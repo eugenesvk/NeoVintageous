@@ -104,7 +104,7 @@ _ALIASES = {
 }
 
 
-@register(seqs.CR, (NORMAL,))
+@register(seqs.SEQ['cr'], (NORMAL,))
 class AbolishCoercions(RequireOneCharMixin, ViOperatorDef):
     def init(self):
         self.scroll_into_view = True

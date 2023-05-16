@@ -43,7 +43,7 @@ __all__ = [
 ]
 
 
-@register(seqs.GC, ACTION_MODES)
+@register(seqs.SEQ['gc'], ACTION_MODES)
 class CommentaryMotion(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -70,7 +70,7 @@ class CommentaryLines(ViOperatorDef):
 
 # NOTE The command (gC) is not defined in the original Commentary plugin, it's
 # from a plugin called tComment: https://github.com/tomtom/tcomment_vim.
-@register(seqs.G_BIG_C, ACTION_MODES)
+@register(seqs.SEQ['g⇧c'], ACTION_MODES)
 class CommentaryBlock(ViOperatorDef):
     def init(self):
         self.updates_xpos = True

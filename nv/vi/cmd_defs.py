@@ -39,7 +39,7 @@ from NeoVintageous.nv.vim import VISUAL_BLOCK
 from NeoVintageous.nv.vim import VISUAL_LINE
 
 
-@assign(seqs.D, ACTION_MODES)
+@assign(seqs.SEQ['d'], ACTION_MODES)
 class ViDeleteByChars(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -49,7 +49,7 @@ class ViDeleteByChars(ViOperatorDef):
         self.command = 'nv_vi_d'
 
 
-@assign(seqs.D, (SELECT,))
+@assign(seqs.SEQ['d'], (SELECT,))
 class ViDeleteMultipleCursor(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -59,7 +59,7 @@ class ViDeleteMultipleCursor(ViOperatorDef):
         self.command = 'nv_vi_d'
 
 
-@assign(seqs.BIG_O, ACTION_MODES)
+@assign(seqs.SEQ['⇧o'], ACTION_MODES)
 class ViInsertLineBefore(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -67,7 +67,7 @@ class ViInsertLineBefore(ViOperatorDef):
         self.command = 'nv_vi_big_o'
 
 
-@assign(seqs.O, (NORMAL,))
+@assign(seqs.SEQ['o'], (NORMAL,))
 class ViInsertLineAfter(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -85,7 +85,7 @@ class ViGoToOtherEnd(ViOperatorDef):
 
 
 @assign(seqs.DEL, ACTION_MODES + (SELECT,))
-@assign(seqs.X, ACTION_MODES + (SELECT,))
+@assign(seqs.SEQ['x'], ACTION_MODES + (SELECT,))
 class ViRightDeleteChars(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -94,7 +94,7 @@ class ViRightDeleteChars(ViOperatorDef):
         self.command = 'nv_vi_x'
 
 
-@assign(seqs.S, ACTION_MODES + (SELECT,))
+@assign(seqs.SEQ['s'], ACTION_MODES + (SELECT,))
 class ViSubstituteChar(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -102,7 +102,7 @@ class ViSubstituteChar(ViOperatorDef):
         self.command = 'nv_vi_s'
 
 
-@assign(seqs.Y, ACTION_MODES)
+@assign(seqs.SEQ['y'], ACTION_MODES)
 class ViYankByChars(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -111,7 +111,7 @@ class ViYankByChars(ViOperatorDef):
         self.command = 'nv_vi_y'
 
 
-@assign(seqs.Y, (SELECT,))
+@assign(seqs.SEQ['y'], (SELECT,))
 class ViYankSelectByChars(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -149,7 +149,7 @@ class ViUnindent(ViOperatorDef):
         self.command = 'nv_vi_less_than'
 
 
-@assign(seqs.C, ACTION_MODES)
+@assign(seqs.SEQ['c'], ACTION_MODES)
 class ViChangeByChars(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -160,7 +160,7 @@ class ViChangeByChars(ViOperatorDef):
         self.command = 'nv_vi_c'
 
 
-@assign(seqs.C, (SELECT,))
+@assign(seqs.SEQ['c'], (SELECT,))
 class ViChangeMultipleCursor(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -170,7 +170,7 @@ class ViChangeMultipleCursor(ViOperatorDef):
         self.command = 'nv_vi_c'
 
 
-@assign(seqs.U, (NORMAL,))
+@assign(seqs.SEQ['u'], (NORMAL,))
 class ViUndo(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -178,7 +178,7 @@ class ViUndo(ViOperatorDef):
         self.command = 'nv_vi_u'
 
 
-@assign(seqs.U, (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
+@assign(seqs.SEQ['u'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
 class ViChangeToLowerCaseByCharsVisual(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -187,7 +187,7 @@ class ViChangeToLowerCaseByCharsVisual(ViOperatorDef):
         self.command = 'nv_vi_visual_u'
 
 
-@assign(seqs.CTRL_R, ACTION_MODES)
+@assign(seqs.SEQ['⎈r'], ACTION_MODES)
 class ViRedo(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -195,7 +195,7 @@ class ViRedo(ViOperatorDef):
         self.command = 'nv_vi_ctrl_r'
 
 
-@assign(seqs.BIG_D, ACTION_MODES)
+@assign(seqs.SEQ['⇧d'], ACTION_MODES)
 class ViDeleteToEol(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -204,7 +204,7 @@ class ViDeleteToEol(ViOperatorDef):
         self.command = 'nv_vi_big_d'
 
 
-@assign(seqs.BIG_C, ACTION_MODES)
+@assign(seqs.SEQ['⇧c'], ACTION_MODES)
 class ViChangeToEol(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -224,7 +224,7 @@ class ViChangeToUpperCaseByLines(ViOperatorDef):
         self.command = 'nv_vi_g_big_u_big_u'
 
 
-@assign(seqs.CC, ACTION_MODES)
+@assign(seqs.SEQ['cc'], ACTION_MODES)
 class ViChangeLine(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -234,7 +234,7 @@ class ViChangeLine(ViOperatorDef):
         self.command = 'nv_vi_cc'
 
 
-@assign(seqs.DD, ACTION_MODES)
+@assign(seqs.SEQ['dd'], ACTION_MODES)
 class ViDeleteLine(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -243,7 +243,7 @@ class ViDeleteLine(ViOperatorDef):
         self.command = 'nv_vi_dd'
 
 
-@assign(seqs.BIG_R, ACTION_MODES)
+@assign(seqs.SEQ['⇧r'], ACTION_MODES)
 class ViEnterReplaceMode(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -272,7 +272,7 @@ class ViChangeToLowerCaseByLines(ViOperatorDef):
         self.command = 'nv_vi_guu'
 
 
-@assign(seqs.GU, ACTION_MODES)
+@assign(seqs.SEQ['gu'], ACTION_MODES)
 class ViChangeToLowerCaseByChars(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -300,8 +300,8 @@ class ViUnindentLine(ViOperatorDef):
         self.command = 'nv_vi_less_than_less_than'
 
 
-@assign(seqs.YY, ACTION_MODES)
-@assign(seqs.BIG_Y, ACTION_MODES)
+@assign(seqs.SEQ['yy'], ACTION_MODES)
+@assign(seqs.SEQ['⇧y'], ACTION_MODES)
 class ViYankLine(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -327,7 +327,7 @@ class ViForceInvertCaseByChars(ViOperatorDef):
         self.command = 'nv_vi_tilde'
 
 
-@assign(seqs.BIG_S, ACTION_MODES)
+@assign(seqs.SEQ['⇧s'], ACTION_MODES)
 class ViSubstituteByLines(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -347,7 +347,7 @@ class ViInvertCaseByChars(ViOperatorDef):
         self.command = 'nv_vi_g_tilde'
 
 
-@assign(seqs.G_BIG_U, ACTION_MODES)
+@assign(seqs.SEQ['g⇧u'], ACTION_MODES)
 class ViChangeToUpperCaseByChars(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -357,7 +357,7 @@ class ViChangeToUpperCaseByChars(ViOperatorDef):
         self.command = 'nv_vi_g_big_u'
 
 
-@assign(seqs.BIG_J, ACTION_MODES)
+@assign(seqs.SEQ['⇧j'], ACTION_MODES)
 class ViJoinLines(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -366,7 +366,7 @@ class ViJoinLines(ViOperatorDef):
         self.command = 'nv_vi_big_j'
 
 
-@assign(seqs.CTRL_X, ACTION_MODES)
+@assign(seqs.SEQ['⎈x'], ACTION_MODES)
 class ViDecrement(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -378,7 +378,7 @@ class ViDecrement(ViOperatorDef):
         }
 
 
-@assign(seqs.CTRL_A, ACTION_MODES)
+@assign(seqs.SEQ['⎈a'], ACTION_MODES)
 class ViIncrement(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -387,7 +387,7 @@ class ViIncrement(ViOperatorDef):
         self.command = 'nv_vi_modify_numbers'
 
 
-@assign(seqs.G_BIG_J, ACTION_MODES)
+@assign(seqs.SEQ['g⇧j'], ACTION_MODES)
 class ViJoinLinesNoSeparator(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -399,7 +399,7 @@ class ViJoinLinesNoSeparator(ViOperatorDef):
         }
 
 
-@assign(seqs.V, ACTION_MODES)
+@assign(seqs.SEQ['v'], ACTION_MODES)
 class ViEnterVisualMode(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -408,7 +408,7 @@ class ViEnterVisualMode(ViOperatorDef):
 
 
 @assign(seqs.Z_ENTER, ACTION_MODES)
-@assign(seqs.ZT, ACTION_MODES)
+@assign(seqs.SEQ['zt'], ACTION_MODES)
 class ViScrollToScreenTop(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -416,7 +416,7 @@ class ViScrollToScreenTop(ViOperatorDef):
         self.command = 'nv_vi_z_enter'
 
 
-@assign(seqs.ZB, ACTION_MODES)
+@assign(seqs.SEQ['zb'], ACTION_MODES)
 @assign(seqs.Z_MINUS, ACTION_MODES)
 class ViScrollToScreenBottom(ViOperatorDef):
     def init(self):
@@ -425,7 +425,7 @@ class ViScrollToScreenBottom(ViOperatorDef):
         self.command = 'nv_vi_z_minus'
 
 
-@assign(seqs.ZZ, ACTION_MODES)
+@assign(seqs.SEQ['zz'], ACTION_MODES)
 class ViScrollToScreenCenter(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -444,7 +444,7 @@ class ViZDot(ViOperatorDef):
         }
 
 
-@assign(seqs.GQ, ACTION_MODES)
+@assign(seqs.SEQ['gq'], ACTION_MODES)
 class ViReformat(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -465,7 +465,7 @@ class ViReformatLinewise(ViOperatorDef):
         }
 
 
-@assign(seqs.P, ACTION_MODES + (SELECT,))
+@assign(seqs.SEQ['p'], ACTION_MODES + (SELECT,))
 class ViPasteAfter(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -477,7 +477,7 @@ class ViPasteAfter(ViOperatorDef):
         }
 
 
-@assign(seqs.BIG_P, ACTION_MODES + (SELECT,))
+@assign(seqs.SEQ['⇧p'], ACTION_MODES + (SELECT,))
 class ViPasteBefore(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -489,8 +489,8 @@ class ViPasteBefore(ViOperatorDef):
         }
 
 
-@assign(seqs.RIGHT_SQUARE_BRACKET_BIG_P, ACTION_MODES + (SELECT,))
-@assign(seqs.RIGHT_SQUARE_BRACKET_P, ACTION_MODES + (SELECT,))
+@assign(seqs.SEQ[']⇧p'], ACTION_MODES + (SELECT,))
+@assign(seqs.SEQ[']p'], ACTION_MODES + (SELECT,))
 class ViPasteAfterAndIndent(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -503,8 +503,8 @@ class ViPasteAfterAndIndent(ViOperatorDef):
         }
 
 
-@assign(seqs.LEFT_SQUARE_BRACKET_BIG_P, ACTION_MODES + (SELECT,))
-@assign(seqs.LEFT_SQUARE_BRACKET_P, ACTION_MODES + (SELECT,))
+@assign(seqs.SEQ['[⇧p'], ACTION_MODES + (SELECT,))
+@assign(seqs.SEQ['[p'], ACTION_MODES + (SELECT,))
 class ViPasteBeforeAndIndent(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -517,7 +517,7 @@ class ViPasteBeforeAndIndent(ViOperatorDef):
         }
 
 
-@assign(seqs.GP, ACTION_MODES + (SELECT,))
+@assign(seqs.SEQ['gp'], ACTION_MODES + (SELECT,))
 class ViPasteAfterWithAdjustedCursor(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -530,7 +530,7 @@ class ViPasteAfterWithAdjustedCursor(ViOperatorDef):
         }
 
 
-@assign(seqs.G_BIG_P, ACTION_MODES + (SELECT,))
+@assign(seqs.SEQ['g⇧p'], ACTION_MODES + (SELECT,))
 class ViPasteBeforeWithAdjustedCursor(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -543,7 +543,7 @@ class ViPasteBeforeWithAdjustedCursor(ViOperatorDef):
         }
 
 
-@assign(seqs.BIG_X, ACTION_MODES)
+@assign(seqs.SEQ['⇧x'], ACTION_MODES)
 class ViLeftDeleteChar(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -552,9 +552,9 @@ class ViLeftDeleteChar(ViOperatorDef):
         self.command = 'nv_vi_big_x'
 
 
-@assign(seqs.CTRL_PAGEDOWN, ACTION_MODES)
+@assign(seqs.SEQ['⎈⇟'], ACTION_MODES)
+@assign(seqs.SEQ['gt'], ACTION_MODES)
 @assign(seqs.CTRL_W_GT, ACTION_MODES)
-@assign(seqs.GT, ACTION_MODES)
 class ViActivateNextTab(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -565,16 +565,16 @@ class ViActivateNextTab(ViOperatorDef):
         })
 
 
-@assign(seqs.CTRL_PAGEUP, ACTION_MODES)
+@assign(seqs.SEQ['⎈⇞'], ACTION_MODES)
+@assign(seqs.SEQ['g⇧t'], ACTION_MODES)
 @assign(seqs.CTRL_W_G_BIG_T, ACTION_MODES)
-@assign(seqs.G_BIG_T, ACTION_MODES)
 class ViActivatePreviousTab(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
         self.command = 'nv_vi_g_big_t'
 
 
-@assign(seqs.CTRL_W, (INSERT,))
+@assign(seqs.SEQ['⎈w'], (INSERT,))
 class ViDeleteUpToCursor(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -622,7 +622,7 @@ class ViMoveCurrentWindowToVeryBottom(ViOperatorDef):
         }
 
 
-@assign(seqs.CTRL_6, ACTION_MODES)
+@assign(seqs.SEQ['⎈6'], ACTION_MODES)
 @assign(seqs.CTRL_HAT, ACTION_MODES)
 class ViGotoAlternateFile(ViOperatorDef):
     def init(self):
@@ -858,7 +858,7 @@ class ViExchangeCurrentWindowWithNextOrPreviousNthWindow(ViOperatorDef):
         }
 
 
-@assign(seqs.BIG_V, ACTION_MODES)
+@assign(seqs.SEQ['⇧v'], ACTION_MODES)
 class ViEnterVisualLineMode(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -866,7 +866,7 @@ class ViEnterVisualLineMode(ViOperatorDef):
         self.command = 'nv_enter_visual_line_mode'
 
 
-@assign(seqs.GV, ACTION_MODES)
+@assign(seqs.SEQ['gv'], ACTION_MODES)
 class ViRestoreVisualSelections(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -874,13 +874,13 @@ class ViRestoreVisualSelections(ViOperatorDef):
         self.command = 'nv_vi_gv'
 
 
-@assign(seqs.GX, ACTION_MODES)
+@assign(seqs.SEQ['gx'], ACTION_MODES)
 class ViNetrwGx(ViOperatorDef):
     def init(self):
         self.command = 'nv_vi_gx'
 
 
-@assign(seqs.CTRL_O, ACTION_MODES)
+@assign(seqs.SEQ['⎈o'], ACTION_MODES)
 class ViJumpBack(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -888,7 +888,7 @@ class ViJumpBack(ViOperatorDef):
         self.command = 'nv_vi_jump_back'
 
 
-@assign(seqs.CTRL_I, ACTION_MODES)
+@assign(seqs.SEQ['⎈i'], ACTION_MODES)
 @assign(seqs.TAB, ACTION_MODES)
 class ViJumpForward(ViOperatorDef):
     def init(self):
@@ -905,13 +905,13 @@ class ViRepeat(ViOperatorDef):
         self.command = 'nv_vi_dot'
 
 
-@assign(seqs.CTRL_Y, ACTION_MODES)
+@assign(seqs.SEQ['⎈y'], ACTION_MODES)
 class ViScrollByLinesUp(ViMotionDef):
     def init(self):
         self.command = 'nv_vi_ctrl_y'
 
 
-@assign(seqs.BIG_U, (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
+@assign(seqs.SEQ['⇧u'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
 class ViChangeToUpperCaseByCharsVisual(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -920,13 +920,13 @@ class ViChangeToUpperCaseByCharsVisual(ViOperatorDef):
         self.command = 'nv_vi_visual_big_u'
 
 
-@assign(seqs.CTRL_E, ACTION_MODES)
+@assign(seqs.SEQ['⎈e'], ACTION_MODES)
 class ViScrollByLinesDown(ViMotionDef):
     def init(self):
         self.command = 'nv_vi_ctrl_e'
 
 
-@assign(seqs.AT, ACTION_MODES)
+@assign(seqs.SEQ['at'], ACTION_MODES)
 class ViOpenMacrosForRepeating(RequireOneCharMixin, ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -938,7 +938,7 @@ class ViOpenMacrosForRepeating(RequireOneCharMixin, ViOperatorDef):
         })
 
 
-@assign(seqs.Q, ACTION_MODES)
+@assign(seqs.SEQ['q'], ACTION_MODES)
 class ViToggleMacroRecorder(RequireOneCharMixin, ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -950,7 +950,7 @@ class ViToggleMacroRecorder(RequireOneCharMixin, ViOperatorDef):
         })
 
 
-@assign(seqs.CTRL_V, ACTION_MODES)
+@assign(seqs.SEQ['⎈v'], ACTION_MODES)
 class ViEnterVisualBlockMode(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -958,7 +958,7 @@ class ViEnterVisualBlockMode(ViOperatorDef):
         self.command = 'nv_enter_visual_block_mode'
 
 
-@assign(seqs.GA, ACTION_MODES)
+@assign(seqs.SEQ['ga'], ACTION_MODES)
 class ViShowAsciiValueOfChar(ViOperatorDef):
     def init(self):
         self.command = 'nv_vi_ga'
@@ -974,8 +974,8 @@ class Vigf(ViOperatorDef):
         }
 
 
+@assign(seqs.SEQ['gf'], (NORMAL,))
 @assign(seqs.CTRL_W_G_BIG_F, ACTION_MODES)
-@assign(seqs.G_BIG_F, ACTION_MODES)
 class VigF(ViOperatorDef):
     def init(self):
         self.command = 'nv_vi_g'
@@ -984,7 +984,7 @@ class VigF(ViOperatorDef):
         }
 
 
-@assign(seqs.I, (NORMAL, SELECT))
+@assign(seqs.SEQ['i'], (NORMAL, SELECT))
 @assign(seqs.INSERT, (NORMAL, SELECT))
 class ViEnterInserMode(ViOperatorDef):
     def init(self):
@@ -993,10 +993,10 @@ class ViEnterInserMode(ViOperatorDef):
         self.command = 'nv_enter_insert_mode'
 
 
-@assign(seqs.V, (SELECT, ))
+@assign(seqs.SEQ['v'], (SELECT, ))
 @assign(seqs.ESC, ACTION_MODES)
-@assign(seqs.CTRL_C, ACTION_MODES + (INSERT, SELECT))
-@assign(seqs.CTRL_LEFT_SQUARE_BRACKET, ACTION_MODES + (INSERT, SELECT))
+@assign(seqs.SEQ['⎈c'], ACTION_MODES + (INSERT, SELECT))
+@assign(seqs.SEQ['⎈['], ACTION_MODES + (INSERT, SELECT))
 class ViEnterNormalMode(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -1029,7 +1029,7 @@ class ViSplitAndEditAlternate(ViOperatorDef):
         }
 
 
-@assign(seqs.A, (NORMAL,))
+@assign(seqs.SEQ['a'], (NORMAL,))
 class ViInsertAfterChar(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -1037,7 +1037,7 @@ class ViInsertAfterChar(ViOperatorDef):
         self.command = 'nv_vi_a'
 
 
-@assign(seqs.BIG_A, ACTION_MODES)
+@assign(seqs.Q['⇧a'], ACTION_MODES)
 class ViInsertAtEol(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -1045,7 +1045,7 @@ class ViInsertAtEol(ViOperatorDef):
         self.command = 'nv_vi_big_a'
 
 
-@assign(seqs.BIG_I, ACTION_MODES + (SELECT,))
+@assign(seqs.SEQ['⇧i'], ACTION_MODES + (SELECT,))
 class ViInsertAtBol(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -1061,28 +1061,28 @@ class ViEnterCommandLineMode(ViOperatorDef):
         self.command = 'nv_cmdline'
 
 
-@assign(seqs.CTRL_G, ACTION_MODES)
+@assign(seqs.SEQ['⎈g'], ACTION_MODES)
 class ViShowFileStatus(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
         self.command = 'nv_vi_ctrl_g'
 
 
-@assign(seqs.BIG_Z_BIG_Q, (NORMAL,))
+@assign(seqs.SEQ['⇧z⇧q'], (NORMAL,))
 class ViExitEditor(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
         self.command = 'nv_vi_big_z_big_q'
 
 
-@assign(seqs.BIG_Z_BIG_Z, (NORMAL,))
+@assign(seqs.SEQ['⇧z⇧z'], (NORMAL,))
 class ViCloseFile(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
         self.command = 'nv_vi_big_z_big_z'
 
 
-@assign(seqs.G_BIG_D, ACTION_MODES)
+@assign(seqs.SEQ['g⇧d'], ACTION_MODES)
 class ViGotoSymbolInProject(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -1092,7 +1092,7 @@ class ViGotoSymbolInProject(ViOperatorDef):
         }
 
 
-@assign(seqs.GD, MOTION_MODES)
+@assign(seqs.SEQ['gd'], MOTION_MODES)
 class ViGotoSymbolInFile(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1103,10 +1103,10 @@ class ViGotoSymbolInFile(ViMotionDef):
         }
 
 
-@assign(seqs.ALT_RIGHT, MOTION_MODES)
-@assign(seqs.L, MOTION_MODES)
-@assign(seqs.RIGHT, MOTION_MODES)
-@assign(seqs.SPACE, MOTION_MODES)
+@assign(seqs.SEQ['⎇▶'], MOTION_MODES)
+@assign(seqs.SEQ['l'], MOTION_MODES)
+@assign(seqs.SEQ['▶'], MOTION_MODES)
+@assign(seqs.SEQ['␠'], MOTION_MODES)
 class ViMoveRightByChars(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1114,7 +1114,7 @@ class ViMoveRightByChars(ViMotionDef):
         self.command = 'nv_vi_l'
 
 
-@assign(seqs.SHIFT_ENTER, MOTION_MODES)
+@assign(seqs.SEQ['⇧⏎'], MOTION_MODES)
 class ViShiftEnterMotion(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1122,8 +1122,8 @@ class ViShiftEnterMotion(ViMotionDef):
         self.command = 'nv_vi_shift_enter'
 
 
-@assign(seqs.B, MOTION_MODES)
-@assign(seqs.SHIFT_LEFT, MOTION_MODES)
+@assign(seqs.SEQ['b'], MOTION_MODES)
+@assign(seqs.SEQ['⇧◀'], MOTION_MODES)
 class ViMoveByWordsBackward(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1131,8 +1131,8 @@ class ViMoveByWordsBackward(ViMotionDef):
         self.command = 'nv_vi_b'
 
 
-@assign(seqs.BIG_B, MOTION_MODES)
-@assign(seqs.CTRL_LEFT, MOTION_MODES)
+@assign(seqs.SEQ['⇧b'], MOTION_MODES)
+@assign(seqs.SEQ['⎈◀'], MOTION_MODES)
 class ViMoveByBigWordsBackward(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1140,8 +1140,8 @@ class ViMoveByBigWordsBackward(ViMotionDef):
         self.command = 'nv_vi_big_b'
 
 
-@assign(seqs.BIG_W, MOTION_MODES)
-@assign(seqs.CTRL_RIGHT, MOTION_MODES)
+@assign(seqs.SEQ['⇧w'], MOTION_MODES)
+@assign(seqs.SEQ['⎈▶'], MOTION_MODES)
 class ViMoveByBigWords(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1149,7 +1149,7 @@ class ViMoveByBigWords(ViMotionDef):
         self.command = 'nv_vi_big_w'
 
 
-@assign(seqs.E, MOTION_MODES)
+@assign(seqs.SEQ['e'], MOTION_MODES)
 class ViMoveByWordEnds(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1157,7 +1157,7 @@ class ViMoveByWordEnds(ViMotionDef):
         self.command = 'nv_vi_e'
 
 
-@assign(seqs.BIG_H, MOTION_MODES)
+@assign(seqs.SEQ['⇧h'], MOTION_MODES)
 class ViGotoScreenTop(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1165,7 +1165,7 @@ class ViGotoScreenTop(ViMotionDef):
         self.command = 'nv_vi_big_h'
 
 
-@assign(seqs.GE, MOTION_MODES)
+@assign(seqs.SEQ['ge'], MOTION_MODES)
 class ViMoveByWordEndsBackward(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1173,7 +1173,7 @@ class ViMoveByWordEndsBackward(ViMotionDef):
         self.command = 'nv_vi_ge'
 
 
-@assign(seqs.G_BIG_E, MOTION_MODES)
+@assign(seqs.SEQ['g⇧e'], MOTION_MODES)
 class ViMoveByBigWordEndsBackward(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1181,7 +1181,7 @@ class ViMoveByBigWordEndsBackward(ViMotionDef):
         self.command = 'nv_vi_g_big_e'
 
 
-@assign(seqs.BIG_L, MOTION_MODES)
+@assign(seqs.SEQ['⇧l'], MOTION_MODES)
 class ViGotoScreenBottom(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1189,7 +1189,7 @@ class ViGotoScreenBottom(ViMotionDef):
         self.command = 'nv_vi_big_l'
 
 
-@assign(seqs.BIG_M, MOTION_MODES)
+@assign(seqs.SEQ['⇧m'], MOTION_MODES)
 class ViGotoScreenMiddle(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1197,7 +1197,7 @@ class ViGotoScreenMiddle(ViMotionDef):
         self.command = 'nv_vi_big_m'
 
 
-@assign(seqs.CTRL_D, MOTION_MODES)
+@assign(seqs.SEQ['⎈d'], MOTION_MODES)
 class ViMoveHalfScreenDown(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1209,7 +1209,7 @@ class ViMoveHalfScreenDown(ViMotionDef):
         })
 
 
-@assign(seqs.CTRL_U, MOTION_MODES + (INSERT,))
+@assign(seqs.SEQ['⎈u'], MOTION_MODES + (INSERT,))
 class ViMoveHalfScreenUp(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1221,9 +1221,9 @@ class ViMoveHalfScreenUp(ViMotionDef):
         })
 
 
-@assign(seqs.CTRL_F, MOTION_MODES)
-@assign(seqs.PAGE_DOWN, MOTION_MODES)
-@assign(seqs.SHIFT_DOWN, MOTION_MODES)
+@assign(seqs.SEQ['⎈f'], MOTION_MODES)
+@assign(seqs.SEQ['⇟'], MOTION_MODES)
+@assign(seqs.SEQ['⇧▼'], MOTION_MODES)
 class ViMoveScreenDown(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1231,9 +1231,9 @@ class ViMoveScreenDown(ViMotionDef):
         self.command = 'nv_vi_ctrl_f'
 
 
-@assign(seqs.CTRL_B, MOTION_MODES)
-@assign(seqs.PAGE_UP, MOTION_MODES)
-@assign(seqs.SHIFT_UP, MOTION_MODES)
+@assign(seqs.SEQ['⎈b'], MOTION_MODES)
+@assign(seqs.SEQ['⇞'], MOTION_MODES)
+@assign(seqs.SEQ['⇧▲'], MOTION_MODES)
 class ViMoveScreenUp(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1279,7 +1279,7 @@ class ViMoveBackOneLine(ViMotionDef):
         self.command = 'nv_vi_minus'
 
 
-@assign(seqs.G_UNDERSCORE, MOTION_MODES)
+@assign(seqs.SEQ['g⇧-'], MOTION_MODES)
 class ViMoveToSoftEol(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1288,7 +1288,7 @@ class ViMoveToSoftEol(ViMotionDef):
 
 
 @assign(seqs.G_DOWN, MOTION_MODES)
-@assign(seqs.GJ, MOTION_MODES)
+@assign(seqs.SEQ['gj'], MOTION_MODES)
 class ViMoveByScreenLineDown(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1297,7 +1297,7 @@ class ViMoveByScreenLineDown(ViMotionDef):
 
 
 @assign(seqs.G_UP, MOTION_MODES)
-@assign(seqs.GK, MOTION_MODES)
+@assign(seqs.SEQ['gk'], MOTION_MODES)
 class ViMoveByScreenLineUp(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1305,7 +1305,7 @@ class ViMoveByScreenLineUp(ViMotionDef):
         self.command = 'nv_vi_gk'
 
 
-@assign(seqs.LEFT_BRACE, MOTION_MODES)
+@assign(seqs.SEQ['⇧['], MOTION_MODES)
 class ViMoveByBlockUp(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1361,7 +1361,7 @@ class ViMoveByBlockDown(ViMotionDef):
         self.command = 'nv_vi_right_brace'
 
 
-@assign(seqs.LEFT_PAREN, MOTION_MODES)
+@assign(seqs.SEQ['⇧9'], MOTION_MODES)
 class ViMoveBySentenceUp(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1377,7 +1377,7 @@ class ViMoveBySentenceDown(ViMotionDef):
         self.command = 'nv_vi_right_paren'
 
 
-@assign(seqs.LEFT_SQUARE_BRACKET_LEFT_BRACE, MOTION_MODES)
+@assign(seqs.SEQ['[⇧['], MOTION_MODES)
 class ViGotoOpeningBrace(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1389,7 +1389,7 @@ class ViGotoOpeningBrace(ViMotionDef):
         }
 
 
-@assign(seqs.LEFT_SQUARE_BRACKET_LEFT_PAREN, MOTION_MODES)
+@assign(seqs.SEQ['[⇧9'], MOTION_MODES)
 class ViGotoOpeningParen(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1401,7 +1401,7 @@ class ViGotoOpeningParen(ViMotionDef):
         }
 
 
-@assign(seqs.LEFT_SQUARE_BRACKET_C, ACTION_MODES)
+@assign(seqs.SEQ['[c'], ACTION_MODES)
 class ViBackwardToStartOfChange(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1412,7 +1412,7 @@ class ViBackwardToStartOfChange(ViMotionDef):
         }
 
 
-@assign(seqs.RIGHT_SQUARE_BRACKET_C, ACTION_MODES)
+@assign(seqs.SEQ[']c'], ACTION_MODES)
 class ViForwardToStartOfChange(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1423,7 +1423,7 @@ class ViForwardToStartOfChange(ViMotionDef):
         }
 
 
-@assign(seqs.LEFT_SQUARE_BRACKET_S, ACTION_MODES)
+@assign(seqs.SEQ['[s'], ACTION_MODES)
 class ViPrevMisppelledWord(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1434,7 +1434,7 @@ class ViPrevMisppelledWord(ViMotionDef):
         }
 
 
-@assign(seqs.RIGHT_SQUARE_BRACKET_S, ACTION_MODES)
+@assign(seqs.SEQ[']s'], ACTION_MODES)
 class ViNextMispelledWord(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1445,7 +1445,7 @@ class ViNextMispelledWord(ViMotionDef):
         }
 
 
-@assign(seqs.RIGHT_SQUARE_BRACKET_RIGHT_BRACE, MOTION_MODES)
+@assign(seqs.SEQ[']⇧]'], MOTION_MODES)
 class ViGotoClosingBrace(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1457,7 +1457,7 @@ class ViGotoClosingBrace(ViMotionDef):
         }
 
 
-@assign(seqs.RIGHT_SQUARE_BRACKET_RIGHT_PAREN, MOTION_MODES)
+@assign(seqs.SEQ[']⇧0'], MOTION_MODES)
 class ViGotoClosingParen(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1518,7 +1518,7 @@ class ViMoveByLineCols(ViMotionDef):
         self.command = 'nv_vi_bar'
 
 
-@assign(seqs.BIG_E, MOTION_MODES)
+@assign(seqs.SEQ['⇧e'], MOTION_MODES)
 class ViMoveByBigWordEnds(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1526,12 +1526,12 @@ class ViMoveByBigWordEnds(ViMotionDef):
         self.command = 'nv_vi_big_e'
 
 
-@assign(seqs.ALT_LEFT, MOTION_MODES)
-@assign(seqs.BACKSPACE, MOTION_MODES)
-@assign(seqs.CTRL_BACKSPACE, MOTION_MODES)
-@assign(seqs.CTRL_H, MOTION_MODES)
-@assign(seqs.H, MOTION_MODES)
-@assign(seqs.LEFT, MOTION_MODES)
+@assign(seqs.SEQ['⎇◀'], MOTION_MODES)
+@assign(seqs.SEQ['␈'], MOTION_MODES)
+@assign(seqs.SEQ['⎈␈'], MOTION_MODES)
+@assign(seqs.SEQ['⎈h'], MOTION_MODES)
+@assign(seqs.SEQ['h'], MOTION_MODES)
+@assign(seqs.SEQ['◀'], MOTION_MODES)
 class ViMoveLeftByChars(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1539,8 +1539,8 @@ class ViMoveLeftByChars(ViMotionDef):
         self.command = 'nv_vi_h'
 
 
-@assign(seqs.SHIFT_RIGHT, MOTION_MODES)
-@assign(seqs.W, MOTION_MODES)
+@assign(seqs.SEQ['⇧▶'], MOTION_MODES)
+@assign(seqs.SEQ['w'], MOTION_MODES)
 class ViMoveByWords(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1548,11 +1548,11 @@ class ViMoveByWords(ViMotionDef):
         self.command = 'nv_vi_w'
 
 
-@assign(seqs.CTRL_DOWN, MOTION_MODES)
-@assign(seqs.CTRL_J, MOTION_MODES)
-@assign(seqs.CTRL_N, MOTION_MODES)
-@assign(seqs.DOWN, MOTION_MODES)
-@assign(seqs.J, MOTION_MODES)
+@assign(seqs.SEQ['⎈▼'], MOTION_MODES)
+@assign(seqs.SEQ['⎈j'], MOTION_MODES)
+@assign(seqs.SEQ['⎈n'], MOTION_MODES)
+@assign(seqs.SEQ['▼'], MOTION_MODES)
+@assign(seqs.SEQ['j'], MOTION_MODES)
 class ViMoveDownByLines(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1563,10 +1563,10 @@ class ViMoveDownByLines(ViMotionDef):
         })
 
 
-@assign(seqs.CTRL_P, MOTION_MODES)
-@assign(seqs.CTRL_UP, MOTION_MODES)
-@assign(seqs.K, MOTION_MODES)
-@assign(seqs.UP, MOTION_MODES)
+@assign(seqs.SEQ['⎈p'], MOTION_MODES)
+@assign(seqs.SEQ['⎈▲'], MOTION_MODES)
+@assign(seqs.SEQ['k'], MOTION_MODES)
+@assign(seqs.SEQ['▲'], MOTION_MODES)
 class ViMoveUpByLines(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1594,7 +1594,7 @@ class ViMoveToSoftBol(ViMotionDef):
         self.command = 'nv_vi_underscore'
 
 
-@assign(seqs.KEYPAD_0, MOTION_MODES)
+@assign(seqs.SEQ['🔢0'], MOTION_MODES)
 @assign(seqs.ZERO, MOTION_MODES)
 class ViMoveToHardBol(ViMotionDef):
     def init(self):
@@ -1603,7 +1603,8 @@ class ViMoveToHardBol(ViMotionDef):
         self.command = 'nv_vi_zero'
 
 
-@assign(seqs.GN, MOTION_MODES)
+@assign(seqs.SEQ['gn'], MOTION_MODES)
+
 class ViSearchLastUsedPattern(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1611,7 +1612,7 @@ class ViSearchLastUsedPattern(ViMotionDef):
         self.command = 'nv_vi_search'
 
 
-@assign(seqs.G_BIG_N, MOTION_MODES)
+@assign(seqs.SEQ['g⇧n'], MOTION_MODES)
 class ViSearchLastUsedPatternReverse(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1622,7 +1623,7 @@ class ViSearchLastUsedPatternReverse(ViMotionDef):
         }
 
 
-@assign(seqs.N, MOTION_MODES)
+@assign(seqs.SEQ['n'], MOTION_MODES)
 class ViRepeatSearchForward(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1633,7 +1634,7 @@ class ViRepeatSearchForward(ViMotionDef):
         }
 
 
-@assign(seqs.BIG_N, MOTION_MODES)
+@assign(seqs.SEQ['⇧n'], MOTION_MODES)
 class ViRepeatSearchBackward(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1660,16 +1661,16 @@ class ViReverseFindWord(ViMotionDef):
         self.command = 'nv_vi_octothorp'
 
 
-@assign(seqs.BIG_Z, MOTION_MODES)
-@assign(seqs.CTRL_K, MOTION_MODES)
-@assign(seqs.CTRL_W, MOTION_MODES)
+@assign(seqs.SEQ['⇧z'], MOTION_MODES)
+@assign(seqs.SEQ['⎈k'], MOTION_MODES)
+@assign(seqs.SEQ['⎈w'], MOTION_MODES)
 @assign(seqs.CTRL_W_G, MOTION_MODES)
-@assign(seqs.CTRL_X, (INSERT,))
-@assign(seqs.G, MOTION_MODES)
-@assign(seqs.LEFT_SQUARE_BRACKET, MOTION_MODES)
-@assign(seqs.RIGHT_SQUARE_BRACKET, MOTION_MODES)
-@assign(seqs.Z, MOTION_MODES)
-@assign(seqs.ZU, MOTION_MODES)
+@assign(seqs.SEQ['⎈x'], (INSERT,))
+@assign(seqs.SEQ['g'], MOTION_MODES)
+@assign(seqs.SEQ['['], MOTION_MODES)
+@assign(seqs.SEQ[']'], MOTION_MODES)
+@assign(seqs.SEQ['z'], MOTION_MODES)
+@assign(seqs.SEQ['zu'], MOTION_MODES)
 class ViOpenNameSpace(ViMotionDef):  # TODO This should not be a motion.
 
     def translate(self, view):
@@ -1684,7 +1685,7 @@ class ViOpenRegister(ViMotionDef):
 
 
 @assign(seqs.CTRL_HOME, MOTION_MODES)
-@assign(seqs.GG, MOTION_MODES)
+@assign(seqs.SEQ['gg'], MOTION_MODES)
 class ViGotoBof(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1696,7 +1697,7 @@ class ViGotoBof(ViMotionDef):
         })
 
 
-@assign(seqs.BIG_G, MOTION_MODES)
+@assign(seqs.SEQ['⇧g'], MOTION_MODES)
 class ViGotoEof(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1708,7 +1709,7 @@ class ViGotoEof(ViMotionDef):
         })
 
 
-@assign(seqs.R, ACTION_MODES)
+@assign(seqs.SEQ['r'], ACTION_MODES)
 class ViReplaceCharacters(RequireOneCharMixin, ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -1721,7 +1722,7 @@ class ViReplaceCharacters(RequireOneCharMixin, ViOperatorDef):
         })
 
 
-@assign(seqs.M, ACTION_MODES)
+@assign(seqs.SEQ['m'], ACTION_MODES)
 class ViSetMark(RequireOneCharMixin, ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -1732,7 +1733,7 @@ class ViSetMark(RequireOneCharMixin, ViOperatorDef):
         })
 
 
-@assign(seqs.F, MOTION_MODES)
+@assign(seqs.SEQ['f'], MOTION_MODES)
 class ViSearchCharForward(RequireOneCharMixin, ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1745,7 +1746,7 @@ class ViSearchCharForward(RequireOneCharMixin, ViMotionDef):
         })
 
 
-@assign(seqs.T, MOTION_MODES)
+@assign(seqs.SEQ['t'], MOTION_MODES)
 class ViSearchCharForwardTill(RequireOneCharMixin, ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1758,7 +1759,7 @@ class ViSearchCharForwardTill(RequireOneCharMixin, ViMotionDef):
         })
 
 
-@assign(seqs.A, (OPERATOR_PENDING, VISUAL, VISUAL_LINE, VISUAL_BLOCK))
+@assign(seqs.SEQ['a'], (OPERATOR_PENDING, VISUAL, VISUAL_LINE, VISUAL_BLOCK))
 class ViATextObject(RequireOneCharMixin, ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1771,7 +1772,7 @@ class ViATextObject(RequireOneCharMixin, ViMotionDef):
         })
 
 
-@assign(seqs.I, (OPERATOR_PENDING, VISUAL, VISUAL_LINE, VISUAL_BLOCK))
+@assign(seqs.SEQ['i'], (OPERATOR_PENDING, VISUAL, VISUAL_LINE, VISUAL_BLOCK))
 class ViITextObject(RequireOneCharMixin, ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1784,7 +1785,7 @@ class ViITextObject(RequireOneCharMixin, ViMotionDef):
         })
 
 
-@assign(seqs.BIG_F, MOTION_MODES)
+@assign(seqs.SEQ['⇧f'], MOTION_MODES)
 class ViSearchCharBackward(RequireOneCharMixin, ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1797,7 +1798,7 @@ class ViSearchCharBackward(RequireOneCharMixin, ViMotionDef):
         })
 
 
-@assign(seqs.BIG_T, MOTION_MODES)
+@assign(seqs.SEQ['⇧t'], MOTION_MODES)
 class ViSearchCharBackwardTill(RequireOneCharMixin, ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1906,7 +1907,7 @@ class ViInsertLineWithCommonPrefix(ViOperatorDef):
         self.command = 'nv_vi_ctrl_x_ctrl_l'
 
 
-@assign(seqs.GM, MOTION_MODES)
+@assign(seqs.SEQ['gm'], MOTION_MODES)
 class ViMoveHalfScreenHorizontally(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1914,16 +1915,16 @@ class ViMoveHalfScreenHorizontally(ViMotionDef):
         self.command = 'nv_vi_gm'
 
 
-@assign(seqs.ZC, ACTION_MODES)
-@assign(seqs.ZG, ACTION_MODES)
-@assign(seqs.ZH, ACTION_MODES)
-@assign(seqs.ZL, ACTION_MODES)
-@assign(seqs.ZO, ACTION_MODES)
+@assign(seqs.SEQ['zc'], ACTION_MODES)
+@assign(seqs.SEQ['zg'], ACTION_MODES)
+@assign(seqs.SEQ['zh'], ACTION_MODES)
+@assign(seqs.SEQ['zl'], ACTION_MODES)
+@assign(seqs.SEQ['zo'], ACTION_MODES)
 @assign(seqs.ZUG, ACTION_MODES)
-@assign(seqs.Z_BIG_H, ACTION_MODES)
-@assign(seqs.Z_BIG_L, ACTION_MODES)
-@assign(seqs.Z_BIG_M, ACTION_MODES)
-@assign(seqs.Z_BIG_R, ACTION_MODES)
+@assign(seqs.SEQ['z⇧h'], ACTION_MODES)
+@assign(seqs.SEQ['z⇧l'], ACTION_MODES)
+@assign(seqs.SEQ['z⇧m'], ACTION_MODES)
+@assign(seqs.SEQ['z⇧r'], ACTION_MODES)
 @assign(seqs.Z_EQUAL, ACTION_MODES)
 @assign(seqs.Z_LEFT, ACTION_MODES)
 @assign(seqs.Z_RIGHT, ACTION_MODES)

@@ -27,8 +27,8 @@ from NeoVintageous.nv.vim import SELECT
 __all__ = ()
 
 
-@register(seqs.CTRL_N, ACTION_MODES)
-@register(seqs.GH, ACTION_MODES)
+@register(seqs.SEQ['⎈n'], ACTION_MODES)
+@register(seqs.SEQ['gh'], ACTION_MODES)
 class MultipleCursorsStart(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -36,7 +36,7 @@ class MultipleCursorsStart(ViOperatorDef):
         self.command = 'nv_enter_select_mode'
 
 
-@register(seqs.BIG_J, (SELECT,))
+@register(seqs.SEQ['⇧j'], (SELECT,))
 @register(seqs.ESC, (SELECT,))
 class MultipleCursorsExit(ViOperatorDef):
     def init(self):
@@ -46,9 +46,9 @@ class MultipleCursorsExit(ViOperatorDef):
         self.command = 'nv_vi_select_big_j'
 
 
-@register(seqs.CTRL_N, (SELECT,))
-@register(seqs.J, (SELECT,))
-@register(seqs.N, (SELECT,))
+@register(seqs.SEQ['⎈n'], (SELECT,))
+@register(seqs.SEQ['j'], (SELECT,))
+@register(seqs.SEQ['n'], (SELECT,))
 class MultipleCursorsAdd(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -64,9 +64,9 @@ class MultipleCursorsAddAll(ViOperatorDef):
         self.command = 'nv_vi_big_a'
 
 
-@register(seqs.CTRL_P, (SELECT,))
-@register(seqs.K, (SELECT,))
-@register(seqs.BIG_Q, (SELECT,))
+@register(seqs.SEQ['⎈p'], (SELECT,))
+@register(seqs.SEQ['k'], (SELECT,))
+@register(seqs.SEQ['⇧q'], (SELECT,))
 class MultipleCursorsRemove(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -74,16 +74,16 @@ class MultipleCursorsRemove(ViOperatorDef):
         self.command = 'nv_vi_select_k'
 
 
-@register(seqs.CTRL_X, (SELECT,))
-@register(seqs.L, (SELECT,))
-@register(seqs.Q, (SELECT,))
+@register(seqs.SEQ['⎈x'], (SELECT,))
+@register(seqs.SEQ['l'], (SELECT,))
+@register(seqs.SEQ['q'], (SELECT,))
 class MultipleCursorsSkip(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
         self.command = 'find_under_expand_skip'
 
 
-@register(seqs.G_BIG_H, ACTION_MODES)
+@register(seqs.SEQ['g⇧h'], ACTION_MODES)
 class MultipleCursorsAll(ViOperatorDef):
     def init(self):
         self.updates_xpos = True

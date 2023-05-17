@@ -53,18 +53,15 @@ import json
 def getUserKeymap(keymap_len):
   win        	= sublime.active_window()
   view       	= win.active_view()
-  cfg_key    	= 'neo_vintageous'
   cfg_key_map	= 'keymap'
   cfg_key_low	= 'lower'
   cfg_key_upp	= 'upper'
   cfg_key_als	= 'alias'
   nv_cfg     	= None
+  cfg_fname  	= f"{package_name}.sublime-settings"
   if view:
-    cfg_fname	= "Preferences.sublime-settings"
-    cfg      	= view.settings()
-    nv_cfg      = cfg.get(cfg_key)
+    nv_cfg	= sublime.load_settings(cfg_fname)
   else: # no view, no config: likely at plugin load, so Sublime API is not ready
-    cfg_fname	= f"{package_name}.sublime-settings"
     cfg_path 	= Path(Path() / sublime.packages_path() / "User" / cfg_fname).expanduser()
     msg_error	= None
     if cfg_path.is_file():
@@ -77,41 +74,37 @@ def getUserKeymap(keymap_len):
       return
 
   if not nv_cfg:
-    msg_error = f"no '{cfg_key}' setting value in '{cfg_fname}'"
+    msg_error = f"no settings found in '{cfg_fname}'"
     log.error(msg_error); _l.s(view, msg_error)
     return
   if not isinstance(nv_cfg, dict):
-    msg_error = f"'{cfg_key}' setting should be a dictionary, not {type(nv_cfg)} (in '{cfg_fname}')"
+    msg_error = f"setting should be a dictionary, not {type(nv_cfg)} (in '{cfg_fname}')"
     log.error(msg_error); _l.s(view, msg_error)
     return
   if not cfg_key_map in nv_cfg:
-    msg_error = f"'{cfg_key}' setting has no '{cfg_key_map}' field (in '{cfg_fname}')"
+    msg_error = f"no '{cfg_key_map}' field (in '{cfg_fname}')"
     log.error(msg_error); _l.s(view, msg_error)
     return
   keymap = nv_cfg[cfg_key_map]
   if not 'upper' in keymap:
-    msg_error = f"'{cfg_key}' → '{cfg_key_map}' setting has no 'upper' field (in '{cfg_fname}')"
+    msg_error = f"'{cfg_key_map}' setting has no 'upper' field (in '{cfg_fname}')"
     log.error(msg_error); _l.s(view, msg_error)
     return
   if not cfg_key_low in keymap:
-    msg_error = f"'{cfg_key}' → '{cfg_key_map}' setting has no '{cfg_key_low}' field (in '{cfg_fname}')"
+    msg_error = f"'{cfg_key_map}' setting has no '{cfg_key_low}' field (in '{cfg_fname}')"
     log.error(msg_error); _l.s(view, msg_error)
     return
   low = re.sub(r'\s','',keymap[cfg_key_low])
   upp = re.sub(r'\s','',keymap[cfg_key_upp])
   if not (ln := len(low)) == keymap_len:
-    msg_error = f"'{cfg_key}' → '{cfg_key_map}' → '{cfg_key_low}' setting should have '{keymap_len}' characters, not '{ln}' (in '{cfg_fname}')"
+    msg_error = f"'{cfg_key_map}' → '{cfg_key_low}' setting should have '{keymap_len}' characters, not '{ln}' (in '{cfg_fname}')"
     log.error(msg_error); _l.s(view, msg_error)
     return
   if not (ln := len(upp)) == keymap_len:
-    msg_error = f"'{cfg_key}' → '{cfg_key_map}' → '{cfg_key_upp}' setting should have '{keymap_len}' characters, not '{ln}' (in '{cfg_fname}')"
+    msg_error = f"'{cfg_key_map}' → '{cfg_key_upp}' setting should have '{keymap_len}' characters, not '{ln}' (in '{cfg_fname}')"
     log.error(msg_error); _l.s(view, msg_error)
     return
   alias = keymap['alias'] if "alias" in keymap else False
-  if not (ln := len(upp)) == keymap_len:
-    msg_error = f"'{cfg_key}' → '{cfg_key_map}' → '{cfg_key_upp}' setting should have '{keymap_len}' characters, not '{ln}' (in '{cfg_fname}')"
-    log.error(msg_error); _l.s(view, msg_error)
-    return
 
   return({"low":low,"upp":upp,"alias":alias})
 

@@ -104,6 +104,8 @@ class lyt(Enum):
 
 class LayoutConverter:
   def __init__(self):
+    self.isUser   = False
+    self.isAlias  = False
     layout_str        = {
       lyt.qwerty      :{'low' : R'''`1234567890-=\ qwertyuiop[] asdfghjkl;' zxcvbnm,./'''
        ,                'upp' : R'''~!@#$%^&*()_+| QWERTYUIOP{} ASDFGHJKL:" ZXCVBNM<>?'''},
@@ -133,6 +135,8 @@ class LayoutConverter:
     if userKeymap:
       layout_str[lyt.user] = userKeymap
       self.isUser = True
+      if 'alias' in userKeymap and userKeymap['alias']:
+        self.isAlias = True
 
     translations = dict() # generate translation dictionaries for use in str.translate(dict)
     for   layout_from in layout_str:

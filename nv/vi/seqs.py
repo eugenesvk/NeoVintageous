@@ -110,6 +110,9 @@ _letters = { # space-separated lists of keycaps
     ]}
 }
 
+from NeoVintageous.nv.layout_convert	import lyt, LayoutConverter
+lyt_converter   = LayoutConverter()
+
 for lbl, row in _letters.items():
   keycaps	= row["keycaps"].split(_sep) if (type(row["keycaps"]) == str) else row["keycaps"]
   mods   	= row["mods"]
@@ -121,28 +124,36 @@ for lbl, row in _letters.items():
     preVal	= mod["preVal"] if "preVal" in mod else ""
     valLbl	= mod["valLbl"] if "valLbl" in mod else ""
     posVal	= mod["posVal"] if "posVal" in mod else ""
+    # print(f"mod={mod}")
+    # print(f"var= val= val_als= (key_vim= _als=)")
     for key in keycaps:
-      if key in NAMED_KEY_ALIASES:
-        key_var	= key
+      if key in   NAMED_KEY_ALIASES:
         key_vim	= NAMED_KEY_ALIASES[key]
       else:
-        key_var	= key
         key_vim	= key.upper() if "⇧" in modVar else key
-      var      	= preVar + modVar + varLbl + key_var
+      var      	= preVar + modVar + varLbl + key
+      #        	  g        ⇧⎈      🔢      ◀   or a
       val      	= preVal + modVal + valLbl + key_vim  + posVal
-      ### TODO add translation from user config
-      SEQ[var]   = [val]
+      #        	  <        C-       S-      left or A   >
+      SEQ[var] 	= [val]
+      if lyt_converter.isAlias and\
+         len(key_vim) == 1     and\
+         not key_vim.isnumeric(): # exclude f1
+        key_vim_als	= (lyt_converter.convert(key_vim, lyt.qwerty, lyt.user)).replace('\\','\\\\')
+        val_als    	= preVal + modVal + valLbl + key_vim_als  + posVal
+        SEQ[var]   	+= [val_als]
+        # print(f"{var} {val} {val_als} ({key_vim} {key_vim_als}) ")
 
 # ↓ SEQ dictionary ('quotes' omitted)
 # lbl     list of allowed vim values
 #   F1	: [<f1>]
 # ⇧F1 	: [<S-f1>]
 # ⎈F1 	: [<C-f1>]
-#⇧⎈F1 	: [<C-S-f1>],
+#⇧⎈F1 	: [<C-S-f1>]
 #   1 	: [1]
 # 🔢1  	: [<k1>]
-#   q 	: [q]
-# ⇧q  	: [Q]
+#   q 	: [q, й] (with user keymap's aliases)
+# ⇧q  	: [Q, Й] (with user keymap's aliases)
 #  ⎈a 	: [<C-a>]
 # ⇧⎈p 	: [<C-P>]
 

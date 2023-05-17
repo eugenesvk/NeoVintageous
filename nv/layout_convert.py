@@ -1,6 +1,11 @@
 import sublime
 import sublime_plugin
-statusName = '07_NeoVintageous' # number defines the order of custom status bar statuses
+
+import NeoVintageous.dep.json5kit as json5kit # noqa: F401,F403
+from NeoVintageous.dep.json5kit import Json5Node, Json5Array, Json5String # noqa: F401,F403
+
+package_name	= "NeoVintageous"     	# TODO: read packge name from a global place
+statusName  	= f"07_{package_name}"	# number defines the order of custom status bar statuses
 
 import logging
 log = logging.getLogger(__name__)
@@ -18,6 +23,8 @@ class LogToStatus:
   def set_status(self, view, msg, overwrite=False):
     self.cancel_timer()
     self.view = view
+    if not view:
+      return
     if overwrite:
       self.view.set_status(self.tag, msg)
     else:
@@ -39,49 +46,74 @@ class LogToStatus:
 _l = LogToStatus()
 
 
+from pathlib import Path
 import re
+import json
+
 def getUserKeymap(keymap_len):
-  view        = sublime.active_window().active_view()
-  cfg         = view.settings()
-  cfg_key     = 'neo_vintageous'
-  cfg_key_map = 'keymap'
-  cfg_key_low = 'lower'
-  cfg_key_upp = 'upper'
-  nv_cfg      = cfg.get(cfg_key)
+  win        	= sublime.active_window()
+  view       	= win.active_view()
+  cfg_key    	= 'neo_vintageous'
+  cfg_key_map	= 'keymap'
+  cfg_key_low	= 'lower'
+  cfg_key_upp	= 'upper'
+  cfg_key_als	= 'alias'
+  nv_cfg     	= None
+  if view:
+    cfg_fname	= "Preferences.sublime-settings"
+    cfg      	= view.settings()
+    nv_cfg      = cfg.get(cfg_key)
+  else: # no view, no config: likely at plugin load, so Sublime API is not ready
+    cfg_fname	= f"{package_name}.sublime-settings"
+    cfg_path 	= Path(Path() / sublime.packages_path() / "User" / cfg_fname).expanduser()
+    msg_error	= None
+    if cfg_path.is_file():
+      cfg_file	= cfg_path.read_text()
+      cfg_tree	= json5kit.parse(cfg_file) # allows comments
+      nv_cfg  	= json.loads(cfg_tree.to_json())
+    else:
+      msg_error = f"no '{cfg_path}' file found"
+      log.error(msg_error); _l.s(view, msg_error)
+      return
 
   if not nv_cfg:
-    msg_error = f"no '{cfg_key}' setting value in 'Preferences.sublime-settings'"
+    msg_error = f"no '{cfg_key}' setting value in '{cfg_fname}'"
     log.error(msg_error); _l.s(view, msg_error)
     return
   if not isinstance(nv_cfg, dict):
-    msg_error = f"'{cfg_key}' setting should be a dictionary, not {type(nv_cfg)} (in 'Preferences.sublime-settings')"
+    msg_error = f"'{cfg_key}' setting should be a dictionary, not {type(nv_cfg)} (in '{cfg_fname}')"
     log.error(msg_error); _l.s(view, msg_error)
     return
   if not cfg_key_map in nv_cfg:
-    msg_error = f"'{cfg_key}' setting has no '{cfg_key_map}' field (in 'Preferences.sublime-settings')"
+    msg_error = f"'{cfg_key}' setting has no '{cfg_key_map}' field (in '{cfg_fname}')"
     log.error(msg_error); _l.s(view, msg_error)
     return
   keymap = nv_cfg[cfg_key_map]
   if not 'upper' in keymap:
-    msg_error = f"'{cfg_key}' → '{cfg_key_map}' setting has no 'upper' field (in 'Preferences.sublime-settings')"
+    msg_error = f"'{cfg_key}' → '{cfg_key_map}' setting has no 'upper' field (in '{cfg_fname}')"
     log.error(msg_error); _l.s(view, msg_error)
     return
   if not cfg_key_low in keymap:
-    msg_error = f"'{cfg_key}' → '{cfg_key_map}' setting has no '{cfg_key_low}' field (in 'Preferences.sublime-settings')"
+    msg_error = f"'{cfg_key}' → '{cfg_key_map}' setting has no '{cfg_key_low}' field (in '{cfg_fname}')"
     log.error(msg_error); _l.s(view, msg_error)
     return
   low = re.sub(r'\s','',keymap[cfg_key_low])
   upp = re.sub(r'\s','',keymap[cfg_key_upp])
   if not (ln := len(low)) == keymap_len:
-    msg_error = f"'{cfg_key}' → '{cfg_key_map}' → '{cfg_key_low}' setting should have '{keymap_len}' characters, not '{ln}' (in 'Preferences.sublime-settings')"
+    msg_error = f"'{cfg_key}' → '{cfg_key_map}' → '{cfg_key_low}' setting should have '{keymap_len}' characters, not '{ln}' (in '{cfg_fname}')"
     log.error(msg_error); _l.s(view, msg_error)
     return
   if not (ln := len(upp)) == keymap_len:
-    msg_error = f"'{cfg_key}' → '{cfg_key_map}' → '{cfg_key_upp}' setting should have '{keymap_len}' characters, not '{ln}' (in 'Preferences.sublime-settings')"
+    msg_error = f"'{cfg_key}' → '{cfg_key_map}' → '{cfg_key_upp}' setting should have '{keymap_len}' characters, not '{ln}' (in '{cfg_fname}')"
+    log.error(msg_error); _l.s(view, msg_error)
+    return
+  alias = keymap['alias'] if "alias" in keymap else False
+  if not (ln := len(upp)) == keymap_len:
+    msg_error = f"'{cfg_key}' → '{cfg_key_map}' → '{cfg_key_upp}' setting should have '{keymap_len}' characters, not '{ln}' (in '{cfg_fname}')"
     log.error(msg_error); _l.s(view, msg_error)
     return
 
-  return({"low":low,"upp":upp})
+  return({"low":low,"upp":upp,"alias":alias})
 
 class Symbol:
   def __init__(self, name=''):

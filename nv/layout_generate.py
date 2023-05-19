@@ -34,10 +34,16 @@ def convertKeymapLayout(keymap, lyt_from, lyt_to):
     (?P<keycap> [^\s])      # ←
     (?P<pos>    [\s]*$)     #
     """, re.X)
+  reLastKeyVim = re.compile(r"""
+    (?P<pre>    ^[\s]*<.*-[\s]*)	# <opening and up to and including the last +
+    (?P<keycap> [^\s])          	# ←
+    (?P<pos>    [\s]*>[\s]*$)   	# closing>
+    """, re.X)
+
 
   class keyComboTransformer(json5kit.Json5Transformer):
     def visit_String(self, node):
-      key_combo_raw = node.value  # 'ctrl + a '
+      key_combo_raw = node.value  # 'ctrl + a ' or '<M-q>' for target NV keys
       if   (reM := re.match(reSingleKey, key_combo_raw)):
         if (keycap := reM.group('keycap')):
           keycap_new   	= (lyt_converter.convert(keycap, lyt_from, lyt_to)).replace('\\','\\\\')
@@ -47,6 +53,11 @@ def convertKeymapLayout(keymap, lyt_from, lyt_to):
         if (keycap := reM.group('keycap')):
           keycap_new   	= (lyt_converter.convert(keycap, lyt_from, lyt_to)).replace('\\','\\\\')
           key_combo_new	= re.sub(reLastKey  , fr"\g<pre>{keycap_new}\g<pos>",key_combo_raw)
+          node = node.replace(json.dumps(key_combo_new, ensure_ascii=False))
+      elif (reM := re.match(reLastKeyVim  , key_combo_raw)):
+        if (keycap := reM.group('keycap')):
+          keycap_new   	= (lyt_converter.convert(keycap, lyt_from, lyt_to)).replace('\\','\\\\')
+          key_combo_new	= re.sub(reLastKeyVim,fr"\g<pre>{keycap_new}\g<pos>",key_combo_raw)
           node = node.replace(json.dumps(key_combo_new, ensure_ascii=False))
       return node
 

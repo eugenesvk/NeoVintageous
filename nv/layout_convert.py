@@ -77,8 +77,9 @@ def getUserKeymap(keymap_len):
     msg_error = f"no settings found in '{cfg_fname}'"
     log.error(msg_error); _l.s(view, msg_error)
     return
-  if not isinstance(nv_cfg, dict):
-    msg_error = f"setting should be a dictionary, not {type(nv_cfg)} (in '{cfg_fname}')"
+  if not isinstance(nv_cfg, dict) and\
+     not isinstance(nv_cfg, sublime.Settings):
+    msg_error = f"setting should be of type dictionary/Setting, not {type(nv_cfg)} (in '{cfg_fname}')"
     log.error(msg_error); _l.s(view, msg_error)
     return
   if not cfg_key_map in nv_cfg:

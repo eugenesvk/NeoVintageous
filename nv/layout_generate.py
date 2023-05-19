@@ -7,16 +7,20 @@ import sublime
 import sublime_plugin
 
 import NeoVintageous.dep.json5kit as json5kit # noqa: F401,F403
-from NeoVintageous.dep.json5kit     	import Json5Node, Json5Array, Json5String # noqa: F401,F403
+from NeoVintageous.dep.json5kit     	import Json5Node, Json5Array, Json5String, Json5Object # noqa: F401,F403
 from NeoVintageous.nv.layout_convert	import lyt, LayoutConverter
 
 __all__ = [
   'NvUserKeymap'
 ]
 
-
+def isJstr(key, strVal) -> bool:
+  return True if (type(key.value) == Json5String and (key.value.value) == strVal) else False
+def isJStrInArr(val, key, strVal) -> bool:
+  return True if (isinstance(val, Json5Array) and isJstr(key, strVal)) else False
 def convertKeymapLayout(keymap, lyt_from, lyt_to):
-  lyt_converter   = LayoutConverter()
+  lyt_converter	= LayoutConverter()
+  isAlias      	= lyt_converter.isAlias
   keymap_tree = json5kit.parse(keymap)
 
   reSp = re.compile(r'\s')
@@ -30,46 +34,51 @@ def convertKeymapLayout(keymap, lyt_from, lyt_to):
     (?P<keycap> [^\s])      # ←
     (?P<pos>    [\s]*$)     #
     """, re.X)
-  class ArrayKeyComboTransformer(json5kit.Json5Transformer):
+
+  class keyComboTransformer(json5kit.Json5Transformer):
     def visit_String(self, node):
       key_combo_raw = node.value  # 'ctrl + a '
       if   (reM := re.match(reSingleKey, key_combo_raw)):
         if (keycap := reM.group('keycap')):
           keycap_new   	= (lyt_converter.convert(keycap, lyt_from, lyt_to)).replace('\\','\\\\')
           key_combo_new	= re.sub(reSingleKey, fr"\g<pre>{keycap_new}\g<pos>",key_combo_raw)
-          return node.replace(json.dumps(key_combo_new, ensure_ascii=False))
-        else:
-          return node
+          node = node.replace(json.dumps(key_combo_new, ensure_ascii=False))
       elif (reM := re.match(reLastKey  , key_combo_raw)):
         if (keycap := reM.group('keycap')):
           keycap_new   	= (lyt_converter.convert(keycap, lyt_from, lyt_to)).replace('\\','\\\\')
           key_combo_new	= re.sub(reLastKey  , fr"\g<pre>{keycap_new}\g<pos>",key_combo_raw)
-          return node.replace(json.dumps(key_combo_new, ensure_ascii=False))
-        else:
-          return node
-      else:
-        return node
+          node = node.replace(json.dumps(key_combo_new, ensure_ascii=False))
+      return node
+
   class DictTransformer(json5kit.Json5Transformer):
     def __init__(self):
-      self.object_value_to_key = {}
+      self.objVal2Key 	= {}
+      self.objectFound	= False
+
     def visit_Object(self, node):
-      for key, value in zip(node.keys, node.values):
-        self.object_value_to_key[value] = key
+      if self.objectFound: # don't parse anything past the first object
+        return node
+      for key, val in zip(node.keys, node.values):
+        if isJStrInArr(val, key, "keys"):
+          self.objVal2Key[           val] = key
+        if isAlias: # also convert args:{key:"q"}
+          if isJstr(           key, "args"):
+            if type(      val) == Json5Object:
+              for key, val in zip(val.keys, val.values):
+                if isJstr(key,"key"):
+                  if type(val) == Json5String:
+                    self.objVal2Key[val] = key # store args→key:val identities to match later recursion
       super().generic_visit(node)
       return node
 
     def generic_visit(self, node):
       super().generic_visit(node)
-      key = self.object_value_to_key.get(node)
-      if key is None:
-        return node
-      if key.value.value == "keys":
-        if isinstance(node, Json5Array):
-          ArrayKeyComboTransformer().visit(node)
-        return node
-      else:
-        return node
+      if self.objVal2Key.get(node):
+        node = keyComboTransformer().visit(node)
+      return node
+
   DictTransformer().visit(keymap_tree)
+
   return keymap_tree.to_source()
 
 class NvUserKeymap(sublime_plugin.ApplicationCommand):

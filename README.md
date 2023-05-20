@@ -7,6 +7,15 @@
     <a href="https://packagecontrol.io/packages/NeoVintageous"><img alt="Downloads" src="https://img.shields.io/packagecontrol/dt/NeoVintageous.svg?style=flat-square"></a>
 </p>
 
+## About this fork of NeoVintageous
+
+NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
+  - Internationalization support of:
+    + :sparkles: non-QWERTY/non-Latin layouts based on custom user `keymap` dictionary in `User/NeoVintageous.sublime-settings` (see [example config](https://github.com/eugenesvk/extSubl-NeoVintageous/blob/master/NeoVintageous.sublime-settings)). Requires manually running `NeoVintageous: Generate non-QWERTY keymap` command to convert default NeoVintageous keybinds to use this keymap
+    + :sparkles: non-Latin maps in `.neovintageous`, e.g., `noremap ц b` to move back by word when a Cyrillic layout is on (does not work with modifier keys since Sublime Text doesn't report non-Latin keys in key combos, see [this ST issue](https://github.com/sublimehq/sublime_text/issues/5980))
+  - (a wish to) Support nicer configuration:
+    + :sparkles: rudimentary foundations to support custom key symbols in user config, e.g., `noremap <⇟> w` to move by word with a PageDown key
+
 ## About NeoVintageous
 
 NeoVintageous is an advanced Vim emulation layer for [Sublime Text](https://www.sublimetext.com).

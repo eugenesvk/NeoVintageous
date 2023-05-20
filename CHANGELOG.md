@@ -1,6 +1,39 @@
 # NEOVINTAGEOUS CHANGELOG
 
 All notable changes are documented in this file using the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
+[unreleased]: https://github.com/eugenesvk/extSubl-NeoVintageous/compare/1.0.0...HEAD
+## [Unreleased]
+  <!-- - __Added__ -->
+   <!-- + :sparkles: ??? -->
+   <!-- new features -->
+  <!-- - __Changed__ -->
+   <!-- + ???  -->
+   <!-- changes in existing functionality -->
+  <!-- - __Fixed__ -->
+   <!-- + :beetle: ??? -->
+   <!-- bug fixes -->
+  <!-- - __Deprecated__ -->
+   <!-- + :poop: ??? -->
+   <!-- soon-to-be removed features -->
+  <!-- - __Removed__ -->
+   <!-- + :wastebasket: ??? -->
+   <!-- now removed features -->
+  <!-- - __Security__ -->
+   <!-- + :lock: ??? -->
+   <!-- vulnerabilities -->
+
+  - __Added__
+   + :sparkles: non-QWERTY/non-Latin layouts based on custom user `keymap` dictionary in `User/NeoVintageous.sublime-settings` (requires manually running `NeoVintageous: Generate non-QWERTY keymap` command)
+   + :sparkles: support of non-Latin maps in `.neovintageous`, e.g., `noremap ц b` to move back by word when a Cyrillic layout is on (does not work with modifier keys since Sublime Text doesn't report non-Latin keys)
+   + :sparkles: rudimentary foundations to support custom key symbols in user config, e.g., `noremap <⇟> w` to move by word with a PageDown key
+  - __Changed__
+   + commands: add key symbols like `⎈` to command name for easier visual differentiation and 1-symbol-search 
+  - __Fixed__
+   + :beetle: literal tabs in .neovintageous config breaking some remaps by removing all literal tabs during parsing
+   + :beetle: invalid register error for non-latin macros
+   + :beetle: keypad numbers not working as count prefix
+   + :beetle: 1-symbol keys like `⇟` in named key aliases not recognized
+
 
 ## 1.31.0 - 2023-07-12
 

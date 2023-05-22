@@ -1221,10 +1221,10 @@ def do_ex_command(window, name: str, args=None) -> None:
     ex_cmd(window=window, line_range=RangeNode(), **args)
 
 
-def _parse_user_cmdline(line: str):
+def _parse_user_cmdline(line: str, camelcase=True):
     commands = []
     for line in _split_cmdline_lines(line):
-        command = _parse_user_cmdline_split(line)
+        command = _parse_user_cmdline_split(line, camelcase)
         if command:
             commands.append(command)
 
@@ -1235,8 +1235,9 @@ def _split_cmdline_lines(line: str) -> list:
     return re.split('\\<bar\\>', line, flags=re.IGNORECASE)
 
 
-def _parse_user_cmdline_split(line: str):
-    re_cmd = '[A-Z][a-zA-Z_0-9]*'
+def _parse_user_cmdline_split(line: str, camelcase=True):
+    re_cmd = '[A-Z][a-zA-Z_0-9]*' if camelcase else\
+                  '[a-zA-Z_0-9]*'
     re_arg_name = '[a-zA-Z_][a-zA-Z0-9_]*'
     re_arg_value = '[a-zA-Z0-9\\:\\.,\n\t#@_-]+'
 
@@ -1247,12 +1248,13 @@ def _parse_user_cmdline_split(line: str):
     command = match.groupdict()
 
     # TODO Refactor coerce to underscore.
-    cmd = re.sub(r"([A-Z]+)([A-Z][a-z])", r'\1_\2', command['cmd'])
-    cmd = re.sub(r"([a-z\d])([A-Z])", r'\1_\2', cmd)
-    cmd = cmd.replace("-", "_")
-    cmd = cmd.lower()
+    if camelcase:
+      cmd = re.sub(r"([A-Z]+)([A-Z][a-z])", r'\1_\2', command['cmd'])
+      cmd = re.sub(r"([a-z\d])([A-Z])", r'\1_\2', cmd)
+      cmd = cmd.replace("-", "_")
+      cmd = cmd.lower()
 
-    command['cmd'] = cmd
+      command['cmd'] = cmd
 
     if command['args']:
         argsv = re.findall('\\s(?P<name>' + re_arg_name + ')=(?P<value>' + re_arg_value + ')', command['args'])
@@ -1327,9 +1329,10 @@ def do_ex_cmdline(window, line: str) -> None:
             window.run_command(command['command'], command['args'])
 
         return
-    if line[1].isupper():
-        # Run user command. User commands begin with an uppercase letter.
-        user_commands = _parse_user_cmdline(line)
+    if (semi_double := (line[1] == ':')) or line[1].isupper():
+        # Run user command. User commands begin with an uppercase letter or ::
+        user_commands = _parse_user_cmdline(line[1:], camelcase=False) if semi_double else\
+                        _parse_user_cmdline(line    , camelcase=True)
         if not user_commands:
             return status_message('invalid command')
 

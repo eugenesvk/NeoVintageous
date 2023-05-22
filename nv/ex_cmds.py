@@ -22,6 +22,8 @@ import re
 import sys
 import traceback
 
+import sublime
+
 from sublime import DIALOG_CANCEL
 from sublime import DIALOG_YES
 from sublime import Region
@@ -1315,6 +1317,16 @@ def do_ex_cmdline(window, line: str) -> None:
     if line[0] != ':':
         raise RuntimeError('cmdline must start with a colon')
 
+    if (cmd_sublime := line[1:]).startswith('"command"'): # Run Sublime commands beginning with "command"
+        user_sublime_commands = _parse_user_sublime_cmdline(window, cmd_sublime)
+        if not user_sublime_commands:
+            return status_message('invalid Sublime command')
+        _log.debug('execute user Sublime ex command: %s', user_sublime_commands)
+
+        for command in user_sublime_commands:
+            window.run_command(command['command'], command['args'])
+
+        return
     if line[1].isupper():
         # Run user command. User commands begin with an uppercase letter.
         user_commands = _parse_user_cmdline(line)
@@ -1391,3 +1403,16 @@ def do_ex_user_cmdline(window, line: str) -> None:
             raise RuntimeError('user cmdline must begin with a colon')
 
         return window.run_command('nv_cmdline', args={'initial_text': line})
+
+
+def _parse_user_sublime_cmdline(window, line:str) -> None:
+  # todos: add multiline split? for line in _split_cmdline_lines(line):
+  commands = []
+  command	= sublime.decode_value('{'+line+'}')
+  if   not  'command' in command:
+    return None
+  elif not  'args'    in command:
+    command['args'] = None
+  commands.append(command)
+
+  return commands

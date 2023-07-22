@@ -2,7 +2,7 @@
 
 All notable changes are documented in this file using the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
-[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/1.0.0...HEAD
+[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/1.31.0-0.5.0...HEAD
 ## [Unreleased]
   <!-- - __Added__ -->
    <!-- + :sparkles: ??? -->

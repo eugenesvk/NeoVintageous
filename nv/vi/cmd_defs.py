@@ -84,7 +84,7 @@ class ViGoToOtherEnd(ViOperatorDef):
         self.command = 'nv_vi_visual_o'
 
 
-@assign(seqs.DEL, ACTION_MODES + (SELECT,))
+@assign(seqs.SEQ['␡'], ACTION_MODES + (SELECT,))
 @assign(seqs.SEQ['x'], ACTION_MODES + (SELECT,))
 class ViRightDeleteChars(ViOperatorDef):
     def init(self):
@@ -889,7 +889,7 @@ class ViJumpBack(ViOperatorDef):
 
 
 @assign(seqs.SEQ['⎈i'], ACTION_MODES)
-@assign(seqs.TAB, ACTION_MODES)
+@assign(seqs.SEQ['⭾'], ACTION_MODES)
 class ViJumpForward(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -986,7 +986,7 @@ class VigF(ViOperatorDef):
 
 
 @assign(seqs.SEQ['i'], (NORMAL, SELECT))
-@assign(seqs.INSERT, (NORMAL, SELECT))
+@assign(seqs.SEQ['⎀'], (NORMAL, SELECT))
 class ViEnterInserMode(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -995,7 +995,7 @@ class ViEnterInserMode(ViOperatorDef):
 
 
 @assign(seqs.SEQ['v'], (SELECT, ))
-@assign(seqs.ESC, ACTION_MODES)
+@assign(seqs.SEQ['⎋'], ACTION_MODES)
 @assign(seqs.SEQ['⎈c'], ACTION_MODES + (INSERT, SELECT))
 @assign(seqs.SEQ['⎈['], ACTION_MODES + (INSERT, SELECT))
 class ViEnterNormalMode(ViOperatorDef):
@@ -1255,7 +1255,7 @@ class ViGotoExactMarkXpos(RequireOneCharMixin, ViMotionDef):
 
 
 @assign(seqs.SEQ['$'], MOTION_MODES)
-@assign(seqs.END, MOTION_MODES)
+@assign(seqs.SEQ['⇥'], MOTION_MODES)
 class ViMoveToEol(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1263,7 +1263,7 @@ class ViMoveToEol(ViMotionDef):
         self.command = 'nv_vi_dollar'
 
 
-@assign(seqs.ENTER, MOTION_MODES)
+@assign(seqs.SEQ['⏎'], MOTION_MODES)
 @assign(seqs.SEQ['+'], MOTION_MODES)
 class ViMotionEnter(ViMotionDef):
     def init(self):
@@ -1482,7 +1482,7 @@ class ViPercent(ViMotionDef):
         })
 
 
-@assign(seqs.BACKSLASH, MOTION_MODES)
+@assign(seqs.SEQ['⧵'], MOTION_MODES)
 @assign(seqs.SEQ[','], MOTION_MODES)
 class ViRepeatCharSearchBackward(ViMotionDef):
     def init(self):
@@ -1579,7 +1579,7 @@ class ViMoveUpByLines(ViMotionDef):
 
 
 @assign(seqs.SEQ["^"], MOTION_MODES)
-@assign(seqs.HOME, MOTION_MODES)
+@assign(seqs.SEQ['⇤'], MOTION_MODES)
 class ViMoveToBol(ViMotionDef):
     def init(self):
         self.scroll_into_view = True

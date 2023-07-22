@@ -26,6 +26,8 @@ NAMED_KEY_ALIASES = {
   'enter' 	: 'cr',
   'return'	: 'cr',
   '⏎'     	: 'cr',
+  '⌤'     	: 'cr',
+  '↩'     	: 'cr',
   '▲'     	: 'up',
   '▼'     	: 'down',
   '◀'     	: 'left',
@@ -33,8 +35,31 @@ NAMED_KEY_ALIASES = {
   '⇟'     	: 'pagedown',
   '⇞'     	: 'pageup',
   '␈'     	: 'bs',
+  '⌫'     	: 'bs',
+  '␡'     	: 'del',
+  '⌦'     	: 'del',
   '␠'     	: 'space',
+  '␣'     	: 'space',
+  '⭾'     	: 'tab',
+  '↹'     	: 'tab',
+  '⇤'     	: 'home',
+  '⤒'     	: 'home',
+  '↖'     	: 'home',
+  '🏠'     	: 'home',
+  '🏡'     	: 'home',
+  '⌂'     	: 'home',
+  '⇥'     	: 'end',
+  '⤓'     	: 'end',
+  '↘'     	: 'end',
+  '⎋'     	: 'esc',
+  '⧵'     	: 'bslash',
+  '＼'     	: 'bslash',
+  '﹨'     	: 'bslash',
+  '⎀'     	: 'insert',
+  'Ⓛ'     	: 'leader',
 }
+
+
 _letters = { # space-separated lists of keycaps
   "function"  	: {"keycaps":"1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20", "mods":[
     {"mLbl"   	: None ,"varLbl":"F"   ,"preVal":"<","valLbl":"f"  ,"posVal":">"},
@@ -190,6 +215,20 @@ SEQ['⇧z⇧z']	= ['ZZ']
 SEQ['⇧[']	= ['{']
 SEQ['⇧9']	= ['(']
 
+# Control chars
+TAB      	= ['⭾','↹','<tab>']                 	# TAB
+BACKSPACE	= ['␈','⌫','<bs>']                  	# BACKSPACE
+HOME     	= ['⇤','⤒','↖','🏠','🏡','⌂','<home>']	# HOME
+END      	= ['⇥','⤓','↘','<end>']             	# END
+DEL      	= ['␡','⌦','<del>']                 	# DEL
+ENTER    	= ['⏎','⌤','↩','<cr>']              	# ENTER
+ESC      	= ['⎋','<esc>']                     	# ESC
+BACKSLASH	= ['⧵','＼','﹨','<bslash>']          	# BACKSLASH
+SPACE    	= ['␠','␣','<space>']               	# SPACE
+INSERT   	= ['⎀','<insert>']                  	# INSERT
+LEADER   	= ['Ⓛ','<leader>']                  	# LEADER
+
+
 Z_LEFT = ['z<left>']
 G_DOWN = ['g<down>']
 G_UP = ['g<up>']
@@ -266,18 +305,12 @@ CTRL_Y = ['<C-y>']
 
 
 ALT_N = ['<M-n>']
-BACKSLASH = ['<bslash>']
-BACKSPACE = ['<bs>']
 BAR = ['<bar>']
 COMMAND_BIG_B = ['<D-B>']
 COMMAND_BIG_F = ['<D-F>']
 COMMAND_BIG_P = ['<D-P>']
 COMMAND_P = ['<D-p>']
-DEL = ['<del>']
-END = ['<end>']
-ENTER = ['<cr>']
 EQUAL_EQUAL = ['==']
-ESC = ['<esc>']
 GCC = ['gcc']
 GQGQ = ['gqgq']
 GQQ = ['gqq']
@@ -290,15 +323,10 @@ G_BIG_U_G_BIG_U = ['gUgU']
 G_TILDE = ['g~']
 G_TILDE_G_TILDE = ['g~g~']
 G_TILDE_TILDE = ['g~~']
-HOME = ['<home>']
-INSERT = ['<insert>']
-LEADER = ['<leader>']
 LESS_THAN = ['<lt>']
 LESS_THAN_LESS_THAN = ['<lt><lt>']
 QUOTE_QUOTE = ["''"]
 SHIFT_ENTER = ['<S-cr>']
-SPACE = ['<space>']
-TAB = ['<tab>']
 YSS = ['yss']
 ZERO = ['0']
 ZUG = ['zug']

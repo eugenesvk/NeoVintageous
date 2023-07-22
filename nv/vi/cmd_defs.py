@@ -119,7 +119,7 @@ class ViYankSelectByChars(ViOperatorDef):
         self.command = 'nv_vi_y'
 
 
-@assign(seqs.EQUAL, ACTION_MODES)
+@assign(seqs.SEQ['='], ACTION_MODES)
 class ViReindent(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -318,7 +318,7 @@ class ViInvertCaseByLines(ViOperatorDef):
         self.command = 'nv_vi_g_tilde_g_tilde'
 
 
-@assign(seqs.TILDE, ACTION_MODES)
+@assign(seqs.SEQ["~"], MOTION_MODES)
 class ViForceInvertCaseByChars(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -897,7 +897,7 @@ class ViJumpForward(ViOperatorDef):
         self.command = 'nv_vi_jump_forward'
 
 
-@assign(seqs.DOT, ACTION_MODES)
+@assign(seqs.SEQ['.'], ACTION_MODES)
 class ViRepeat(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -1054,7 +1054,7 @@ class ViInsertAtBol(ViOperatorDef):
         self.command = 'nv_vi_big_i'
 
 
-@assign(seqs.COLON, ACTION_MODES)
+@assign(seqs.SEQ[':'], ACTION_MODES)
 @assign(seqs.CTRL_W_COLON, ACTION_MODES)
 class ViEnterCommandLineMode(ViOperatorDef):
     def init(self):
@@ -1242,7 +1242,7 @@ class ViMoveScreenUp(ViMotionDef):
         self.command = 'nv_vi_ctrl_b'
 
 
-@assign(seqs.BACKTICK, MOTION_MODES)
+@assign(seqs.SEQ['`'], MOTION_MODES)
 class ViGotoExactMarkXpos(RequireOneCharMixin, ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1254,7 +1254,7 @@ class ViGotoExactMarkXpos(RequireOneCharMixin, ViMotionDef):
         })
 
 
-@assign(seqs.DOLLAR, MOTION_MODES)
+@assign(seqs.SEQ['$'], MOTION_MODES)
 @assign(seqs.END, MOTION_MODES)
 class ViMoveToEol(ViMotionDef):
     def init(self):
@@ -1264,7 +1264,7 @@ class ViMoveToEol(ViMotionDef):
 
 
 @assign(seqs.ENTER, MOTION_MODES)
-@assign(seqs.PLUS, MOTION_MODES)
+@assign(seqs.SEQ['+'], MOTION_MODES)
 class ViMotionEnter(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1272,7 +1272,7 @@ class ViMotionEnter(ViMotionDef):
         self.command = 'nv_vi_enter'
 
 
-@assign(seqs.MINUS, MOTION_MODES)
+@assign(seqs.SEQ['='], MOTION_MODES)
 class ViMoveBackOneLine(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1314,7 +1314,7 @@ class ViMoveByBlockUp(ViMotionDef):
         self.command = 'nv_vi_left_brace'
 
 
-@assign(seqs.SEMICOLON, MOTION_MODES)
+@assign(seqs.SEQ[";"], MOTION_MODES)
 class ViRepeatCharSearchForward(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1342,7 +1342,7 @@ class ViRepeatCharSearchForward(ViMotionDef):
         })
 
 
-@assign(seqs.QUOTE, MOTION_MODES)
+@assign(seqs.SEQ["'"], MOTION_MODES)
 class ViGotoMark(RequireOneCharMixin, ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1354,7 +1354,7 @@ class ViGotoMark(RequireOneCharMixin, ViMotionDef):
         })
 
 
-@assign(seqs.RIGHT_BRACE, MOTION_MODES)
+@assign(seqs.SEQ["}"], MOTION_MODES)
 class ViMoveByBlockDown(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1370,7 +1370,7 @@ class ViMoveBySentenceUp(ViMotionDef):
         self.command = 'nv_vi_left_paren'
 
 
-@assign(seqs.RIGHT_PAREN, MOTION_MODES)
+@assign(seqs.SEQ[")"], MOTION_MODES)
 class ViMoveBySentenceDown(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1470,7 +1470,7 @@ class ViGotoClosingParen(ViMotionDef):
         }
 
 
-@assign(seqs.PERCENT, MOTION_MODES)
+@assign(seqs.SEQ['%'], MOTION_MODES)
 class ViPercent(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1483,7 +1483,7 @@ class ViPercent(ViMotionDef):
 
 
 @assign(seqs.BACKSLASH, MOTION_MODES)
-@assign(seqs.COMMA, MOTION_MODES)
+@assign(seqs.SEQ[','], MOTION_MODES)
 class ViRepeatCharSearchBackward(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1578,7 +1578,7 @@ class ViMoveUpByLines(ViMotionDef):
         })
 
 
-@assign(seqs.HAT, MOTION_MODES)
+@assign(seqs.SEQ["^"], MOTION_MODES)
 @assign(seqs.HOME, MOTION_MODES)
 class ViMoveToBol(ViMotionDef):
     def init(self):
@@ -1587,7 +1587,7 @@ class ViMoveToBol(ViMotionDef):
         self.command = 'nv_vi_hat'
 
 
-@assign(seqs.UNDERSCORE, MOTION_MODES)
+@assign(seqs.SEQ["_"], MOTION_MODES)
 class ViMoveToSoftBol(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1645,7 +1645,7 @@ class ViRepeatSearchBackward(ViMotionDef):
         }
 
 
-@assign(seqs.STAR, MOTION_MODES)
+@assign(seqs.SEQ["*"], MOTION_MODES)
 class ViFindWord(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1653,7 +1653,7 @@ class ViFindWord(ViMotionDef):
         self.command = 'nv_vi_star'
 
 
-@assign(seqs.OCTOTHORP, MOTION_MODES)
+@assign(seqs.SEQ['#'], MOTION_MODES)
 class ViReverseFindWord(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1677,7 +1677,7 @@ class ViOpenNameSpace(ViMotionDef):  # TODO This should not be a motion.
         return {}
 
 
-@assign(seqs.DOUBLE_QUOTE, MOTION_MODES)
+@assign(seqs.SEQ['"'], MOTION_MODES)
 class ViOpenRegister(ViMotionDef):
 
     def translate(self, view):
@@ -1811,7 +1811,7 @@ class ViSearchCharBackwardTill(RequireOneCharMixin, ViMotionDef):
         })
 
 
-@assign(seqs.SLASH, MOTION_MODES)
+@assign(seqs.SEQ["/"], MOTION_MODES)
 class ViSearchForward(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1855,7 +1855,7 @@ class ViSearchForwardImpl(ViMotionDef):
         })
 
 
-@assign(seqs.QUESTION_MARK, MOTION_MODES)
+@assign(seqs.SEQ['?'], MOTION_MODES)
 class ViSearchBackward(ViMotionDef):
     def init(self):
         self.scroll_into_view = True

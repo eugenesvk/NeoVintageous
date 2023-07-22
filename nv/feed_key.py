@@ -70,6 +70,8 @@ from NeoVintageous.nv.vim import is_visual_mode
 DEFAULT_LOG_LEVEL = logging.INFO
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
+print(f"    @feed_key via print: _log={_log}")
+_log.info('   @feed_key via _log')
 
 class FeedKeyHandler():
 
@@ -101,6 +103,7 @@ class FeedKeyHandler():
 
     def _handle_bad_selection(self) -> None:
         if _is_selection_malformed(self.view, self.mode):
+            _log.warn(f'_fix_selection malformed')
             self.mode = _fix_malformed_selection(self.view, self.mode)
 
     def _handle_escape(self) -> bool:
@@ -186,6 +189,9 @@ class FeedKeyHandler():
         set_partial_sequence(self.view, get_partial_sequence(self.view) + self.key)
 
         command = mappings_resolve(self.view, check_user_mappings=self.check_user_mappings)
+        _log.info(f'FeedKeyHandler._handle: command¦{command}¦')
+        if self.key == '<right>':
+          _log.info(f'FeedKeyHandler._handle: key is right check_user_mappings {self.check_user_mappings}')
 
         if isinstance(command, IncompleteMapping):
             return

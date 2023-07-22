@@ -21,7 +21,9 @@ import traceback
 PACKAGE_NAME  = "NeoVintageous"
 
 # To enable debug logging, set the env var to a non-blank value.
-_DEBUG = bool(os.getenv('SUBLIME_NEOVINTAGEOUS_DEBUG'))
+_DEBUG = True #bool(os.getenv('SUBLIME_NEOVINTAGEOUS_DEBUG'))
+# DEFAULT_LOG_LEVEL_NAME = logging.getLevelName(DEFAULT_LOG_LEVEL)
+# EVENT_LEVEL = logging.INFO
 
 # If debugging is enabled, initialise the debug logger. The debug logger needs
 # to be configured before any plugin modules are loaded, otherwise the plugins
@@ -34,8 +36,16 @@ if _DEBUG:  # pragma: no cover
     import logging
 
     DEFAULT_LOG_LEVEL = logging.INFO
+
+    # handler = logging.StreamHandler()
+    # formatter = logging.Formatter(fmt="×××{name} {levelname}: {message}", style='{')
+    # handler.setFormatter(formatter)
+
     logger = logging.getLogger('NeoVint')
     logger.setLevel(DEFAULT_LOG_LEVEL)
+    # logger.addHandler(handler)
+    print(f'    ××NeoVintageous×× got logger={logger} {logging}')
+    logger.info('   ddddebug logger initialised')
 
     # Avoid duplicate loggers when the plugin is reloaded.
     if not logger.hasHandlers():

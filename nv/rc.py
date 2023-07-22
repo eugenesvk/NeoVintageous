@@ -75,6 +75,7 @@ def _load() -> None:
             for line in f:
                 ex_cmdline = _parse_line(line)
                 if ex_cmdline:
+                    _log.info(f"ex_cmdline=¦{ex_cmdline}¦")
                     do_ex_cmdline(window, ex_cmdline)
 
         print('%s file loaded' % _file_name())

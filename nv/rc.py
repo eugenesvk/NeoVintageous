@@ -25,7 +25,9 @@ import sublime
 from NeoVintageous.nv.vim import message
 
 
+DEFAULT_LOG_LEVEL = logging.INFO
 _log = logging.getLogger(__name__)
+_log.setLevel(DEFAULT_LOG_LEVEL)
 
 
 def _file_name() -> str:

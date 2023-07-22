@@ -33,7 +33,9 @@ _DEBUG = bool(os.getenv('SUBLIME_NEOVINTAGEOUS_DEBUG'))
 if _DEBUG:  # pragma: no cover
     import logging
 
-    logger = logging.getLogger('NeoVintageous')
+    DEFAULT_LOG_LEVEL = logging.INFO
+    logger = logging.getLogger('NeoVint')
+    logger.setLevel(DEFAULT_LOG_LEVEL)
 
     # Avoid duplicate loggers when the plugin is reloaded.
     if not logger.hasHandlers():

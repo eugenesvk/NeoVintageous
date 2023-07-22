@@ -101,8 +101,9 @@ from NeoVintageous.nv.window import window_quit_view
 from NeoVintageous.nv.window import window_quit_views
 from NeoVintageous.nv.window import window_tab_control
 
-
+DEFAULT_LOG_LEVEL = logging.DEBUG
 _log = logging.getLogger(__name__)
+_log.setLevel(DEFAULT_LOG_LEVEL)
 
 
 def ex_bfirst(window, **kwargs) -> None:
@@ -1311,7 +1312,7 @@ def do_ex_cmdline(window, line: str) -> None:
     # Is roughly equivalant to:
     #
     # >>> sublime.active_window().run('command_name', {'str': 'fizz', 'bool': True, 'int': 42})
-    _log.debug('do ex cmdline >>>%s<<<', line)
+    _log.debug('do ex cmdline ¦%s¦', line)
 
     if len(line) < 2:
         raise RuntimeError('cmdline must be at least 2 characters long and begin a colon')

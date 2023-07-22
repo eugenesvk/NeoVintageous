@@ -67,8 +67,9 @@ from NeoVintageous.nv.vim import enter_normal_mode
 from NeoVintageous.nv.vim import is_visual_mode
 
 
+DEFAULT_LOG_LEVEL = logging.INFO
 _log = logging.getLogger(__name__)
-
+_log.setLevel(DEFAULT_LOG_LEVEL)
 
 class FeedKeyHandler():
 
@@ -80,13 +81,7 @@ class FeedKeyHandler():
         self.do_eval = do_eval
         self.check_user_mappings = check_user_mappings
         self.mode = get_mode(self.view)
-        _log.info(
-            'key evt: %s/%s/%s eval=%s mappings=%s',
-            key,
-            self.mode,
-            repeat_count,
-            do_eval,
-            check_user_mappings)
+        _log.info(f'FeedKeyHandler.__init__: k¦{key}¦ m¦{self.mode}¦ #¦{repeat_count}¦ eval¦{do_eval}¦ mappings¦{check_user_mappings}¦')
 
     def handle(self) -> None:
         self._handle_bad_selection()

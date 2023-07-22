@@ -346,7 +346,9 @@ __all__ = [
 ]
 
 
+DEFAULT_LOG_LEVEL = logging.INFO
 _log = logging.getLogger(__name__)
+_log.setLevel(DEFAULT_LOG_LEVEL)
 
 
 class nv_cmdline_feed_key(TextCommand):
@@ -436,8 +438,8 @@ class nv_feed_key(WindowCommand):
             _log.exception(e)
             clean_views()
 
-        _log.info('key evt finished in %s ms', '{:.2f}'
-                  .format((time.time() - start_time) * 1000))
+        end_time = (time.time() - start_time) * 1000
+        _log.info(f"k¦{key}¦ completed in {'{:.2f}'.format(end_time)} ms")
 
 
 class nv_process_notation(WindowCommand):

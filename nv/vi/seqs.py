@@ -76,6 +76,12 @@ _letters = { # space-separated lists of keycaps
     {"mLbl"   	:  "⎈", "preVal":"<","posVal":">"},
     {"mLbl"   	: "⇧⎈", "preVal":"<","posVal":">"},
     ]}        	,
+  "punct"     	: {"keycaps":"& @ ` : , $ . \" = - # % + ? ' { } ( ) [ ] ; / * ~ _ ^", "mods":[
+    {"mLbl"   	: None , "preVal":"" ,"posVal":""},
+    {"mLbl"   	: "⇧" , "preVal":"" ,"posVal":""},
+    {"mLbl"   	:  "⎈", "preVal":"<","posVal":">"},
+    {"mLbl"   	: "⇧⎈", "preVal":"<","posVal":">"},
+    ]}        	,
   "sub_a"     	: {"keycaps":"q w e r t y u i o p a s d f g h j k l z x c v b n m","mods":[
     {"mLbl"   	: None,"preVar":"a","preVal":"","preVal":"a"},
     {"mLbl"   	: "⇧","preVar":"a","preVal":"","preVal":"a"},
@@ -168,11 +174,9 @@ SEQ['🔢+']	= ['<kplus>']
 
 # Unimpaired
 SEQ['⎈['] 	= ['<C-[>']
-SEQ['[']  	= ['[']
 SEQ['[␠'] 	= ['[<space>']
 SEQ['[⇧[']	= ['[{']
 SEQ['[⇧9']	= ['[(']
-SEQ[']']  	= [']']
 SEQ[']⇧]']	= [']}']
 SEQ[']⇧0']	= ['])']
 SEQ[']␠'] 	= [']<space>']
@@ -262,25 +266,16 @@ CTRL_Y = ['<C-y>']
 
 
 ALT_N = ['<M-n>']
-AMPERSAND = ['&']
-AT = ['@']
 BACKSLASH = ['<bslash>']
 BACKSPACE = ['<bs>']
-BACKTICK = ['`']
 BAR = ['<bar>']
-COLON = [':']
-COMMA = [',']
 COMMAND_BIG_B = ['<D-B>']
 COMMAND_BIG_F = ['<D-F>']
 COMMAND_BIG_P = ['<D-P>']
 COMMAND_P = ['<D-p>']
 DEL = ['<del>']
-DOLLAR = ['$']
-DOT = ['.']
-DOUBLE_QUOTE = ['"']
 END = ['<end>']
 ENTER = ['<cr>']
-EQUAL = ['=']
 EQUAL_EQUAL = ['==']
 ESC = ['<esc>']
 GCC = ['gcc']
@@ -295,29 +290,15 @@ G_BIG_U_G_BIG_U = ['gUgU']
 G_TILDE = ['g~']
 G_TILDE_G_TILDE = ['g~g~']
 G_TILDE_TILDE = ['g~~']
-HAT = ['^']
 HOME = ['<home>']
 INSERT = ['<insert>']
 LEADER = ['<leader>']
 LESS_THAN = ['<lt>']
 LESS_THAN_LESS_THAN = ['<lt><lt>']
-MINUS = ['-']
-OCTOTHORP = ['#']
-PERCENT = ['%']
-PLUS = ['+']
-QUESTION_MARK = ['?']
-QUOTE = ["'"]
 QUOTE_QUOTE = ["''"]
-RIGHT_BRACE = ['}']
-RIGHT_PAREN = [')']
-SEMICOLON = [';']
 SHIFT_ENTER = ['<S-cr>']
-SLASH = ['/']
 SPACE = ['<space>']
-STAR = ['*']
 TAB = ['<tab>']
-TILDE = ['~']
-UNDERSCORE = ['_']
 YSS = ['yss']
 ZERO = ['0']
 ZUG = ['zug']

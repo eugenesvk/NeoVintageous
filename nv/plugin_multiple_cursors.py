@@ -57,7 +57,7 @@ class MultipleCursorsAdd(ViOperatorDef):
 
 
 @register(seqs.ALT_N, (SELECT,))
-@register(seqs.BIG_A, (SELECT,))
+@register(seqs.SEQ['⇧a'], (SELECT,))
 class MultipleCursorsAddAll(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True

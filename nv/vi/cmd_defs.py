@@ -76,7 +76,7 @@ class ViInsertLineAfter(ViOperatorDef):
         self.command = 'nv_vi_o'
 
 
-@assign(seqs.O, (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
+@assign(seqs.SEQ['o'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
 class ViGoToOtherEnd(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -965,7 +965,7 @@ class ViShowAsciiValueOfChar(ViOperatorDef):
 
 
 @assign(seqs.CTRL_W_GF, ACTION_MODES)
-@assign(seqs.GF, ACTION_MODES)
+@assign(seqs.SEQ['gf'], ACTION_MODES)
 class Vigf(ViOperatorDef):
     def init(self):
         self.command = 'nv_vi_g'
@@ -975,8 +975,8 @@ class Vigf(ViOperatorDef):
 
 
 @assign(seqs.SEQ['gf'], (NORMAL,))
+@assign(seqs.SEQ['g⇧f'], (NORMAL,))
 @assign(seqs.CTRL_W_G_BIG_F, ACTION_MODES)
-@assign(seqs.G_BIG_F, ACTION_MODES)
 class VigF(ViOperatorDef):
     def init(self):
         self.command = 'nv_vi_g'

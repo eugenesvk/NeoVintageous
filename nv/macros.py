@@ -27,13 +27,14 @@ from NeoVintageous.nv.settings import get_glue_until_normal_mode
 
 _data = {}  # type: dict
 
+RU_LETTERS = 'йцукенгшщзхъфывапролджэёячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЁЯЧСМИТЬБЮ'
 
 def is_readable(name: str) -> bool:
-    return name in tuple(digits + ascii_letters + '".=*+@')
+    return name in tuple(digits + ascii_letters + RU_LETTERS + '".=*+@')
 
 
 def is_writable(name: str) -> bool:
-    return name in tuple(digits + ascii_letters + '"')
+    return name in tuple(digits + ascii_letters + RU_LETTERS + '"')
 
 
 def is_recording() -> bool:

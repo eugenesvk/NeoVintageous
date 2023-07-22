@@ -976,6 +976,7 @@ class Vigf(ViOperatorDef):
 
 @assign(seqs.SEQ['gf'], (NORMAL,))
 @assign(seqs.CTRL_W_G_BIG_F, ACTION_MODES)
+@assign(seqs.G_BIG_F, ACTION_MODES)
 class VigF(ViOperatorDef):
     def init(self):
         self.command = 'nv_vi_g'
@@ -1037,7 +1038,7 @@ class ViInsertAfterChar(ViOperatorDef):
         self.command = 'nv_vi_a'
 
 
-@assign(seqs.Q['⇧a'], ACTION_MODES)
+@assign(seqs.SEQ['⇧a'], ACTION_MODES)
 class ViInsertAtEol(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -1604,7 +1605,6 @@ class ViMoveToHardBol(ViMotionDef):
 
 
 @assign(seqs.SEQ['gn'], MOTION_MODES)
-
 class ViSearchLastUsedPattern(ViMotionDef):
     def init(self):
         self.scroll_into_view = True

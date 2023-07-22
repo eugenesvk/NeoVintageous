@@ -37,7 +37,7 @@ class MultipleCursorsStart(ViOperatorDef):
 
 
 @register(seqs.SEQ['⇧j'], (SELECT,))
-@register(seqs.ESC, (SELECT,))
+@register(seqs.SEQ['⎋'], (SELECT,))
 class MultipleCursorsExit(ViOperatorDef):
     def init(self):
         self.updates_xpos = True

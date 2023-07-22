@@ -1,6 +1,7 @@
 # NEOVINTAGEOUS CHANGELOG
 
 All notable changes are documented in this file using the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
+
 [unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/1.0.0...HEAD
 ## [Unreleased]
   <!-- - __Added__ -->
@@ -27,16 +28,16 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
    + :sparkles: support of non-Latin maps in `.neovintageous`, e.g., `noremap ц b` to move back by word when a Cyrillic layout is on (does not work with modifier keys since Sublime Text doesn't report non-Latin keys)
    + :sparkles: rudimentary foundations to support custom key symbols in user config, e.g., `noremap <⇟> w` to move by word with a PageDown key
    + :sparkles: support for raw sublime text commands in user config
-    ```
-    " w moves to line's first non-whitespace char
-    " q does the same twice, but with selection
-    q moves w twice, but with selection
-    noremap w :"command":"move_to","args":{"to":"bol","extend":false}<CR>
-    noremap q :"command":"move_to","args":{"to":"bol","extend":true}<Bar>:"command":"move_to","args":{"to":"bol","extend":true}<CR>
-
-    " or you can use the old syntax (convenient for no-argument commands), but with an extra :colon instead of UpperCamelCase
-    noremap q ::move_to<CR>
-    ```
+      ```
+      " w moves to line's first non-whitespace char
+      " q does the same twice, but with selection
+      q moves w twice, but with selection
+      noremap w :"command":"move_to","args":{"to":"bol","extend":false}<CR>
+      noremap q :"command":"move_to","args":{"to":"bol","extend":true}<Bar>:"command":"move_to","args":{"to":"bol","extend":true}<CR>
+  
+      " or you can use the old syntax (convenient for no-argument commands), but with an extra :colon instead of UpperCamelCase
+      noremap q ::move_to<CR>
+      ```
   - __Changed__
    + commands: add key symbols like `⎈` to command name for easier visual differentiation and 1-symbol-search 
   - __Fixed__

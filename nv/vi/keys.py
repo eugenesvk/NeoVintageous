@@ -200,6 +200,8 @@ class KeySequenceTokenizer():
     def _tokenize_one(self):
         c = self._consume()
 
+        if c in seqs.NAMED_KEY_ALIASES:
+            return '<' + seqs.NAMED_KEY_ALIASES[c] + '>'
         if c == '<':
             return self._expand_vars(self._long_key_name())
         else:

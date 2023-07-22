@@ -38,6 +38,7 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
       " or you can use the old syntax (convenient for no-argument commands), but with an extra :colon instead of UpperCamelCase
       noremap q ::move_to<CR>
       ```
+   + :sparkles: support for single key symbols like `⏎` to be used in user config without `<>`
   - __Changed__
    + commands: add key symbols like `⎈` to command name for easier visual differentiation and 1-symbol-search 
   - __Fixed__

@@ -154,6 +154,26 @@ def _seq_to_mapping(view, seq: str):
         return Mapping(seq, full_match)
 
 
+def _text_to_command(view, text: str, mode: str): # mode + text-command → command definition
+    # ←
+      # view	View	.
+      # text	str 	Text command, eg, 'move-line-down'
+      # mode	str 	Forces the use of this mode instead of the global state's.
+    # → ViCommandDefBase | CommandNotFound
+    if mode in plugin.mappings_text:
+        plugin_command = plugin.mappings_text[mode].get(seq)
+        if plugin_command:
+            if is_plugin_enabled(view, plugin_command):
+                return plugin_command
+
+    if mode in keys.mappings_text:
+        command = keys.mappings_text[mode].get(seq)
+        if command:
+            return command
+
+    return CommandNotFound()
+
+
 def _seq_to_command(view, seq: str, mode: str):
     # Return the command definition mapped for seq and mode.
     #

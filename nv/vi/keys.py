@@ -273,7 +273,7 @@ def assign(seq: list, modes, *args, **kwargs):
     return inner
 
 
-def assign_text(seq: list, modes, *args, **kwargs):
+def assign_text(seq: list, modes: tuple, *args, **kwargs):
     """
     Register a 'text command' to 'command' mapping with NeoVintageous
       'text command' must be known to NeoVintageous (converted to lower case)

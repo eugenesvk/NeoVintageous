@@ -39,6 +39,16 @@ mappings = {
 }  # type: dict
 
 
+mappings_text = {
+    INSERT          	: {},
+    NORMAL          	: {},
+    OPERATOR_PENDING	: {},
+    SELECT          	: {},
+    VISUAL          	: {},
+    VISUAL_BLOCK    	: {},
+    VISUAL_LINE     	: {},
+}  # type: dict
+
 _NAMED_KEYS_NEST = [
 
     seqs.SEQ['⧵'],
@@ -259,5 +269,21 @@ def assign(seq: list, modes, *args, **kwargs):
         for mode in modes:
             for seq_lng in seq:
                 mappings[mode][seq_lng] = cls(*args, **kwargs)
+        return cls
+    return inner
+
+
+def assign_text(seq: list, modes, *args, **kwargs):
+    """
+    Register a 'text command' to 'command' mapping with NeoVintageous
+      'text command' must be known to NeoVintageous (converted to lower case)
+      'command'      must be a ViMotionDef or ViOperatorDef
+    Decorated class is instantiated with `*args` and `**kwargs`.
+    @keys: A list of (`mode:tuple`, `sequence:list`) pairs to map the decorated class to
+    """
+    def inner(cls):
+        for mode in modes:
+            for seq_i in seq:
+                mappings_text[mode][seq_i.lower()] = cls(*args, **kwargs)
         return cls
     return inner

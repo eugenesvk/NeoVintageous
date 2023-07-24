@@ -27,7 +27,7 @@ from NeoVintageous.nv.vi.cmd_base import ViMotionDef
 from NeoVintageous.nv.vi.cmd_base import ViOperatorDef
 from NeoVintageous.nv.vi.cmd_base import translate_action
 from NeoVintageous.nv.vi.cmd_base import translate_motion
-from NeoVintageous.nv.vi.keys import assign
+from NeoVintageous.nv.vi.keys import assign, assign_text
 from NeoVintageous.nv.vim import ACTION_MODES
 from NeoVintageous.nv.vim import INSERT
 from NeoVintageous.nv.vim import MOTION_MODES

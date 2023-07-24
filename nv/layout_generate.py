@@ -10,6 +10,7 @@ import sublime_plugin
 import NeoVintageous.dep.json5kit as json5kit # noqa: F401,F403
 from NeoVintageous.dep.json5kit     	import Json5Node, Json5Array, Json5String, Json5Object # noqa: F401,F403
 from NeoVintageous.nv.layout_convert	import lyt, LayoutConverter
+from NeoVintageous.plugin import PACKAGE_NAME
 
 __all__ = [
   'NvUserKeymap'
@@ -95,13 +96,12 @@ def convertKeymapLayout(keymap, lyt_from, lyt_to):
 
 class NvUserKeymap(sublime_plugin.ApplicationCommand):
   def __init__(self):
-    self.nv_name  	= "NeoVintageous"
     self.nv_keymap	= "Default.sublime-keymap"
     self.dest     	= "$packages/NeoVintageous_UserKeymap/Default.sublime-keymap" # ($platform)
     self.cmd      	= "NeoVintageous: Generate non-QWERTY key bindings"
 
   def run(self, **kwargs):
-    nv_keymap_path	= f"Packages/{self.nv_name}/{self.nv_keymap}"
+    nv_keymap_path	= f"Packages/{PACKAGE_NAME}/{self.nv_keymap}"
     dest          	= expand(kwargs.get('file', self.dest))
     try:
       nv_keymap_raw = sublime.load_resource(nv_keymap_path) # works, string

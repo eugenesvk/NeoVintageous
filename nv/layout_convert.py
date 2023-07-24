@@ -3,9 +3,9 @@ import sublime_plugin
 
 import NeoVintageous.dep.json5kit as json5kit # noqa: F401,F403
 from NeoVintageous.dep.json5kit import Json5Node, Json5Array, Json5String # noqa: F401,F403
+from NeoVintageous.plugin import PACKAGE_NAME
 
-package_name	= "NeoVintageous"     	# TODO: read packge name from a global place
-statusName  	= f"07_{package_name}"	# number defines the order of custom status bar statuses
+statusName	= f"07_{PACKAGE_NAME}"	# number defines the order of custom status bar statuses
 
 import logging
 log = logging.getLogger(__name__)
@@ -58,7 +58,7 @@ def getUserKeymap(keymap_len):
   cfg_key_upp	= 'upper'
   cfg_key_als	= 'alias'
   nv_cfg     	= None
-  cfg_fname  	= f"{package_name}.sublime-settings"
+  cfg_fname  	= f"{PACKAGE_NAME}.sublime-settings"
   if view:
     nv_cfg	= sublime.load_settings(cfg_fname)
   else: # no view, no config: likely at plugin load, so Sublime API is not ready

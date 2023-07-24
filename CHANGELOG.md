@@ -24,6 +24,7 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
    <!-- vulnerabilities -->
 
   - __Added__
+   + :sparkles: allow users to call cli commands on entering/leaving a mode
    + :sparkles: non-QWERTY/non-Latin layouts based on custom user `keymap` dictionary in `User/NeoVintageous.sublime-settings` (requires manually running `NeoVintageous: Generate non-QWERTY keymap` command)
    + :sparkles: support of non-Latin maps in `.neovintageous`, e.g., `noremap ц b` to move back by word when a Cyrillic layout is on (does not work with modifier keys since Sublime Text doesn't report non-Latin keys)
    + :sparkles: rudimentary foundations to support custom key symbols in user config, e.g., `noremap ⇟ w` to move by word with a PageDown key

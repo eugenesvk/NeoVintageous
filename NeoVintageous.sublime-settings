@@ -1,4 +1,5 @@
-{// to use custom keymaps (non-QWERTY/non-Latin) in command mode
+{
+// 1. to use custom keymaps (non-QWERTY/non-Latin) in command mode
   // 1. add "lower"/"upper" keymaps below that match the position of QWERTY symbols
   // 2. Run command "NeoVintageous: Generate non-QWERTY key bindings"
   // 3. set "alias" to true to use non-latin keybinds like `map й w` in .neovintageous
@@ -12,4 +13,18 @@
 //  // assigns to each command an extra keybind in user layout so that said key can be used in the TO sublime-keymap field
 //  // and keymap generation command adds those to the TO field
 //  },
+
+// 2. to run cli commands on entering/leaving a mode add a [list] of command + arguments in the 'events' dictionary:
+  // available modes (CaSe sensitive: Insert Normal Replace Select Visual VisualBlock VisualLine
+  // available mode events (CaSe sensitive: Enter Leave
+//"events"       	: {
+//  "InsertEnter"	: ["~/.local/bin/karabiner_cli", "--set-variables", "{\"isNVⓘ\":1}"],
+//  "InsertLeave"	: ["~/.local/bin/karabiner_cli", "--set-variables", "{\"isNVⓘ\":0}"],
+//  "osx"        	: { // platform-specific commands have higher priority
+//  "Insertenter"	: ["~/.local/bin/karabiner_cli", "--set-variables", "{\"isNVⓘ\":1}"],
+//  "InsertLeave"	: ["~/.local/bin/karabiner_cli", "--set-variables", "{\"isNVⓘ\":0}"],
+//  "NormalEnter"	: ["~/.local/bin/karabiner_cli", "--set-variables", "{\"isNVⓃ\":1}"],
+//  "NormalLeave"	: ["~/.local/bin/karabiner_cli", "--set-variables", "{\"isNVⓃ\":0}"],
+//  },
+//}
 }

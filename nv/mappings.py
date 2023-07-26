@@ -177,11 +177,14 @@ def mappings_add_text(mode: str, lhs: str, rhs: str) -> None:
 
 def mappings_remove(mode: str, lhs: str) -> None:
     del _mappings[mode][_normalise_lhs(lhs)]
+    del _mappings_text[mode][_normalise_lhs(lhs)]
 
 
 def mappings_clear() -> None:
     for mode in _mappings:
         _mappings[mode] = {}
+    for mode in _mappings_text:
+        _mappings_text[mode] = {}
 
 
 def mappings_can_resolve(view, key: str) -> bool:
@@ -196,12 +199,27 @@ def mappings_can_resolve(view, key: str) -> bool:
 
     return False
 
+def mappings_can_resolve_text(view, key: str) -> bool:
+    mode = get_mode         (view)
+    cmd  = get_partial_text (view) + key
+    if _find_full_match_text(view, mode, cmd):
+        return True
+    # if _has_partial_matches(view, mode, cmd): # todo not needed?
+        # return True
+    return False
+
 
 def _seq_to_mapping(view, seq: str):
     mode = get_mode(view)
     full_match = _find_full_match(view, mode, seq)
     if full_match:
         return Mapping(seq, full_match)
+
+def _text_cmd_to_mapping(view, _text_cmd: str):
+    mode = get_mode(view)
+    full_match = _find_full_match_text(view, mode, _text_cmd)
+    if full_match:
+        return Mapping(_text_cmd, full_match)
 
 
 def _text_to_command(view, text: str, mode: str): # mode + text-command → command definition
@@ -211,13 +229,13 @@ def _text_to_command(view, text: str, mode: str): # mode + text-command → comm
       # mode	str 	Forces the use of this mode instead of the global state's.
     # → ViCommandDefBase | CommandNotFound
     if mode in plugin.mappings_text:
-        plugin_command = plugin.mappings_text[mode].get(seq)
+        plugin_command = plugin.mappings_text[mode].get(text)
         if plugin_command:
             if is_plugin_enabled(view, plugin_command):
                 return plugin_command
 
     if mode in keys.mappings_text:
-        command = keys.mappings_text[mode].get(seq)
+        command = keys.mappings_text[mode].get(text)
         if command:
             return command
 

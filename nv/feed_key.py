@@ -20,15 +20,15 @@ import logging
 from NeoVintageous.plugin import DEFAULT_LOG_LEVEL
 from NeoVintageous.nv.mappings import IncompleteMapping
 from NeoVintageous.nv.mappings import Mapping
-from NeoVintageous.nv.mappings import mappings_can_resolve
-from NeoVintageous.nv.mappings import mappings_resolve
-from NeoVintageous.nv.mappings_handler import evaluate_mapping
+from NeoVintageous.nv.mappings import mappings_can_resolve, mappings_can_resolve_text
+from NeoVintageous.nv.mappings import mappings_resolve, mappings_resolve_text
+from NeoVintageous.nv.mappings_handler import evaluate_mapping, evaluate_mapping_text
 from NeoVintageous.nv.settings import append_sequence
 from NeoVintageous.nv.settings import get_action_count
 from NeoVintageous.nv.settings import get_capture_register
 from NeoVintageous.nv.settings import get_mode
 from NeoVintageous.nv.settings import get_motion_count
-from NeoVintageous.nv.settings import get_partial_sequence
+from NeoVintageous.nv.settings import get_partial_sequence, get_partial_text
 from NeoVintageous.nv.settings import get_sequence
 from NeoVintageous.nv.settings import get_setting
 from NeoVintageous.nv.settings import is_interactive
@@ -36,7 +36,7 @@ from NeoVintageous.nv.settings import set_action_count
 from NeoVintageous.nv.settings import set_capture_register
 from NeoVintageous.nv.settings import set_mode
 from NeoVintageous.nv.settings import set_motion_count
-from NeoVintageous.nv.settings import set_partial_sequence
+from NeoVintageous.nv.settings import set_partial_sequence, set_partial_text
 from NeoVintageous.nv.settings import set_register
 from NeoVintageous.nv.state import evaluate_state
 from NeoVintageous.nv.state import get_action

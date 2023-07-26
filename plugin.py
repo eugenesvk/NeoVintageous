@@ -30,20 +30,24 @@ _DEBUG = bool(os.getenv('SUBLIME_NEOVINTAGEOUS_DEBUG'))
 # configuration (a StreamHandler that writes to sys.stderr with a level of
 # WARNING. The end result is that it prints the message to sys.stderr, and in
 # Sublime Text that means it will print the message to console).
-if _DEBUG:  # pragma: no cover
-    import logging
+import logging
 
-    logger = logging.getLogger('NeoVintageous')
+DEFAULT_LOG_LEVEL = logging.WARN
+_log = logging.getLogger(PACKAGE_NAME)
 
-    # Avoid duplicate loggers when the plugin is reloaded.
-    if not logger.hasHandlers():
-        logger.setLevel(logging.DEBUG)
-        stream_handler = logging.StreamHandler()
-        stream_handler.setFormatter(logging.Formatter(
-            'NeoVintageous.%(levelname)-7s [%(filename)15s:%(lineno)-4d] %(message)s'
-        ))
-        logger.addHandler(stream_handler)
-        logger.debug('debug logger initialised')
+# Avoid duplicate loggers when the plugin is reloaded.
+if not _log.hasHandlers():
+    if _DEBUG:  # pragma: no cover
+        _log.setLevel(logging.DEBUG)
+    else:
+        _log.setLevel(DEFAULT_LOG_LEVEL)
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(logging.Formatter(
+        'NeoVintageous.%(levelname)-7s [%(filename)15s:%(lineno)-4d] %(message)s'
+    ))
+    _log.addHandler(stream_handler)
+    if _DEBUG:  # pragma: no cover
+        _log.debug('debug logger initialised')
 
 import sublime  # noqa: E402
 

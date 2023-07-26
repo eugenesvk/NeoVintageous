@@ -130,6 +130,7 @@ class FeedKeyHandler():
         if get_capture_register(self.view):
             set_register(self.view, self.key)
             set_partial_sequence(self.view, '')
+            set_partial_text(self.view, '')
 
             return True
 
@@ -179,11 +180,14 @@ class FeedKeyHandler():
         # If the user has defined a mapping that starts with a number i.e. count
         # then the count handler has to be skipped otherwise it won't resolve.
         # See https://github.com/NeoVintageous/NeoVintageous/issues/434.
-        if not mappings_can_resolve(self.view, self.key):
+        can_resolve_seq = mappings_can_resolve     (self.view, self.key)
+        can_resolve_txt = mappings_can_resolve_text(self.view, self.key)
+        if not can_resolve_txt and not can_resolve_seq:
             if self._handle_count():
                 return
 
         set_partial_sequence(self.view, get_partial_sequence(self.view) + self.key)
+        set_partial_text    (self.view, get_partial_text    (self.view) + self.key)
 
         command = mappings_resolve(self.view, check_user_mappings=self.check_user_mappings)
 
@@ -277,6 +281,7 @@ class FeedKeyHandler():
 
         if get_mode(self.view) == OPERATOR_PENDING:
             set_partial_sequence(self.view, '')
+            set_partial_text(self.view, '')
 
         if do_eval:
             evaluate_state(self.view)

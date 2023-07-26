@@ -20,7 +20,7 @@ from NeoVintageous.nv.mappings import Mapping
 from NeoVintageous.nv.settings import get_action_count
 from NeoVintageous.nv.settings import get_mode
 from NeoVintageous.nv.settings import get_motion_count
-from NeoVintageous.nv.settings import get_partial_sequence
+from NeoVintageous.nv.settings import get_partial_sequence, get_partial_text
 from NeoVintageous.nv.settings import get_register
 from NeoVintageous.nv.settings import get_sequence
 from NeoVintageous.nv.settings import set_action_count
@@ -50,6 +50,23 @@ def evaluate_mapping(view, mapping: Mapping) -> None:
     set_action_count(view, acount)
 
     _handle_rhs(view.window(), rhs)
+
+def evaluate_mapping_text(view, mapping: Mapping) -> None:
+    # TODO Review Why does rhs of mapping need to be resequenced in OPERATOR PENDING mode?
+    rhs = mapping.rhs
+    # if get_mode(view) == OPERATOR_PENDING:
+    #     rhs = get_sequence(view)[:-len(get_partial_text(view))] + mapping.rhs
+
+    # TODO Review Why does state need to be reset before running user mapping?
+    reg = get_register(view)
+    acount = get_action_count(view)
+    mcount = get_motion_count(view)
+    reset_command_data(view)
+    set_register(view, reg)
+    set_motion_count(view, mcount)
+    set_action_count(view, acount)
+
+    _handle_rhs_text(view, rhs)
 
 
 def _handle_rhs(window, rhs: str) -> None:

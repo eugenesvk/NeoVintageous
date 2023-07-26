@@ -34,6 +34,16 @@ mappings = {
     _VISUAL_LINE: {}
 }  # type: dict
 
+mappings_text = {
+    _INSERT          	: {},
+    _NORMAL          	: {},
+    _OPERATOR_PENDING	: {},
+    _SELECT          	: {},
+    _VISUAL          	: {},
+    _VISUAL_BLOCK    	: {},
+    _VISUAL_LINE     	: {}
+}  # type: dict
+
 
 classes = {}  # type: dict
 
@@ -55,6 +65,22 @@ def register(seq: list, modes: tuple, *args, **kwargs):
         for mode in modes:
             for seq_lng in seq:
                 mappings[mode][seq_lng] = cls(*args, **kwargs)
+                classes[cls.__name__] = cls
+        return cls
+    return inner
+
+def register_text(commands: list, modes: tuple, *args, **kwargs):
+    """
+    Register a 'text command' to 'command' mapping with NeoVintageous
+      'text command' must be known to NeoVintageous (converted to lower case)
+      'command'      must be a ViMotionDef or ViOperatorDef
+    Decorated class is instantiated with `*args` and `**kwargs`.
+    @keys: A list of (`mode:tuple`, `commands:list`) pairs to map the decorated class to
+    """
+    def inner(cls):
+        for mode in modes:
+            for cmd in commands:
+                mappings_text[mode][cmd] = cls(*args, **kwargs)
                 classes[cls.__name__] = cls
         return cls
     return inner

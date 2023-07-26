@@ -74,6 +74,23 @@ def _has_partial_matches(view, mode: str, lhs: str) -> bool:
     return False
 
 
+def _has_partial_matches_text(view, mode: str, lhs: str) -> bool:
+    for map_lhs, map_rhs in _mappings_text[mode].items():
+        if isinstance(map_rhs, str):
+            if map_lhs.startswith(lhs):
+                return True
+        else:
+            file_type = get_file_type(view)
+            if file_type and file_type in map_rhs:
+                if map_lhs.startswith(lhs):
+                    return True
+            elif '' in map_rhs:
+                if map_lhs.startswith(lhs):
+                    return True
+
+    return False
+
+
 def _find_full_match(view, mode: str, lhs: str):
     rhs = _mappings[mode].get(lhs)
     if rhs:
@@ -85,6 +102,19 @@ def _find_full_match(view, mode: str, lhs: str):
         except KeyError:
             try:
                 return _mappings[mode][lhs]['']
+            except KeyError:
+                pass
+
+def _find_full_match_text(view, mode: str, lhs: str):
+    rhs = _mappings_text[mode].get(lhs)
+    if rhs:
+        if isinstance(rhs, str):
+            return rhs
+        try:
+            return _mappings_text[mode][lhs][get_file_type(view)]
+        except KeyError:
+            try:
+                return _mappings_text[mode][lhs]['']
             except KeyError:
                 pass
 
@@ -119,6 +149,30 @@ def mappings_add(mode: str, lhs: str, rhs: str) -> None:
             return
 
     _mappings[mode][_normalise_lhs(lhs)] = rhs
+
+def mappings_add_text(mode: str, lhs: str, rhs: str) -> None:
+    # print(f" mappings_add_text mode={mode} lhs={lhs} rhs={rhs}")
+    if re.match('^FileType$', lhs):
+        parsed = re.match('^([^ ]+) ([^ ]+)\\s+', rhs)
+        if parsed:
+            for file_type in parsed.group(1).split(','):
+                file_type_lhs = parsed.group(2)
+                file_type_rhs = rhs[len(parsed.group(0)):]
+
+                file_type_lhs_norm = _normalise_lhs(file_type_lhs)
+
+                match = _mappings_text[mode].get(file_type_lhs_norm)
+
+                if not match:
+                    _mappings_text[mode][file_type_lhs_norm] = {}
+                elif isinstance(match, str):
+                    _mappings_text[mode][file_type_lhs_norm] = {'': match}
+
+                _mappings_text[mode][file_type_lhs_norm][file_type] = file_type_rhs
+
+            return
+
+    _mappings_text[mode][_normalise_lhs(lhs)] = rhs
 
 
 def mappings_remove(mode: str, lhs: str) -> None:

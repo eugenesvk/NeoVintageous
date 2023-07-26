@@ -28,7 +28,16 @@ from NeoVintageous.nv.vim import VISUAL_BLOCK
 from NeoVintageous.nv.vim import VISUAL_LINE
 
 
-mappings = {
+mappings = { # map[key]=internal class/command
+    INSERT: {},
+    NORMAL: {},
+    OPERATOR_PENDING: {},
+    SELECT: {},
+    VISUAL: {},
+    VISUAL_BLOCK: {},
+    VISUAL_LINE: {}
+}  # type: dict
+mappings_reverse = { # map[internal class Name] = key from  ↑ to make finding a key easier later when we need to convert full text command from user config to internal vim key labels
     INSERT: {},
     NORMAL: {},
     OPERATOR_PENDING: {},
@@ -269,6 +278,8 @@ def assign(seq: list, modes, *args, **kwargs):
         for mode in modes:
             for seq_lng in seq:
                 mappings[mode][seq_lng] = cls(*args, **kwargs)
+                if (T := type(cls(*args, **kwargs))) not in mappings_reverse[mode]: # store only the first letter map
+                    mappings_reverse[mode][T] = seq_lng
         return cls
     return inner
 

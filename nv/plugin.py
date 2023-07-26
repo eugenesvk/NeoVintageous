@@ -33,6 +33,15 @@ mappings = {
     _VISUAL_BLOCK: {},
     _VISUAL_LINE: {}
 }  # type: dict
+mappings_reverse = { # map[internal class Name] = key from  ↑ to make finding a key easier later when we need to convert full text command from user config to internal vim key labels
+    _INSERT: {},
+    _NORMAL: {},
+    _OPERATOR_PENDING: {},
+    _SELECT: {},
+    _VISUAL: {},
+    _VISUAL_BLOCK: {},
+    _VISUAL_LINE: {}
+}  # type: dict
 
 mappings_text = {
     _INSERT          	: {},
@@ -65,6 +74,8 @@ def register(seq: list, modes: tuple, *args, **kwargs):
         for mode in modes:
             for seq_lng in seq:
                 mappings[mode][seq_lng] = cls(*args, **kwargs)
+                if (T := type(cls(*args, **kwargs))) not in mappings_reverse[mode]: # store only the first letter map
+                    mappings_reverse[mode][T] = seq_lng
                 classes[cls.__name__] = cls
         return cls
     return inner

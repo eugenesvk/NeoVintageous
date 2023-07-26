@@ -7,7 +7,7 @@ from pathlib import Path
 import sublime
 
 from NeoVintageous.nv.vim import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
-from NeoVintageous.plugin import cfgU
+from NeoVintageous.nv.rc import cfgU
 
 __all__ = ['NeoVintageousEventsUser'] # User events: run cli commands on mode changes
 
@@ -15,16 +15,6 @@ PLATFORM = sublime.platform()
 from NeoVintageous.plugin import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
-
-event_modes = {
-    INSERT      	: 'Insert'
-  , NORMAL      	: 'Normal'
-  , REPLACE     	: 'Replace'
-  , SELECT      	: 'Select'
-  , VISUAL      	: 'Visual'
-  , VISUAL_BLOCK	: 'VisualBlock'
-  , VISUAL_LINE 	: 'VisualLine'
-  }
 
 def get_full_cmd(eventsU, event_name) -> list:
   if type(eventsU) is dict:
@@ -42,14 +32,13 @@ def get_full_cmd(eventsU, event_name) -> list:
         return [full_cmd]
 
 def on_mode_change  (view   , current_mode, new_mode) -> None:
-  from NeoVintageous.plugin import cfgU
   _log.debug(f"mode Δ {current_mode} ⟶ {new_mode}")
   if not hasattr(cfgU, 'events'):
     return
   if not (eventsU := cfgU.events):
     return
   _log.debug(f"user events = {eventsU}")
-  for mode, mode_cfg_name in event_modes.items():
+  for mode, mode_cfg_name in cfgU.event_modes.items():
     event_name = None
     if current_mode == mode:
       event_name = f'{mode_cfg_name}Leave'

@@ -102,7 +102,9 @@ from NeoVintageous.nv.window import window_quit_views
 from NeoVintageous.nv.window import window_tab_control
 
 
+from NeoVintageous.plugin import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
+_log.setLevel(DEFAULT_LOG_LEVEL)
 
 
 def ex_bfirst(window, **kwargs) -> None:

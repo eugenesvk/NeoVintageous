@@ -22,7 +22,9 @@ from sublime import windows as _windows
 
 from NeoVintageous.nv.polyfill import status_message as _status_message
 
+from NeoVintageous.plugin import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
+_log.setLevel(DEFAULT_LOG_LEVEL)
 
 # NeoVintageous always runs actions based on selections. Some Vim commands,
 # however, behave differently depending on whether the current mode is NORMAL or

@@ -37,7 +37,9 @@ from NeoVintageous.nv.vim import VISUAL
 from NeoVintageous.nv.vim import VISUAL_BLOCK
 from NeoVintageous.nv.vim import VISUAL_LINE
 
+from NeoVintageous.plugin import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
+_log.setLevel(DEFAULT_LOG_LEVEL)
 
 _mappings = {
     INSERT: {},

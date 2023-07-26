@@ -346,7 +346,9 @@ __all__ = [
 ]
 
 
+from NeoVintageous.plugin import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
+_log.setLevel(DEFAULT_LOG_LEVEL)
 
 
 class nv_cmdline_feed_key(TextCommand):

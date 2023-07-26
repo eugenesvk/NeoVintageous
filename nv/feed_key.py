@@ -17,6 +17,7 @@
 
 import logging
 
+from NeoVintageous.plugin import DEFAULT_LOG_LEVEL
 from NeoVintageous.nv.mappings import IncompleteMapping
 from NeoVintageous.nv.mappings import Mapping
 from NeoVintageous.nv.mappings import mappings_can_resolve
@@ -66,8 +67,8 @@ from NeoVintageous.nv.vim import VISUAL_LINE
 from NeoVintageous.nv.vim import enter_normal_mode
 from NeoVintageous.nv.vim import is_visual_mode
 
-
 _log = logging.getLogger(__name__)
+_log.setLevel(DEFAULT_LOG_LEVEL)
 
 
 class FeedKeyHandler():

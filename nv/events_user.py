@@ -12,7 +12,9 @@ from NeoVintageous.plugin import cfgU
 __all__ = ['NeoVintageousEventsUser'] # User events: run cli commands on mode changes
 
 PLATFORM = sublime.platform()
+from NeoVintageous.plugin import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
+_log.setLevel(DEFAULT_LOG_LEVEL)
 
 event_modes = {
     INSERT      	: 'Insert'

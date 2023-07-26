@@ -33,7 +33,9 @@ from NeoVintageous.nv.ex.tokens import TokenSearchForward
 from NeoVintageous.nv.ex.tokens import TokenSemicolon
 
 
+from NeoVintageous.plugin import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
+_log.setLevel(DEFAULT_LOG_LEVEL)
 
 
 class _ParsedCommandLine():

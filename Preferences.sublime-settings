@@ -1,190 +1,45 @@
-{
-    // Current search style.
-    //
-    // Valid values are:
-    //     fill
-    //     outline
-    //     underline
-    //     squiggly_underline
-    //     stippled_underline
-    "neovintageous_search_cur_style": "fill",
+{ // Valid style values: fill outline underline squiggly_underline stippled_underline
+"neovintageous_search_cur_style"                	: "fill" 	, //|fill| Current     search style
+"neovintageous_search_inc_style"                	: "fill" 	, //|fill| Incremental search style
+"neovintageous_search_occ_style"                	: "fill" 	, //|fill| Search  occurences style
+"vintageous_auto_complete_exit_from_insert_mode"	: true   	, // On Esc, close auto complete, if visible, and exit to normal mode. When set to false, only the auto complete is closed
+"vintageous_bell"                               	: "blink"	, // |blink|view¦views¦none¦ Visual bell style
+"vintageous_bell_color_scheme"                  	: "dark" 	, //|dark|light¦path¦  Visual bell color-scheme. path=color scheme resource path: Packages/Name/name.hidden-color-scheme
+"vintageous_clear_auto_indent_on_esc"           	: true   	, // If you do not type anything on a new line e.g. pressing <Esc> after "o" or "O", the indent is deleted again. To preserve the leading whitespace on after pressing <esc> set this setting to false
+"vintageous_default_mode"                       	: ""     	, //|""|"insert"¦ Default mode to use when activating or switching views
+  // insert                                     	         	  Enter insert mode when opening or switching views or when the window receives focus and is not in visual mode i.e. visual mode selections are retained when the window loses focus
 
-    //  Incremental search style.
-    //
-    //  Valid values are:
-    //      fill
-    //      outline
-    //      underline
-    //      squiggly_underline
-    //      stippled_underline
-    "neovintageous_search_inc_style": "fill",
+// Plugins                          	       		//
+"vintageous_enable_abolish"         	: true 	, //|true | A port of https://github.com/tpope/vim-abolish
+"vintageous_enable_commentary"      	: true 	, //|true | A port of https://github.com/tpope/vim-commentary
+"vintageous_enable_multiple_cursors"	: true 	, //|true | A port of https://github.com/terryma/vim-multiple-cursors
+"vintageous_enable_sneak"           	: false	, //|false| A port of https://github.com/justinmk/vim-sneak
+"vintageous_enable_sublime"         	: true 	, //|true | Sublime Text tweaks
+"vintageous_enable_surround"        	: true 	, //|true | A port of https://github.com/tpope/vim-surround
+"vintageous_enable_unimpaired"      	: true 	, //|true | A port of https://github.com/tpope/vim-unimpaired
+"highlightedyank"                   	: true 	, //|true | A port of https://github.com/machakann/vim-highlightedyank
 
-    //  Search occurences style.
-    //
-    //  Valid values are:
-    //      fill
-    //      outline
-    //      underline
-    //      squiggly_underline
-    //      stippled_underline
-    "neovintageous_search_occ_style": "fill",
+"highlightedyank_duration"	: 1000  	, // Assign number of time in milliseconds
+"highlightedyank_style"   	: "fill"	,
 
-    // On Esc, close auto complete, if visible, and exit to normal mode.
-    //
-    // When set to false, only the auto complete is closed.
-    "vintageous_auto_complete_exit_from_insert_mode": true,
-
-    //  Visual bell style.
-    //
-    //  Valid values are:
-    //       blink
-    //       view
-    //       views
-    //       none
-    "vintageous_bell": "blink",
-
-    //  Visual bell color-scheme.
-    //
-    //  Valid values are:
-    //       dark
-    //       light
-    //  Or a color scheme resource path:
-    //       Packages/Name/name.hidden-color-scheme
-    "vintageous_bell_color_scheme": "dark",
-
-    //  If you do not type anything on a new line e.g. pressing <Esc> after "o"
-    //  or "O", the indent is deleted again. To preserve the leading whitespace
-    //  on after pressing <esc> set this setting to false.
-    "vintageous_clear_auto_indent_on_esc": true,
-
-    // Default mode to use when activating or switching views.
-    //
-    // Valid values are: "insert"
-    //
-    // mode   | description
-    // ------ | -----------
-    // insert | Enter insert mode when opening or switching views or when
-    //          the window receives focus and is not in visual mode i.e. visual
-    //          mode selections are retained when the window loses focus.
-    "vintageous_default_mode": "",
-
-    // Plugin
-    //
-    // A port of https://github.com/tpope/vim-abolish.
-    "vintageous_enable_abolish": true,
-
-    // Plugin
-    //
-    // A port of https://github.com/tpope/vim-commentary.
-    "vintageous_enable_commentary": true,
-
-    // Plugin
-    //
-    // A port of https://github.com/terryma/vim-multiple-cursors.
-    "vintageous_enable_multiple_cursors": true,
-
-    // Plugin
-    //
-    // A port of https://github.com/justinmk/vim-sneak.
-    "vintageous_enable_sneak": false,
-
-    // Plugin
-    //
-    // Sublime Text tweaks.
-    "vintageous_enable_sublime": true,
-
-    // Plugin
-    //
-    // A port of https://github.com/tpope/vim-surround.
-    "vintageous_enable_surround": true,
-
-    // Plugin
-    //
-    // A port of https://github.com/tpope/vim-unimpaired.
-    "vintageous_enable_unimpaired": true,
-
-    // Plugin
-    //
-    // A port of https://github.com/machakann/vim-highlightedyank.
-    "highlightedyank": true,
-
-    // Assign number of time in milliseconds.
-    "highlightedyank_duration": 1000,
-
-    // Valid values are:
-    //     fill
-    //     outline
-    //     underline
-    //     squiggly_underline
-    //     stippled_underline
-    "highlightedyank_style": "fill",
-
-    // When quitting the last window exit ST.
-    "vintageous_exit_when_quiting_last_window": true,
-
-    // Delegate configured keys to be handled by Sublime Text.
-    //
-    // For example to use native Sublime Text behaviour for ctrl+f:
-    //
-    //     "vintageous_handle_keys": {
-    //         "<C-f>": false
-    //     }
-    //
-    // Keys can be handled for specific modes by using a prefix:
-    //
-    //     n_ - Normal
-    //     i_ - Insert
-    //     v_ - Visual
-    //     V_ - Visual line
-    //     b_ - Visual block
-    //     s_ - Select
-    //
-    // For example to only delegate <C-w> in insert and visual modes:
-    //
-    //     "vintageous_handle_keys": {
-    //         "i_<C-w>": false
-    //         "v_<C-w>": false
-    //     }
-    "vintageous_handle_keys": {},
-
-    // Override native save to handle LSP Code-Actions-On-Save.
-    // See https://github.com/sublimelsp/LSP/issues/1725
-    "vintageous_lsp_save": false,
-
-    // Exit visual multi cursor visual on quit key.
-    //
-    // When false then pressing a quit key (e.g. <Esc> or J) in multiple cursor
-    // visual mode the visual mode exits to normal mode but keeps the cursors.
-    //
-    // When true then pressing a quit key (e.g. <Esc> or J) in multiple cursor
-    // visual mode the visual mode exits all multiple cursors.
-    "vintageous_multi_cursor_exit_from_visual_mode": false,
-
-    // Reset to normal mode when a tab is activated.
-    "vintageous_reset_mode_when_switching_tabs": true,
-
-    // Asynchronous file saving with commands like :w, :wq.
-    "vintageous_save_async": false,
-
-    // Show output panel from shell commands.
-    "vintageous_shell_silent": false,
-
-    // 0: Always case-sensitive
-    // 1: Case sensitivity is determined by 'ignorecase' and 'smartcase'.
-    "vintageous_sneak_use_ic_scs": 0,
-
-    // Name of program to use when starting a ":shell".
-    //
-    // Example: gnome-terminal
-    "vintageous_terminal": null,
-
-    // Enable key bindings prefaced by the control-key.
-    "vintageous_use_ctrl_keys": true,
-
-    // Enable key bindings prefaced by the super-key, otherwise known as the
-    // command-key in OSX, and as the windows-key in Windows.
-    "vintageous_use_super_keys": false,
-
-    // Propagate copy actions to the system clipboard.
-    "vintageous_use_sys_clipboard": false
+"vintageous_exit_when_quiting_last_window"     	: true            	, // When quitting the last window exit ST
+"vintageous_handle_keys"                       	: {}              	, // Delegate configured keys to be handled by Sublime Text, e.g.,
+  //                                           	: { "<C-f>":false}	     use native Sublime Text behaviour for ctrl+f
+  // use a prefix for modes                    	  n_ = Normal     	,    i_ = Insert, v_ = Visual, V_ = Visual line, b_ = Visual block, s_ = Select
+  // "i_<C-w>":false,"v_<C-w>":false           	                  	     only delegate <C-w> in insert and visual modes
+"vintageous_lsp_save"                          	: false           	, // Override native save to handle LSP Code-Actions-On-Save See https://github.com/sublimelsp/LSP/issues/1725
+"vintageous_multi_cursor_exit_from_visual_mode"	: false           	, //|false| Exit visual multi cursor visual on quit key
+  //                                           	→ false           	    pressing a quit key (e.g. <Esc> or J) in multiple cursor visual mode the visual mode exits to normal mode but keeps the cursors
+  //                                           	→ true            	    pressing a quit key (e.g. <Esc> or J) in multiple cursor visual mode the visual mode exits all multiple cursors
+"vintageous_reset_mode_when_switching_tabs"    	: true            	, // Reset to normal mode when a tab is activated
+"vintageous_save_async"                        	: false           	, // Asynchronous file saving with commands like :w, :wq
+"vintageous_shell_silent"                      	: false           	, // Show output panel from shell commands
+"vintageous_sneak_use_ic_scs"                  	: 0               	,
+  //                                           	  0               	  Always case-sensitive
+  //                                           	  1               	  Case sensitivity is determined by 'ignorecase' and 'smartcase'
+"vintageous_terminal"                          	: null            		,// Name of program to use when starting a ":shell". Example: gnome-terminal
+// Enable key bindings prefaced by the control-key
+"vintageous_use_ctrl_keys"    	: true 		,
+"vintageous_use_super_keys"   	: false	, // Enable key bindings prefaced by the super-key, otherwise known as the command-key in OSX, and as the windows-key in Windows
+"vintageous_use_sys_clipboard"	: false	, // Propagate copy actions to the system clipboard
 }

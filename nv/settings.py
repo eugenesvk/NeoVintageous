@@ -253,9 +253,15 @@ def set_interactive(view, value: bool) -> None:
 def get_partial_sequence(view) -> str:
     return get_session_view_value(view, 'partial_sequence', '')
 
+def get_partial_text(view) -> str:
+    return get_session_view_value(view, 'partial_text', '')
+
 
 def set_partial_sequence(view, value: str) -> None:
     set_session_view_value(view, 'partial_sequence', value)
+
+def set_partial_text(view, value: str) -> None:
+    set_session_view_value(view, 'partial_text', value)
 
 
 # Indicate whether nv_process_notation is running.

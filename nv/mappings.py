@@ -21,7 +21,7 @@ import traceback
 
 from NeoVintageous.nv import plugin
 from NeoVintageous.nv.settings import get_mode
-from NeoVintageous.nv.settings import get_partial_sequence
+from NeoVintageous.nv.settings import get_partial_sequence, get_partial_text
 from NeoVintageous.nv.settings import is_plugin_enabled
 from NeoVintageous.nv.utils import get_file_type
 from NeoVintageous.nv.variables import expand_keys

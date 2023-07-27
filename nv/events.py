@@ -31,10 +31,7 @@ from NeoVintageous.nv.state import init_view
 from NeoVintageous.nv.utils import fix_eol_cursor
 from NeoVintageous.nv.utils import is_view
 from NeoVintageous.nv.utils import update_xpos
-from NeoVintageous.nv.vim import NORMAL
-from NeoVintageous.nv.vim import VISUAL
-from NeoVintageous.nv.vim import VISUAL_BLOCK
-from NeoVintageous.nv.vim import VISUAL_LINE
+from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.vim import enter_normal_mode
 from NeoVintageous.nv.vim import mode_to_char
 

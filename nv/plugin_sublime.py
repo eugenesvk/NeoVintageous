@@ -23,7 +23,7 @@ from NeoVintageous.nv.vi import seqs
 from NeoVintageous.nv.vi.cmd_base import ViOperatorDef
 from NeoVintageous.nv.vi.cmd_base import translate_action
 from NeoVintageous.nv.vim import ACTION_MODES
-from NeoVintageous.nv.vim import INSERT
+from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 
 
 __all__ = ()

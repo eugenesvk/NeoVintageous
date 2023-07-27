@@ -29,11 +29,8 @@ from NeoVintageous.nv.utils import regions_transformer_reversed
 from NeoVintageous.nv.utils import row_at
 from NeoVintageous.nv.vi import seqs
 from NeoVintageous.nv.vi.cmd_base import ViOperatorDef
+from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.vim import ACTION_MODES
-from NeoVintageous.nv.vim import INTERNAL_NORMAL
-from NeoVintageous.nv.vim import NORMAL
-from NeoVintageous.nv.vim import VISUAL
-from NeoVintageous.nv.vim import VISUAL_LINE
 from NeoVintageous.nv.vim import enter_normal_mode
 from NeoVintageous.nv.vim import run_motion
 

@@ -27,7 +27,7 @@ from NeoVintageous.nv.settings import set_action_count
 from NeoVintageous.nv.settings import set_motion_count
 from NeoVintageous.nv.settings import set_register
 from NeoVintageous.nv.state import reset_command_data
-from NeoVintageous.nv.vim import OPERATOR_PENDING
+from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 
 
 def evaluate_mapping(view, mapping: Mapping) -> None:

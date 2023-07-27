@@ -40,8 +40,7 @@ except Exception:  # pragma: no cover
 from NeoVintageous.nv.session import get_session_value
 from NeoVintageous.nv.session import maybe_do_runtime_save_session
 from NeoVintageous.nv.settings import get_setting
-from NeoVintageous.nv.vim import VISUAL
-from NeoVintageous.nv.vim import VISUAL_LINE
+from NeoVintageous.nv.modes import VISUAL, VISUAL_LINE
 from NeoVintageous.nv.vim import is_visual_mode
 
 

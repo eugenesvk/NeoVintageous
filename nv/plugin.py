@@ -15,13 +15,13 @@
 # You should have received a copy of the GNU General Public License
 # along with NeoVintageous.  If not, see <https://www.gnu.org/licenses/>.
 
-from NeoVintageous.nv.vim import INSERT as _INSERT
-from NeoVintageous.nv.vim import NORMAL as _NORMAL
-from NeoVintageous.nv.vim import OPERATOR_PENDING as _OPERATOR_PENDING
-from NeoVintageous.nv.vim import SELECT as _SELECT
-from NeoVintageous.nv.vim import VISUAL as _VISUAL
-from NeoVintageous.nv.vim import VISUAL_BLOCK as _VISUAL_BLOCK
-from NeoVintageous.nv.vim import VISUAL_LINE as _VISUAL_LINE
+from NeoVintageous.nv.modes import INSERT as _INSERT
+from NeoVintageous.nv.modes import NORMAL as _NORMAL
+from NeoVintageous.nv.modes import OPERATOR_PENDING as _OPERATOR_PENDING
+from NeoVintageous.nv.modes import SELECT as _SELECT
+from NeoVintageous.nv.modes import VISUAL as _VISUAL
+from NeoVintageous.nv.modes import VISUAL_BLOCK as _VISUAL_BLOCK
+from NeoVintageous.nv.modes import VISUAL_LINE as _VISUAL_LINE
 
 
 mappings = {

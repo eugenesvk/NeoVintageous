@@ -85,13 +85,7 @@ from NeoVintageous.nv.utils import next_non_blank
 from NeoVintageous.nv.utils import regions_transformer
 from NeoVintageous.nv.utils import row_at
 from NeoVintageous.nv.utils import save_view
-from NeoVintageous.nv.vim import INSERT
-from NeoVintageous.nv.vim import NORMAL
-from NeoVintageous.nv.vim import OPERATOR_PENDING
-from NeoVintageous.nv.vim import SELECT
-from NeoVintageous.nv.vim import VISUAL
-from NeoVintageous.nv.vim import VISUAL_BLOCK
-from NeoVintageous.nv.vim import VISUAL_LINE
+from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.vim import enter_normal_mode
 from NeoVintageous.nv.vim import status_message
 from NeoVintageous.nv.window import vnew

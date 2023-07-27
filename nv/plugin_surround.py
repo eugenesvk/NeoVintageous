@@ -32,12 +32,7 @@ from NeoVintageous.nv.vi.cmd_base import ViOperatorDef
 from NeoVintageous.nv.vi.cmd_base import translate_action
 from NeoVintageous.nv.vi.search import reverse_search
 from NeoVintageous.nv.vi.text_objects import get_text_object_region
-from NeoVintageous.nv.vim import INTERNAL_NORMAL
-from NeoVintageous.nv.vim import NORMAL
-from NeoVintageous.nv.vim import OPERATOR_PENDING
-from NeoVintageous.nv.vim import VISUAL
-from NeoVintageous.nv.vim import VISUAL_BLOCK
-from NeoVintageous.nv.vim import VISUAL_LINE
+from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.vim import enter_normal_mode
 from NeoVintageous.nv.vim import run_motion
 

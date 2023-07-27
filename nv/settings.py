@@ -25,7 +25,7 @@ from NeoVintageous.nv.session import get_session_view_value
 from NeoVintageous.nv.session import set_session_value
 from NeoVintageous.nv.session import set_session_view_value
 from NeoVintageous.nv.vim import DIRECTION_DOWN
-from NeoVintageous.nv.vim import UNKNOWN
+from NeoVintageous.nv.modes import UNKNOWN
 from NeoVintageous.nv.events_user import on_mode_change
 
 

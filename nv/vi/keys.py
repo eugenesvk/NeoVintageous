@@ -19,13 +19,7 @@ import re
 
 from NeoVintageous.nv import variables
 from NeoVintageous.nv.vi import seqs
-from NeoVintageous.nv.vim import INSERT
-from NeoVintageous.nv.vim import NORMAL
-from NeoVintageous.nv.vim import OPERATOR_PENDING
-from NeoVintageous.nv.vim import SELECT
-from NeoVintageous.nv.vim import VISUAL
-from NeoVintageous.nv.vim import VISUAL_BLOCK
-from NeoVintageous.nv.vim import VISUAL_LINE
+from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 
 
 mappings = { # map[key]=internal class/command

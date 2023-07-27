@@ -55,10 +55,7 @@ from NeoVintageous.nv.settings import set_visual_block_direction
 from NeoVintageous.nv.settings import set_xpos
 from NeoVintageous.nv.vim import DIRECTION_DOWN
 from NeoVintageous.nv.vim import DIRECTION_UP
-from NeoVintageous.nv.vim import INTERNAL_NORMAL
-from NeoVintageous.nv.vim import NORMAL
-from NeoVintageous.nv.vim import VISUAL
-from NeoVintageous.nv.vim import VISUAL_LINE
+from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.vim import is_visual_mode
 from sublime import CLASS_WORD_END
 from sublime import CLASS_WORD_START

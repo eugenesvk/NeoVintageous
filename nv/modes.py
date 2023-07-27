@@ -14,6 +14,15 @@ UNKNOWN         	= 'mode_unknown'
 VISUAL          	= 'mode_visual'
 VISUAL_BLOCK    	= 'mode_visual_block'
 VISUAL_LINE     	= 'mode_visual_line'
+EVENT_MODES = {
+    INSERT          : 'Insert'
+  , NORMAL          : 'Normal'
+  , REPLACE         : 'Replace'
+  , SELECT          : 'Select'
+  , VISUAL          : 'Visual'
+  , VISUAL_BLOCK    : 'VisualBlock'
+  , VISUAL_LINE     : 'VisualLine'
+  }
 
 from enum import auto, Flag, IntFlag
 class Mode(Flag):

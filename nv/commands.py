@@ -179,15 +179,7 @@ from NeoVintageous.nv.vi.units import prev_paragraph_start
 from NeoVintageous.nv.vi.units import word_ends
 from NeoVintageous.nv.vi.units import word_starts
 from NeoVintageous.nv.vim import EOF
-from NeoVintageous.nv.vim import INSERT
-from NeoVintageous.nv.vim import INTERNAL_NORMAL
-from NeoVintageous.nv.vim import NORMAL
-from NeoVintageous.nv.vim import REPLACE
-from NeoVintageous.nv.vim import SELECT
-from NeoVintageous.nv.vim import UNKNOWN
-from NeoVintageous.nv.vim import VISUAL
-from NeoVintageous.nv.vim import VISUAL_BLOCK
-from NeoVintageous.nv.vim import VISUAL_LINE
+from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.vim import clean_views
 from NeoVintageous.nv.vim import enter_insert_mode
 from NeoVintageous.nv.vim import enter_normal_mode

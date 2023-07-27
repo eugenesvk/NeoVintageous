@@ -32,10 +32,7 @@ from NeoVintageous.nv.ui import ui_bell
 from NeoVintageous.nv.utils import gluing_undo_groups
 from NeoVintageous.nv.utils import translate_char
 from NeoVintageous.nv.vi.keys import tokenize_keys
-from NeoVintageous.nv.vim import INSERT
-from NeoVintageous.nv.vim import NORMAL
-from NeoVintageous.nv.vim import OPERATOR_PENDING
-from NeoVintageous.nv.vim import REPLACE
+from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.vim import enter_normal_mode
 from NeoVintageous.nv.vim import run_motion
 

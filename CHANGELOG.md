@@ -38,6 +38,7 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
       " or use the old syntax with an extra :colon instead of UpperCamelCase (convenient for no-argument commands)
       noremap q ::move_to<CR>
       ```
+   + :sparkles: surround: allow users to configure marks, mark aliases, when to append an extra space
   - __Changed__
    + commands: add key symbols like `⎈` to command name for easier visual differentiation and 1-symbol-search 
   - __Fixed__

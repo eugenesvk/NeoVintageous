@@ -28,6 +28,29 @@
 //  },
 // },
 
+// 3. Set values/reorder the status bar mode indicator
+// "status"       	: { // indicator format is '<prefix><Mode><suffix>', where Mode can be either of the space-separated values
+//   //normal     	Ⓝ N
+//   //insert     	ⓘ I
+//   //command    	Ⓒ C
+//   //visual     	Ⓥ V
+//   //visualblock	▋ VB
+//   //visualline 	━ VL
+//   //select     	Ⓢ S
+//   //operator   	Ⓞ O
+//   //terminal   	Ⓣ T
+//   //replace    	Ⓡ R
+//   //Ⓜ M        	 map
+//   //           	 map!
+//   //Ⓛ L        	//
+//   //Ⓧ X        	//
+//   "prefix"     	: "",
+//   "suffix"     	: "",
+//   "N"          	: " ", // space roughly the width of an indicator to avoid jitter on mode change
+//   "insert"     	: "ⓘ",
+//   "id_mode"    	: "00_nv_mode", // '00_mode' number defines order priority of custom status bar statuses, so 00 should be left-most
+//   "id_seq"     	: "vim-seq",
+// },
 
 // Plugins
 // 1. Use custom brackets in Surround plugin

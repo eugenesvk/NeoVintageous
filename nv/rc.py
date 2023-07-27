@@ -65,6 +65,7 @@ def _unload() -> None:
 
     variables_clear()
     mappings_clear()
+    _unload_cfgU()
 
 
 def _load() -> None:
@@ -80,6 +81,7 @@ def _load() -> None:
         print('%s file loaded' % _file_name())
     except FileNotFoundError:
         _log.info('%s file not found', _file_name())
+    load_cfgU()
 
 
 # Recursive mappings (:map, :nmap, :omap, :smap, :vmap) are not supported. They
@@ -116,3 +118,54 @@ def _parse_line(line: str):
         message('error detected while processing {} at line "{}":\n{}'.format(_file_name(), line.rstrip(), str(e)))
 
     return None
+
+
+from NeoVintageous.plugin import PACKAGE_NAME
+from NeoVintageous.nv.vim import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
+
+cfgU_settings = (f'{PACKAGE_NAME}.sublime-settings')
+cfgU_command = (f'{PACKAGE_NAME}.json')
+class cfgU():
+
+    @staticmethod
+    def load():
+        from NeoVintageous.nv.mappings import mappings_add, mappings_add_text
+
+        global user_settings
+
+        win = sublime.active_window()
+
+        cfgU.user_settings = user_settings
+
+        cfgU.keymap = user_settings.get('keymap'    , None)
+
+        cfgU.events = user_settings.get('events'    , None)
+        if not (evtT := type(cfgU.events)) is dict:
+            print(f"❗️ ‘events’ in ‘{cfgU_settings}’ should be a dictionary, not {evtT}")
+            cfgU.events = None
+
+        cfgU.surround   = user_settings.get('surround'  , None)
+        if not (cfgT := type(cfgU.surround)) is dict:
+            print(f"❗️cfgU.surround=¦{cfgU.surround}¦")
+            _log.warn(f"⚠️‘surround’ in ‘{cfgU_settings}’ should be a dictionary, not {cfgT}")
+            cfgU.surround = None
+
+
+def load_cfgU() -> None: # load alternative user config file to a global class and add a watcher event to track changes
+    # load user config file to a global class and add a watcher event to track changes
+    global cfgU
+    global user_settings
+
+    try:
+        user_settings = sublime.load_settings(cfgU_settings)
+        cfgU.load();
+        user_settings.clear_on_change(PACKAGE_NAME)
+        user_settings.add_on_change  (PACKAGE_NAME, lambda: cfgU.load())
+    except FileNotFoundError:
+        _log.info(f'‘{cfgU_settings}’ or ‘{cfgU_command}’ file(s) not found')
+
+def _unload_cfgU() -> None: # clear config change watcher
+    global cfgU
+    global user_settings
+
+    user_settings.clear_on_change(PACKAGE_NAME)

@@ -17,6 +17,8 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
   - (a wish to) Support nicer configuration:
     + :sparkles: support for raw Sublime Text commands in user config without having to convert their names or arguments (or just the command names by adding extra `:` prefix)
     + :sparkles: rudimentary foundations to support custom key symbols in user config, e.g., `noremap ⇟ w` to move by word with a <kbd>⇟</kbd>PageDown key
+  - a few other extensions:
+    + :sparkles: surround: allow users to configure marks, mark aliases, when to append an extra space
 
 ## About NeoVintageous
 

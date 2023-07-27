@@ -135,18 +135,17 @@ class cfgU():
 
         win = sublime.active_window()
 
-        cfgU.user_settings = user_settings
+        _log.debug(f'🌕️@cfgU.load: user_settings={user_settings.to_dict()}\nuser_commands={user_commands.to_dict()}')
 
         cfgU.keymap = user_settings.get('keymap'    , None)
 
         cfgU.events = user_settings.get('events'    , None)
         if not (evtT := type(cfgU.events)) is dict:
-            print(f"❗️ ‘events’ in ‘{cfgU_settings}’ should be a dictionary, not {evtT}")
+            _log.warn(f"⚠️‘events’ in ‘{cfgU_settings}’ should be a dictionary, not {evtT}")
             cfgU.events = None
 
         cfgU.surround   = user_settings.get('surround'  , None)
         if not (cfgT := type(cfgU.surround)) is dict:
-            print(f"❗️cfgU.surround=¦{cfgU.surround}¦")
             _log.warn(f"⚠️‘surround’ in ‘{cfgU_settings}’ should be a dictionary, not {cfgT}")
             cfgU.surround = None
 

@@ -124,7 +124,6 @@ from NeoVintageous.plugin import PACKAGE_NAME
 from NeoVintageous.nv.modes import EVENT_MODES
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.modes import Mode as M, text_to_modes, MODE_NAMES_OLD
-from NeoVintageous.nv.mappings import mappings_add, mappings_add_text
 
 cfgU_settings = (f'{PACKAGE_NAME}.sublime-settings')
 cfgU_command = (f'{PACKAGE_NAME}.json')
@@ -141,6 +140,7 @@ class cfgU():
 
     @staticmethod
     def load():
+        from NeoVintageous.nv.mappings import mappings_add, mappings_add_text
         global user_settings, user_commands
 
         win = sublime.active_window()

@@ -82,6 +82,18 @@ mode_names = { # unique text abbreviations per mode (combinations are handled in
 # l map   |   | • | • |   |   |   |    | • |
 # Normal, Insert, Command-line, Visual, Select, Operator-pending, Terminal-Job, Lang-Arg
 
+MODE_NAMES_OLD = { # ToDo: replace all with just enums, this is for temporary getting old names from the enums
+  Mode.Insert         	: INSERT,
+  Mode.InternalNormal 	: INTERNAL_NORMAL,
+  Mode.Normal         	: NORMAL,
+  Mode.OperatorPending	: OPERATOR_PENDING,
+  Mode.Replace        	: REPLACE,
+  Mode.Select         	: SELECT,
+  Mode.Unknown        	: UNKNOWN,
+  Mode.Visual         	: VISUAL,
+  Mode.VisualBlock    	: VISUAL_BLOCK,
+  Mode.VisualLine     	: VISUAL_LINE,
+}
 mode_names_rev = dict() # reverse mode dictionary for easier mapping of user strings to modes
 for mode,mode_text in mode_names.items():
   if isinstance(mode_text, str):

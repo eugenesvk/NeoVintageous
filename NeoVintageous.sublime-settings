@@ -4,20 +4,20 @@
   // 2. Run command "NeoVintageous: Generate non-QWERTY key bindings"
   // 3. set "alias" to true to use non-latin keybinds like `map й w` in .neovintageous
   // (doesn't work for key combinations pending resolution of https://github.com/sublimehq/sublime_text/issues/5980)
-//"keymap"  	: {
-//    qwerty	   `12 34567890-=\  qwertyuiop[] asdfghjkl;' zxcvbnm,./
-//  "lower" 	: "ё12 34567890-=\\ йцукенгшщзхъ фывапролджэ ячсмитьбю.",
-//    qwerty	   ~!@ #$%^&*()_+|  QWERTYUIOP{} ASDFGHJKL:" ZXCVBNM<>?
-//  "upper" 	: "Ё!@ #$%^&*()_+/  ЙЦУКЕНГШЩЗХЪ ФЫВАПРОЛДЖЭ ЯЧСМИТЬБЮ?", // remap only unique keys, leave symbols as is not to lose them in Latin layout
-//  "alias" 	: true,	// use `map й w` in .neovintageous to map non-latin keys separately from latin ones
+// "keymap"  	: {
+//   //qwerty	   `12 34567890-=\  qwertyuiop[] asdfghjkl;' zxcvbnm,./
+//  "lower"  	: "ё12 34567890-=\\ йцукенгшщзхъ фывапролджэ ячсмитьбю.",
+//   //qwerty	   ~!@ #$%^&*()_+|  QWERTYUIOP{} ASDFGHJKL:" ZXCVBNM<>?
+//  "upper"  	: "Ё!@ #$%^&*()_+/  ЙЦУКЕНГШЩЗХЪ ФЫВАПРОЛДЖЭ ЯЧСМИТЬБЮ?", // remap only unique keys, leave symbols as is not to lose them in Latin layout
+//  "alias"  	: true,	// use `map й w` in .neovintageous to map non-latin keys separately from latin ones
 //  // assigns to each command an extra keybind in user layout so that said key can be used in the TO sublime-keymap field
 //  // and keymap generation command adds those to the TO field
 //  },
 
-// 2. to run cli commands on entering/leaving a mode add a [list] of command + arguments in the 'events' dictionary:
-  // available modes (CaSe sensitive: Insert Normal Replace Select Visual VisualBlock VisualLine
-  // available mode events (CaSe sensitive: Enter Leave
-//"events"       	: {
+// // 2. to run cli commands on entering/leaving a mode add a [list] of command + arguments in the 'events' dictionary:
+//   // available modes (CaSe sensitive: Insert Normal Replace Select Visual VisualBlock VisualLine
+//   // available mode events (CaSe sensitive: Enter Leave
+// "events"      	: {
 //  "InsertEnter"	: ["~/.local/bin/karabiner_cli", "--set-variables", "{\"isNVⓘ\":1}"],
 //  "InsertLeave"	: ["~/.local/bin/karabiner_cli", "--set-variables", "{\"isNVⓘ\":0}"],
 //  "osx"        	: { // platform-specific commands have higher priority
@@ -26,10 +26,12 @@
 //  "NormalEnter"	: ["~/.local/bin/karabiner_cli", "--set-variables", "{\"isNVⓃ\":1}"],
 //  "NormalLeave"	: ["~/.local/bin/karabiner_cli", "--set-variables", "{\"isNVⓃ\":0}"],
 //  },
-//}
+// },
 
-// 3. use custom brackets in Surround plugin
-//"surround"           	: {
+
+// Plugins
+// 1. Use custom brackets in Surround plugin
+// "surround"          	: {
 //  "punctuation marks"	: { // add to defaults (){}[]<>
 //    "‘":"‘’","“":"“”",
 //    "‹":"‹›","«":"«»",
@@ -47,6 +49,6 @@
 //    "r":"‹","t":"«","y":"`'","o":"〔","p":"␌",
 //    "z":"⸨","n":"【","m":"「",",":"〈",".":"⟪",
 //  } //"b":")","B":"}","r":"]","a":">",
-//}
+// },
 
 }

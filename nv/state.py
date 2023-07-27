@@ -67,18 +67,35 @@ from NeoVintageous.nv.vim import reset_status_line
 from NeoVintageous.nv.vim import run_action
 from NeoVintageous.nv.vim import run_motion
 
+from NeoVintageous.nv.rc import cfgU
 
 from NeoVintageous.plugin import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
 
 
+_prefix = ''
+_suffix = ''
+_id_mode = 'vim-mode'
+_id_seq  = 'vim-seq'
+def reload_with_user_data() -> None:
+    if hasattr(cfgU,'status') and (cfg := cfgU.status):
+        global _prefix, _suffix, _id_mode, _id_seq
+        if (_key := 'prefix')  in cfg and type(_val := cfg[_key]) == str:
+            _prefix = _val
+        if (_key := 'suffix')  in cfg and type(_val := cfg[_key]) == str:
+            _suffix = _val
+        if (_key := 'id_mode') in cfg and type(_val := cfg[_key]) == str:
+            _id_mode = _val
+        if (_key := 'id_seq')  in cfg and type(_val := cfg[_key]) == str:
+            _id_seq = _val
+
 def update_status_line(view) -> None:
     mode_name = mode_to_name(get_mode(view))
     if mode_name:
-        view.set_status('vim-mode', '-- {} --'.format(mode_name))
+        view.set_status(_id_mode, f'{_prefix}{mode_name}{_suffix}')
 
-    view.set_status('vim-seq', get_sequence(view))
+    view.set_status(_id_seq, get_sequence(view))
 
 
 def must_collect_input(view, motion: ViMotionDef, action: ViOperatorDef) -> bool:

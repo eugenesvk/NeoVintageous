@@ -21,6 +21,7 @@ import traceback
 from sublime import windows as _windows
 
 from NeoVintageous.nv.polyfill import status_message as _status_message
+from NeoVintageous.nv.rc import cfgU
 
 from NeoVintageous.plugin import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
@@ -34,16 +35,8 @@ _log.setLevel(DEFAULT_LOG_LEVEL)
 # is INTERNAL_NORMAL's job. INTERNAL_NORMAL is a pseudomode, because global
 # state's .mode property should never set to it, yet it's set in vi_cmd_data
 # often. Note that for pure motions we still use plain NORMAL mode.
-INSERT = 'mode_insert'
-INTERNAL_NORMAL = 'mode_internal_normal'
-NORMAL = 'mode_normal'
-OPERATOR_PENDING = 'mode_operator_pending'
-REPLACE = 'mode_replace'
-SELECT = 'mode_select'
-UNKNOWN = 'mode_unknown'
-VISUAL = 'mode_visual'
-VISUAL_BLOCK = 'mode_visual_block'
-VISUAL_LINE = 'mode_visual_line'
+from NeoVintageous.nv.modes import Mode as M, text_to_modes, text_to_mode_alone
+from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 
 ACTION_MODES = (NORMAL, VISUAL, VISUAL_LINE, VISUAL_BLOCK)
 MOTION_MODES = (NORMAL, OPERATOR_PENDING, VISUAL, VISUAL_LINE, VISUAL_BLOCK)
@@ -55,16 +48,17 @@ EOF = '\x00'
 NL = '\n'
 
 _MODES = {
-    INSERT: 'INSERT',
-    INTERNAL_NORMAL: '',
-    NORMAL: '',
-    OPERATOR_PENDING: '',
-    VISUAL: 'VISUAL',
-    VISUAL_BLOCK: 'VISUAL BLOCK',
-    VISUAL_LINE: 'VISUAL LINE',
-    UNKNOWN: 'UNKNOWN',
-    REPLACE: 'REPLACE',
-    SELECT: 'SELECT',
+    M.Insert         	: 'ⓘ',
+    M.InternalNormal 	: '',
+    M.Normal         	: 'Ⓝ',
+    M.OperatorPending	: 'Ⓞ',
+    M.V              	: 'Ⓥ',
+    M.Visual         	: 'Ⓥ',
+    M.VisualBlock    	: 'Ⓥ▋',
+    M.VisualLine     	: 'Ⓥ━',
+    M.Unknown        	: '❓',
+    M.Replace        	: 'Ⓡ',
+    M.Select         	: 'Ⓢ',
 }
 
 _MODE2CHAR = {
@@ -76,12 +70,25 @@ _MODE2CHAR = {
     VISUAL_BLOCK: 'b',
 }
 
+def reload_with_user_data() -> None:
+    if hasattr(cfgU,'status') and (cfg := cfgU.status):
+        global _MODES, _id_mode, _id_seq
+        for _key in cfg: # 'insert'
+            if type(_val := cfg[_key]) == str:
+                if (modes := text_to_mode_alone(_key)):
+                    _MODES[modes] = _val
+        if (_key := 'id_mode') in cfg and type(_val := cfg[_key]) == str:
+            _id_mode = _val
+        if (_key := 'id_seq')  in cfg and type(_val := cfg[_key]) == str:
+            _id_seq = _val
+
 
 def mode_to_name(mode: str) -> str:
+    mode_enum = text_to_modes(mode)
     try:
-        return _MODES[mode]
+        return _MODES[mode_enum]
     except KeyError:
-        return '*UNKNOWN'
+        return '❔'
 
 
 def mode_to_char(mode: str) -> str:
@@ -91,10 +98,12 @@ def mode_to_char(mode: str) -> str:
         return ''
 
 
+_id_mode = 'vim-mode'
+_id_seq  = 'vim-seq'
 def reset_status_line(view, mode: str) -> None:
-    view.erase_status('vim-seq')
+    view.erase_status(_id_seq)
     if mode == NORMAL:
-        view.erase_status('vim-mode')
+        view.set_status(_id_mode, _MODES[M.Normal])
 
 
 def is_visual_mode(mode: str) -> bool:

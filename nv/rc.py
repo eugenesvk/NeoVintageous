@@ -121,7 +121,7 @@ def _parse_line(line: str):
 
 
 from NeoVintageous.plugin import PACKAGE_NAME
-from NeoVintageous.nv.vim import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
+from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 
 cfgU_settings = (f'{PACKAGE_NAME}.sublime-settings')
 cfgU_command = (f'{PACKAGE_NAME}.json')
@@ -144,16 +144,26 @@ class cfgU():
             _log.warn(f"⚠️‘events’ in ‘{cfgU_settings}’ should be a dictionary, not {evtT}")
             cfgU.events = None
 
+        cfgU.status   = user_settings.get('status'  , None)
+        if not (cfgT := type(cfgU.status)) is dict:
+            _log.warn(f"⚠️‘status’ in ‘{cfgU_settings}’ should be a dictionary, not {cfgT}")
+            cfgU.status = None
+
         cfgU.surround   = user_settings.get('surround'  , None)
         if not (cfgT := type(cfgU.surround)) is dict:
             _log.warn(f"⚠️‘surround’ in ‘{cfgU_settings}’ should be a dictionary, not {cfgT}")
             cfgU.surround = None
+
 
         _import_plugins_with_user_data()
 
 def _import_plugins_with_user_data():
     from NeoVintageous.nv import plugin_surround
     plugin_surround.reload_with_user_data()
+    from NeoVintageous.nv import vim
+    vim.reload_with_user_data()
+    from NeoVintageous.nv import state
+    state.reload_with_user_data()
 
 def load_cfgU() -> None: # load alternative user config file to a global class and add a watcher event to track changes
     # load user config file to a global class and add a watcher event to track changes

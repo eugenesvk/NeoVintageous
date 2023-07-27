@@ -19,6 +19,8 @@ import logging
 import re
 import traceback
 
+from typing import Union
+
 from NeoVintageous.nv import plugin
 from NeoVintageous.nv.settings import get_mode
 from NeoVintageous.nv.settings import get_partial_sequence, get_partial_text
@@ -48,7 +50,7 @@ _mappings = {
 
 class Mapping:
 
-    def __init__(self, lhs: str, rhs: str):
+    def __init__(self, lhs: str, rhs: Union[str, list]):
         self.lhs = lhs
         self.rhs = rhs
 
@@ -108,7 +110,7 @@ def _find_full_match(view, mode: str, lhs: str):
 def _find_full_match_text(view, mode: str, lhs: str):
     rhs = _mappings_text[mode].get(lhs)
     if rhs:
-        if isinstance(rhs, str):
+        if isinstance(rhs, (str, list)):
             return rhs
         try:
             return _mappings_text[mode][lhs][get_file_type(view)]
@@ -150,7 +152,8 @@ def mappings_add(mode: str, lhs: str, rhs: str) -> None:
 
     _mappings[mode][_normalise_lhs(lhs)] = rhs
 
-def mappings_add_text(mode: str, lhs: str, rhs: str) -> None:
+def mappings_add_text(mode: str, lhs: str, rhs: Union[str, list]) -> None:
+    # {"m":"cmd1"} or {"m":["cmd1","cmd2"]}
     # print(f" mappings_add_text mode={mode} lhs={lhs} rhs={rhs}")
     if re.match('^FileType$', lhs):
         parsed = re.match('^([^ ]+) ([^ ]+)\\s+', rhs)

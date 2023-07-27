@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with NeoVintageous.  If not, see <https://www.gnu.org/licenses/>.
 
+from typing import Union
+
 from NeoVintageous.nv.ex_cmds import do_ex_user_cmdline
 from NeoVintageous.nv.mappings import Mapping
 from NeoVintageous.nv.settings import get_action_count
@@ -119,24 +121,26 @@ def _handle_rhs(window, rhs: str) -> None:
 from NeoVintageous.nv         	import plugin
 from NeoVintageous.nv.vi      	import keys
 from NeoVintageous.nv.mappings	import mappings_resolve_text
-def _handle_rhs_text(view, rhs: str) -> None: # find a key that is mapped to the same internal function as from text_command, and pass that key for later processing. Removes the need to repeat internal functions to handle text_commands
+def _handle_rhs_text(view, rhs: Union[str, list]) -> None: # find a key that is mapped to the same internal function as from text_command, and pass that key for later processing. Removes the need to repeat internal functions to handle text_commands
     win = view.window()
     mode = get_mode(view)
-    text_commands = rhs.lower() # ToDo handle list
-    command_txt = mappings_resolve_text(view, text_commands=text_commands, mode=mode, check_user_mappings=False)
-    if command_txt:
-        if mode in (mappings := plugin.mappings_reverse):
-            dict_cls_to_cmd = mappings[mode]
-            for clsT,seq in dict_cls_to_cmd.items():
-                if clsT == type(command_txt):
-                    _log.debug(f"key that matches our command_txt is ¦{seq}¦ from plugin_dict's class ¦{clsT}¦")
-                    win.run_command('nv_process_notation',{'keys':seq, 'check_user_mappings':False,})
-                    return
-        if mode in (mappings := keys.mappings_reverse):
-            dict_cls_to_cmd = mappings[mode]
-            value_prev = None
-            for clsT,seq in dict_cls_to_cmd.items():
-                if clsT == type(command_txt):
-                    _log.debug(f"key that matches our command_txt is ¦{seq}¦ from keys_dict's class ¦{clsT}¦")
-                    win.run_command('nv_process_notation',{'keys':seq, 'check_user_mappings':False,})
-                    return
+    text_commands = [rhs] if isinstance(rhs, str) else rhs
+    for text_command_i in text_commands:
+        text_command = text_command_i.lower()
+        command_txt = mappings_resolve_text(view, text_commands=text_command, mode=mode, check_user_mappings=False)
+        if command_txt:
+            if mode in (mappings := plugin.mappings_reverse):
+                dict_cls_to_cmd = mappings[mode]
+                for clsT,seq in dict_cls_to_cmd.items():
+                    if clsT == type(command_txt):
+                        _log.debug(f"key that matches our command_txt is ¦{seq}¦ from plugin_dict's class ¦{clsT}¦")
+                        win.run_command('nv_process_notation',{'keys':seq, 'check_user_mappings':False,})
+                        break
+            if mode in (mappings := keys.mappings_reverse):
+                dict_cls_to_cmd = mappings[mode]
+                value_prev = None
+                for clsT,seq in dict_cls_to_cmd.items():
+                    if clsT == type(command_txt):
+                        _log.debug(f"key that matches our command_txt is ¦{seq}¦ from keys_dict's class ¦{clsT}¦")
+                        win.run_command('nv_process_notation',{'keys':seq, 'check_user_mappings':False,})
+                        break

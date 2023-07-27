@@ -278,17 +278,16 @@ def assign(seq: list, modes, *args, **kwargs):
     return inner
 
 
-def assign_text(seq: list, modes: tuple, *args, **kwargs):
-    """
-    Register a 'text command' to 'command' mapping with NeoVintageous
+def assign_text(commands:list, modes:tuple, *args, **kwargs):
+    """Register a 'text command' to 'command' mapping with NeoVintageous
       'text command' must be known to NeoVintageous (converted to lower case)
       'command'      must be a ViMotionDef or ViOperatorDef
     Decorated class is instantiated with `*args` and `**kwargs`.
-    @keys: A list of (`mode:tuple`, `sequence:list`) pairs to map the decorated class to
+    @keys: A list of (`mode:tuple`, `commands:list`) pairs to map the decorated class to
     """
     def inner(cls):
         for mode in modes:
-            for seq_i in seq:
-                mappings_text[mode][seq_i.lower()] = cls(*args, **kwargs)
+            for cmd in commands:  # 'EnterInsertMode' → class ViEnterInsertMode(ViOperatorDef)
+                mappings_text[mode][cmd.lower()] = cls(*args, **kwargs)
         return cls
     return inner

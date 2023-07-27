@@ -22,7 +22,7 @@ import re
 
 import sublime
 
-from NeoVintageous.nv.vim import message
+from NeoVintageous.nv.polyfill import nv_message as message
 
 
 from NeoVintageous.plugin import DEFAULT_LOG_LEVEL

@@ -38,6 +38,10 @@ def status_message(msg: str, *args: str) -> None:
     _status_message(_format_message(msg, *args))
 
 
+def nv_message(msg: str, *args: str) -> None:
+    status_message('NeoVintageous: ' + msg, *args)
+
+
 def _format_message(msg: str, *args) -> str:
     if args:
         msg = msg % args

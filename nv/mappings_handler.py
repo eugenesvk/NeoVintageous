@@ -29,6 +29,10 @@ from NeoVintageous.nv.settings import set_register
 from NeoVintageous.nv.state import reset_command_data
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 
+import logging
+from NeoVintageous.plugin import DEFAULT_LOG_LEVEL
+_log = logging.getLogger(__name__)
+_log.setLevel(DEFAULT_LOG_LEVEL)
 
 def evaluate_mapping(view, mapping: Mapping) -> None:
     # TODO Review Why does rhs of mapping need to be resequenced in OPERATOR PENDING mode?

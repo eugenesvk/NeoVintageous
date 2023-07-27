@@ -130,6 +130,7 @@ def _normalise_lhs(lhs: str) -> str:
 
 
 def mappings_add(mode: str, lhs: str, rhs: str) -> None:
+    # nnoremap FileType go gd :LspSymbolDefinition<CR>
     if re.match('^FileType$', lhs):
         parsed = re.match('^([^ ]+) ([^ ]+)\\s+', rhs)
         if parsed:
@@ -147,6 +148,7 @@ def mappings_add(mode: str, lhs: str, rhs: str) -> None:
                     _mappings[mode][file_type_lhs_norm] = {'': match}
 
                 _mappings[mode][file_type_lhs_norm][file_type] = file_type_rhs
+                #                 gd                   go        :LspSymbolDefinition<CR>
 
             return
 

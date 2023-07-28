@@ -194,8 +194,14 @@ class FeedKeyHandler():
         set_partial_sequence(self.view, get_partial_sequence(self.view) + self.key)
         set_partial_text    (self.view, get_partial_text    (self.view) + self.key)
 
-        command = mappings_resolve(self.view, check_user_mappings=self.check_user_mappings)
+        command_seq = mappings_resolve     (self.view, check_user_mappings=self.check_user_mappings)
+        command_txt = mappings_resolve_text(self.view, check_user_mappings=self.check_user_mappings)
 
+        self.command = command_txt
+        if (isTextHandled := self._handle_text()):
+            return
+
+        command = command_seq
         if isinstance(command, IncompleteMapping):
             return
 
@@ -207,7 +213,7 @@ class FeedKeyHandler():
             return
 
         if isinstance(command, Mapping):
-            self._handle_mapping(command)
+            self._handle_mapping     (command)
             return
 
         if isinstance(command, CommandNotFound):
@@ -247,10 +253,36 @@ class FeedKeyHandler():
 
         self._handle_command(command, self.do_eval)
 
+    def _handle_text(self) -> bool:
+        command_seq = self.command_txt
+        command_txt = self.command_seq
+        command     = command_txt
+
+        if isinstance(command, IncompleteMapping):
+            return True
+        if isinstance(command, ViOpenNameSpace): # ToDo
+            return True
+        if isinstance(command, ViOpenRegister): # ToDo
+            set_capture_register(self.view, True)
+            return True
+        if isinstance(command, Mapping):
+            self._handle_mapping_text(command)
+            return True
+        if isinstance(command, CommandNotFound): # ToDo
+            return False # pass to handle sequence
+        if (isinstance(command, ViOperatorDef) and get_mode(self.view) == OPERATOR_PENDING):
+            return False # pass to handle sequence
+        return False # pass to handle sequence
+
     def _handle_mapping(self, mapping: Mapping) -> None:
         # TODO Review What happens if Mapping + do_eval=False
         if self.do_eval:
             evaluate_mapping(self.view, mapping)
+
+    def _handle_mapping_text(self, mapping: Mapping) -> None:
+        # TODO Review What happens if Mapping + do_eval=False
+        if self.do_eval:
+            evaluate_mapping_text(self.view, mapping)
 
     def _handle_command(self, command: ViCommandDefBase, do_eval: bool) -> None:
         # Raises:

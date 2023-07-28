@@ -188,8 +188,8 @@ class FeedKeyHandler():
         # If the user has defined a mapping that starts with a number i.e. count
         # then the count handler has to be skipped otherwise it won't resolve.
         # See https://github.com/NeoVintageous/NeoVintageous/issues/434.
-        can_resolve_seq = mappings_can_resolve     (self.view, self.key)
         can_resolve_txt = mappings_can_resolve_text(self.view, self.key)
+        can_resolve_seq = mappings_can_resolve     (self.view, self.key)
         self._dbg_txt += f"{'✓' if can_resolve_txt else '✗'}TXT ⌨️¦{self.key}¦"
         self._dbg_seq += f"{'✓' if can_resolve_seq else '✗'}SEQ ⌨️¦{self.key}¦"
         if not can_resolve_txt and not can_resolve_seq:
@@ -200,8 +200,8 @@ class FeedKeyHandler():
         set_partial_sequence(self.view, get_partial_sequence(self.view) + self.key)
         set_partial_text    (self.view, get_partial_text    (self.view) + self.key)
 
-        command_seq = mappings_resolve     (self.view, check_user_mappings=self.check_user_mappings)
         command_txt = mappings_resolve_text(self.view, check_user_mappings=self.check_user_mappings)
+        command_seq = mappings_resolve     (self.view, check_user_mappings=self.check_user_mappings)
         self._dbg_seq += f" part¦{_part_seq}¦"
         self._dbg_txt += f" part¦{_part_txt}¦"
         #m# cmd_seq¦<ViSetMark>¦  cmd_txt¦<NeoVintageous.nv.mappings.Mapping object at 0x10a2468b0>¦

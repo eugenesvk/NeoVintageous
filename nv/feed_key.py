@@ -60,10 +60,15 @@ from NeoVintageous.nv.vi.keys import to_bare_command_name
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.vim import enter_normal_mode
 from NeoVintageous.nv.vim import is_visual_mode
+from NeoVintageous.nv.log import addLoggingLevel, stream_handler
 
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
-
+addLoggingLevel('KEY', DEFAULT_LOG_LEVEL - 5)
+_log.setLevel('KEY')
+if _log.hasHandlers(): # clear existing handlers, including sublime's
+    logging.getLogger().handlers.clear()
+    _log.addHandler(stream_handler)
 
 class FeedKeyHandler():
 

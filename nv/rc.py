@@ -168,11 +168,11 @@ class cfgU():
         _import_plugins_with_user_data()
 
         # todo: #? convert mappings_add to a helper function that accepts enum2|enum2
-        commands_all = user_commands.get('commands')
-        if not (cfgT := type(commands_all)) is dict:
-            _log.warn(f"⚠️Type of ‘commands’ @ ‘{cfgU_command}’ should be dict, not {cfgT}")
+        keybinds = user_commands.get('keybind')
+        if not (cfgT := type(keybinds)) is dict:
+            _log.warn(f"⚠️Type of ‘keybind’ @ ‘{cfgU_command}’ should be dict, not {cfgT}")
         else:
-            for mode_string,command_list in commands_all.items():
+            for mode_string,command_list in keybinds.items():
                 #{↑"NI"    :↑[{"m":"cmd1"},{"n":"cmd2"},]}
                 if not (cfgT := type(command_list)) is list:
                     _log.warn(f"⚠️Type of ‘{mode_string}’ @ ‘{cfgU_command}’ should be list, not {cfgT}")

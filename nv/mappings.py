@@ -147,6 +147,7 @@ def _normalise_lhs(lhs: str) -> str:
 
 def mappings_add(mode: str, lhs: str, rhs: str) -> None:
     # nnoremap FileType go gd :LspSymbolDefinition<CR>
+    _log.map(f" @mappings_add mode={mode} lhs={lhs} rhs={rhs}")
     if re.match('^FileType$', lhs):
         parsed = re.match('^([^ ]+) ([^ ]+)\\s+', rhs)
         if parsed:
@@ -251,12 +252,14 @@ def _text_to_command(view, text: str, mode: str): # mode + text-command → comm
     # → ViCommandDefBase | CommandNotFound
     if mode in plugin.mappings_text:
         plugin_command = plugin.mappings_text[mode].get(text)
+        _log.map(f" plugin_command = {plugin_command}")
         if plugin_command:
             if is_plugin_enabled(view, plugin_command):
                 return plugin_command
 
     if mode in keys.mappings_text:
         command = keys.mappings_text[mode].get(text)
+        _log.map(f" keys_cmd={command} from text={text}")
         if command:
             return command
 
@@ -282,6 +285,7 @@ def _seq_to_command(view, seq: str, mode: str):
 
     if mode in keys.mappings:
         command = keys.mappings[mode].get(seq)
+        _log.map(f" keys_cmd={command} from seq={seq}")
         if command:
             return command
 
@@ -310,6 +314,7 @@ def mappings_resolve(view, sequence: str = None, mode: str = None, check_user_ma
 
     # We usually need to look at the partial sequence, but some commands do
     # weird things, like ys, which isn't a namespace but behaves as such.
+    _log.map(f"  inSEQ¦{sequence}¦ part_seq¦{get_partial_sequence(view)}¦")
     seq = sequence or get_partial_sequence(view)
 
     command = None
@@ -331,6 +336,7 @@ def mappings_resolve(view, sequence: str = None, mode: str = None, check_user_ma
         # off the responsibility to the feed key command.
 
         command = _seq_to_mapping(view, seq)
+        _log.map(f" inSEQ user_map _seq_to_mapping¦{command}")
 
         if not command:
             if not sequence:
@@ -339,6 +345,7 @@ def mappings_resolve(view, sequence: str = None, mode: str = None, check_user_ma
 
     if not command:
         command = _seq_to_command(view, to_bare_command_name(seq), mode or get_mode(view))
+        _log.map(f" inSEQ _seq_to_command¦{command}")
 
     _log.info('resolved %s mode=%s sequence=%s %s', command, mode, sequence, command.__class__.__mro__)
 
@@ -353,16 +360,21 @@ def mappings_resolve_text(view, text_commands: list = None, mode: str = None, ch
     # → Mapping |  CommandNotFound
 
     # We usually need to look at the partial sequence, but some commands do weird things, like ys, which isn't a namespace but behaves as such.
+    _log.map(f"  inTXT text_commands = {text_commands}  get_partial_text = {get_partial_text(view)}")
     text_cmd = text_commands or get_partial_text(view)
     command = None
     if check_user_mappings:
         command = _text_cmd_to_mapping(view, text_cmd)
+        _log.map(f"  inTXT user_map _text_cmd_to_mapping¦{command}")
         if not command:
             if not text_cmd:
                 if _has_partial_matches_text(view, get_mode(view), text_cmd):
                     return IncompleteMapping()
     if not command:
         command = _text_to_command(view, text_cmd, mode or get_mode(view))
+        _log.map(f"  inTXT _text_to_command¦{command}")
     lhs = command.lhs if hasattr(command, 'lhs') else ''
     rhs = command.rhs if hasattr(command, 'rhs') else ''
+    # _log.info(f' @mapRes_text usr‘{check_user_mappings}’→ lhs‘{lhs}’ rhs‘{rhs}’ m‘{mode}’ text_cmd=‘{text_cmd}’ ‘{command.__class__.__mro__}’')
+    # _log.info(f' @mapRes_text → ‘{command}’ .lhs‘{command.lhs}’ .rhs‘{command.rhs}’ m‘{mode}’ text_cmd=‘{text_cmd}’ ‘{command.__class__.__mro__}’')
     return command

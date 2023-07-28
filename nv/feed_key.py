@@ -16,6 +16,7 @@
 # along with NeoVintageous.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
+import time
 
 from NeoVintageous.plugin import DEFAULT_LOG_LEVEL
 from NeoVintageous.nv.mappings import IncompleteMapping
@@ -182,13 +183,18 @@ class FeedKeyHandler():
         return False
 
     def _handle(self) -> None:
+        self._dbg_seq, self._dbg_txt = '',''
+        _log.key(f"       ———————————@_handle {time.asctime()}")
         # If the user has defined a mapping that starts with a number i.e. count
         # then the count handler has to be skipped otherwise it won't resolve.
         # See https://github.com/NeoVintageous/NeoVintageous/issues/434.
         can_resolve_seq = mappings_can_resolve     (self.view, self.key)
         can_resolve_txt = mappings_can_resolve_text(self.view, self.key)
+        self._dbg_txt += f"{'✓' if can_resolve_txt else '✗'}TXT ⌨️¦{self.key}¦"
+        self._dbg_seq += f"{'✓' if can_resolve_seq else '✗'}SEQ ⌨️¦{self.key}¦"
         if not can_resolve_txt and not can_resolve_seq:
             if self._handle_count():
+                self._dbg_txt += f" ↩ _handle_count"; _log.key(self._dbg_txt); _log.key(self._dbg_seq)
                 return
 
         set_partial_sequence(self.view, get_partial_sequence(self.view) + self.key)
@@ -196,6 +202,10 @@ class FeedKeyHandler():
 
         command_seq = mappings_resolve     (self.view, check_user_mappings=self.check_user_mappings)
         command_txt = mappings_resolve_text(self.view, check_user_mappings=self.check_user_mappings)
+        self._dbg_seq += f" part¦{_part_seq}¦"
+        self._dbg_txt += f" part¦{_part_txt}¦"
+        #m# cmd_seq¦<ViSetMark>¦  cmd_txt¦<NeoVintageous.nv.mappings.Mapping object at 0x10a2468b0>¦
+
 
         self.command = command_txt
         if (isTextHandled := self._handle_text()):
@@ -203,16 +213,20 @@ class FeedKeyHandler():
 
         command = command_seq
         if isinstance(command, IncompleteMapping):
+            self._dbg_seq += f", ↩ IncompleteMapping"; _log.key(self._dbg_seq)
             return
 
         if isinstance(command, ViOpenNameSpace):
+            self._dbg_seq += f", ↩ ViOpenNameSpace"; _log.key(self._dbg_seq)
             return
 
         if isinstance(command, ViOpenRegister):
+            self._dbg_seq += f", ViOpenRegister"; _log.key(self._dbg_seq)
             set_capture_register(self.view, True)
             return
 
         if isinstance(command, Mapping):
+            self._dbg_seq += f"↩map lhs¦{command.lhs}¦ rhs¦{command.rhs}¦"; _log.key(self._dbg_seq)
             self._handle_mapping     (command)
             return
 
@@ -251,6 +265,8 @@ class FeedKeyHandler():
             if not command.motion_required:
                 set_mode(self.view, NORMAL)
 
+        self._dbg_seq += f" _handle cmd¦{command_seq}¦" # ToDo
+        _log.key(self._dbg_seq)
         self._handle_command(command, self.do_eval)
 
     def _handle_text(self) -> bool:
@@ -259,19 +275,28 @@ class FeedKeyHandler():
         command     = command_txt
 
         if isinstance(command, IncompleteMapping):
+            self._dbg_txt += f" cmd¦{command_seq}¦ ↩ IncompleteMapping"; _log.key(self._dbg_txt);_log.key(self._dbg_seq);
             return True
         if isinstance(command, ViOpenNameSpace): # ToDo
+            self._dbg_txt += f" cmd¦{command_seq}¦ ↩ ViOpenNameSpace"; _log.key(self._dbg_txt);_log.key(self._dbg_seq);
             return True
         if isinstance(command, ViOpenRegister): # ToDo
+            self._dbg_txt += f" cmd¦{command_seq}¦ ↩set ViOpenRegister"; _log.key(self._dbg_txt);_log.key(self._dbg_seq);
             set_capture_register(self.view, True)
             return True
         if isinstance(command, Mapping):
+            self._dbg_txt += f"↩map lhs¦{command.lhs}¦ rhs¦{command.rhs}¦"; _log.key(self._dbg_txt);_log.key(self._dbg_seq);
             self._handle_mapping_text(command)
             return True
         if isinstance(command, CommandNotFound): # ToDo
+            self._dbg_txt += f" cmd¦{command_seq}¦ skip"
             return False # pass to handle sequence
         if (isinstance(command, ViOperatorDef) and get_mode(self.view) == OPERATOR_PENDING):
+            self._dbg_txt += f" skip ViOperatorDef and OPERATOR_PENDING" # ToDo handle
             return False # pass to handle sequence
+        self._dbg_txt += f", (disabled)TXT _handle_command" # ToDo
+        # self._handle_command(command, self.do_eval) # todo handle text command
+        _log.key(self._dbg_txt)
         return False # pass to handle sequence
 
     def _handle_mapping(self, mapping: Mapping) -> None:

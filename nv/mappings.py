@@ -173,7 +173,7 @@ def mappings_add(mode: str, lhs: str, rhs: str) -> None:
 
 def mappings_add_text(mode: str, lhs: str, rhs: Union[str, list]) -> None:
     # {"m":"cmd1"} or {"m":["cmd1","cmd2"]}
-    # print(f" mappings_add_text mode={mode} lhs={lhs} rhs={rhs}")
+    _log.map(f" mappings_add_text mode={mode} ‹¦{lhs}¦ ¦{rhs}¦›")
     if re.match('^FileType$', lhs):
         parsed = re.match('^([^ ]+) ([^ ]+)\\s+', rhs)
         if parsed:

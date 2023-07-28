@@ -197,13 +197,17 @@ class FeedKeyHandler():
                 self._dbg_txt += f" ↩ _handle_count"; _log.key(self._dbg_txt); _log.key(self._dbg_seq)
                 return
 
-        set_partial_sequence(self.view, get_partial_sequence(self.view) + self.key)
-        set_partial_text    (self.view, get_partial_text    (self.view) + self.key)
+        _part_txt = get_partial_text    (self.view)
+        _part_seq = get_partial_sequence(self.view)
+        set_partial_text                (self.view, _part_txt + self.key)
+        set_partial_sequence            (self.view, _part_seq + self.key)
 
         command_txt = mappings_resolve_text(self.view, check_user_mappings=self.check_user_mappings)
         command_seq = mappings_resolve     (self.view, check_user_mappings=self.check_user_mappings)
         self._dbg_seq += f" part¦{_part_seq}¦"
         self._dbg_txt += f" part¦{_part_txt}¦"
+        self.command_seq = command_txt
+        self.command_txt = command_seq
         #m# cmd_seq¦<ViSetMark>¦  cmd_txt¦<NeoVintageous.nv.mappings.Mapping object at 0x10a2468b0>¦
 
 

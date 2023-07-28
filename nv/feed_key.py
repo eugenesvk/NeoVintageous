@@ -214,8 +214,13 @@ class FeedKeyHandler():
         self.command = command_txt
         if (isTextHandled := self._handle_text()):
             return
+        else:
+            self._handle_seq()
 
-        command = command_seq
+    def _handle_seq(self) -> None:
+        command_seq = self.command_txt
+        command_txt = self.command_seq
+        command     = command_seq
         if isinstance(command, IncompleteMapping):
             self._dbg_seq += f", ↩ IncompleteMapping"; _log.key(self._dbg_seq)
             return

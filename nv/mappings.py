@@ -53,6 +53,16 @@ _mappings = {
     VISUAL: {}
 }  # type: dict
 
+_mappings_text = { # stores text_commands like ‘enter_insert_mode’ as opposed to ‘gin’
+    INSERT          	: {},
+    NORMAL          	: {},
+    OPERATOR_PENDING	: {},
+    SELECT          	: {},
+    VISUAL_BLOCK    	: {},
+    VISUAL_LINE     	: {},
+    VISUAL          	: {}
+}  # type: dict
+
 
 class Mapping:
 
@@ -332,4 +342,27 @@ def mappings_resolve(view, sequence: str = None, mode: str = None, check_user_ma
 
     _log.info('resolved %s mode=%s sequence=%s %s', command, mode, sequence, command.__class__.__mro__)
 
+    return command
+
+def mappings_resolve_text(view, text_commands: list = None, mode: str = None, check_user_mappings: bool = True):
+    # Check current global state and return the command mapped to the available list of text_commands
+    # ←
+      # sequence           	list	sequence of text_commands
+      # mode               	str 	if passed, use instead of the global state's
+      # check_user_mappings	bool	.
+    # → Mapping |  CommandNotFound
+
+    # We usually need to look at the partial sequence, but some commands do weird things, like ys, which isn't a namespace but behaves as such.
+    text_cmd = text_commands or get_partial_text(view)
+    command = None
+    if check_user_mappings:
+        command = _text_cmd_to_mapping(view, text_cmd)
+        if not command:
+            if not text_cmd:
+                if _has_partial_matches_text(view, get_mode(view), text_cmd):
+                    return IncompleteMapping()
+    if not command:
+        command = _text_to_command(view, text_cmd, mode or get_mode(view))
+    lhs = command.lhs if hasattr(command, 'lhs') else ''
+    rhs = command.rhs if hasattr(command, 'rhs') else ''
     return command

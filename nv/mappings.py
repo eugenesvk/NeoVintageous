@@ -21,6 +21,7 @@ import traceback
 
 from typing import Union
 
+from NeoVintageous.plugin import DEFAULT_LOG_LEVEL
 from NeoVintageous.nv import plugin
 from NeoVintageous.nv.settings import get_mode
 from NeoVintageous.nv.settings import get_partial_sequence, get_partial_text
@@ -32,10 +33,15 @@ from NeoVintageous.nv.vi.cmd_base import CommandNotFound
 from NeoVintageous.nv.vi.keys import to_bare_command_name
 from NeoVintageous.nv.vi.keys import tokenize_keys
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
+from NeoVintageous.nv.log import addLoggingLevel, stream_handler
 
-from NeoVintageous.plugin import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
+addLoggingLevel('MAP', DEFAULT_LOG_LEVEL - 5)
+_log.setLevel('MAP')
+if _log.hasHandlers(): # clear existing handlers, including sublime's
+    logging.getLogger().handlers.clear()
+    _log.addHandler(stream_handler)
 
 _mappings = {
     INSERT: {},

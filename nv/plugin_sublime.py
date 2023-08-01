@@ -26,7 +26,7 @@ from NeoVintageous.nv.vim import ACTION_MODES
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 
 
-__all__ = ()
+__all__ = []  # type: list
 
 
 @register(seqs.CTRL_ALT_P, ACTION_MODES)

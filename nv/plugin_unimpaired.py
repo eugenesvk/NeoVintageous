@@ -40,9 +40,7 @@ from NeoVintageous.nv.window import window_buffer_control
 from NeoVintageous.nv.window import window_tab_control
 
 
-__all__ = [
-    'nv_unimpaired_command'
-]
+__all__ = ['nv_unimpaired_command']
 
 
 @register(seqs.SEQ['[l'], (NORMAL, VISUAL))

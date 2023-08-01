@@ -45,9 +45,7 @@ from NeoVintageous.nv.vi.cmd_base import translate_motion
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 
 
-__all__ = [
-    'nv_sneak_command'
-]
+__all__ = ['nv_sneak_command']
 
 
 class SneakInputMotion(ViMotionDef):

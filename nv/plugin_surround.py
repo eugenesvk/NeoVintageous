@@ -42,9 +42,7 @@ from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
 
-__all__ = [
-    'nv_surround_command'
-]
+__all__ = ['nv_surround_command']
 
 
 def _should_tag_accept_input(inp: str) -> bool:

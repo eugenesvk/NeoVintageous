@@ -30,9 +30,7 @@ from NeoVintageous.nv.vi.cmd_base import translate_action
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 
 
-__all__ = [
-    'nv_abolish_command'
-]
+__all__ = ['nv_abolish_command']
 
 
 def _coerce_to_mixedcase(string: str) -> str:

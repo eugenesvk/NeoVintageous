@@ -794,7 +794,7 @@ class nv_enter_normal_mode(TextCommand):
         def f(view, s):
             if mode == INSERT:
                 if view.line(s.b).a != s.b:
-                    return Region(s.b - 1)
+                    return Region(s.b)
 
                 return Region(s.b)
 

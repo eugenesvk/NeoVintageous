@@ -91,6 +91,7 @@ from NeoVintageous.nv.settings import set_reset_during_init
 from NeoVintageous.nv.settings import set_xpos
 from NeoVintageous.nv.settings import toggle_ctrl_keys
 from NeoVintageous.nv.settings import toggle_super_keys
+from NeoVintageous.nv.settings import get_config
 from NeoVintageous.nv.state import reset_command_data
 from NeoVintageous.nv.state import update_status_line
 from NeoVintageous.nv.ui import ui_bell
@@ -194,6 +195,7 @@ from NeoVintageous.nv.window import window_control
 from NeoVintageous.nv.window import window_open_file
 from NeoVintageous.nv.window import window_tab_control
 
+from NeoVintageous.nv.rc import cfgU
 
 __all__ = [
     'Neovintageous',
@@ -794,7 +796,8 @@ class nv_enter_normal_mode(TextCommand):
         def f(view, s):
             if mode == INSERT:
                 if view.line(s.b).a != s.b:
-                    return Region(s.b)
+                    moveLeft = 0 if (get_config('edit.move_left_on_insert_exit') == False) else 1
+                    return Region(s.b - moveLeft)
 
                 return Region(s.b)
 

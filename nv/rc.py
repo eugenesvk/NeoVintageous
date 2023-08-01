@@ -167,6 +167,10 @@ class cfgU():
             _log.warn(f"‘surround’ in ‘{cfgU_settings}’ should be a dictionary, not {cfgT}")
             cfgU.surround = None
 
+        cfgU.edit   = user_settings.get('edit'  , None)
+        if not (cfgT := type(cfgU.edit)) is dict:
+            _log.warn(f"‘edit’ in ‘{cfgU_settings}’ should be a dictionary, not {cfgT}")
+            cfgU.edit = None
 
         _import_plugins_with_user_data()
 

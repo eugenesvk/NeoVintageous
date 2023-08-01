@@ -23,6 +23,7 @@ import re
 import sublime
 
 from NeoVintageous.nv.polyfill import nv_message as message
+from NeoVintageous.nv.helper import flatten_dict
 
 
 from NeoVintageous.plugin import DEFAULT_LOG_LEVEL
@@ -147,6 +148,8 @@ class cfgU():
 
         _log.debug(f'🌕️@cfgU.load: user_settings={user_settings.to_dict()}\nuser_commands={user_commands.to_dict()}')
 
+        cfgU.flat = flatten_dict(user_settings.to_dict()) # store a flat dictionary for easy access
+        # but also do some validation
         cfgU.keymap = user_settings.get('keymap'    , None)
 
         cfgU.events = user_settings.get('events'    , None)

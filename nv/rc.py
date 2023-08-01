@@ -151,17 +151,17 @@ class cfgU():
 
         cfgU.events = user_settings.get('events'    , None)
         if not (evtT := type(cfgU.events)) is dict:
-            _log.warn(f"⚠️‘events’ in ‘{cfgU_settings}’ should be a dictionary, not {evtT}")
+            _log.warn(f"‘events’ in ‘{cfgU_settings}’ should be a dictionary, not {evtT}")
             cfgU.events = None
 
         cfgU.status   = user_settings.get('status'  , None)
         if not (cfgT := type(cfgU.status)) is dict:
-            _log.warn(f"⚠️‘status’ in ‘{cfgU_settings}’ should be a dictionary, not {cfgT}")
+            _log.warn(f"‘status’ in ‘{cfgU_settings}’ should be a dictionary, not {cfgT}")
             cfgU.status = None
 
         cfgU.surround   = user_settings.get('surround'  , None)
         if not (cfgT := type(cfgU.surround)) is dict:
-            _log.warn(f"⚠️‘surround’ in ‘{cfgU_settings}’ should be a dictionary, not {cfgT}")
+            _log.warn(f"‘surround’ in ‘{cfgU_settings}’ should be a dictionary, not {cfgT}")
             cfgU.surround = None
 
 
@@ -170,26 +170,26 @@ class cfgU():
         # todo: #? convert mappings_add to a helper function that accepts enum2|enum2
         keybinds = user_commands.get('keybind')
         if not (cfgT := type(keybinds)) is dict:
-            _log.warn(f"⚠️Type of ‘keybind’ @ ‘{cfgU_command}’ should be dict, not {cfgT}")
+            _log.warn(f"Type of ‘keybind’ @ ‘{cfgU_command}’ should be dict, not {cfgT}")
         else:
             for mode_string,command_list in keybinds.items():
                 #{↑"NI"    :↑[{"m":"cmd1"},{"n":"cmd2"},]}
                 if not (cfgT := type(command_list)) is list:
-                    _log.warn(f"⚠️Type of ‘{mode_string}’ @ ‘{cfgU_command}’ should be list, not {cfgT}")
+                    _log.warn(f"Type of ‘{mode_string}’ @ ‘{cfgU_command}’ should be list, not {cfgT}")
                     break
                 modes = text_to_modes(mode_string) # "NI" → M.Normal | M.Insert
                 if not modes:
-                    _log.warn(f"⚠️Couldn't parse ‘{mode_string}’ @ ‘{cfgU_command}’ to a list of modes")
+                    _log.warn(f"Couldn't parse ‘{mode_string}’ @ ‘{cfgU_command}’ to a list of modes")
                     break
                 if hasattr(M, modes.name): # create an iterable from a single item for ↓
                     modes = [modes]
                 for mode in modes: # M.Normal
                     if not mode in cfgU.text_commands:
-                        _log.warn(f"⚠️Invalid mode ‘{mode}’ in ‘{mode_string}’ in ‘{cfgU_command}’")
+                        _log.warn(f"Invalid mode ‘{mode}’ in ‘{mode_string}’ in ‘{cfgU_command}’")
                         break
                     for command_dict in command_list: # {"m":"cmd1"}
                         if not (cfgT := type(command_dict)) is dict:
-                            _log.warn(f"⚠️Type of ‘{command_dict}’ within ‘{mode_string}’ @‘{cfgU_command}’ should be dict, not {cfgT}")
+                            _log.warn(f"Type of ‘{command_dict}’ within ‘{mode_string}’ @‘{cfgU_command}’ should be dict, not {cfgT}")
                             break
                         for key,text_command in command_dict.items():
                             #{↑"m":↑"cmd1"}

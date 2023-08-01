@@ -28,6 +28,12 @@ from NeoVintageous.nv.vim import DIRECTION_DOWN
 from NeoVintageous.nv.modes import UNKNOWN
 from NeoVintageous.nv.events_user import on_mode_change
 
+from NeoVintageous.nv.rc import cfgU
+def get_config(path:str, default=None):
+    if not (pathT := type(path)) is str:
+        _log.warn(f"‘{path}’ should be a string, not {pathT}")
+        return None
+    return cfgU.flat.get(path, default)
 
 def get_setting(view, name: str, default=None):
     return view.settings().get('vintageous_%s' % name, default)

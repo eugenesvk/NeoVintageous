@@ -14,6 +14,11 @@
 //  // and keymap generation command adds those to the TO field
 //  },
 
+// Edit behavior
+//"edit"                      	: { //|default|
+//  "move_left_on_insert_exit"	: false, //|true| move cursor left on ⓘ→Ⓝ to be consistent with line-end editing https://vimhelp.org/vim_faq.txt.html#faq-10.2
+//},
+
 // // 2. to run cli commands on entering/leaving a mode add a [list] of command + arguments in the 'events' dictionary:
 //   // available modes (CaSe sensitive: Insert Normal Replace Select Visual VisualBlock VisualLine
 //   // available mode events (CaSe sensitive: Enter Leave

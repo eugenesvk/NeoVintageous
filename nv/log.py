@@ -1,6 +1,13 @@
 import logging
 
+DEFAULT_LOG_LEVEL = logging.WARN
+
 filter_levelname_dict = {'WARNING':'⚠️','INFO':"ⓘ",'KEY':'⌨️'}
+
+def add_module_logger_levels():
+  addLoggingLevel('KEY', DEFAULT_LOG_LEVEL - 20)
+  addLoggingLevel('MAP', DEFAULT_LOG_LEVEL - 20)
+  addLoggingLevel('SET', DEFAULT_LOG_LEVEL - 20)
 
 stream_handler = logging.StreamHandler()
 formatter = logging.Formatter('NV%(levelname)-1s_%(filename)10s:%(lineno)-3d %(message)s')
@@ -57,3 +64,5 @@ def addLoggingLevel(levelName, levelNum, methodName=None):
   setattr(logging                 	, levelName , levelNum)
   setattr(logging.getLoggerClass()	, methodName, logForLevel)
   setattr(logging                 	, methodName, logToRoot)
+
+add_module_logger_levels()

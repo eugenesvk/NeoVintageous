@@ -31,8 +31,8 @@ _DEBUG = bool(os.getenv('SUBLIME_NEOVINTAGEOUS_DEBUG'))
 # WARNING. The end result is that it prints the message to sys.stderr, and in
 # Sublime Text that means it will print the message to console).
 import logging
+from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
 
-DEFAULT_LOG_LEVEL = logging.WARN
 _log = logging.getLogger(PACKAGE_NAME)
 
 # Avoid duplicate loggers when the plugin is reloaded.

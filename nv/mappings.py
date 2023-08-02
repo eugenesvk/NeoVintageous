@@ -21,7 +21,7 @@ import traceback
 
 from typing import Union
 
-from NeoVintageous.plugin import DEFAULT_LOG_LEVEL
+from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
 from NeoVintageous.nv import plugin
 from NeoVintageous.nv.settings import get_mode
 from NeoVintageous.nv.settings import get_partial_sequence, get_partial_text
@@ -37,7 +37,6 @@ from NeoVintageous.nv.log import addLoggingLevel, stream_handler
 
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
-addLoggingLevel('MAP', DEFAULT_LOG_LEVEL - 5)
 _log.setLevel('MAP')
 if _log.hasHandlers(): # clear existing handlers, including sublime's
     logging.getLogger().handlers.clear()

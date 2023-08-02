@@ -32,10 +32,9 @@ from NeoVintageous.nv.events_user import on_mode_change
 from NeoVintageous.nv.log import addLoggingLevel, stream_handler
 from NeoVintageous.nv.rc import cfgU
 
-from NeoVintageous.plugin import DEFAULT_LOG_LEVEL
+from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
-addLoggingLevel('SET', DEFAULT_LOG_LEVEL + 5)
 _log.setLevel('SET')
 if _log.hasHandlers(): # clear existing handlers, including sublime's
     logging.getLogger().handlers.clear()

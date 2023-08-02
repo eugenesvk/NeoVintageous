@@ -38,7 +38,7 @@ from NeoVintageous.nv.vim import run_motion
 
 from NeoVintageous.nv.rc import cfgU
 
-from NeoVintageous.plugin import DEFAULT_LOG_LEVEL
+from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
 

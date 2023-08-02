@@ -18,7 +18,7 @@
 import logging
 import time
 
-from NeoVintageous.plugin import DEFAULT_LOG_LEVEL
+from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
 from NeoVintageous.nv.mappings import IncompleteMapping
 from NeoVintageous.nv.mappings import Mapping
 from NeoVintageous.nv.mappings import mappings_can_resolve, mappings_can_resolve_text
@@ -65,7 +65,6 @@ from NeoVintageous.nv.log import addLoggingLevel, stream_handler
 
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
-addLoggingLevel('KEY', DEFAULT_LOG_LEVEL - 5)
 _log.setLevel('KEY')
 if _log.hasHandlers(): # clear existing handlers, including sublime's
     logging.getLogger().handlers.clear()

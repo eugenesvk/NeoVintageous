@@ -23,7 +23,7 @@ from sublime import windows as _windows
 from NeoVintageous.nv.polyfill import status_message as _status_message
 from NeoVintageous.nv.rc import cfgU
 
-from NeoVintageous.plugin import DEFAULT_LOG_LEVEL
+from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
 

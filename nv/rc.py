@@ -26,7 +26,7 @@ from NeoVintageous.nv.polyfill import nv_message as message
 from NeoVintageous.nv.helper import flatten_dict
 
 
-from NeoVintageous.plugin import DEFAULT_LOG_LEVEL
+from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
 

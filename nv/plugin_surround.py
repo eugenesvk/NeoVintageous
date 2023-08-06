@@ -45,11 +45,14 @@ _log.setLevel(DEFAULT_LOG_LEVEL)
 __all__ = ['nv_surround_command']
 
 
-def _should_tag_accept_input(inp: str) -> bool:
-    if inp.lower().startswith('<c-t>'):
-        return not re.match('<[Cc]-t>.*?[\n>]', inp)
-
-    return not inp[-1] in ('>', '\n')
+class nv_surround_command(TextCommand):
+    def run(self, edit, action, **kwargs):
+        if action == 'cs':
+            _do_cs(self.view, edit, **kwargs)
+        elif action == 'ds':
+            _do_ds(self.view, edit, **kwargs)
+        elif action == 'ys':
+            _do_ys(self.view, edit, **kwargs)
 
 
 @register(seqs.SEQ['ys'], (NORMAL,))
@@ -184,16 +187,6 @@ class Surroundcs(ViOperatorDef):
             'target': self.inp[0],
             'replacement': self.inp[1:]
         })
-
-
-class nv_surround_command(TextCommand):
-    def run(self, edit, action, **kwargs):
-        if action == 'cs':
-            _do_cs(self.view, edit, **kwargs)
-        elif action == 'ds':
-            _do_ds(self.view, edit, **kwargs)
-        elif action == 'ys':
-            _do_ys(self.view, edit, **kwargs)
 
 
 _PUNCTUATION_MARKS = {
@@ -481,3 +474,10 @@ def _do_ys(view, edit, mode: str = None, motion=None, replacement: str = '"', co
         _rsynced_regions_transformer(view, f)
 
     enter_normal_mode(view, mode)
+
+
+def _should_tag_accept_input(inp: str) -> bool:
+    if inp.lower().startswith('<c-t>'):
+        return not re.match('<[Cc]-t>.*?[\n>]', inp)
+
+    return not inp[-1] in ('>', '\n')

@@ -1,10 +1,10 @@
 { // Valid style values: fill outline underline squiggly_underline stippled_underline
-"neovintageous_search_cur_style"                	: "fill"	, //|fill| Current     search style
-"neovintageous_search_inc_style"                	: "fill"	, //|fill| Incremental search style
-"neovintageous_search_occ_style"                	: "fill"	, //|fill| Search  occurences style
-"vintageous_auto_nohlsearch_on_normal_enter"    	: true  	, //|true| If enabled, search highlighting is cleared entering normal mode. This typically means when the <Esc> key is pressed.
-  // To clear search highlighting directly      	  :noh[lsearch]
-  // Example mapping                            	  noremap <C-l> :nohlsearch<CR>
+"neovintageous_search_cur_style"                	: "fill" 	, //|fill| Current     search style
+"neovintageous_search_inc_style"                	: "fill" 	, //|fill| Incremental search style
+"neovintageous_search_occ_style"                	: "fill" 	, //|fill| Search  occurences style
+"vintageous_auto_nohlsearch_on_normal_enter"    	: true   	, //|true|     // If enabled, search highlighting is cleared when entering normal mode. This usually occurs when the <Esc> key is pressed
+  // :noh[lsearch]                              	         	// clear search highlighting directly
+  // noremap <C-l> :nohlsearch<CR>              	         	// map a key combination to clear search highlighting
 "vintageous_auto_complete_exit_from_insert_mode"	: true   	, // On Esc, close auto complete, if visible, and exit to normal mode. When set to false, only the auto complete is closed
 "vintageous_bell"                               	: "blink"	, // |blink|view¦views¦none¦ Visual bell style
 "vintageous_bell_color_scheme"                  	: "dark" 	, //|dark|light¦path¦  Visual bell color-scheme. path=color scheme resource path: Packages/Name/name.hidden-color-scheme

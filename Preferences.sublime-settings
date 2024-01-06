@@ -38,6 +38,9 @@
   //                                           	: { "<C-f>":false}	     use native Sublime Text behaviour for ctrl+f
   // use a prefix for modes                    	  n_ = Normal     	,    i_ = Insert, v_ = Visual, V_ = Visual line, b_ = Visual block, s_ = Select
   // "i_<C-w>":false,"v_<C-w>":false           	                  	     only delegate <C-w> in insert and visual modes
+"vintageous_i_escape_jj"                       	: false           	, // Enable Insert jj escape
+"vintageous_i_escape_jk"                       	: false           	, // Enable Insert jk escape
+"vintageous_i_escape_kj"                       	: false           	, // Enable Insert kj escape
 "vintageous_lsp_save"                          	: false           	, // Override native save to handle LSP Code-Actions-On-Save See https://github.com/sublimelsp/LSP/issues/1725
 "vintageous_multi_cursor_exit_from_visual_mode"	: false           	, //|false| Exit visual multi cursor visual on quit key
   //                                           	→ false           	    pressing a quit key (e.g. <Esc> or J) in multiple cursor visual mode the visual mode exits to normal mode but keeps the cursors

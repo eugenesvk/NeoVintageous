@@ -8,39 +8,39 @@
 "vintageous_auto_complete_exit_from_insert_mode"	: true  	, // On Esc, close auto complete, if visible, and exit to normal mode. When set to false, only the auto complete is closed
 "vintageous_auto_switch_input_method"           	: false 	, // Enable automatic switching of input methods.
 
-"vintageous_auto_switch_input_method_default"	: ""	, // The default input method to be used
-  // Example: xkb:us::eng, us, 0, 1, 2, com.apple.keylayout.US, 1033
-"vintageous_auto_switch_input_method_get_cmd"	: "/path/to/im-select"	,// The full path to the command used to retrieve the current input method key.
-  // Example: "/usr/bin/ibus engine", "/usr/local/bin/xkb-switch", "/usr/bin/fcitx-remote", "/path/to/im-get", "/usr/bin/qdbus org.kde.keyboard /Layouts getLayout", "/usr/local/bin/im-select", "D:\\bin\\im-select.exe"
-"vintageous_auto_switch_input_method_set_cmd"	: "/path/to/im-select {im}"	, // The full path to the command used to switch input methods, where {im} is a placeholder for the input method key.
-  // Example: "/usr/bin/ibus engine {im}", "/usr/local/bin/xkb-switch -s {im}", "/usr/bin/fcitx-remote -t {im}", "/path/to/im-set {im}", "/usr/bin/qdbus org.kde.keyboard /Layouts setLayout {im}", "/usr/local/bin/im-select {im}", "D:\\bin\\im-select.exe {im}"
-"vintageous_bell"                    	: "blink"	, // |blink|view¦views¦none¦ Visual bell style
+"vintageous_auto_switch_input_method_default"	: ""	, // Configure the default input method to be used
+  // Examples: "xkb:us::eng", "us", "0", "1", "2", "com.apple.keylayout.US", "1033"
+"vintageous_auto_switch_input_method_get_cmd"	: "/path/to/im-select"	,// Specify the complete command path for retrieving the current input method key.
+  // Examples: "/usr/bin/ibus engine", "/usr/local/bin/xkb-switch", "/usr/bin/fcitx-remote", "/path/to/im-get", "/usr/bin/qdbus org.kde.keyboard /Layouts getLayout", "/usr/local/bin/im-select", "D:\\bin\\im-select.exe"
+"vintageous_auto_switch_input_method_set_cmd"	: "/path/to/im-select {im}"	, // Provide the complete command path for switching input methods, using {im} as a placeholder for the input method key.
+  // Examples: "/usr/bin/ibus engine {im}", "/usr/local/bin/xkb-switch -s {im}", "/usr/bin/fcitx-remote -t {im}", "/path/to/im-set {im}", "/usr/bin/qdbus org.kde.keyboard /Layouts setLayout {im}", "/usr/local/bin/im-select {im}", "D:\\bin\\im-select.exe {im}"
+"vintageous_bell"                    	: "blink"	, //|blink|view¦views¦none¦ Visual bell style
 "vintageous_bell_color_scheme"       	: "dark" 	, //|dark|light¦path¦  Visual bell color-scheme. path=color scheme resource path: Packages/Name/name.hidden-color-scheme
 "vintageous_clear_auto_indent_on_esc"	: true   	, // If you do not type anything on a new line e.g. pressing <Esc> after "o" or "O", the indent is deleted again. To preserve the leading whitespace on after pressing <esc> set this setting to false
 "vintageous_default_mode"            	: ""     	, //|""|"insert"¦ Default mode to use when activating or switching views
   // insert                          	         	  Enter insert mode when opening or switching views or when the window receives focus and is not in visual mode i.e. visual mode selections are retained when the window loses focus
 
 // Plugins                          	       		//
-"vintageous_enable_abolish"         	: true 	, //|true | A port of https://github.com/tpope/vim-abolish
-"vintageous_enable_commentary"      	: true 	, //|true | A port of https://github.com/tpope/vim-commentary
-"vintageous_enable_multiple_cursors"	: true 	, //|true | A port of https://github.com/terryma/vim-multiple-cursors
-"vintageous_enable_sneak"           	: false	, //|false| A port of https://github.com/justinmk/vim-sneak
+"vintageous_enable_abolish"         	: true 	, //|true | A port of github.com/tpope/vim-abolish
+"vintageous_enable_commentary"      	: true 	, //|true | A port of github.com/tpope/vim-commentary
+"vintageous_enable_multiple_cursors"	: true 	, //|true | A port of github.com/terryma/vim-multiple-cursors
+"vintageous_enable_sneak"           	: false	, //|false| A port of github.com/justinmk/vim-sneak
 "vintageous_enable_sublime"         	: true 	, //|true | Sublime Text tweaks
-"vintageous_enable_surround"        	: true 	, //|true | A port of https://github.com/tpope/vim-surround
-"vintageous_enable_unimpaired"      	: true 	, //|true | A port of https://github.com/tpope/vim-unimpaired
-"highlightedyank"                   	: true 	, //|true | A port of https://github.com/machakann/vim-highlightedyank
+"vintageous_enable_surround"        	: true 	, //|true | A port of github.com/tpope/vim-surround
+"vintageous_enable_unimpaired"      	: true 	, //|true | A port of github.com/tpope/vim-unimpaired
+"highlightedyank"                   	: true 	, //|true | A port of github.com/machakann/vim-highlightedyank
 
 "highlightedyank_duration"	: 1000  	, // Assign number of time in milliseconds
-"highlightedyank_style"   	: "fill"	,
+"highlightedyank_style"   	: "fill"	, // see list of available styles at the top
 
 "vintageous_exit_when_quiting_last_window"     	: true            	, // When quitting the last window exit ST
 "vintageous_handle_keys"                       	: {}              	, // Delegate configured keys to be handled by Sublime Text, e.g.,
   //                                           	: { "<C-f>":false}	     use native Sublime Text behaviour for ctrl+f
   // use a prefix for modes                    	  n_ = Normal     	,    i_ = Insert, v_ = Visual, V_ = Visual line, b_ = Visual block, s_ = Select
   // "i_<C-w>":false,"v_<C-w>":false           	                  	     only delegate <C-w> in insert and visual modes
-"vintageous_i_escape_jj"                       	: false           	, // Enable Insert jj escape
-"vintageous_i_escape_jk"                       	: false           	, // Enable Insert jk escape
-"vintageous_i_escape_kj"                       	: false           	, // Enable Insert kj escape
+"vintageous_i_escape_jj"                       	: false           	, // Toggle the use of "jj" as an escape sequence in Insert mode
+"vintageous_i_escape_jk"                       	: false           	, // Toggle the use of "jk" as an escape sequence in Insert mode
+"vintageous_i_escape_kj"                       	: false           	, // Toggle the use of "kj" as an escape sequence in Insert mode
 "vintageous_lsp_save"                          	: false           	, // Override native save to handle LSP Code-Actions-On-Save See https://github.com/sublimelsp/LSP/issues/1725
 "vintageous_multi_cursor_exit_from_visual_mode"	: false           	, //|false| Exit visual multi cursor visual on quit key
   //                                           	→ false           	    pressing a quit key (e.g. <Esc> or J) in multiple cursor visual mode the visual mode exits to normal mode but keeps the cursors
@@ -49,14 +49,14 @@
 "vintageous_save_async"                        	: false           	, // Asynchronous file saving with commands like :w, :wq
 "vintageous_shell_silent"                      	: false           	, // Show output panel from shell commands
 "vintageous_show_marks_in_gutter"              	: true            	, // Show marks in the gutter
-"vintageous_sneak_use_ic_scs"                  	: 0               	,
+"vintageous_sneak_use_ic_scs"                  	: 0               	, // 0|1 Specify case sensitivity mode for Sneak:
   //                                           	  0               	  Always case-sensitive
-  //                                           	  1               	  Case sensitivity is determined by 'ignorecase' and 'smartcase'
+  //                                           	  1               	  Case sensitivity based on 'ignorecase' and 'smartcase'
 "vintageous_source"                            	: null            	, // Read Ex commands from a resource before the neovintageousrc resource is sourced. This means you can still override these ex commands in your neovintageousrc file, for example:
   // Packages/NeoVintageousDvorak/dvorak.neovintageous   // See github.com/gerardroche/NeoVintageousDvorak
   // Packages/NeoVintageousColemak/colemak.neovintageous // See github.com/gerardroche/NeoVintageousColemak
-"vintageous_terminal"         	: null 	,// Name of program to use when starting a ":shell". Example: gnome-terminal
-"vintageous_use_ctrl_keys"    	: true 	,// Enable Vim ctrl keys
-"vintageous_use_super_keys"   	: true 	,// Enable Vim super keys. Super key is an alternative name for what is commonly labelled as the Windows key or Command key (Macintosh).
+"vintageous_terminal"         	: null 	,// Define the program to use when initiating a ":shell" command. Example: "gnome-terminal"
+"vintageous_use_ctrl_keys"    	: true 	,// Enable Vim Ctrl keys
+"vintageous_use_super_keys"   	: true 	,// Enable Vim Super keys. Super key refers to the Windows key or Command key (Macintosh).
 "vintageous_use_sys_clipboard"	: false	,// Propagate copy actions to the system clipboard
 }

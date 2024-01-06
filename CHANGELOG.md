@@ -65,6 +65,10 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
 * [#915](https://github.com/NeoVintageous/NeoVintageous/issues/915): Show marks in gutter (controlled via `vintageous_show_marks_in_gutter` setting)
 * [#921](https://github.com/NeoVintageous/NeoVintageous/issues/921): `'equalalways'` option
 
+### Changed
+
+* [#946](https://github.com/NeoVintageous/NeoVintageous/issues/946): :noremap and unmap now include Select mode
+
 ### Fixed
 
 * [#929](https://github.com/NeoVintageous/NeoVintageous/issues/929): There is no syntax highlighting for `<LocalLeader>`

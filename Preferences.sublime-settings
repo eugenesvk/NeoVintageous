@@ -41,11 +41,11 @@
 "vintageous_sneak_use_ic_scs"                  	: 0               	,
   //                                           	  0               	  Always case-sensitive
   //                                           	  1               	  Case sensitivity is determined by 'ignorecase' and 'smartcase'
-"vintageous_source"                            	: null            	, // Read Ex commands from a resource before the neovintageourc resource is sourced. This means you can still override these ex commands in your neovintageousrc file
-  // Example                                   	: Packages/NeoVintageousDvorak/dvorak.neovintageous
-  // Example                                   	: Packages/NeoVintageousColemak/colemak.neovintageous
-"vintageous_terminal"                          	: null 	,// Name of program to use when starting a ":shell". Example: gnome-terminal
-"vintageous_use_ctrl_keys"                     	: true 	,// Enable Vim ctrl keys
-"vintageous_use_super_keys"                    	: true 	,// Enable Vim super keys. Super key is an alternative name for what is commonly labelled as the Windows key or Command key (Macintosh).
-"vintageous_use_sys_clipboard"                 	: false	,// Propagate copy actions to the system clipboard
+"vintageous_source"                            	: null            	, // Read Ex commands from a resource before the neovintageourc resource is sourced. This means you can still override these ex commands in your neovintageousrc file, for example:
+  // Packages/NeoVintageousDvorak/dvorak.neovintageous   // See github.com/gerardroche/NeoVintageousDvorak
+  // Packages/NeoVintageousColemak/colemak.neovintageous // See github.com/gerardroche/NeoVintageousColemak
+"vintageous_terminal"         	: null 	,// Name of program to use when starting a ":shell". Example: gnome-terminal
+"vintageous_use_ctrl_keys"    	: true 	,// Enable Vim ctrl keys
+"vintageous_use_super_keys"   	: true 	,// Enable Vim super keys. Super key is an alternative name for what is commonly labelled as the Windows key or Command key (Macintosh).
+"vintageous_use_sys_clipboard"	: false	,// Propagate copy actions to the system clipboard
 }

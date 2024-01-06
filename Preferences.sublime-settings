@@ -37,7 +37,7 @@
 "vintageous_reset_mode_when_switching_tabs"    	: true            	, // Reset to normal mode when a tab is activated
 "vintageous_save_async"                        	: false           	, // Asynchronous file saving with commands like :w, :wq
 "vintageous_shell_silent"                      	: false           	, // Show output panel from shell commands
-"vintageous_show_marks_in_gutter"              	: true            	, // Show mark letters in the gutter
+"vintageous_show_marks_in_gutter"              	: true            	, // Show marks in the gutter
 "vintageous_sneak_use_ic_scs"                  	: 0               	,
   //                                           	  0               	  Always case-sensitive
   //                                           	  1               	  Case sensitivity is determined by 'ignorecase' and 'smartcase'

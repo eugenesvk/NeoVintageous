@@ -2,7 +2,7 @@
 
 All notable changes are documented in this file using the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
-[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/1.31.0-0.5.0...HEAD
+[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.5.1341...HEAD
 ## [Unreleased]
   <!-- - __Added__ -->
    <!-- + :sparkles: ??? -->
@@ -23,6 +23,8 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
    <!-- + :lock: ??? -->
    <!-- vulnerabilities -->
 
+[0.5.1341]: https://github.com/eugenesvk/NeoVintageous/releases/tag/0.5.1341
+## [0.5.1341]
   - __Added__
    + :sparkles: allow users to call cli commands on entering/leaving a mode
    + :sparkles: non-QWERTY/non-Latin layouts based on custom user `keymap` dictionary in `User/NeoVintageous.sublime-settings` (requires manually running `NeoVintageous: Generate non-QWERTY keymap` command)

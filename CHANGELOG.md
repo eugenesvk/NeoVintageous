@@ -48,7 +48,7 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
    + :beetle: 1-symbol keys like `⇟` in named key aliases not recognized
 
 
-## 1.32.0 - Unreleased
+## 1.32.0 - 2023-08-12
 
 ### Added
 

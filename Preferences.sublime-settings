@@ -2,7 +2,7 @@
 "vintageous_search_cur_style"                   	: "fill"	, //|fill| Current     search style
 "vintageous_search_inc_style"                   	: "fill"	, //|fill| Incremental search style
 "vintageous_search_occ_style"                   	: "fill"	, //|fill| Search  occurences style
-"vintageous_auto_nohlsearch_on_normal_enter"    	: true  	, //|true|     // If enabled, search highlighting is cleared when entering normal mode. This usually occurs when the <Esc> key is pressed
+"vintageous_auto_nohlsearch_on_normal_enter"    	: true  	, //|true| If enabled, search highlighting is cleared when entering normal mode. This usually occurs when the <Esc> key is pressed
   // :noh[lsearch]                              	        	// clear search highlighting directly
   // noremap <C-l> :nohlsearch<CR>              	        	// map a key combination to clear search highlighting
 "vintageous_auto_complete_exit_from_insert_mode"	: true  	, // On Esc, close auto complete, if visible, and exit to normal mode. When set to false, only the auto complete is closed
@@ -52,7 +52,7 @@
 "vintageous_sneak_use_ic_scs"                  	: 0               	,
   //                                           	  0               	  Always case-sensitive
   //                                           	  1               	  Case sensitivity is determined by 'ignorecase' and 'smartcase'
-"vintageous_source"                            	: null            	, // Read Ex commands from a resource before the neovintageourc resource is sourced. This means you can still override these ex commands in your neovintageousrc file, for example:
+"vintageous_source"                            	: null            	, // Read Ex commands from a resource before the neovintageousrc resource is sourced. This means you can still override these ex commands in your neovintageousrc file, for example:
   // Packages/NeoVintageousDvorak/dvorak.neovintageous   // See github.com/gerardroche/NeoVintageousDvorak
   // Packages/NeoVintageousColemak/colemak.neovintageous // See github.com/gerardroche/NeoVintageousColemak
 "vintageous_terminal"         	: null 	,// Name of program to use when starting a ":shell". Example: gnome-terminal

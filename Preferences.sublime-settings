@@ -32,7 +32,10 @@
 "vintageous_highlighted_yank_duration"	: 1000  	, //|1000 | Assign number of time in milliseconds.
 "vintageous_highlighted_yank_style"   	: "fill"	, //|fill | Specify the style for highlighted yank indicator. See list of available styles at the top
 
-"vintageous_exit_when_quiting_last_window"     	: true            	, // When quitting the last window exit ST
+
+"vintageous_exit_when_quitting_last_window"    	: true            	, // Controls the behaviour of commands like ZZ, :quit, :wq, etc
+  //                                           	true              	  quitting the last view will also exit Sublime Text. When set to
+  //                                           	false             	  Sublime Text remains open after closing the last view.
 "vintageous_handle_keys"                       	: {}              	, // Delegate configured keys to be handled by Sublime Text, e.g.,
   //                                           	: { "<C-f>":false}	     use native Sublime Text behaviour for ctrl+f
   // use a prefix for modes                    	  n_ = Normal     	,    i_ = Insert, v_ = Visual, V_ = Visual line, b_ = Visual block, s_ = Select

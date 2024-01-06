@@ -33,28 +33,29 @@
 "vintageous_highlighted_yank_style"   	: "fill"	, //|fill | Specify the style for highlighted yank indicator. See list of available styles at the top
 
 
-"vintageous_exit_when_quitting_last_window"    	: true            	, // Controls the behaviour of commands like ZZ, :quit, :wq, etc
-  //                                           	true              	  quitting the last view will also exit Sublime Text. When set to
-  //                                           	false             	  Sublime Text remains open after closing the last view.
-"vintageous_handle_keys"                       	: {}              	, // Delegate configured keys to be handled by Sublime Text, e.g.,
-  //                                           	: { "<C-f>":false}	     use native Sublime Text behaviour for ctrl+f
-  // use a prefix for modes                    	  n_ = Normal     	,    i_ = Insert, v_ = Visual, V_ = Visual line, b_ = Visual block, s_ = Select
-  // "i_<C-w>":false,"v_<C-w>":false           	                  	     only delegate <C-w> in insert and visual modes
-"vintageous_i_escape_jj"                       	: false           	, // Toggle the use of "jj" as an escape sequence in Insert mode
-"vintageous_i_escape_jk"                       	: false           	, // Toggle the use of "jk" as an escape sequence in Insert mode
-"vintageous_i_escape_kj"                       	: false           	, // Toggle the use of "kj" as an escape sequence in Insert mode
-"vintageous_lsp_save"                          	: false           	, // Override native save to handle LSP Code-Actions-On-Save See https://github.com/sublimelsp/LSP/issues/1725
-"vintageous_multi_cursor_exit_from_visual_mode"	: false           	, //|false| Exit visual multi cursor visual on quit key
-  //                                           	→ false           	    pressing a quit key (e.g. <Esc> or J) in multiple cursor visual mode the visual mode exits to normal mode but keeps the cursors
-  //                                           	→ true            	    pressing a quit key (e.g. <Esc> or J) in multiple cursor visual mode the visual mode exits all multiple cursors
-"vintageous_reset_mode_when_switching_tabs"    	: true            	, // Reset to normal mode when a tab is activated
-"vintageous_save_async"                        	: false           	, // Asynchronous file saving with commands like :w, :wq
-"vintageous_shell_silent"                      	: false           	, // Show output panel from shell commands
-"vintageous_show_marks_in_gutter"              	: true            	, // Show marks in the gutter
-"vintageous_sneak_use_ic_scs"                  	: 0               	, // 0|1 Specify case sensitivity mode for Sneak:
-  //                                           	  0               	  Always case-sensitive
-  //                                           	  1               	  Case sensitivity based on 'ignorecase' and 'smartcase'
-"vintageous_source"                            	: null            	, // Read Ex commands from a resource before the neovintageousrc resource is sourced. This means you can still override these ex commands in your neovintageousrc file, for example:
+"vintageous_exit_when_quitting_last_window"    	: true                	, // Configures the behavior of commands like ZZ, :quit, :wq, etc.
+  //                                           	true                  	  makes quitting the last view exit Sublime Text
+  //                                           	false                 	  keeps Sublime Text open after closing the last view
+  //                                           	unless_sidebar_visible	  exits only if the sidebar is hidden
+"vintageous_handle_keys"                       	: {}                  	, // Delegate configured keys to be handled by Sublime Text, e.g.,
+  //                                           	: { "<C-f>":false}    	     use native Sublime Text behaviour for ctrl+f
+  // use a prefix for modes                    	  n_ = Normal         	,    i_ = Insert, v_ = Visual, V_ = Visual line, b_ = Visual block, s_ = Select
+  // "i_<C-w>":false,"v_<C-w>":false           	                      	     only delegate <C-w> in insert and visual modes
+"vintageous_i_escape_jj"                       	: false               	, // Toggle the use of "jj" as an escape sequence in Insert mode
+"vintageous_i_escape_jk"                       	: false               	, // Toggle the use of "jk" as an escape sequence in Insert mode
+"vintageous_i_escape_kj"                       	: false               	, // Toggle the use of "kj" as an escape sequence in Insert mode
+"vintageous_lsp_save"                          	: false               	, // Override native save to handle LSP Code-Actions-On-Save See https://github.com/sublimelsp/LSP/issues/1725
+"vintageous_multi_cursor_exit_from_visual_mode"	: false               	, //|false| Exit visual multi cursor visual on quit key
+  //                                           	→ false               	    pressing a quit key (e.g. <Esc> or J) in multiple cursor visual mode the visual mode exits to normal mode but keeps the cursors
+  //                                           	→ true                	    pressing a quit key (e.g. <Esc> or J) in multiple cursor visual mode the visual mode exits all multiple cursors
+"vintageous_reset_mode_when_switching_tabs"    	: true                	, // Reset to normal mode when a tab is activated
+"vintageous_save_async"                        	: false               	, // Asynchronous file saving with commands like :w, :wq
+"vintageous_shell_silent"                      	: false               	, // Show output panel from shell commands
+"vintageous_show_marks_in_gutter"              	: true                	, // Show marks in the gutter
+"vintageous_sneak_use_ic_scs"                  	: 0                   	, // 0|1 Specify case sensitivity mode for Sneak:
+  //                                           	  0                   	  Always case-sensitive
+  //                                           	  1                   	  Case sensitivity based on 'ignorecase' and 'smartcase'
+"vintageous_source"                            	: null                	, // Read Ex commands from a resource before the neovintageousrc resource is sourced. This means you can still override these ex commands in your neovintageousrc file, for example:
   // Packages/NeoVintageousDvorak/dvorak.neovintageous   // See github.com/gerardroche/NeoVintageousDvorak
   // Packages/NeoVintageousColemak/colemak.neovintageous // See github.com/gerardroche/NeoVintageousColemak
 "vintageous_terminal"         	: null 	,// Define the program to use when initiating a ":shell" command. Example: "gnome-terminal"

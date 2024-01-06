@@ -1383,6 +1383,7 @@ class ViMoveToEol(ViMotionDef):
         self.command = 'nv_vi_dollar'
 
 
+@assign(seqs.SEQ['⎈m'], MOTION_MODES)
 @assign(seqs.SEQ['⏎'], MOTION_MODES)
 @assign(seqs.SEQ['+'], MOTION_MODES)
 @assign_text(['MotionEnter'], MOTION_MODES)

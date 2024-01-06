@@ -48,6 +48,7 @@ from NeoVintageous.nv.polyfill import set_selection
 from NeoVintageous.nv.polyfill import spell_add
 from NeoVintageous.nv.polyfill import spell_undo
 from NeoVintageous.nv.settings import get_cmdline_cwd
+from NeoVintageous.nv.settings import get_mode
 from NeoVintageous.nv.settings import get_setting
 from NeoVintageous.nv.settings import get_visual_block_direction
 from NeoVintageous.nv.settings import set_mode
@@ -1411,3 +1412,18 @@ def _maybe_equalalways(window) -> None:
     view = window.active_view()
     if view and get_option(view, 'equalalways'):
         make_all_groups_same_size(window)
+
+
+def is_insert_mode(view, mode: str = None) -> bool:
+    return _resolve_mode(view, mode) == INSERT
+
+
+def is_not_insert_mode(view, mode: str = None) -> bool:
+    return _resolve_mode(view, mode) != INSERT
+
+
+def _resolve_mode(view, mode: str = None) -> str:
+    if mode is None:
+        return get_mode(view)
+
+    return mode

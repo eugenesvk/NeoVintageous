@@ -1,16 +1,24 @@
 { // Valid style values: fill outline underline squiggly_underline stippled_underline
-"neovintageous_search_cur_style"                	: "fill" 	, //|fill| Current     search style
-"neovintageous_search_inc_style"                	: "fill" 	, //|fill| Incremental search style
-"neovintageous_search_occ_style"                	: "fill" 	, //|fill| Search  occurences style
-"vintageous_auto_nohlsearch_on_normal_enter"    	: true   	, //|true|     // If enabled, search highlighting is cleared when entering normal mode. This usually occurs when the <Esc> key is pressed
-  // :noh[lsearch]                              	         	// clear search highlighting directly
-  // noremap <C-l> :nohlsearch<CR>              	         	// map a key combination to clear search highlighting
-"vintageous_auto_complete_exit_from_insert_mode"	: true   	, // On Esc, close auto complete, if visible, and exit to normal mode. When set to false, only the auto complete is closed
-"vintageous_bell"                               	: "blink"	, // |blink|view¦views¦none¦ Visual bell style
-"vintageous_bell_color_scheme"                  	: "dark" 	, //|dark|light¦path¦  Visual bell color-scheme. path=color scheme resource path: Packages/Name/name.hidden-color-scheme
-"vintageous_clear_auto_indent_on_esc"           	: true   	, // If you do not type anything on a new line e.g. pressing <Esc> after "o" or "O", the indent is deleted again. To preserve the leading whitespace on after pressing <esc> set this setting to false
-"vintageous_default_mode"                       	: ""     	, //|""|"insert"¦ Default mode to use when activating or switching views
-  // insert                                     	         	  Enter insert mode when opening or switching views or when the window receives focus and is not in visual mode i.e. visual mode selections are retained when the window loses focus
+"neovintageous_search_cur_style"                	: "fill"	, //|fill| Current     search style
+"neovintageous_search_inc_style"                	: "fill"	, //|fill| Incremental search style
+"neovintageous_search_occ_style"                	: "fill"	, //|fill| Search  occurences style
+"vintageous_auto_nohlsearch_on_normal_enter"    	: true  	, //|true|     // If enabled, search highlighting is cleared when entering normal mode. This usually occurs when the <Esc> key is pressed
+  // :noh[lsearch]                              	        	// clear search highlighting directly
+  // noremap <C-l> :nohlsearch<CR>              	        	// map a key combination to clear search highlighting
+"vintageous_auto_complete_exit_from_insert_mode"	: true  	, // On Esc, close auto complete, if visible, and exit to normal mode. When set to false, only the auto complete is closed
+"vintageous_auto_switch_input_method"           	: false 	, // Enable automatic switching of input methods.
+
+"vintageous_auto_switch_input_method_default"	: ""	, // The default input method to be used
+  // Example: xkb:us::eng, us, 0, 1, 2, com.apple.keylayout.US, 1033
+"vintageous_auto_switch_input_method_get_cmd"	: "/path/to/im-select"	,// The full path to the command used to retrieve the current input method key.
+  // Example: "/usr/bin/ibus engine", "/usr/local/bin/xkb-switch", "/usr/bin/fcitx-remote", "/path/to/im-get", "/usr/bin/qdbus org.kde.keyboard /Layouts getLayout", "/usr/local/bin/im-select", "D:\\bin\\im-select.exe"
+"vintageous_auto_switch_input_method_set_cmd"	: "/path/to/im-select {im}"	, // The full path to the command used to switch input methods, where {im} is a placeholder for the input method key.
+  // Example: "/usr/bin/ibus engine {im}", "/usr/local/bin/xkb-switch -s {im}", "/usr/bin/fcitx-remote -t {im}", "/path/to/im-set {im}", "/usr/bin/qdbus org.kde.keyboard /Layouts setLayout {im}", "/usr/local/bin/im-select {im}", "D:\\bin\\im-select.exe {im}"
+"vintageous_bell"                    	: "blink"	, // |blink|view¦views¦none¦ Visual bell style
+"vintageous_bell_color_scheme"       	: "dark" 	, //|dark|light¦path¦  Visual bell color-scheme. path=color scheme resource path: Packages/Name/name.hidden-color-scheme
+"vintageous_clear_auto_indent_on_esc"	: true   	, // If you do not type anything on a new line e.g. pressing <Esc> after "o" or "O", the indent is deleted again. To preserve the leading whitespace on after pressing <esc> set this setting to false
+"vintageous_default_mode"            	: ""     	, //|""|"insert"¦ Default mode to use when activating or switching views
+  // insert                          	         	  Enter insert mode when opening or switching views or when the window receives focus and is not in visual mode i.e. visual mode selections are retained when the window loses focus
 
 // Plugins                          	       		//
 "vintageous_enable_abolish"         	: true 	, //|true | A port of https://github.com/tpope/vim-abolish

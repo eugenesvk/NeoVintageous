@@ -30,6 +30,7 @@ from sublime import Region
 from sublime_plugin import TextCommand
 from sublime_plugin import WindowCommand
 
+from NeoVintageous.nv import listener
 from NeoVintageous.nv import macros
 from NeoVintageous.nv.cmdline import Cmdline
 from NeoVintageous.nv.cmdline_search import CmdlineSearch
@@ -119,7 +120,9 @@ from NeoVintageous.nv.utils import hide_panel
 from NeoVintageous.nv.utils import highest_visible_pt
 from NeoVintageous.nv.utils import highlow_visible_rows
 from NeoVintageous.nv.utils import is_help_view
+from NeoVintageous.nv.utils import is_insert_mode
 from NeoVintageous.nv.utils import is_linewise_operation
+from NeoVintageous.nv.utils import is_not_insert_mode
 from NeoVintageous.nv.utils import is_view
 from NeoVintageous.nv.utils import lowest_visible_pt
 from NeoVintageous.nv.utils import new_inclusive_region
@@ -777,6 +780,9 @@ class nv_vi_c(TextCommand):
 class nv_enter_normal_mode(TextCommand):
 
     def run(self, edit, mode=None, count=None, register=None, from_init=False):
+        if is_insert_mode(self.view, mode):
+            listener.on_insert_leave(self.view, new_mode=NORMAL)
+
         self.view.window().run_command('hide_auto_complete')
         self.view.window().run_command('hide_overlay')
 
@@ -918,6 +924,9 @@ class nv_enter_normal_mode(TextCommand):
 class nv_enter_select_mode(TextCommand):
 
     def run(self, edit, mode=None, count=1, register=None):
+        if is_insert_mode(self.view, mode):
+            listener.on_insert_leave(self.view, new_mode=VISUAL)
+
         set_mode(self.view, SELECT)
 
         if mode == INTERNAL_NORMAL:
@@ -934,6 +943,9 @@ class nv_enter_select_mode(TextCommand):
 class nv_enter_insert_mode(TextCommand):
 
     def run(self, edit, mode=None, count=1, register=None):
+        if is_not_insert_mode(self.view, mode):
+            listener.on_insert_enter(self.view, prev_mode=mode)
+
         def f(view, s):
             s.a = s.b = get_insertion_point_at_b(s)
 
@@ -955,6 +967,9 @@ class nv_enter_visual_mode(TextCommand):
         if get_mode(self.view) == VISUAL and not force:
             enter_normal_mode(self.view, mode)
             return
+
+        if is_insert_mode(self.view, mode):
+            listener.on_insert_leave(self.view, new_mode=VISUAL)
 
         if mode == VISUAL_BLOCK:
             visual_block = VisualBlockSelection(self.view)
@@ -998,6 +1013,9 @@ class nv_enter_visual_line_mode(TextCommand):
         if get_mode(self.view) == VISUAL_LINE and not force:
             enter_normal_mode(self.view, mode)
             return
+
+        if is_insert_mode(self.view, mode):
+            listener.on_insert_leave(self.view, new_mode=VISUAL_LINE)
 
         if mode in (NORMAL, INTERNAL_NORMAL):
             # Special-case: If cursor is at the very EOF, then try backup the
@@ -1053,6 +1071,9 @@ class nv_enter_visual_line_mode(TextCommand):
 class nv_enter_replace_mode(TextCommand):
 
     def run(self, edit, mode=None, count=None, register=None, **kwargs):
+        if is_insert_mode(self.view, mode):
+            listener.on_insert_leave(self.view, new_mode=REPLACE)
+
         def f(view, s):
             s.a = s.b
             return s
@@ -2268,6 +2289,9 @@ class nv_vi_at(TextCommand):
 class nv_enter_visual_block_mode(TextCommand):
 
     def run(self, edit, mode=None, count=None, register=None, force=False):
+        if is_insert_mode(self.view, mode):
+            listener.on_insert_leave(self.view, new_mode=VISUAL_BLOCK)
+
         if mode in (NORMAL, VISUAL, VISUAL_LINE, INTERNAL_NORMAL):
             VisualBlockSelection.create(self.view)
             set_mode(self.view, VISUAL_BLOCK)

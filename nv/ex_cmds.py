@@ -87,6 +87,7 @@ from NeoVintageous.nv.utils import next_non_blank
 from NeoVintageous.nv.utils import regions_transformer
 from NeoVintageous.nv.utils import row_at
 from NeoVintageous.nv.utils import save_view
+from NeoVintageous.nv.utils import show_ascii
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.vim import enter_normal_mode
 from NeoVintageous.nv.vim import status_message
@@ -101,6 +102,10 @@ from NeoVintageous.nv.window import window_tab_control
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
+
+
+def ex_ascii(view, **kwargs) -> None:
+    show_ascii(view)
 
 
 def ex_bfirst(window, **kwargs) -> None:

@@ -223,11 +223,14 @@ END      	= ['⇥','⤓','↘','<end>']             	# END
 DEL      	= ['␡','⌦','<del>']                 	# DEL
 ENTER    	= ['⏎','⌤','↩','<cr>']              	# ENTER
 ESC      	= ['⎋','<esc>']                     	# ESC
-BACKSLASH	= ['⧵','＼','﹨','<bslash>']          	# BACKSLASH
+BACKSLASH	= ['⧵','＼','﹨']                     	# BACKSLASH
 SPACE    	= ['␠','␣','<space>']               	# SPACE
 INSERT   	= ['⎀','<insert>']                  	# INSERT
 LEADER   	= ['Ⓛ','<leader>']                  	# LEADER
-
+for key in BACKSLASH:
+  val                   = '<' + NAMED_KEY_ALIASES[key] + '>' # <bslash>
+  SEQ[key + key]        = [val + val]
+  SEQ[key + key + '⇧a'] = [val + val + 'A']
 
 Z_LEFT = ['z<left>']
 G_DOWN = ['g<down>']

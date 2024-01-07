@@ -1888,7 +1888,9 @@ class ViReverseFindWord(ViMotionDef):
 @assign(seqs.SEQ[']'], MOTION_MODES)
 @assign(seqs.SEQ['z'], MOTION_MODES)
 @assign(seqs.SEQ['zu'], MOTION_MODES)
-@assign_text(['OpenNameSpace'], MOTION_MODES)
+@assign(seqs.SEQ['⧵'], (SELECT,))
+@assign(seqs.SEQ['⧵⧵'], (SELECT,))
+@assign_text(['OpenNameSpace'], (MOTION_MODES,SELECT,INSERT,))
 class ViOpenNameSpace(ViMotionDef):  # TODO This should not be a motion.
 
     def translate(self, view):

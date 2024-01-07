@@ -61,7 +61,8 @@ class MultipleCursorsAdd(ViOperatorDef):
 
 
 @register(seqs.ALT_N, (SELECT,))
-@register(seqs.SEQ['⇧a'], (SELECT,))
+@register(seqs.SEQ['⧵⧵⇧a'], (SELECT,))
+@register(seqs.SEQ['⇧a'], (SELECT,)) # DEPRECATED; use \\A instead and change A to append
 @register_text(['MultipleCursorsAddAll'], (SELECT,))
 class MultipleCursorsAddAll(ViOperatorDef):
     def init(self):

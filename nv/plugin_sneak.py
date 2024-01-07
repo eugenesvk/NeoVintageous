@@ -82,6 +82,7 @@ class SneakInputMotion(ViMotionDef):
 # @register(seqs.SEQ['z'], (OPERATOR_PENDING,))
 @register(_SNEAK_S, (NORMAL, VISUAL, VISUAL_LINE))
 @register(_SNEAK_Z, (OPERATOR_PENDING,))
+@register_text(['Sneak'], (NORMAL, VISUAL, VISUAL_LINE, OPERATOR_PENDING))
 class Sneaks(SneakInputMotion):
     def translate(self, view):
         return translate_motion(view, 'nv_sneak', {
@@ -93,6 +94,7 @@ class Sneaks(SneakInputMotion):
 # @register(seqs.SEQ['⇧z'], (VISUAL, VISUAL_LINE, OPERATOR_PENDING))
 @register(_SNEAK_BIG_S, (NORMAL,))
 @register(_SNEAK_BIG_Z, (VISUAL, VISUAL_LINE, OPERATOR_PENDING))
+@register_text(['SneakBack'], (NORMAL, VISUAL, VISUAL_LINE, OPERATOR_PENDING))
 class SneakS(SneakInputMotion):
     def translate(self, view):
         return translate_motion(view, 'nv_sneak', {

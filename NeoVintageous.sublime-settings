@@ -20,8 +20,8 @@
 //},
 
 // // 2. to run cli commands on entering/leaving a mode add a [list] of command + arguments in the 'events' dictionary:
-//   // available modes (CaSe sensitive: Insert Normal Replace Select Visual VisualBlock VisualLine
-//   // available mode events (CaSe sensitive: Enter Leave
+//   // available modes (CaSe sensitive): Insert Normal Replace Select Visual VisualBlock VisualLine
+//   // available mode events (CaSe sensitive): Enter Leave
 // "events"      	: {
 //  "InsertEnter"	: ["~/.local/bin/karabiner_cli", "--set-variables", "{\"isNVⓘ\":1}"],
 //  "InsertLeave"	: ["~/.local/bin/karabiner_cli", "--set-variables", "{\"isNVⓘ\":0}"],

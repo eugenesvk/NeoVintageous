@@ -38,6 +38,7 @@ class MultipleCursorsStart(ViOperatorDef):
 
 
 @register(seqs.SEQ['⇧j'], (SELECT,))
+@register(seqs.SEQ['⭾'], (SELECT,))
 @register(seqs.SEQ['⎋'], (SELECT,))
 @register_text(['MultipleCursorsExit'], (SELECT,))
 class MultipleCursorsExit(ViOperatorDef):
@@ -70,6 +71,7 @@ class MultipleCursorsAddAll(ViOperatorDef):
 
 @register(seqs.SEQ['⎈p'], (SELECT,))
 @register(seqs.SEQ['k'], (SELECT,))
+@register(seqs.SEQ['⇧n'], (SELECT,))
 @register(seqs.SEQ['⇧q'], (SELECT,))
 @register_text(['MultipleCursorsRemove'], (SELECT,))
 class MultipleCursorsRemove(ViOperatorDef):

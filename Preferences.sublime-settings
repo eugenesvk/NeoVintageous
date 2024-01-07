@@ -6,9 +6,9 @@
   // :noh[lsearch]                              	        	// clear search highlighting directly
   // noremap <C-l> :nohlsearch<CR>              	        	// map a key combination to clear search highlighting
 "vintageous_auto_complete_exit_from_insert_mode"	: true  	, // On Esc, close auto complete, if visible, and exit to normal mode. When set to false, only the auto complete is closed
-"vintageous_auto_switch_input_method"           	: false 	, // Enable automatic switching of input methods.
 
-"vintageous_auto_switch_input_method_default"	: ""	, // Configure the default input method to be used
+"vintageous_auto_switch_input_method"        	: false	, // Enable automatic switching of input methods.
+"vintageous_auto_switch_input_method_default"	: ""   	, // Configure the default input method to be used
   // Examples: "xkb:us::eng", "us", "0", "1", "2", "com.apple.keylayout.US", "1033"
 "vintageous_auto_switch_input_method_get_cmd"	: "/path/to/im-select"	,// Specify the complete command path for retrieving the current input method key.
   // Examples: "/usr/bin/ibus engine", "/usr/local/bin/xkb-switch", "/usr/bin/fcitx-remote", "/path/to/im-get", "/usr/bin/qdbus org.kde.keyboard /Layouts getLayout", "/usr/local/bin/im-select", "D:\\bin\\im-select.exe"

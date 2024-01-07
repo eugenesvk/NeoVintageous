@@ -1316,6 +1316,7 @@ class ViMoveByBigWordEndsBackward(ViMotionDef):
 
 
 @assign(seqs.G_SEMICOLON, MOTION_MODES)
+@assign_text(['GotoOlderChange'], MOTION_MODES)
 class ViGotoOlderChange(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1327,6 +1328,7 @@ class ViGotoOlderChange(ViMotionDef):
 
 
 @assign(seqs.G_COMMA, MOTION_MODES)
+@assign_text(['GotoNewerChange'], MOTION_MODES)
 class ViGotoNewerChange(ViMotionDef):
     def init(self):
         self.updates_xpos = True

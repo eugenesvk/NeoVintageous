@@ -207,7 +207,7 @@ SEQ[']⇧0']	= ['])']
 SEQ[']␠'] 	= [']<space>']
 
 # subMode
-SEQ['g⇧-'] 		= ['g_']
+SEQ['g⇧-'] 	= ['g_']
 SEQ['⇧z⇧q']	= ['ZQ']
 SEQ['⇧z⇧z']	= ['ZZ']
 

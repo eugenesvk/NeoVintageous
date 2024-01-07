@@ -1738,7 +1738,7 @@ class ViMoveByWords(ViMotionDef):
 
 @assign(seqs.SEQ['⎈▼'], MOTION_MODES)
 @assign(seqs.SEQ['⎈j'], MOTION_MODES)
-@assign(seqs.SEQ['⎈n'], MOTION_MODES)
+@assign(seqs.SEQ['⎈n'], MOTION_MODES + (INSERT,))
 @assign(seqs.SEQ['▼'], MOTION_MODES)
 @assign(seqs.SEQ['j'], MOTION_MODES)
 @assign_text(['MoveDownByLines'], MOTION_MODES)

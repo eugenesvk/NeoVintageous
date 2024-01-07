@@ -48,6 +48,12 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
    + :beetle: 1-symbol keys like `⇟` in named key aliases not recognized
 
 
+## 1.33.0 - Unreleased
+
+### Fixed
+
+* [#960](https://github.com/NeoVintageous/NeoVintageous/issues/960): Disable highlighting the line in cmdline output
+
 ## 1.32.1 - 2023-08-13
 
 ### Fixed

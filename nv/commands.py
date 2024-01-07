@@ -1895,7 +1895,7 @@ class nv_vi_ga(WindowCommand):
             if char in char_notation_map:
                 char = char_notation_map[char]
 
-            return "<" + char + ">"
+            return char
 
         view = self.window.active_view()
         region = view.sel()[-1]
@@ -1904,7 +1904,7 @@ class nv_vi_ga(WindowCommand):
         c_hex = hex(c_ord)
         c_oct = oct(c_ord)
         c_not = char_to_notation(c_str)
-        status_message('%7s %3s,  Hex %4s,  Octal %5s' % (c_not, c_ord, c_hex, c_oct))
+        status_message('%7s %3s %4s %5s' % (c_not, c_ord, c_hex, c_oct))
 
 
 class nv_vi_gt(WindowCommand):

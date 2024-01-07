@@ -17,6 +17,8 @@
 
 # A Port of https://github.com/justinmk/vim-sneak.
 
+import os
+
 from sublime import IGNORECASE
 from sublime import LITERAL
 from sublime_plugin import TextCommand
@@ -48,6 +50,17 @@ from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PEN
 __all__ = ['nv_sneak_command']
 
 
+def _get_env(name: str, default) -> str:
+    seq = os.getenv(name)
+    return seq if seq else seqs.S
+
+
+_SNEAK_S = _get_env('NEOVINTAGEOUS_SNEAK_MAP_S', seqs.S)
+_SNEAK_BIG_S = _get_env('NEOVINTAGEOUS_SNEAK_MAP_BIG_S', seqs.BIG_S)
+_SNEAK_Z = _get_env('NEOVINTAGEOUS_SNEAK_MAP_Z', seqs.Z)
+_SNEAK_BIG_Z = _get_env('NEOVINTAGEOUS_SNEAK_MAP_BIG_Z', seqs.BIG_Z)
+
+
 class SneakInputMotion(ViMotionDef):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -65,8 +78,10 @@ class SneakInputMotion(ViMotionDef):
         return True
 
 
-@register(seqs.SEQ['s'], (NORMAL, VISUAL, VISUAL_LINE))
-@register(seqs.SEQ['z'], (OPERATOR_PENDING,))
+# @register(seqs.SEQ['s'], (NORMAL, VISUAL, VISUAL_LINE))
+# @register(seqs.SEQ['z'], (OPERATOR_PENDING,))
+@register(_SNEAK_S, (NORMAL, VISUAL, VISUAL_LINE))
+@register(_SNEAK_Z, (OPERATOR_PENDING,))
 class Sneaks(SneakInputMotion):
     def translate(self, view):
         return translate_motion(view, 'nv_sneak', {
@@ -74,8 +89,10 @@ class Sneaks(SneakInputMotion):
         })
 
 
-@register(seqs.SEQ['⇧s'], (NORMAL,))
-@register(seqs.SEQ['⇧z'], (VISUAL, VISUAL_LINE, OPERATOR_PENDING))
+# @register(seqs.SEQ['⇧s'], (NORMAL,))
+# @register(seqs.SEQ['⇧z'], (VISUAL, VISUAL_LINE, OPERATOR_PENDING))
+@register(_SNEAK_BIG_S, (NORMAL,))
+@register(_SNEAK_BIG_Z, (VISUAL, VISUAL_LINE, OPERATOR_PENDING))
 class SneakS(SneakInputMotion):
     def translate(self, view):
         return translate_motion(view, 'nv_sneak', {

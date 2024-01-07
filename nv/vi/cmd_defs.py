@@ -1768,7 +1768,7 @@ class ViMoveByWords(ViMotionDef):
 @assign(seqs.SEQ['⎈n'], MOTION_MODES + (INSERT,))
 @assign(seqs.SEQ['▼'], MOTION_MODES)
 @assign(seqs.SEQ['j'], MOTION_MODES)
-@assign_text(['MoveDownByLines'], MOTION_MODES)
+@assign_text(['MoveDownByLines'], MOTION_MODES + (INSERT,))
 class ViMoveDownByLines(ViMotionDef):
     def init(self):
         self.scroll_into_view = True

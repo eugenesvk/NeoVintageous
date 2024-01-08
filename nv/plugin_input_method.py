@@ -18,8 +18,7 @@
 from NeoVintageous.nv.listener import register
 from NeoVintageous.nv.settings import get_setting
 from NeoVintageous.nv.shell import read
-from NeoVintageous.nv.vim import INSERT
-from NeoVintageous.nv.vim import REPLACE
+from NeoVintageous.nv.modes import INSERT, REPLACE
 
 
 __all__ = []  # type: list

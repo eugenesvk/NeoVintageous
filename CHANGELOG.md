@@ -43,6 +43,7 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
    + :sparkles: surround: allow users to configure marks, mark aliases, when to append an extra space
    + :sparkles: preliminary support for configuring keybinds without having to learn a foreign vim language by calling the command(s) by name, e.g., `l MoveLeftByChars` instead of `l h`. Also allows rebinding plugin commands without using environment variables, e.g., `b Sneak` instead of setting `$NEOVINTAGEOUS_SNEAK_MAP_S`)
    + :sparkles: Allow user configuration of status bar Mode indicators, including suffix, indicator, prefix, and indicator position relative to other indicators. Also updates defaults to be more terse and symbolic (e.g., ⓘ instead of INSERT and Ⓥ▋ instead of VISUAL BLOCK)
+   + :sparkles: nowrap alternative to tab switch Ex commands (`tabnextnowrap`/`tabpreviousnowrap`)
   - __Changed__
    + commands: add key symbols like `⎈` to command name for easier visual differentiation and 1-symbol-search 
   - __Fixed__

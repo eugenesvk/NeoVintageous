@@ -198,7 +198,9 @@ class cfgU():
 
         # todo: #? convert mappings_add to a helper function that accepts enum2|enum2
         keybinds = user_commands.get('keybind')
-        if not (cfgT := type(keybinds)) is dict:
+        if   not               keybinds:
+            pass
+        elif not (cfgT := type(keybinds)) is dict:
             _log.warn(f"Type of ‘keybind’ @ ‘{cfgU_command}’ should be dict, not {cfgT}")
         else:
             for mode_string,command_list in keybinds.items():

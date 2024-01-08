@@ -47,7 +47,7 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
    + :beetle: keypad numbers not working as count prefix
    + :beetle: 1-symbol keys like `⇟` in named key aliases not recognized
 
-## 1.34.1 - Unreleased
+## 1.34.1 - 2024-12-08
 
 ### Fixed
 

@@ -90,8 +90,8 @@ def register_text(commands: list, modes: tuple, *args, **kwargs):
     """
     def inner(cls):
         for mode in modes:
-            for cmd in commands:
-                mappings_text[mode][cmd] = cls(*args, **kwargs)
+            for cmd in commands: # 'SneakBack' → class SneakS(SneakInputMotion)
+                mappings_text[mode][cmd.lower()] = cls(*args, **kwargs)
                 classes[cls.__name__] = cls
         return cls
     return inner

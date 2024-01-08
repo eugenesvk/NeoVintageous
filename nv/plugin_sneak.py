@@ -55,10 +55,10 @@ def _get_env(name: str, default) -> str:
     return seq if seq else default
 
 
-_SNEAK_S = _get_env('NEOVINTAGEOUS_SNEAK_MAP_S', seqs.S)
-_SNEAK_BIG_S = _get_env('NEOVINTAGEOUS_SNEAK_MAP_BIG_S', seqs.BIG_S)
-_SNEAK_Z = _get_env('NEOVINTAGEOUS_SNEAK_MAP_Z', seqs.Z)
-_SNEAK_BIG_Z = _get_env('NEOVINTAGEOUS_SNEAK_MAP_BIG_Z', seqs.BIG_Z)
+_SNEAK_S = _get_env('NEOVINTAGEOUS_SNEAK_MAP_S', seqs.SEQ['s'])
+_SNEAK_BIG_S = _get_env('NEOVINTAGEOUS_SNEAK_MAP_BIG_S', seqs.SEQ['⇧s'])
+_SNEAK_Z = _get_env('NEOVINTAGEOUS_SNEAK_MAP_Z', seqs.SEQ['z'])
+_SNEAK_BIG_Z = _get_env('NEOVINTAGEOUS_SNEAK_MAP_BIG_Z', seqs.SEQ['⇧z'])
 
 
 class SneakInputMotion(ViMotionDef):

@@ -79,9 +79,11 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
 - Revert support for `<Left>` and `<Right>` insert mode [#985](https://github.com/NeoVintageous/NeoVintageous/issues/985), [#986](https://github.com/NeoVintageous/NeoVintageous/discussions/986)
 
 ## 1.33.0 - 2023-09-28
+
 ### Added
 
 - Add reverse sorting support for sort command by appending `!` e.g., `:sort!`
+- Add support for `<Left>` and `<Right>` in insert mode, allowing you to move the cursor one character to the left and right.
 - Add `[count]` support for `CTRL-i` and `CTRL-o`: navigate to newer and older cursor positions in the jump list. [#981](https://github.com/NeoVintageous/NeoVintageous/issues/981) [#980](https://github.com/NeoVintageous/NeoVintageous/issues/980)
 - Add `CTRL-n` and `CTRL-p` for next and previous item navigation in the Command Palette, Goto File, Goto Symbol, and Goto Symbol in Project. [#979](https://github.com/NeoVintageous/NeoVintageous/issues/979)
 - Add `:ascii` to display the ASCII value of the character under the cursor in decimal, hexadecimal, and octal formats. The mnemonic is "Get Ascii value," and it functions similarly to `ga`. [#975](https://github.com/NeoVintageous/NeoVintageous/issues/975)

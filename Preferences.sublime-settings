@@ -17,8 +17,7 @@
 "vintageous_bell"                    	: "blink"	, //|blink|view¦views¦none¦ Visual bell style
 "vintageous_bell_color_scheme"       	: "dark" 	, //|dark|light¦path¦  Visual bell color-scheme. path=color scheme resource path: Packages/Name/name.hidden-color-scheme
 "vintageous_clear_auto_indent_on_esc"	: true   	, // If you do not type anything on a new line e.g. pressing <Esc> after "o" or "O", the indent is deleted again. To preserve the leading whitespace on after pressing <esc> set this setting to false
-"vintageous_default_mode"            	: ""     	, //|""|"insert"¦ Default mode to use when activating or switching views
-  // insert                          	         	  Enter insert mode when opening or switching views or when the window receives focus and is not in visual mode i.e. visual mode selections are retained when the window loses focus
+"vintageous_default_mode"            	: null   	, //|null|"insert"¦"visual"¦ Default mode to use when activating or switching views or when the window receives focus and is not in visual mode (selections of which are retained when the window loses focus) (null=Normal)
 
 // Plugins                            	        		//
 "vintageous_enable_abolish"           	: true  	, //|true | A port of github.com/tpope/vim-abolish

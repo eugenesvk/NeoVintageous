@@ -26,6 +26,7 @@
 "vintageous_enable_sneak"             	: false 	, //|false| A port of github.com/justinmk/vim-sneak
 "vintageous_enable_sublime"           	: true  	, //|true | Sublime Text tweaks
 "vintageous_enable_surround"          	: true  	, //|true | A port of github.com/tpope/vim-surround
+"vintageous_enable_targets"           	: true  	, //|true | A port of vim-targets plugin by @wellle
 "vintageous_enable_unimpaired"        	: true  	, //|true | A port of github.com/tpope/vim-unimpaired
 "vintageous_highlighted_yank"         	: true  	, //|true | Enable Highlighted Yank plugin. (ported from the vim-highlightedyank plugin by @machakann)
 "vintageous_highlighted_yank_duration"	: 1000  	, //|1000 | Assign number of time in milliseconds.

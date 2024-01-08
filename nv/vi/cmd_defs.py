@@ -1257,7 +1257,7 @@ class ViGotoSymbolInFile(ViMotionDef):
 
 @assign(seqs.SEQ['⎇▶'], MOTION_MODES)
 @assign(seqs.SEQ['l'], MOTION_MODES)
-@assign(seqs.SEQ['▶'], MOTION_MODES + (INSERT,))
+@assign(seqs.SEQ['▶'], MOTION_MODES)
 @assign(seqs.SEQ['␠'], MOTION_MODES)
 @assign_text(['MoveRightByChars'], MOTION_MODES)
 class ViMoveRightByChars(ViMotionDef):
@@ -1744,7 +1744,7 @@ class ViMoveByBigWordEnds(ViMotionDef):
 @assign(seqs.SEQ['⎈␈'], MOTION_MODES)
 @assign(seqs.SEQ['⎈h'], MOTION_MODES)
 @assign(seqs.SEQ['h'], MOTION_MODES)
-@assign(seqs.SEQ['◀'], MOTION_MODES + (INSERT,))
+@assign(seqs.SEQ['◀'], MOTION_MODES)
 @assign_text(['MoveLeftByChars'], MOTION_MODES)
 class ViMoveLeftByChars(ViMotionDef):
     def init(self):

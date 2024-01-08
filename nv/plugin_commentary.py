@@ -39,6 +39,7 @@ __all__ = ['nv_commentary_command']
 
 
 @register(seqs.SEQ['gc'], ACTION_MODES)
+@register_text(['CommentaryMotion'], ACTION_MODES)
 class CommentaryMotion(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -52,6 +53,7 @@ class CommentaryMotion(ViOperatorDef):
 
 
 @register(seqs.GCC, (NORMAL,))
+@register_text(['CommentaryLines'], (NORMAL,))
 class CommentaryLines(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -66,6 +68,7 @@ class CommentaryLines(ViOperatorDef):
 # NOTE The command (gC) is not defined in the original Commentary plugin, it's
 # from a plugin called tComment: https://github.com/tomtom/tcomment_vim.
 @register(seqs.SEQ['g⇧c'], ACTION_MODES)
+@register_text(['CommentaryBlock'], ACTION_MODES)
 class CommentaryBlock(ViOperatorDef):
     def init(self):
         self.updates_xpos = True

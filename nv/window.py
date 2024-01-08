@@ -563,7 +563,7 @@ def window_buffer_control(window, action: str, count: int = 1) -> None:
         raise ValueError('unknown buffer control action: %s' % action)
 
 
-def window_tab_control(window, action: str, count: int = 1, index: int = None) -> None:
+def window_tab_control(window, action: str, count: int = 1, index: int = None, wrap:bool = False) -> None:
     view = window.active_view()
     if not view:
         return status_message('view not found')
@@ -572,10 +572,16 @@ def window_tab_control(window, action: str, count: int = 1, index: int = None) -
     group_index, view_index = window.get_view_index(view)
 
     if action == 'next':
-        window.run_command('select_by_index', {'index': (view_index + count) % view_count})
+        if wrap or ((view_index + 1 + count) <= view_count):
+            window.run_command('select_by_index', {'index': (view_index + count) % view_count})
+        else:
+            window.run_command('select_by_index', {'index': view_count - 1})
 
     elif action == 'previous':
-        window.run_command('select_by_index', {'index': (view_index + view_count - count) % view_count})
+        if wrap or ((view_index + 1 - count) >= 1):
+            window.run_command('select_by_index', {'index': (view_index + view_count - count) % view_count})
+        else:
+            window.run_command('select_by_index', {'index': 0})
 
     elif action == 'last':
         window.run_command('select_by_index', {'index': view_count - 1})

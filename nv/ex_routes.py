@@ -575,8 +575,10 @@ def _ex_route_tablast(state) -> TokenCommand:
     return _create_route(state, 'tablast')
 
 
-def _ex_route_tabnext(state) -> TokenCommand:
+def _ex_route_tabnext(      state) -> TokenCommand:
     return _create_count_param_route(state, 'tabnext')
+def _ex_route_tabnextnowrap(state) -> TokenCommand:
+    return _create_count_param_route(state, 'tabnextnowrap')
 
 
 def _ex_route_tabnew(state) -> TokenCommand:
@@ -587,8 +589,10 @@ def _ex_route_tabonly(state) -> TokenCommand:
     return _create_route(state, 'tabonly')
 
 
-def _ex_route_tabprevious(state) -> TokenCommand:
+def _ex_route_tabprevious(      state) -> TokenCommand:
     return _create_count_param_route(state, 'tabprevious')
+def _ex_route_tabpreviousnowrap(state) -> TokenCommand:
+    return _create_count_param_route(state, 'tabpreviousnowrap')
 
 
 def _ex_route_unmap(state) -> TokenCommand:
@@ -811,9 +815,11 @@ _add_ex_route(r'tabc(?:lose)?', _ex_route_tabclose, 'tabclose')
 _add_ex_route(r'tabfir(?:st)?', _ex_route_tabfirst, 'tabfirst')
 _add_ex_route(r'tabl(?:ast)?', _ex_route_tablast, 'tablast')
 _add_ex_route(r'tab(?:new|e(?:dit)?)', _ex_route_tabnew, ['tabnew', 'tabedit'])
+_add_ex_route(r'tabn(?:ext)?nowrap', _ex_route_tabnextnowrap, 'tabnextnowrap')
 _add_ex_route(r'tabn(?:ext)?', _ex_route_tabnext, 'tabnext')
 _add_ex_route(r'tabN(?:ext)?', _ex_route_tabprevious, 'tabNext')
 _add_ex_route(r'tabo(?:nly)?', _ex_route_tabonly, 'tabonly')
+_add_ex_route(r'tabp(?:revious)?nowrap', _ex_route_tabpreviousnowrap, 'tabpreviousnowrap')
 _add_ex_route(r'tabp(?:revious)?', _ex_route_tabprevious, 'tabprevious')
 _add_ex_route(r'tabr(?:ewind)?', _ex_route_tabfirst, 'tabrewind')
 _add_ex_route(r'unm(?:ap)?', _ex_route_unmap, 'unmap')

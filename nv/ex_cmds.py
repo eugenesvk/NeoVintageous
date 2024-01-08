@@ -937,8 +937,10 @@ def ex_tablast(window, **kwargs) -> None:
     window_tab_control(window, 'last')
 
 
-def ex_tabnext(window, count: int = 1, **kwargs) -> None:
-    window_tab_control(window, 'next', count=count)
+def ex_tabnext(      window, count: int = 1, wrap:bool = True,  **kwargs) -> None:
+    window_tab_control(window, 'next', count=count, wrap=wrap)
+def ex_tabnextnowrap(window, count: int = 1, wrap:bool = False, **kwargs) -> None:
+    window_tab_control(window, 'next', count=count, wrap=wrap)
 
 
 def ex_tabnew(window, **kwargs) -> None:
@@ -949,8 +951,10 @@ def ex_tabonly(window, **kwargs) -> None:
     window_tab_control(window, 'only')
 
 
-def ex_tabprevious(window, count: int = 1, **kwargs) -> None:
-    window_tab_control(window, 'previous', count=count)
+def ex_tabprevious(      window, count: int = 1, wrap:bool = True , **kwargs) -> None:
+    window_tab_control(window, 'previous', count=count, wrap=wrap)
+def ex_tabpreviousnowrap(window, count: int = 1, wrap:bool = False, **kwargs) -> None:
+    window_tab_control(window, 'previous', count=count, wrap=wrap)
 
 
 def ex_unmap(lhs: str, **kwargs) -> None:

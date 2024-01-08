@@ -48,6 +48,13 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
    + :beetle: 1-symbol keys like `⇟` in named key aliases not recognized
 
 
+## 1.34.0 - Unreleased
+
+### Added
+
+- Add `zO`, alias of `zo`, open fold
+- Add `zC`, alias of `zC`, close fold
+
 ## 1.33.1 - 2023-09-29
 
 ### Fixed

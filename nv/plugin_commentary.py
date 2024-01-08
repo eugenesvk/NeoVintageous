@@ -20,7 +20,7 @@
 from sublime import Region
 from sublime_plugin import TextCommand
 
-from NeoVintageous.nv.plugin import register
+from NeoVintageous.nv.plugin import register, register_text
 from NeoVintageous.nv.polyfill import set_selection
 from NeoVintageous.nv.ui import ui_bell
 from NeoVintageous.nv.utils import next_non_blank

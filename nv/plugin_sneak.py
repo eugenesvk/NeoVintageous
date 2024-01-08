@@ -24,7 +24,7 @@ from sublime import LITERAL
 from sublime_plugin import TextCommand
 
 from NeoVintageous.nv.options import get_option
-from NeoVintageous.nv.plugin import register
+from NeoVintageous.nv.plugin import register, register_text
 from NeoVintageous.nv.polyfill import set_selection
 from NeoVintageous.nv.polyfill import view_find_all_in_range
 from NeoVintageous.nv.polyfill import view_rfind_all

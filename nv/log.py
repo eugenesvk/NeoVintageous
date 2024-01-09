@@ -1,6 +1,6 @@
 import logging
 
-DEFAULT_LOG_LEVEL = logging.WARN
+DEFAULT_LOG_LEVEL = logging.WARNING
 
 filter_levelname_dict = {'WARNING':'⚠️','INFO':"ⓘ",'KEY':'⌨️'}
 

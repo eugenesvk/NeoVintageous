@@ -22,24 +22,22 @@ import traceback
 PACKAGE_NAME  = "NeoVintageous"
 
 # The logger needs to be configured before any modules are loaded.
-logger = logging.getLogger(__package__)
+logger = logging.getLogger(PACKAGE_NAME)
 logger.propagate = False
 
-# To enable debug logging set the following environment variable to a non-blank
-# value or to a logging level: CRITICAL, ERROR, WARNING, INFO, DEBUG, NOTSET.
-_DEBUG = os.getenv('SUBLIME_NEOVINTAGEOUS_DEBUG')
-from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
-if _DEBUG:
-    logger.setLevel(getattr(logging, _DEBUG.upper(), logging.DEBUG))
-else:
-    logger.setLevel(logging.WARNING)
-
-# Avoid duplicate loggers e.g., if the plugin is reloaded.
-if not logger.hasHandlers():
+# To enable debug logging set the following environment variable to a non-blank value or to a logging level: CRITICAL, ERROR, WARNING, INFO, DEBUG, NOTSET
+if not logger.hasHandlers(): # Avoid duplicate loggers e.g., if the plugin is reloaded.
+    _DEBUG = os.getenv('SUBLIME_NEOVINTAGEOUS_DEBUG')
+    if _DEBUG:
+        logger.setLevel(getattr(logging, _DEBUG.upper(), logging.DEBUG))
+        print(f"+env, set logging level at {getattr(logging, _DEBUG.upper(), logging.DEBUG)}")
+    else:
+        from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
+        logger.setLevel(DEFAULT_LOG_LEVEL)
+        print(f"-env, set logging level at {DEFAULT_LOG_LEVEL}")
     stream_handler = logging.StreamHandler()
-    stream_handler.setFormatter(logging.Formatter(
-        'NeoVintageous.%(levelname)-7s [%(filename)15s:%(lineno)-4d] %(message)s'
-    ))
+    from NeoVintageous.nv.log import formatter
+    stream_handler.setFormatter(formatter)
     logger.addHandler(stream_handler)
 
 import sublime  # noqa: E402

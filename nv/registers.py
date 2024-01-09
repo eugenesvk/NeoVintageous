@@ -24,6 +24,8 @@ import traceback
 from sublime import get_clipboard
 from sublime import set_clipboard
 
+from NeoVintageous.nv.rc import cfgU
+
 try:
     from Default.paste_from_history import g_clipboard_history as _clipboard_history
 
@@ -221,11 +223,23 @@ def _get(view, name: str = _UNNAMED):
     return _get_data_values(name.lower())
 
 
+_indicator_register = {
+    'char'	: 'c'	,# Characterwise text
+    'line'	: 'l'	,# Linewise      text
+}
+def reload_with_user_data() -> None:
+    if hasattr(cfgU,'indicator_register') and (cfg := cfgU.indicator_register):
+        global _indicator_register
+        for _key in cfg: # 'character'
+            if type(_val := cfg[_key]) == str:
+                if _key in _indicator_register:
+                    _indicator_register[_key] = _val
 def registers_get_all(view):
+    cfg = _indicator_register
     for name in _ALL:
         content = _get(view, name)
         if content:
-            yield ('l' if _is_register_linewise(name) else 'c', name, content)
+            yield (_indicator_register['line'] if _is_register_linewise(name) else _indicator_register['char'], name, content)
 
 
 def registers_get_for_paste(view, register: str, mode: str) -> tuple:

@@ -67,6 +67,10 @@
   // "file_qleft" 	: "", 	//|"|        	File name quotes
   // "file_qright"	: "", 	//|"|        	File name quotes
 //},
+// "indicator_register"	: { // Set values for ‘register’ command indicators
+  // "char"            	: "c",	// Characterwise text
+  // "line"            	: "━",	// Linewise      text
+// },
 
 // Plugins
 // 1. Use custom brackets in Surround plugin

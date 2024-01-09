@@ -189,6 +189,11 @@ class cfgU():
             _log.warn(f"‘indicator_ls’ in ‘{cfgU_settings}’ should be a dictionary, not {cfgT}")
             cfgU.indicator_ls = None
 
+        cfgU.indicator_register   = user_settings.get('indicator_register'  , None)
+        if not (cfgT := type(cfgU.indicator_register)) is dict:
+            _log.warn(f"‘indicator_register’ in ‘{cfgU_settings}’ should be a dictionary, not {cfgT}")
+            cfgU.indicator_register = None
+
         cfgU.surround   = user_settings.get('surround'  , None)
         if not (cfgT := type(cfgU.surround)) is dict:
             _log.warn(f"‘surround’ in ‘{cfgU_settings}’ should be a dictionary, not {cfgT}")
@@ -241,6 +246,8 @@ def _import_plugins_with_user_data():
     state.reload_with_user_data()
     from NeoVintageous.nv import ex_cmds
     ex_cmds.reload_with_user_data()
+    from NeoVintageous.nv import registers
+    registers.reload_with_user_data()
 
 def load_cfgU() -> None: # load alternative user config file to a global class and add a watcher event to track changes
     # load user config file to a global class and add a watcher event to track changes

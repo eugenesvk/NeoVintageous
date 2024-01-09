@@ -56,6 +56,17 @@
 //   "id_mode"    	: "00_nv_mode", // '00_mode' number defines order priority of custom status bar statuses, so 00 should be left-most
 //   "id_seq"     	: "vim-seq", // status for displaying key sequence
 // },
+//"indicator_ls"  	: { // Set values for ‘ls’ command indicators
+  // "current"    	: "•",	//|%|        	The buffer in the current window
+  // "modified"   	: "🖉",	//|+|        	Modified buffer
+  // "read_only"  	: "👓",	//|=|        	Readonly buffer
+  // "active"     	: "👁",	//|a|        	Active   buffer: loaded and visible
+  // "hidden"     	: " ",	//|h|        	Hidden   buffer: loaded but invisible
+  // "line"       	: "━",	//|line |    	Line prefix
+  // "no_name"    	: "", 	//|[NO NAME]|	Name for a tab without a file
+  // "file_qleft" 	: "", 	//|"|        	File name quotes
+  // "file_qright"	: "", 	//|"|        	File name quotes
+//},
 
 // Plugins
 // 1. Use custom brackets in Surround plugin

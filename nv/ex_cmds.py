@@ -30,6 +30,7 @@ from sublime import Region
 from sublime import set_timeout
 from sublime import yes_no_cancel_dialog
 
+from NeoVintageous.nv.rc import cfgU
 from NeoVintageous.nv import shell
 from NeoVintageous.nv import variables
 from NeoVintageous.nv.cmdline import CmdlineOutput
@@ -140,23 +141,42 @@ def ex_buffer(window, index: int = None, **kwargs) -> None:
         ui_bell('E86: Buffer %s does not exist' % index)
 
 
+_indicator_ls = {
+    "current"    	: "%"        	,# The buffer in the current window
+    "modified"   	: "+"        	,# A modified buffer
+    "read_only"  	: "="        	,# A readonly buffer
+    "active"     	: "a"        	,# An active buffer: it is loaded and visible
+    "hidden"     	: "h"        	,# A hidden buffer: It is loaded but currently not visible
+    "line"       	: "line "    	,# Line prefix
+    "no_name"    	: "[No Name]"	,# Name for a tab without a file
+    "file_qleft" 	: '"'        	,# File name quotes
+    "file_qright"	: '"'        	,# File name quotes
+}
+def reload_with_user_data() -> None:
+    if hasattr(cfgU,'indicator_ls') and (cfg := cfgU.indicator_ls):
+        global _indicator_ls
+        for _key in cfg: # 'current'
+            if type(_val := cfg[_key]) == str:
+                if _key in _indicator_ls:
+                    _indicator_ls[_key] = _val
 def ex_buffers(window, **kwargs) -> None:
     def _format_buffer_line(view) -> str:
+        cfg = _indicator_ls
         path = view.file_name()
         if path:
             parent, leaf = os.path.split(path)
             path = os.path.join(os.path.basename(parent), leaf)
         else:
-            path = view.name() or '[No Name]'
+            path = view.name() or cfg['no_name']
 
         lines = [str(view.rowcol(s.b)[0] + 1) for s in view.sel()]
 
-        current_indicator = '%' if view.id() == window.active_view().id() else ' '
-        readonly_indicator = '=' if is_view_read_only(view) else ' '
-        modified_indicator = '+' if view.is_dirty() else ' '
+        current_indicator = cfg['current'] if view.id() == window.active_view().id() else ' '
+        readonly_indicator = cfg['read_only'] if is_view_read_only(view) else ' '
+        modified_indicator = cfg['modified'] if view.is_dirty() else ' '
 
         active_group_view = window.active_view_in_group(window.get_view_index(view)[0])
-        visibility_indicator = 'a' if active_group_view and view.id() == active_group_view.id() else 'h'
+        visibility_indicator = cfg['active'] if active_group_view and view.id() == active_group_view.id() else cfg['hidden']
 
         return '%5d %s%s%s%s %-30s %s' % (
             view.id(),
@@ -164,8 +184,8 @@ def ex_buffers(window, **kwargs) -> None:
             visibility_indicator,
             readonly_indicator,
             modified_indicator,
-            '"{}"'.format(path),
-            'line {}'.format(','.join(lines))
+            '{}{}{}'.format(cfg['file_qleft'],path,cfg['file_qright']),
+            '{}{}'.format(cfg['line'],','.join(lines))
         )
 
     output = CmdlineOutput(window)

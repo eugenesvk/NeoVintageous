@@ -17,6 +17,7 @@ from NeoVintageous.dep.json5kit.nodes import (
     Json5Comma,
     Json5Comment,
     Json5File,
+    Json5Identifier,
     Json5Key,
     Json5Newline,
     Json5Node,
@@ -31,12 +32,26 @@ from NeoVintageous.dep.json5kit.nodes import (
 from NeoVintageous.dep.json5kit.visitor import Json5Visitor, Json5Transformer
 
 
+def index_to_line_column(index: int, source: str) -> tuple[int, int]:
+    """Converts the tokenizer index into a line and column for the error."""
+    line, column = 1, 0
+    for char in source[:index]:
+        if char == "\n":
+            line += 1
+            column = 0
+        else:
+            column += 1
+
+    return line, column
+
+
 class Json5ParseError(Exception):
     """Raised when the JSON5 string has bad syntax."""
 
-    def __init__(self, message: str, index: int) -> None:
-        super().__init__(message)
+    def __init__(self, message: str, index: int, source: str) -> None:
         self.index = index
+        self.line, self.column = index_to_line_column(self.index, source)
+        super().__init__(f"at {self.line}:{self.column}: {message}")
 
 
 class Json5Parser:
@@ -117,6 +132,7 @@ class Json5Parser:
             raise Json5ParseError(
                 f"Expected to find '{char}', found EOF",
                 index=self.current,
+                source=self.source,
             )
 
         current_char = self.read_char()
@@ -124,6 +140,7 @@ class Json5Parser:
             raise Json5ParseError(
                 f"Expected to find '{char}', found '{current_char}'",
                 index=self.current,
+                source=self.source,
             )
 
     def parse(self) -> Json5File:
@@ -135,7 +152,7 @@ class Json5Parser:
         # Ensure no more data exists
         if not self.scanned:
             token = self.read_char()
-            raise Json5ParseError(f"Unexpected {token}", self.current)
+            raise Json5ParseError(f"Unexpected {token}", self.current, self.source)
 
         return Json5File(value, leading_trivia_nodes, trailing_trivia_nodes)
 
@@ -145,6 +162,7 @@ class Json5Parser:
             raise Json5ParseError(
                 "Expected to find JSON5 data, found EOF",
                 index=self.current,
+                source=self.source,
             )
 
         if self.match_next("["):
@@ -186,7 +204,7 @@ class Json5Parser:
             node = Json5String(source, string_value, trailing_trivia_nodes=[])
 
         # TODO: leading decimal?
-        elif self.peek() in string.digits:
+        elif self.peek() in string.digits or self.peek() in ("+", "-"):
             source, float_value = self.parse_number()
             node = Json5Number(source, float_value, trailing_trivia_nodes=[])
 
@@ -197,11 +215,18 @@ class Json5Parser:
         node.trailing_trivia_nodes = trailing_trivia_nodes
         return node
 
-    # def parse_identifier(self) -> Json5Key:
-    #     """Scans keywords and variable names."""
-    #     # TODO: not full ECMA syntax
-    #     while not self.scanned and (self.peek().isalnum() or self.peek() == "_"):
-    #         self.advance()
+    def parse_identifier(self) -> str:
+        """
+        Scans keywords and variable names.
+        It doesn't check for the first letter being a non-number because the call-site
+        already confirms that.
+        """
+        # TODO: not full ECMA syntax
+        start_index = self.current
+        while not self.scanned and (self.peek().isalnum() or self.peek() == "_"):
+            self.advance()
+        identifier = self.source[start_index : self.current]
+        return identifier
 
     def parse_string(self, quote_char: Literal["'", '"']) -> tuple[str, str]:
         # TODO: this is probably not all escapes
@@ -217,7 +242,9 @@ class Json5Parser:
             # Escaping the next character
             next_char = self.peek()
             if next_char == "":
-                raise Json5ParseError("Unterminated string", index=start_index)
+                raise Json5ParseError(
+                    "Unterminated string", index=start_index, source=self.source
+                )
 
             if next_char == "\n":
                 pass  # trailing backslash means ignore the newline
@@ -236,6 +263,7 @@ class Json5Parser:
                 raise Json5ParseError(
                     f"Unknown escape sequence: '{escape}'",
                     index=self.current,
+                    source=self.source,
                 )
 
             self.advance()
@@ -251,6 +279,8 @@ class Json5Parser:
         # TODO: exponent syntax support
         # TODO: Hexadecimal support
         start_index = self.current
+        if self.peek() in ("+", "-"):
+            self.advance()
 
         while self.peek().isdigit():
             self.advance()
@@ -289,18 +319,29 @@ class Json5Parser:
         return Json5Array(items, leading_trivia_nodes, trailing_trivia_nodes)
 
     def parse_object_entry(self) -> tuple[Json5Key, Json5Node]:
-        # TODO: identifier support
-        if not self.match_next(('"', "'")):
-            raise Json5ParseError(f"Expected to find identifier", index=self.current)
+        key_value_node: Json5String | Json5Identifier
 
-        quote_char = cast(Literal['"', "'"], self.previous())
-        source, value = self.parse_string(quote_char)
-        string_trailing_trivia = self.parse_trivia()
-        string_node = Json5String(source, value, string_trailing_trivia)
+        if self.peek().isalpha() or self.peek() == "_":
+            source = self.parse_identifier()
+            trailing_trivia = self.parse_trivia()
+            key_value_node = Json5Identifier(source, trailing_trivia)
+
+        elif self.match_next(('"', "'")):
+            quote_char = cast(Literal['"', "'"], self.previous())
+            source, value = self.parse_string(quote_char)
+            trailing_trivia = self.parse_trivia()
+            key_value_node = Json5String(source, value, trailing_trivia)
+
+        else:
+            raise Json5ParseError(
+                f"Expected to find identifier",
+                index=self.current,
+                source=self.source,
+            )
 
         self.consume(":")
         trivia_after_colon = self.parse_trivia()
-        key_node = Json5Key(string_node, trivia_after_colon)
+        key_node = Json5Key(key_value_node, trivia_after_colon)
 
         value_node = self.parse_node()
         if self.peek() == "}":

@@ -22,6 +22,11 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
   <!-- - __Security__ -->
    <!-- + :lock: ??? -->
    <!-- vulnerabilities -->
+  - __Added__
+   + :sparkles: nowrap alternative to tab switch Ex commands (`tabnextnowrap`/`tabpreviousnowrap`)
+   + :sparkles: allow user to set values various indicators:
+     + for `ls` command, e.g., replace `+` modified file mark with `🖉` similar to how a modified tab is marked
+     + for `registers` command, e.g., replace `l` for linewise with `━`
 
 [0.5.1341]: https://github.com/eugenesvk/NeoVintageous/releases/tag/0.5.1341
 ## [0.5.1341]
@@ -43,10 +48,6 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
    + :sparkles: surround: allow users to configure marks, mark aliases, when to append an extra space
    + :sparkles: preliminary support for configuring keybinds without having to learn a foreign vim language by calling the command(s) by name, e.g., `l MoveLeftByChars` instead of `l h`. Also allows rebinding plugin commands without using environment variables, e.g., `b Sneak` instead of setting `$NEOVINTAGEOUS_SNEAK_MAP_S`)
    + :sparkles: Allow user configuration of status bar Mode indicators, including suffix, indicator, prefix, and indicator position relative to other indicators. Also updates defaults to be more terse and symbolic (e.g., ⓘ instead of INSERT and Ⓥ▋ instead of VISUAL BLOCK)
-   + :sparkles: nowrap alternative to tab switch Ex commands (`tabnextnowrap`/`tabpreviousnowrap`)
-   + :sparkles: allow user to set values various indicators:
-     + for `ls` command, e.g., replace `+` modified file mark with `🖉` similar to how a modified tab is marked
-     + for `registers` command, e.g., replace `l` for linewise with `━`
   - __Changed__
    + commands: add key symbols like `⎈` to command name for easier visual differentiation and 1-symbol-search 
   - __Fixed__

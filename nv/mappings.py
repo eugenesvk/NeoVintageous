@@ -37,7 +37,6 @@ from NeoVintageous.nv.log import addLoggingLevel, stream_handler
 
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
-_log.setLevel('MAP')
 if _log.hasHandlers(): # clear existing handlers, including sublime's
     logging.getLogger().handlers.clear()
     _log.addHandler(stream_handler)

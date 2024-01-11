@@ -107,7 +107,11 @@ for mode,mode_text in mode_names.items():
         _log.debug(f" ‘{mode_text_str}’ is not unique, check ‘mode_names’")
       else:
         mode_names_rev[mode_text_str]  = mode
-
+# mode_names_rev { # print('mode_names_rev',mode_names_rev)
+# Ⓥ         : <Mode.V: 72>,
+# V          : <Mode.V: 72>,
+# visual     : <Mode.V: 72>,
+# mode_visual: <Mode.V: 72>, }
 
 import re
 resp  	= re.compile(r'\s+')

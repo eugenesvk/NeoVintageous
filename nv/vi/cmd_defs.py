@@ -1694,6 +1694,7 @@ class ViPercent(ViMotionDef):
 
 @assign(seqs.SEQ['⧵'], MOTION_MODES)
 @assign(seqs.SEQ[','], MOTION_MODES)
+@assign_text(['RepeatCharSearchBackward'], MOTION_MODES)
 class ViRepeatCharSearchBackward(ViMotionDef):
     def init(self):
         self.updates_xpos = True

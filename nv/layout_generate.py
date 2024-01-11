@@ -13,7 +13,8 @@ from NeoVintageous.nv.layout_convert	import lyt, LayoutConverter
 from NeoVintageous.plugin import PACKAGE_NAME
 
 __all__ = [
-  'NvUserKeymap'
+  'NvUserKeymap',
+  'NvDefaultKeymapKdl',
 ]
 
 def isJstr(key, strVal) -> bool:
@@ -94,7 +95,8 @@ def convertKeymapLayout(keymap, lyt_from, lyt_to):
 
   return keymap_tree.to_source()
 
-class NvUserKeymap(sublime_plugin.ApplicationCommand):
+from sublime_plugin import ApplicationCommand
+class NvUserKeymap(ApplicationCommand):
   def __init__(self):
     self.nv_keymap	= "Default.sublime-keymap"
     self.dest     	= "$packages/NeoVintageous_UserKeymap/Default.sublime-keymap" # ($platform)
@@ -135,3 +137,94 @@ class NvUserKeymap(sublime_plugin.ApplicationCommand):
 
 def expand(string):
   return sublime.expand_variables(string, sublime.active_window().extract_variables())
+
+
+# Command to generate the KDL version of the default keymap
+import NeoVintageous.dep.kdl as kdl
+def parse_kdl_doc(s):
+  parseConfig = kdl.ParseConfig(
+    nativeUntaggedValues    =False  #|True| produce native Py objects (str int float bool None) untagged values (no (foo)prefix), or kdl-Py objects (kdl.String kdl.Decimal...)
+    ,nativeTaggedValues     =False  #|True| produce native Py objects for (tagged)values for predefined tags like i8..u64 f32 uuid url regex
+  )
+  printConfig = kdl.PrintConfig(
+    indent              ="  "   #|"\t"|
+    ,semicolons         =False  #|False|
+    ,printNullArgs      =True   #|True| if False, skip over any "null"/None arguments. Corrupts docs that use "null" keyword intentionally, but can be useful if you'd prefer to use a None value as a signal that the argument has been removed
+    ,printNullProps     =True   #|True| =printNullArgs, but applies to properties
+    ,respectStringType  =True   #|True| output strings as the same type they were in the input, either raw (r#"foo"#) or normal ("foo") (only kdl-Py, not native ones (e.g, set nativeUntaggedValues=False))
+    ,respectRadix       =True   #|True| ≈respectStringType, output numbers as the radix they were in the input, like 0x1b for hex numbers. False: print decimal numbers (kdl-Py)
+    ,exponent           ="e"    #|e| character to use for the exponent part of decimal numbers, when printed with scientific notation, "e" or "E" (kdl-Py)
+  )
+  return kdl.Parser(parseConfig, printConfig).parse(s)
+
+from NeoVintageous.nv.modes import mode_names, mode_names_rev
+def mode_full_to_abbrev(mode_full:str,i=1):
+  if not mode_full or len(mode_full) == 1:
+    return mode_full
+  return mode_names[mode_names_rev[mode_full]][i] # mode_names = {Mode.N:['Ⓝ','N','normal',NORMAL]
+
+class NvDefaultKeymapKdl(ApplicationCommand):
+  def __init__(self):
+    self.keymap	= "NeoVintageous.keymap-default.kdl"
+    self.dest  	= f"$packages/{PACKAGE_NAME}/{self.keymap}" # ($platform)
+    self.cmd   	= "NeoVintageous: Dump default key bindings in KDL"
+
+  def run(self, **kwargs):
+    from NeoVintageous.nv.vi.keys import mappings # [mode_normal][<C-x>]=<ViDecrement>
+    from NeoVintageous.nv.vi.keys import map_cmd2textcmd
+    map_key2cmd_modes = {} # {<C-w>:{'ViDelete':[mode_insert,mode_normal]}}
+    for     i, mode    in enumerate(mappings):  # generate map_key2cmd_modes
+      mode_d = mappings[mode] # [<C-x>]=<ViDecrement>
+      for j, keybind in enumerate(mode_d): # <C-x>
+        cmd = mode_d[keybind] # <ViDecrement>
+        T = type(cmd) # <class 'NeoVintageous.nv.vi.cmd_defs.ViDecrement'>
+        cmd_txt = map_cmd2textcmd[T][0] # ViDecrement → Decrement
+        if keybind in map_key2cmd_modes:
+          if T in map_key2cmd_modes[keybind]:
+            map_key2cmd_modes[    keybind][T] += [mode]  # add an extra mode to the same keybind
+          else:
+            map_key2cmd_modes[    keybind][T]  = [mode]  # add an extra command/mode
+        else:
+          map_key2cmd_modes[        keybind] =  {T:[mode]} # add a new keybind/command
+        # [<C-x>] = { <...ViDecrement'>    : mode_insert...
+        #             <...ViOpenNameSpace'>: mode_insert}
+
+    keymap_kdl = parse_kdl_doc('')
+    for     i, keybind    in enumerate(map_key2cmd_modes): # generate keymap_kdl from default keybinds
+      keybind_d = map_key2cmd_modes[keybind]
+      for j, cmd in enumerate(keybind_d):
+        mode_l      = keybind_d[cmd] #  ['mode_insert','mode_normal']
+        mode_sort   = ['mode_normal','mode_insert','mode_visual']
+        mode_l_sort = []
+        empty = '' # '_'
+        for m in mode_sort: # move NIV modes first and sort them as NIV
+          if m in mode_l:
+            mode_l_sort += [m]
+            mode_l.remove(m)
+          else:
+            mode_l_sort += [empty]
+        mode_l_sort += mode_l # add the remaining modes
+        mode_s = "".join(mode_full_to_abbrev(mode,0) for mode in mode_l_sort) # Ⓝⓘ
+        cmd_txt = map_cmd2textcmd[cmd][0] # ViDeleteUpToCursor → DeleteUpToCursor
+        node_key = kdl.Node(tag=mode_s, name=keybind, args=[cmd_txt])
+        keymap_kdl.nodes.append(node_key)
+        # print(f"  {i}{j} {keybind}={cmd} @ {mode_l}")
+
+    dest = expand(kwargs.get('file',self.dest)) # expand Sublime variables
+    if not (parent := Path(dest).parent).exists():
+      try:
+        os.mkdir(parent)
+        print(f"{PACKAGE_NAME}: created folder ‘{parent}’ to store the default keymap as KDL")
+      except FileNotFoundError as e:
+        sublime.error_message(f"{PACKAGE_NAME}: need to create user keymap at ‘{dest}’, but its grand-parent folder doesn't exist:\n‘{e}’")
+        return
+      except FileExistsError as e:
+        pass
+
+    try:
+      with open(dest, 'w') as file:
+        print(f"//Autogenerated default ‘{PACKAGE_NAME}’ keymap in KDL via ‘{self.cmd}’ command, changes will be overwritten", file=file)
+        print(keymap_kdl, file=file)
+        sublime.message_dialog(f"{PACKAGE_NAME}:\nKeymap in KDL generated at '{dest}'")
+    except FileNotFoundError as e:
+      sublime.error_message(f"{PACKAGE_NAME}:\nTried and failed to save generated keymap to\n{dest}")

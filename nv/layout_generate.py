@@ -23,7 +23,7 @@ def isJStrInArr(val, key, strVal) -> bool:
 def convertKeymapLayout(keymap, lyt_from, lyt_to):
   lyt_converter	= LayoutConverter()
   isAlias      	= lyt_converter.isAlias
-  keymap_tree = json5kit.parse(keymap)
+  keymap_tree  	= json5kit.parse(keymap)
 
   reSp = re.compile(r'\s')
   reSingleKey = re.compile(r"""

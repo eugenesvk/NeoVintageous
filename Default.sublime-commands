@@ -9,4 +9,5 @@
   "base_file":"${packages}/NeoVintageous/Preferences.sublime-settings",
   "user_file":"${packages}/User/Preferences.sublime-settings",
   "default"  :"{\n\t$0\n}\n"}},
+{"caption":"NeoVintageous: Dump default keymap as KDL"	,"command":"nv_default_keymap_kdl"},
 ]

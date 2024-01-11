@@ -249,17 +249,14 @@ def to_bare_command_name(seq: str) -> str:
 
 
 def assign(seq: list, modes, *args, **kwargs):
-    """
-    Register a 'key sequence' to 'command' mapping with NeoVintageous.
-
-    The registered key sequence must be known to NeoVintageous. The
-    registered command must be a ViMotionDef or ViOperatorDef.
-
-    The decorated class is instantiated with `*args` and `**kwargs`.
-
-    @keys
-      A list of (`mode:tuple`, `sequence:list`) pairs to map the decorated
-      class to.
+    """Register a 'key sequence' to 'command' mapping with NeoVintageous
+      'key sequence' must be known to NeoVintageous
+      'command'      must be a ViMotionDef or ViOperatorDef
+    Decorated class is instantiated with `*args` and `**kwargs`.
+    'mappings'         is a '{mode : {sequence : cmd}}' dict
+      # [mode_normal][<insert>] = <ViEnterInsertMode>
+      # [mode_normal][i       ] = <ViEnterInsertMode>
+    'mappings_reverse' is a '{mode : {cmd : sequence}}' dict (only 1st sequence is stored)
     """
     def inner(cls):
         for mode in modes:

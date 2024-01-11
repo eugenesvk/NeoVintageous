@@ -43,15 +43,8 @@ mappings_reverse = { # map[internal class Name] = key from  ↑ to make finding 
     _VISUAL_LINE: {}
 }  # type: dict
 
-mappings_text = {
-    _INSERT          	: {},
-    _NORMAL          	: {},
-    _OPERATOR_PENDING	: {},
-    _SELECT          	: {},
-    _VISUAL          	: {},
-    _VISUAL_BLOCK    	: {},
-    _VISUAL_LINE     	: {}
-}  # type: dict
+map_textcmd2cmd = {} # type: dict
+map_cmd2textcmd = {} # type:dict map[internal command Name] = assigned textual command name from ↑ to make matching a textual command to a key easier (also preserves CaSe of entered commands)
 
 
 classes = {}  # type: dict
@@ -89,9 +82,11 @@ def register_text(commands: list, modes: tuple, *args, **kwargs):
     @keys: A list of (`mode:tuple`, `commands:list`) pairs to map the decorated class to
     """
     def inner(cls):
-        for mode in modes:
-            for cmd in commands: # 'SneakBack' → class SneakS(SneakInputMotion)
-                mappings_text[mode][cmd.lower()] = cls(*args, **kwargs)
-                classes[cls.__name__] = cls
+        for cmd in commands:  # 'SneakBack' → class SneakS(SneakInputMotion)
+            if (C := cmd.lower())               not in map_textcmd2cmd:
+                map_textcmd2cmd[C] = cls(*args,**kwargs)
+            classes[cls.__name__] = cls
+        if     (T := type(cls(*args,**kwargs))) not in map_cmd2textcmd:
+            map_cmd2textcmd    [T] = commands
         return cls
     return inner

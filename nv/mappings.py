@@ -242,25 +242,19 @@ def _text_cmd_to_mapping(view, _text_cmd: str):
         return Mapping(_text_cmd, full_match)
 
 
-def _text_to_command(view, text: str, mode: str): # mode + text-command → command definition
-    # ←
-      # view	View	.
-      # text	str 	Text command, eg, 'move-line-down'
-      # mode	str 	Forces the use of this mode instead of the global state's.
-    # → ViCommandDefBase | CommandNotFound
-    if mode in plugin.mappings_text:
-        plugin_command = plugin.mappings_text[mode].get(text)
-        _log.map(f" plugin_command = {plugin_command}")
-        if plugin_command:
-            if is_plugin_enabled(view, plugin_command):
-                return plugin_command
-
-    if mode in keys.mappings_text:
-        command = keys.mappings_text[mode].get(text)
-        _log.map(f" keys_cmd={command} from text={text}")
-        if command:
-            return command
-
+def _text_to_command(view, text: str):
+    """ Convert textual command (MoveByLineCols) into command function (ViMoveByLineCols)
+        ←  view	View	.
+         text  	str 	Text command, eg, 'MoveByLineCols'
+        → ViCommandDefBase | CommandNotFound
+    """
+    cmd_plugin  = plugin.map_textcmd2cmd.get(text)
+    cmd_keys    =   keys.map_textcmd2cmd.get(text)
+    _log.map(f" cmd_text ‘{text}’ → cmd_plugin ‘{cmd_plugin}’ cmd_keys = ‘{cmd_keys}’")
+    if cmd_plugin and is_plugin_enabled(view, cmd_plugin):
+        return cmd_plugin
+    if cmd_keys:
+        return cmd_keys
     return CommandNotFound()
 
 
@@ -369,7 +363,7 @@ def mappings_resolve_text(view, text_commands: list = None, mode: str = None, ch
                 if _has_partial_matches_text(view, get_mode(view), text_cmd):
                     return IncompleteMapping()
     if not command:
-        command = _text_to_command(view, text_cmd, mode or get_mode(view))
+        command = _text_to_command(view, text_cmd)
         _log.map(f"  inTXT _text_to_command¦{command}")
     lhs = command.lhs if hasattr(command, 'lhs') else ''
     rhs = command.rhs if hasattr(command, 'rhs') else ''

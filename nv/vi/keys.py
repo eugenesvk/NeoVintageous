@@ -42,24 +42,8 @@ mappings_reverse = { # map[internal class Name] = key from  ↑ to make finding 
 }  # type: dict
 
 
-mappings_text = {
-    INSERT          	: {},
-    NORMAL          	: {},
-    OPERATOR_PENDING	: {},
-    SELECT          	: {},
-    VISUAL          	: {},
-    VISUAL_BLOCK    	: {},
-    VISUAL_LINE     	: {},
-}  # type: dict
-mappings_text_reverse = { # map[internal command Name] = assigned textual command name from ↑ to make matching a textual command to a key easier (also preserves CaSe of entered commands)
-    INSERT          	: {},
-    NORMAL          	: {},
-    OPERATOR_PENDING	: {},
-    SELECT          	: {},
-    VISUAL          	: {},
-    VISUAL_BLOCK    	: {},
-    VISUAL_LINE     	: {},
-}  # type: dict
+map_textcmd2cmd = {} # type: dict
+map_cmd2textcmd = {} # type:dict map[internal command Name] = assigned textual command name from ↑ to make matching a textual command to a key easier (also preserves CaSe of entered commands)
 
 _NAMED_KEYS_NEST = [
 
@@ -295,12 +279,10 @@ def assign_text(commands:list, modes:tuple, *args, **kwargs):
     @keys: A list of (`mode:tuple`, `commands:list`) pairs to map the decorated class to
     """
     def inner(cls):
-        for mode in modes:
-            for cmd in commands:  # 'EnterInsertMode' → class ViEnterInsertMode(ViOperatorDef)
-                mappings_text        [mode][cmd.lower()                   ] = cls(*args,**kwargs)
-                if (T := type(cls(*args,**kwargs))) in mappings_reverse[mode]:
-                    mappings_text_reverse[mode][T] += [cmd] # add dupe command to a list
-                else:
-                    mappings_text_reverse[mode][T]  = [cmd] # add      command as a list
+        for cmd in commands:  # 'EnterInsertMode' → class ViEnterInsertMode(ViOperatorDef)
+            if (C := cmd.lower())               not in map_textcmd2cmd:
+                map_textcmd2cmd[C] = cls(*args,**kwargs)
+        if     (T := type(cls(*args,**kwargs))) not in map_cmd2textcmd:
+            map_cmd2textcmd    [T] = commands
         return cls
     return inner

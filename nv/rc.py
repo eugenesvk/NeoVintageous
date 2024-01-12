@@ -33,10 +33,14 @@ _log.setLevel(DEFAULT_LOG_LEVEL)
 
 def _file_name() -> str:
     return '.neovintageousrc'
+def _file_name_config_kdl() -> str:
+    return f"{PACKAGE_NAME}.kdl"
 
 
 def _file_path() -> str:
     return os.path.join(sublime.packages_path(), 'User', _file_name())
+def _file_path_config_kdl() -> str:
+    return os.path.join(sublime.packages_path(), 'User', _file_name_config_kdl())
 
 
 def open_rc(window) -> None:
@@ -46,6 +50,15 @@ def open_rc(window) -> None:
         with builtins.open(file, 'w', encoding='utf-8') as f:
             f.write('" A double quote character starts a comment.\n')
 
+    window.open_file(file)
+def open_config_file_kdl(window) -> None:
+    file = _file_path_config_kdl()
+    if not os.path.exists(file):
+        with builtins.open(file, 'w', encoding='utf-8') as f: # todo
+            f.write('// Install ‘KDL’ package for syntax highlighting\n')
+            f.write('// ← Comment, Command ↓ (mode)Key "CommandName"\n')
+            f.write('// (i)"<C-w>" "DeleteUpToCursor"\n')
+            f.write('// See ‘NeoVintageous.keymap-default.kdl’ for a list of defaults (run ‘NeoVintageous: Dump default keymap as KDL’ in Command Palette to generate it)\n')
     window.open_file(file)
 
 

@@ -58,8 +58,7 @@ from NeoVintageous.nv.polyfill import spell_select
 from NeoVintageous.nv.polyfill import split_by_newlines
 from NeoVintageous.nv.polyfill import toggle_side_bar
 from NeoVintageous.nv.process_notation import ProcessNotationHandler
-from NeoVintageous.nv.rc import open_rc
-from NeoVintageous.nv.rc import reload_rc
+from NeoVintageous.nv.rc import open_rc, open_config_file_kdl, reload_rc
 from NeoVintageous.nv.registers import get_alternate_file_register
 from NeoVintageous.nv.registers import registers_get_for_paste
 from NeoVintageous.nv.registers import registers_op_change
@@ -533,6 +532,8 @@ class Neovintageous(WindowCommand):
     def run(self, action, **kwargs):
         if action == 'open_rc_file':
             open_rc(self.window)
+        if action == 'open_config_file_kdl':
+            open_config_file_kdl(self.window)
         elif action == 'reload_rc_file':
             reload_rc()
         elif action == 'toggle_ctrl_keys':

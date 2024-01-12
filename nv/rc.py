@@ -262,8 +262,8 @@ def _import_plugins_with_user_data():
     from NeoVintageous.nv import registers
     registers.reload_with_user_data()
 
-def load_cfgU() -> None: # load alternative user config file to a global class and add a watcher event to track changes
-    # load user config file to a global class and add a watcher event to track changes
+def load_cfgU() -> None:
+    """load alternative user config file to a global class and add a watcher event to track changes"""
     global cfgU
     global user_settings, user_commands
 

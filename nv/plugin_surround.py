@@ -48,11 +48,11 @@ __all__ = ['nv_surround_command']
 class nv_surround_command(TextCommand):
     def run(self, edit, action, **kwargs):
         if action == 'cs':
-            _do_cs(self.view, edit, **kwargs)
+            _do_replace(self.view, edit, **kwargs)
         elif action == 'ds':
-            _do_ds(self.view, edit, **kwargs)
+            _do_delete(self.view, edit, **kwargs)
         elif action == 'ys':
-            _do_ys(self.view, edit, **kwargs)
+            _do_add(self.view, edit, **kwargs)
 
 
 @register(seqs.SEQ['ys'], (NORMAL,))
@@ -294,7 +294,7 @@ def _rsynced_regions_transformer(view, f) -> None:
         view_sel.add(new_sel)
 
 
-def _do_cs(view, edit, mode: str, target: str, replacement: str, count=None, register=None) -> None:
+def _do_replace(view, edit, mode: str, target: str, replacement: str, count=None, register=None) -> None:
     if not target and replacement:
         return
 
@@ -354,7 +354,7 @@ def _do_cs(view, edit, mode: str, target: str, replacement: str, count=None, reg
     _rsynced_regions_transformer(view, _f)
 
 
-def _do_ds(view, edit, mode: str, target: str, count=None, register=None) -> None:
+def _do_delete(view, edit, mode: str, target: str, count=None, register=None) -> None:
     if not target:
         return
 
@@ -439,7 +439,7 @@ def _trim_regions(view, start: Region, end: Region) -> tuple:
     return (start, end)
 
 
-def _do_ys(view, edit, mode: str = None, motion=None, replacement: str = '"', count: int = 1, register=None) -> None:
+def _do_add(view, edit, mode: str = None, motion=None, replacement: str = '"', count: int = 1, register=None) -> None:
     def _surround(view, edit, s, replacement: str) -> None:
         replacement_open, replacement_close = _expand_replacements(replacement)
         if replacement_open.startswith('<'):

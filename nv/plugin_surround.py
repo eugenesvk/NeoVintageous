@@ -209,10 +209,13 @@ _APPEND_SPACE_TO_CHARS = '({['
 _STEADY_CURSOR = dict()
 for key in (_STEADY_CURSOR_KEY := ['add','replace','delete']):
     _STEADY_CURSOR[key] = True
+VALID_TARGETS  = 'ra@' # Delete targets
+VALID_TARGETS += '\'"`b()B{}[]<>t.,-_;:#~*\\/|+=&$' # targets for plugin github.com/wellle/targets.vim
+#IilpsWw plugin targets excluded
 
 def reload_with_user_data_kdl() -> None:
     if hasattr(cfgU,'cfg_kdl') and (cfg := cfgU.cfg_kdl.get('surround',None)): # skip on initial import when Plugin API isn't ready, so not settings are loaded
-        global _PUNCTUATION_MARKS, _PUNCTUTION_MARK_ALIASES, _APPEND_SPACE_TO_CHARS, _STEADY_CURSOR
+        global _PUNCTUATION_MARKS, _PUNCTUTION_MARK_ALIASES, _APPEND_SPACE_TO_CHARS, _STEADY_CURSOR, VALID_TARGETS
         if (node := cfg.get('punctuationmarks'  ,None)): # ‘=‘’ “=“” key-value pairs
             # _log.debug(f"@plugin surround: Parsing config punctuationmarks")
             for i,key in enumerate(prop_d := node.props): #‘=‘’
@@ -253,6 +256,8 @@ def reload_with_user_data_kdl() -> None:
                     _STEADY_CURSOR[key] = val
             if not node.props:
                 _log.warn(f"node ‘{node.name}’ is missing key=value properties")
+        VALID_TARGETS += "".join(((val:=_PUNCTUATION_MARKS[k])[0]+val[1]) for k in _PUNCTUATION_MARKS) # add marks
+        VALID_TARGETS += "".join(_PUNCTUTION_MARK_ALIASES.keys()) # add aliases
 
 # def reload_with_user_data() -> None:
 #     if hasattr(cfgU,'surround') and (cfg := cfgU.surround): # skip on initial import when Plugin API isn't ready, so not settings are loaded
@@ -420,10 +425,7 @@ def _do_delete(view, edit, mode: str, target: str, count=None, register=None) ->
     noop_targets = 'wWsp'
     if target in noop_targets:
         return
-
-    # Includes targets for plugin https://github.com/wellle/targets.vim
-    valid_targets = '\'"`b()B{}r[]a<>t.,-_;:@#~*\\/|+=&$'
-    if target not in valid_targets:
+    if target not in VALID_TARGETS:
         return
 
     # Trim contained whitespace for opening punctuation mark targets.

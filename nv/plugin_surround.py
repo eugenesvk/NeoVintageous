@@ -338,14 +338,14 @@ def _rsynced_regions_transformer(view, f, _res_view_sel_reverse:list=[]) -> None
     for i,sel in enumerate(sels):
         view_sel.subtract(sel)
 
-        (new_sel, (ins_count_beg,ins_count_end)) = f(view, sel)
+        (new_sel, (edit_count_beg,edit_count_end)) = f(view, sel)
         if not isinstance(new_sel, Region):
             raise TypeError('sublime.Region required')
 
         if _res_view_sel_reverse: # adjust old cursor pos by count of chars inserted @ beg
             old_sel = _res_view_sel_reverse[i]
             (a,b) = old_sel.to_tuple() # → this region as a tuple (a,b)
-            old_sel_adjusted = Region(ins_count_beg+a,ins_count_beg+b)
+            old_sel_adjusted = Region(edit_count_beg+a,edit_count_beg+b)
             view_sel.add(old_sel_adjusted)
         else: # or don't adjust anything and just select the new region
             view_sel.add(new_sel)

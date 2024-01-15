@@ -278,6 +278,9 @@ class cfgU():
                             cfgU.text_commands[mode][key] = text_command
                             mappings_add_text(mode=MODE_NAMES_OLD[mode], lhs=key, rhs=text_command)
 
+def _import_plugins_with_user_data_kdl():
+    from NeoVintageous.nv import plugin_surround
+    plugin_surround.reload_with_user_data_kdl()
 def _import_plugins_with_user_data():
     from NeoVintageous.nv import plugin_surround
     plugin_surround.reload_with_user_data()

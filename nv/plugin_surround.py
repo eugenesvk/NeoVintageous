@@ -275,13 +275,12 @@ def reload_with_user_data_kdl() -> None:
 #         if (_key := 'append space to chars') in cfg:
 #             _APPEND_SPACE_TO_CHARS = cfg[_key]
 
-# Expand target punctuation marks. Eight punctuation marks, (, ), {, }, [, ], <,
-# and >, represent themselves and their counterparts. The targets b, B, r, and
-# a are aliases for ), }, ], and > (the first two mirror Vim; the second two
-# are completely arbitrary and subject to change). Some marks and their
-# counterparts are the same for example quote marks: ', ", `.
+# Expand target punctuation marks:
+  # (){}[]<> represent themselves/their counterparts
+  # bBra     aliases for )}]>     )}mirror Vim; ]> are arbitrary and subject to change
+  # '"`      quote marks and their counterparts are the same
 def _expand_targets(target: str) -> tuple:
-    target = _resolve_target_aliases(target)
+    target = _resolve_target_aliases(target) # 'a' to '>'
 
     return _PUNCTUATION_MARKS.get(target, (target, target))
 

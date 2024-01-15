@@ -301,7 +301,7 @@ def _get_text_object_paragraph(view, s: Region, inclusive: bool, count: int) -> 
     return find_paragraph_text_object(view, s, inclusive, count)
 
 
-def _get_text_object_bracket(view, s: Region, inclusive: bool, count: int, delims: tuple) -> Region:
+def _get_text_object_bracket(view, s: Region, inclusive: bool, count: int, delims: tuple, seek_forward=True) -> Region:
     start = get_insertion_point_at_b(s)
     opening = find_prev_lone_bracket(view, start, delims)
 
@@ -311,7 +311,7 @@ def _get_text_object_bracket(view, s: Region, inclusive: bool, count: int, delim
     if not opening and get_setting(view, 'enable_targets'):
         start = get_insertion_point_at_b(s)
         match = view_find(view, delims[0], start)
-        if match:
+        if match and seek_forward:
             opening = find_prev_lone_bracket(view, match.begin(), delims)
             if opening:
                 start_next_bracket_pt = max(start_next_bracket_pt, opening.end())
@@ -420,7 +420,7 @@ def _get_text_object_line(view, s: Region, inclusive: bool, count: int) -> Regio
     return Region(start, end)
 
 
-def get_text_object_region(view, s: Region, text_object: str, inclusive: bool = False, count: int = 1) -> Region:
+def get_text_object_region(view, s: Region, text_object: str, inclusive: bool = False, count: int = 1, seek_forward=True) -> Region:
     try:
         delims, type_ = PAIRS[text_object]
     except KeyError:
@@ -431,7 +431,7 @@ def get_text_object_region(view, s: Region, text_object: str, inclusive: bool = 
     elif type_ == PARAGRAPH:
         return _get_text_object_paragraph(view, s, inclusive, count)
     elif type_ == BRACKET:
-        return _get_text_object_bracket(view, s, inclusive, count, delims)
+        return _get_text_object_bracket(view, s, inclusive, count, delims, seek_forward)
     elif type_ == QUOTE:
         return _get_text_object_quote(view, s, inclusive, count, delims)
     elif type_ == WORD:

@@ -210,6 +210,50 @@ _STEADY_CURSOR = dict()
 for key in (_STEADY_CURSOR_KEY := ['add','replace','delete']):
     _STEADY_CURSOR[key] = True
 
+def reload_with_user_data_kdl() -> None:
+    if hasattr(cfgU,'cfg_kdl') and (cfg := cfgU.cfg_kdl.get('surround',None)): # skip on initial import when Plugin API isn't ready, so not settings are loaded
+        global _PUNCTUATION_MARKS, _PUNCTUTION_MARK_ALIASES, _APPEND_SPACE_TO_CHARS, _STEADY_CURSOR
+        if (node := cfg.get('punctuationmarks'  ,None)): # ‘=‘’ “=“” key-value pairs
+            # _log.debug(f"@plugin surround: Parsing config punctuationmarks")
+            for i,key in enumerate(prop_d := node.props): #‘=‘’
+                tag_val = prop_d[key] #‘=(t)‘’ if (t) exists (though shouldn't)
+                val = tag_val.value if hasattr(tag_val,'value') else tag_val
+                if len(v_split := re.split(R'\s+',val)) > 1:
+                    _PUNCTUATION_MARKS[key] = (v_split[0],v_split[1]) # `'   '
+                elif (_len := len(val)) == 2:
+                    _PUNCTUATION_MARKS[key] = (val[0]    ,val[1])     # ‘    ’
+                else:
+                    _log.warn(f"node ‘{node.name}’ ‘{key}’ should have an argument of length 2, not ‘{_len}’")
+            if not node.props:
+                _log.warn(f"node ‘{node.name}’ is missing key=value properties")
+        if (node := cfg.get('punctuationalias'  ,None)): # clear g=‘ key-value pairs
+            # _log.debug(f"@plugin surround: Parsing config punctuationalias")
+            if 'clear' in node.args:
+                _PUNCTUTION_MARK_ALIASES.clear()
+            for i,key in enumerate(prop_d := node.props): #d="("
+                tag_val = prop_d[key] #d=(t)( if (t) exists (though shouldn't)
+                val = tag_val.value if hasattr(tag_val,'value') else tag_val
+                _PUNCTUTION_MARK_ALIASES[key] = val
+            if not node.props:
+                _log.warn(f"node ‘{node.name}’ is missing key=value properties")
+        if (node := cfg.get('appendspacetochars',None)): # )}]
+            # _log.debug(f"@plugin surround: Parsing config appendspacetochars")
+            if (args := node.args):
+                _APPEND_SPACE_TO_CHARS = args[0]
+            if not args:
+                _log.warn(f"node ‘{node.name}’ is missing arguments")
+            if len(args) > 1:
+                _log.warn(f"node ‘{node.name}’ has extra arguments, only the 1st was used ‘{', '.join(args)}’")
+        if (node := cfg.get('steadycursor',None)): # add=true replace=true delete=true
+            # _log.debug(f"@plugin surround: Parsing config steadycursor")
+            for i,key in enumerate(prop_d := node.props):
+                tag_val = prop_d[key] #add=(t)true if (t) exists (though shouldn't)
+                val = tag_val.value if hasattr(tag_val,'value') else tag_val
+                if key in _STEADY_CURSOR_KEY:
+                    _STEADY_CURSOR[key] = val
+            if not node.props:
+                _log.warn(f"node ‘{node.name}’ is missing key=value properties")
+
 def reload_with_user_data() -> None:
     if hasattr(cfgU,'surround') and (cfg := cfgU.surround): # skip on initial import when Plugin API isn't ready, so not settings are loaded
         global _APPEND_SPACE_TO_CHARS, _PUNCTUTION_MARK_ALIASES

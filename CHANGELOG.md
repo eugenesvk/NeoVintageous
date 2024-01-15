@@ -51,6 +51,12 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
      group values↑ in ‘keybind{}’, so the file itself can include only top-level ‘key command’ lines
      */
      ```
+   + :sparkles: human-readable format for setting keyboard shortcuts
+     `(nv)d "MoveByWordsBackward" // understandable command name`
+     instead of `.neovintageousrc`'s
+     `nnoremap d b` why do you need to remember that `b` moves by words backwards if you never use it?
+     `vnoremap d b` oh, can you can't even add a comment on the same line to clarify it
+
 
 [0.5.1341]: https://github.com/eugenesvk/NeoVintageous/releases/tag/0.5.1341
 ## [0.5.1341]

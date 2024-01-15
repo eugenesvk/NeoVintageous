@@ -399,7 +399,7 @@ def _do_replace(view, edit, mode: str, target: str, replacement: str, count=None
                 region_begin, region_end = _get_regions_for_target(view, s, target_open)
 
             if not (region_end and region_begin):
-                return s
+                return (s, (0,0))
 
             replacement_a = replacement_open
 
@@ -419,12 +419,20 @@ def _do_replace(view, edit, mode: str, target: str, replacement: str, count=None
             # characters replaced and would result in an off-by-n bugs.
             view.replace(edit, region_end, replacement_close)
             view.replace(edit, region_begin, replacement_a)
+            repl_count_end = len(replacement_close) - region_end.size()
+            repl_count_beg = len(replacement_a)     - region_begin.size()
 
-            return Region(region_begin.begin())
+            return (Region(region_begin.begin()), (repl_count_beg,repl_count_end))
 
-        return s
+        return (s, (0,0))
 
-    _rsynced_regions_transformer(view, _f)
+    _res_view_sel_reverse = list()    # save cursor pos as they might be reset elsewhere
+    if _STEADY_CURSOR['replace']:
+        sels = reversed(list(view.sel())) # end→beg not to adjust for ∑replacements
+        for sel in sels:
+            _res_view_sel_reverse.append(sel)
+
+    _rsynced_regions_transformer(view, _f, _res_view_sel_reverse)
 
 
 def _do_delete(view, edit, mode: str, target: str, count=None, register=None) -> None:

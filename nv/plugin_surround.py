@@ -254,21 +254,21 @@ def reload_with_user_data_kdl() -> None:
             if not node.props:
                 _log.warn(f"node ‘{node.name}’ is missing key=value properties")
 
-def reload_with_user_data() -> None:
-    if hasattr(cfgU,'surround') and (cfg := cfgU.surround): # skip on initial import when Plugin API isn't ready, so not settings are loaded
-        global _PUNCTUATION_MARKS, _PUNCTUTION_MARK_ALIASES, _APPEND_SPACE_TO_CHARS
-        if (_key := 'punctuation marks') in cfg:
-            for key,value in cfg[_key].items():
-                if not (_len := len(value)) == 2:
-                    _log.warn(f"‘punctuation marks’ values should have 2 values, not ‘{_len}’ in ‘{value}’")
-                    continue
-                _PUNCTUATION_MARKS[key] = (value[0], value[1])
-        if (_key := 'punctuation alias') in cfg:
-            _PUNCTUTION_MARK_ALIASES.clear()
-            for key,value in cfg[_key].items():
-                _PUNCTUTION_MARK_ALIASES[key] = value
-        if (_key := 'append space to chars') in cfg:
-            _APPEND_SPACE_TO_CHARS = cfg[_key]
+# def reload_with_user_data() -> None:
+#     if hasattr(cfgU,'surround') and (cfg := cfgU.surround): # skip on initial import when Plugin API isn't ready, so not settings are loaded
+#         global _PUNCTUATION_MARKS, _PUNCTUTION_MARK_ALIASES, _APPEND_SPACE_TO_CHARS
+#         if (_key := 'punctuation marks') in cfg:
+#             for key,value in cfg[_key].items():
+#                 if not (_len := len(value)) == 2:
+#                     _log.warn(f"‘punctuation marks’ values should have 2 values, not ‘{_len}’ in ‘{value}’")
+#                     continue
+#                 _PUNCTUATION_MARKS[key] = (value[0], value[1])
+#         if (_key := 'punctuation alias') in cfg:
+#             _PUNCTUTION_MARK_ALIASES.clear()
+#             for key,value in cfg[_key].items():
+#                 _PUNCTUTION_MARK_ALIASES[key] = value
+#         if (_key := 'append space to chars') in cfg:
+#             _APPEND_SPACE_TO_CHARS = cfg[_key]
 
 # Expand target punctuation marks. Eight punctuation marks, (, ), {, }, [, ], <,
 # and >, represent themselves and their counterparts. The targets b, B, r, and

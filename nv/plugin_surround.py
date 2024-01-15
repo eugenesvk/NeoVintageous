@@ -256,7 +256,7 @@ def reload_with_user_data_kdl() -> None:
 
 def reload_with_user_data() -> None:
     if hasattr(cfgU,'surround') and (cfg := cfgU.surround): # skip on initial import when Plugin API isn't ready, so not settings are loaded
-        global _APPEND_SPACE_TO_CHARS, _PUNCTUTION_MARK_ALIASES
+        global _PUNCTUATION_MARKS, _PUNCTUTION_MARK_ALIASES, _APPEND_SPACE_TO_CHARS
         if (_key := 'punctuation marks') in cfg:
             for key,value in cfg[_key].items():
                 if not (_len := len(value)) == 2:

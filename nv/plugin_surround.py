@@ -431,7 +431,7 @@ def _do_delete(view, edit, mode: str, target: str, count=None, register=None) ->
     should_trim_contained_whitespace = True if target in '({[<' else False
 
     # Targets.
-    target_open, target_close = _expand_targets(target)
+    target_open, target_close = _expand_targets(target) # 'a' or '>' to ''
 
     def _f(view, s):
         if mode == INTERNAL_NORMAL:
@@ -447,19 +447,27 @@ def _do_delete(view, edit, mode: str, target: str, count=None, register=None) ->
                     region_begin, region_end = _trim_regions(view, region_begin, region_end)
 
             if not (region_begin and region_end):
-                return s
+                return (s, (0,0))
 
             # It's important that the regions are replaced in reverse because
             # otherwise the buffer size would be reduced by the number of
             # characters replaced and would result in an off-by-one bug.
             view.replace(edit, region_end, '')
             view.replace(edit, region_begin, '')
+            del_count_end = -1 * region_end.size()
+            del_count_beg = -1 * region_begin.size()
 
-            return Region(region_begin.begin())
+            return (Region(region_begin.begin()), (del_count_beg,del_count_end))
 
-        return s
+        return (s, (0,0))
 
-    _rsynced_regions_transformer(view, _f)
+    _res_view_sel_reverse = list()    # save cursor pos as they might be reset elsewhere
+    if _STEADY_CURSOR['delete']:
+        sels = reversed(list(view.sel())) # end→beg not to adjust for ∑deletes
+        for sel in sels:
+            _res_view_sel_reverse.append(sel)
+
+    _rsynced_regions_transformer(view, _f, _res_view_sel_reverse)
 
 
 def _get_regions_for_target(view, s: Region, target: str) -> tuple:

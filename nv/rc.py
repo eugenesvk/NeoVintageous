@@ -297,6 +297,15 @@ class cfgU():
 def _import_plugins_with_user_data_kdl():
     from NeoVintageous.nv import plugin_surround
     plugin_surround.reload_with_user_data_kdl()
+    from NeoVintageous.nv import vim
+    vim.reload_with_user_data_kdl()
+    # from NeoVintageous.nv import state # all needed config values are taken from nv.vim
+    # state.reload_with_user_data_kdl()
+    from NeoVintageous.nv import ex_cmds
+    ex_cmds.reload_with_user_data_kdl()
+    from NeoVintageous.nv import registers
+    registers.reload_with_user_data_kdl()
+
 def _import_plugins_with_user_data():
     from NeoVintageous.nv import plugin_surround
     plugin_surround.reload_with_user_data()

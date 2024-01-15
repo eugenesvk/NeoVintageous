@@ -2,7 +2,7 @@ import logging
 
 DEFAULT_LOG_LEVEL = logging.WARNING
 
-filter_levelname_dict = {'WARNING':'⚠️','INFO':"ⓘ",'KEY':'⌨️'}
+filter_levelname_dict = {'ERROR':'❗','WARNING':'⚠️','INFO':"ⓘ",'KEY':'⌨️'}
 
 def add_module_logger_levels():
   addLoggingLevel('KEY', DEFAULT_LOG_LEVEL - 20)

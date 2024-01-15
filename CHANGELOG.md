@@ -56,6 +56,7 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
      instead of `.neovintageousrc`'s
      `nnoremap d b` why do you need to remember that `b` moves by words backwards if you never use it?
      `vnoremap d b` oh, can you can't even add a comment on the same line to clarify it
+     And the whole `noremap` doesn't need to be repeated on every single line
 
 
 [0.5.1341]: https://github.com/eugenesvk/NeoVintageous/releases/tag/0.5.1341

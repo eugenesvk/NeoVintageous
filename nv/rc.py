@@ -59,6 +59,7 @@ def open_config_file_kdl(window) -> None:
             f.write('// ← Comment, Command ↓ (mode)Key "CommandName"\n')
             f.write('// (i)"<C-w>" "DeleteUpToCursor"\n')
             f.write('// See ‘NeoVintageous.keymap-default.kdl’ for a list of defaults (run ‘NeoVintageous: Dump default keymap as KDL’ in Command Palette to generate it)\n')
+            f.write('#v 0.1 // config format version\n')
     window.open_file(file)
 
 

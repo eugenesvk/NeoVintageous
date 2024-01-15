@@ -372,19 +372,17 @@ def _rsynced_regions_transformer(view, f, _res_view_sel_reverse:list=[]) -> None
 def _do_replace(view, edit, mode: str, target: str, replacement: str, count=None, register=None) -> None:
     if not target and replacement:
         return
-
     if len(target) != 1:
         return
-
-    # Replacements must be 1 character long or at least 3 characters for tags.
-    if len(replacement) >= 3:
-        if replacement[0] not in ('t', '<') or not replacement[-1] in ('>', '\n'):
+    if len(replacement) >= 3: # Replacements must be 1 character long or at least 3 characters for tags
+        if replacement[ 0] not in ('t', '<') or\
+           replacement[-1] not in ('>', '\n'):
             return
     elif len(replacement) != 1:
         return
 
     # Targets.
-    target_open, target_close = _expand_targets(target)
+    target_open, target_close = _expand_targets(target) # 'a' or '>' to a tuple of (< , >)
 
     # Replacements
     replacement_open, replacement_close = _expand_replacements(replacement)
@@ -443,7 +441,7 @@ def _do_delete(view, edit, mode: str, target: str, count=None, register=None) ->
     should_trim_contained_whitespace = True if target in '({[<' else False
 
     # Targets.
-    target_open, target_close = _expand_targets(target) # 'a' or '>' to ''
+    target_open, target_close = _expand_targets(target) # 'a' or '>' to a tuple of (< , >)
 
     def _f(view, s):
         if mode == INTERNAL_NORMAL:

@@ -194,7 +194,7 @@ def plugin_loaded():
     try:
         load_session()
         load_rc()
-        _import_plugins_with_user_data()
+        # _import_plugins_with_user_data()
         _import_plugins_with_user_data_kdl()
     except Exception as e:  # pragma: no cover
         traceback.print_exc()

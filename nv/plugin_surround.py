@@ -212,10 +212,14 @@ for key in (_STEADY_CURSOR_KEY := ['add','replace','delete']):
 VALID_TARGETS  = 'ra@' # Delete targets
 VALID_TARGETS += '\'"`b()B{}[]<>t.,-_;:#~*\\/|+=&$' # targets for plugin github.com/wellle/targets.vim
 #IilpsWw plugin targets excluded
+SEEK_FORWARD = False # when looking for brackets, if the current text is NOT enclosed, but Targets plugin is enabled, seek the next pair of brackets
+  # ⎀a(b)  with surround delete of ( will result in:
+  # ⎀ab       True  SEEK_FORWARD
+  # ⎀a(b)     False SEEK_FORWARD
 
 def reload_with_user_data_kdl() -> None:
     if hasattr(cfgU,'cfg_kdl') and (cfg := cfgU.cfg_kdl.get('surround',None)): # skip on initial import when Plugin API isn't ready, so not settings are loaded
-        global _PUNCTUATION_MARKS, _PUNCTUTION_MARK_ALIASES, _APPEND_SPACE_TO_CHARS, _STEADY_CURSOR, VALID_TARGETS
+        global _PUNCTUATION_MARKS, _PUNCTUTION_MARK_ALIASES, _APPEND_SPACE_TO_CHARS, _STEADY_CURSOR, VALID_TARGETS, SEEK_FORWARD
         if (node := cfg.get('punctuationmarks'  ,None)): # ‘=‘’ “=“” key-value pairs
             # _log.debug(f"@plugin surround: Parsing config punctuationmarks")
             for i,key in enumerate(prop_d := node.props): #‘=‘’
@@ -256,6 +260,17 @@ def reload_with_user_data_kdl() -> None:
                     _STEADY_CURSOR[key] = val
             if not node.props:
                 _log.warn(f"node ‘{node.name}’ is missing key=value properties")
+        if (node := cfg.get('seekforward',None)): # ⎀a(b) don't delete () if false
+            # _log.debug(f"@plugin surround: Parsing config seekforward")
+            if (args := node.args):
+                if not isinstance(args[0],bool):
+                    _log.error(f"node ‘{node.name}’ argument should be ‘true’ or ‘false’, not ‘{args[0]}’")
+                else:
+                    SEEK_FORWARD = args[0]
+            if not args:
+                _log.warn(f"node ‘{node.name}’ is missing arguments")
+            if len(args) > 1:
+                _log.warn(f"node ‘{node.name}’ has extra arguments, only the 1st was used ‘{', '.join(args)}’")
         VALID_TARGETS += "".join(((val:=_PUNCTUATION_MARKS[k])[0]+val[1]) for k in _PUNCTUATION_MARKS) # add marks
         VALID_TARGETS += "".join(_PUNCTUTION_MARK_ALIASES.keys()) # add aliases
 
@@ -345,7 +360,10 @@ def _rsynced_regions_transformer(view, f, _res_view_sel_reverse:list=[]) -> None
         if _res_view_sel_reverse: # adjust old cursor pos by count of chars inserted @ beg
             old_sel = _res_view_sel_reverse[i]
             (a,b) = old_sel.to_tuple() # → this region as a tuple (a,b)
-            old_sel_adjusted = Region(edit_count_beg+a,edit_count_beg+b)
+            if old_sel.end() < new_sel.begin(): # seek forward edited after the cursor, so the cursor stays
+                old_sel_adjusted = Region(               a,               b)
+            else:
+                old_sel_adjusted = Region(edit_count_beg+a,edit_count_beg+b)
             view_sel.add(old_sel_adjusted)
         else: # or don't adjust anything and just select the new region
             view_sel.add(new_sel)
@@ -464,7 +482,7 @@ def _do_delete(view, edit, mode: str, target: str, count=None, register=None) ->
 
 
 def _get_regions_for_target(view, s: Region, target: str) -> tuple:
-    text_object = get_text_object_region(view, s, target, inclusive=True)
+    text_object = get_text_object_region(view, s, target, inclusive=True, seek_forward=SEEK_FORWARD)
     if not text_object:
         return (None, None)
 

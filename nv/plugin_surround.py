@@ -279,17 +279,25 @@ def _expand_replacements(target: str) -> tuple:
     return (begin, end)
 
 
-def _rsynced_regions_transformer(view, f) -> None:
-    sels = reversed(list(view.sel()))
+from sublime import Region
+def _rsynced_regions_transformer(view, f, _res_view_sel_reverse:list=None) -> None:
+    sels = reversed(list(view.sel())) # end→beg not to adjust for ∑inserts
+
     view_sel = view.sel()
-    for sel in sels:
+    for i,sel in enumerate(sels):
         view_sel.subtract(sel)
 
-        new_sel = f(view, sel)
+        (new_sel, (ins_count_beg,ins_count_end)) = f(view, sel)
         if not isinstance(new_sel, Region):
             raise TypeError('sublime.Region required')
 
-        view_sel.add(new_sel)
+        if _res_view_sel_reverse: # adjust old cursor pos by count of chars inserted @ beg
+            old_sel = _res_view_sel_reverse[i]
+            (a,b) = old_sel.to_tuple() # → this region as a tuple (a,b)
+            old_sel_adjusted = Region(ins_count_beg+a,ins_count_beg+b)
+            view_sel.add(old_sel_adjusted)
+        else: # or don't adjust anything and just select the new region
+            view_sel.add(new_sel)
 
 
 def _do_replace(view, edit, mode: str, target: str, replacement: str, count=None, register=None) -> None:

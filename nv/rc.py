@@ -245,7 +245,7 @@ class cfgU():
             _log.warn(f"‘edit’ in ‘{cfgU_settings}’ should be a dictionary, not {cfgT}")
             cfgU.edit = None
 
-        _import_plugins_with_user_data()
+        # _import_plugins_with_user_data()
 
         # todo: #? convert mappings_add to a helper function that accepts enum2|enum2
         keybinds = user_commands.get('keybind')

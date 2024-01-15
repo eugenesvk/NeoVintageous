@@ -178,6 +178,31 @@ class cfgU():
     }  # type: dict
 
     @staticmethod
+    def load_kdl(cfg_l:List[kdl.Document]):
+        from NeoVintageous.nv.mappings import mappings_add, mappings_add_text
+        cfg_kdl_f = cfgU.cfg_kdl_f # config file path
+        cfgU.cfg_kdl = dict()
+
+        # Split config into per-section/per-plugin group
+        cfg_group   = ['keymap','events','status','indicator_ls','indicator_register','edit']
+        cfg_plugins = ['surround']
+        for g in cfg_group:
+            cfgU.cfg_kdl[g] = None
+        for cfg in cfg_l: # store the latest existing value
+            for g in cfg_group:
+                if (node := cfg.get(g, None)):
+                    cfgU.cfg_kdl[g] = node
+            if (node := cfg.get('plugin', None)):
+                for g in cfg_plugins:
+                    if (node := node.get(g, None)):
+                        cfgU.cfg_kdl[g] = node
+        for g in cfg_group: # Rudimentary type checks
+            if  cfgU.cfg_kdl[g] and not (cfgU.cfg_kdl[g].nodes):
+                cfgU.cfg_kdl[g] = None; _log.warn(f"‘{g}’ in ‘{cfg_kdl_f}’ has no child nodes!")
+
+        _import_plugins_with_user_data_kdl()
+
+    @staticmethod
     def load():
         from NeoVintageous.nv.mappings import mappings_add, mappings_add_text
         global user_settings, user_commands

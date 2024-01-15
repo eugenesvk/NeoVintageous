@@ -303,10 +303,10 @@ def _expand_targets(target: str) -> tuple:
 def _resolve_target_aliases(target: str) -> str:
     return _PUNCTUTION_MARK_ALIASES.get(target, target) # 'a' to '>' or self
 
-# If either ), }, ], or > is used, the text is wrapped in the appropriate pair
-# of characters. Similar behavior can be found with (, {, and [ (but not <),
-# which append an additional space to the inside. Like with the targets above,
-# b, B, r, and a are aliases for ), }, ], and >.
+# )}]> wraps the text in the appropriate pair of characters
+# bBra aliases
+# ({[  wraps the text and appends space to the inside
+#    < is different, used for tags
 def _expand_replacements(target: str) -> tuple:
     # Function replacement
     if target[0] == 'f':

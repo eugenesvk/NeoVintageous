@@ -206,6 +206,9 @@ _PUNCTUTION_MARK_ALIASES = {
     'a': '>',
 }
 _APPEND_SPACE_TO_CHARS = '({['
+_STEADY_CURSOR = dict()
+for key in (_STEADY_CURSOR_KEY := ['add','replace','delete']):
+    _STEADY_CURSOR[key] = True
 
 def reload_with_user_data() -> None:
     if hasattr(cfgU,'surround') and (cfg := cfgU.surround): # skip on initial import when Plugin API isn't ready, so not settings are loaded

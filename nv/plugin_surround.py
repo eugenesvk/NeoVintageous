@@ -437,39 +437,47 @@ def _trim_regions(view, start: Region, end: Region) -> tuple:
     return (start, end)
 
 
+from typing import List, Union
 def _do_add(view, edit, mode: str = None, motion=None, replacement: str = '"', count: int = 1, register=None) -> None:
-    def _surround(view, edit, s, replacement: str) -> None:
-        replacement_open, replacement_close = _expand_replacements(replacement)
+    def _surround(view, edit, s, replacement: str) -> List[int]:
+        replacement_open, replacement_close = _expand_replacements(replacement) #< > for >
         if replacement_open.startswith('<'):
-            view.insert(edit, s.b, replacement_close)
-            view.insert(edit, s.a, replacement_open)
-            return
+            ins_count_end = view.insert(edit, s.b, replacement_close)
+            ins_count_beg = view.insert(edit, s.a, replacement_open)
+            return (ins_count_beg,ins_count_end)
 
         if mode == VISUAL_LINE:
             replacement_open = replacement_open + '\n'
             replacement_close = replacement_close + '\n'
 
-        view.insert(edit, s.end(), replacement_close)
-        view.insert(edit, s.begin(), replacement_open)
+        ins_count_end = view.insert(edit, s.end(), replacement_close)
+        ins_count_beg = view.insert(edit, s.begin(), replacement_open)
+        return (ins_count_beg,ins_count_end) # count actual # of inserted chars to be able to calculate old cursor position
 
     def f(view, s):
         if mode == INTERNAL_NORMAL:
-            _surround(view, edit, s, replacement)
-            return Region(s.begin())
+            (ins_count_end,ins_count_beg) = _surround(view, edit, s, replacement)
+            return (Region(s.begin()), (ins_count_end,ins_count_beg))
         elif mode in (VISUAL, VISUAL_LINE, VISUAL_BLOCK):
-            _surround(view, edit, s, replacement)
-            return Region(s.begin())
+            (ins_count_end,ins_count_beg) = _surround(view, edit, s, replacement)
+            return (Region(s.begin()), (ins_count_end,ins_count_beg))
         return s
 
     if not motion and not view.has_non_empty_selection_region():
         enter_normal_mode(view, mode)
         raise ValueError('motion required')
 
+    _res_view_sel_reverse = list()    # save cursor pos as they are reset in run_motion
+    sels = reversed(list(view.sel())) # end→beg not to adjust for ∑inserts
+    for sel in sels:
+        _res_view_sel_reverse.append(sel)
+
     if mode == INTERNAL_NORMAL:
-        run_motion(view, motion)
+        run_motion(view, motion) # add a Word object to selection (moving to Word's end)
+        #eg {'motion':'nv_vi_select_text_object','motion_args':{'count':1,'inclusive':False,'mode':'mode_internal_normal','text_object':'w'}}
 
     if replacement:
-        _rsynced_regions_transformer(view, f)
+        _rsynced_regions_transformer(view, f, _res_view_sel_reverse)
 
     enter_normal_mode(view, mode)
 

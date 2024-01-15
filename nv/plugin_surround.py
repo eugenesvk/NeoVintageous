@@ -199,8 +199,6 @@ _PUNCTUATION_MARKS = {
     '<': ('<', '>'),
     '>': ('<', '>'),
 }
-
-
 _PUNCTUTION_MARK_ALIASES = {
     'b': ')',
     'B': '}',

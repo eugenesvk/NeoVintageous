@@ -282,11 +282,11 @@ def reload_with_user_data_kdl() -> None:
 def _expand_targets(target: str) -> tuple:
     target = _resolve_target_aliases(target) # 'a' to '>'
 
-    return _PUNCTUATION_MARKS.get(target, (target, target))
+    return _PUNCTUATION_MARKS.get(target, (target, target)) # '>' to a tuple of (< , >) or self
 
 
 def _resolve_target_aliases(target: str) -> str:
-    return _PUNCTUTION_MARK_ALIASES.get(target, target)
+    return _PUNCTUTION_MARK_ALIASES.get(target, target) # 'a' to '>' or self
 
 # If either ), }, ], or > is used, the text is wrapped in the appropriate pair
 # of characters. Similar behavior can be found with (, {, and [ (but not <),

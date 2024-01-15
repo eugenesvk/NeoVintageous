@@ -181,25 +181,40 @@ class cfgU():
     @staticmethod
     def load_kdl(cfg_l:List[kdl.Document]):
         from NeoVintageous.nv.mappings import mappings_add, mappings_add_text
-        cfg_kdl_f = cfgU.cfg_kdl_f # config file path
-        cfgU.cfg_kdl = dict()
+        cfg_kdl_f = cfgU.kdl_f # config file path
+        cfgU.kdl = dict()
 
         # Split config into per-section/per-plugin group
-        cfg_group   = ['keymap','events','status','indicator_ls','indicator_register','edit']
-        cfg_plugins = ['surround']
+        cfg_group  = ['keymap','events','status','edit','keybind']
+        cfg_nest   = {'plugin'   :['surround']
+            ,         'indicator':['ls','registers']}
+        # Set config dictionaries to emtpy
         for g in cfg_group:
-            cfgU.cfg_kdl[g] = None
-        for cfg in cfg_l: # store the latest existing value
-            for g in cfg_group:
+            cfgU.kdl          [g] = None
+        for nest in cfg_nest:
+            cfgU.kdl    [nest]    = dict()
+            for g in nest:
+                cfgU.kdl[nest][g] = None
+        # Fill config dictionaries
+        for cfg in cfg_l: # store the latest existing value in any of the docs
+            for g in cfg_group:   # direct config groups like 'keymap'
                 if (node := cfg.get(g, None)):
-                    cfgU.cfg_kdl[g] = node
-            if (node := cfg.get('plugin', None)):
-                for g in cfg_plugins:
-                    if (node := node.get(g, None)):
-                        cfgU.cfg_kdl[g] = node
+                    cfgU.kdl  [g] = node
+            for nest in cfg_nest: # nested config groups like 'surround' within 'plugin'
+                if (node_nest := cfg.get(nest, None)):       # 'plugin'   node
+                    for g in cfg_nest[nest]:                 # 'surround'
+                        if (node := node_nest.get(g, None)): # 'surround' child node
+                            if g in cfgU.kdl[nest]: # dupe, but the other is less specific, overwrite
+                                _log.error(f"node ‘{g}’ already set as a direct node, overwriting")
+                            cfgU.kdl[nest][g] = node
+                        if (node := cfg.get(g, None)):       # 'surround' direct node
+                            if g in cfgU.kdl[nest]: # dupe, but     this  is less specific, ignore
+                                _log.error(f"node ‘{g}’ already set as a child of ‘{nest}’, skipping this dupe")
+                            else:
+                                cfgU.kdl[nest][g] = node
         for g in cfg_group: # Rudimentary type checks
-            if  cfgU.cfg_kdl[g] and not (cfgU.cfg_kdl[g].nodes):
-                cfgU.cfg_kdl[g] = None; _log.warn(f"‘{g}’ in ‘{cfg_kdl_f}’ has no child nodes!")
+            if  cfgU.kdl[g] and not (cfgU.kdl[g].nodes):
+                cfgU.kdl[g] = None; _log.warn(f"‘{g}’ in ‘{cfg_kdl_f}’ has no child nodes!")
 
         _import_plugins_with_user_data_kdl()
 

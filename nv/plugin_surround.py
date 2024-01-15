@@ -327,7 +327,7 @@ def _expand_replacements(target: str) -> tuple:
 
 
 from sublime import Region
-def _rsynced_regions_transformer(view, f, _res_view_sel_reverse:list=None) -> None:
+def _rsynced_regions_transformer(view, f, _res_view_sel_reverse:list=[]) -> None:
     sels = reversed(list(view.sel())) # end→beg not to adjust for ∑inserts
 
     view_sel = view.sel()

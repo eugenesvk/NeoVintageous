@@ -104,6 +104,7 @@ def _load() -> None:
     except FileNotFoundError:
         _log.info('%s file not found', _file_path())
     load_cfgU()
+    load_cfgU_kdl()
 
 
 def _source(window, source) -> None:
@@ -160,6 +161,8 @@ from NeoVintageous.plugin import PACKAGE_NAME
 from NeoVintageous.nv.modes import EVENT_MODES
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.modes import Mode as M, text_to_modes, MODE_NAMES_OLD
+import NeoVintageous.dep.kdl as kdl
+from typing import List, Union
 
 cfgU_settings = (f'{PACKAGE_NAME}.sublime-settings')
 cfgU_command = (f'{PACKAGE_NAME}.json')
@@ -261,6 +264,26 @@ def _import_plugins_with_user_data():
     ex_cmds.reload_with_user_data()
     from NeoVintageous.nv import registers
     registers.reload_with_user_data()
+
+from pathlib import Path
+from NeoVintageous.nv.cfg_parse import parse_kdl_config
+def load_cfgU_kdl() -> None:
+    global cfgU
+    cfg_p = _file_path_config_kdl()
+    if (cfg_f := Path(cfg_p).expanduser()).exists():
+        try:
+            with open(cfg_f, 'r', encoding='utf-8', errors='replace') as f:
+                cfg = f.read()
+        except FileNotFoundError as e:
+            sublime.error_message(f"{PACKAGE_NAME}:\nTried and failed to load\n{cfg_f}")
+            return
+    else:
+        # sublime.error_message(f"{PACKAGE_NAME}:\nCouldn't find\n{cfg_p}") # this config file is optional
+        return
+    kdl_docs = [] # list of KDL docs in the order of parsing, includes imports as separate items
+    parse_kdl_config(cfg, cfg_f, kdl_docs)
+    cfgU.cfg_kdl_f = cfg_f
+    cfgU.load_kdl(kdl_docs)
 
 def load_cfgU() -> None:
     """load alternative user config file to a global class and add a watcher event to track changes"""

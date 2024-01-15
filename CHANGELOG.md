@@ -44,6 +44,13 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
         upper 	r#"l;'\"
        "upper"	: "l;'\\",
        ```
+   + :sparkles: support for importing other config files
+     ```
+     #import (keybind)"NeoVintageous.key.kdl"
+     /*↑ or ‘import’ to import ↑ file name relative to this main config file
+     group values↑ in ‘keybind{}’, so the file itself can include only top-level ‘key command’ lines
+     */
+     ```
 
 [0.5.1341]: https://github.com/eugenesvk/NeoVintageous/releases/tag/0.5.1341
 ## [0.5.1341]

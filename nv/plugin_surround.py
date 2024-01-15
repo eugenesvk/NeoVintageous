@@ -414,15 +414,9 @@ def _do_replace(view, edit, mode: str, target: str, replacement: str, count=None
 def _do_delete(view, edit, mode: str, target: str, count=None, register=None) -> None:
     if not target:
         return
-
     if len(target) != 1:
         return
-
-    # The target letters w, W, s, and p correspond to a word, a WORD, a
-    # sentence, and a paragraph respectively. These are special in that they
-    # have nothing to delete, and used with ds they are a no-op.
-    noop_targets = 'wWsp'
-    if target in noop_targets:
+    if target in 'wWsp': # 'word WORD sentence paragraph' have nothing to delete, so noop
         return
     if target not in VALID_TARGETS:
         return
@@ -435,9 +429,8 @@ def _do_delete(view, edit, mode: str, target: str, count=None, register=None) ->
 
     def _f(view, s):
         if mode == INTERNAL_NORMAL:
-            # A t is a pair of HTML or XML tags.
-            if target == 't':
-                # TODO test dst works when cursor position is inside tag begin <a|bc>x</abc> -> dst -> |x
+            if target == 't': # a pair of HTML or XML tags
+                # TODO test dst works when cursor position is inside tag begin <a|bc>x -> dst -> |x
                 # TODO test dst works when cursor position is inside tag end   <abc>x</a|bc> -> dst -> |x
                 region_end = view.find('<\\/.*?>', s.b)
                 region_begin = reverse_search(view, '<.*?>', start=0, end=s.b)

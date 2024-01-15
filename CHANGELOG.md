@@ -28,6 +28,9 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
      + for `ls` command, e.g., replace `+` modified file mark with `🖉` similar to how a modified tab is marked
      + for `registers` command, e.g., replace `l` for linewise with `━`
    + :sparkles: option to maintain cursor position on surround plugin's text edits, e.g., adding `'` to `my_⎀word` (⎀ denotes cursor position) will leave cursor at the same spot in the new `'my_⎀word'` while previously it moved it to the first inserted punctuation `⎀'my_word'`
+   + :sparkles: option to not seek the next set brackets if current text isn't enclosed in one — `⎀a(b)` with surround delete will result in:
+     - `⎀a(b)` if `seek_forward` is `false` (default)
+     - `⎀ab`   if `seek_forward` is `true`
    + :sparkles: new KDL config format `NeoVintageous.kdl` with
      + Fewer quotes (and in the future v2 version with even fewer quotes):
        ```

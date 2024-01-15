@@ -476,9 +476,10 @@ def _do_add(view, edit, mode: str = None, motion=None, replacement: str = '"', c
         raise ValueError('motion required')
 
     _res_view_sel_reverse = list()    # save cursor pos as they are reset in run_motion
-    sels = reversed(list(view.sel())) # end→beg not to adjust for ∑inserts
-    for sel in sels:
-        _res_view_sel_reverse.append(sel)
+    if _STEADY_CURSOR['add']:
+        sels = reversed(list(view.sel())) # end→beg not to adjust for ∑inserts
+        for sel in sels:
+            _res_view_sel_reverse.append(sel)
 
     if mode == INTERNAL_NORMAL:
         run_motion(view, motion) # add a Word object to selection (moving to Word's end)

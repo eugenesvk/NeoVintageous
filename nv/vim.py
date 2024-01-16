@@ -116,6 +116,7 @@ def reload_with_user_data_kdl() -> None:
                             mode_names_rev.get(node.name.upper(),None))): # kdl keys are converted to lowercase, so check 'i' and 'I'
                     DEFM[mode] = val
                     # print(f"status mode DEFM ‘{mode}’ from ‘{node.name}’ argument ‘{val}’")
+        node = cfg
         for i,key in enumerate(prop_d := node.props): # 2. parse properties id_seq="vim-seq", alternative notation to child node/arg pairs
             tag_val = prop_d[key] #(t)"vim-seq" if (t) exists (though shouldn't)
             # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag

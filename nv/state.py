@@ -51,6 +51,7 @@ from NeoVintageous.nv.vi.cmd_base import ViMotionDef
 from NeoVintageous.nv.vi.cmd_base import ViOperatorDef
 from NeoVintageous.nv.vi.cmd_defs import ViToggleMacroRecorder
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
+from NeoVintageous.nv.modes import Mode as M, mode_names, mode_names_rev, text_to_modes, text_to_mode_alone
 from NeoVintageous.nv.vim import clean_view
 from NeoVintageous.nv.vim import enter_insert_mode
 from NeoVintageous.nv.vim import enter_normal_mode
@@ -68,7 +69,6 @@ _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
 
 
-from NeoVintageous.nv.modes import mode_names, mode_names_rev
 DEF = {
     'prefix' : '',
     'suffix' : '',
@@ -77,8 +77,10 @@ DEF = {
 }
 import copy
 DEF_R = copy.deepcopy(DEF) # save original defaults to reset statuses with old IDs
+DEF_R['update_idmode'] = False
+DEF_R['update_idseq']  = False
 DEFM = dict()
-for m in mode_names:
+for m in mode_names: # Mode.N enum variants
     DEFM[m] = None
 
 def reload_with_user_data_kdl() -> None:
@@ -144,11 +146,25 @@ def reload_with_user_data_kdl() -> None:
 #             DEF['idseq'] = _val
 
 def update_status_line(view) -> None:
-    mode_name = mode_to_name(get_mode(view))
+    global DEF_R
+    if not DEF_R['update_idseq']:
+        if not DEF['idseq'] == DEF_R['idseq']: # reset old status if user config changed ID
+            view.erase_status(DEF_R['idseq'])
+            DEF_R['update_idseq'] = True
+    if not DEF_R['update_idmode']:
+        if not DEF['idmode'] == DEF_R['idmode']:
+            view.erase_status(DEF_R['idmode'])
+            DEF_R['update_idmode'] = True
+    mode_txt  = get_mode(view) # mode_insert
+    mode_enum = mode_names_rev.get(mode_txt,None) # Mode.Insert
+    if mode_enum in DEFM and DEFM[mode_enum] is not None:
+        mode_name = DEFM[mode_enum]
+    else:
+        mode_name = mode_to_name(mode_txt)
     if mode_name:
-        view.set_status(_id_mode, f'{_prefix}{mode_name}{_suffix}')
+        view.set_status(DEF['idmode'], f"{DEF['prefix']}{mode_name}{DEF['suffix']}")
 
-    view.set_status(_id_seq, get_sequence(view))
+    view.set_status(DEF['idseq'], get_sequence(view))
 
 
 def must_collect_input(view, motion: ViMotionDef, action: ViOperatorDef) -> bool:

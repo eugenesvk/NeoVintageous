@@ -52,6 +52,7 @@ from NeoVintageous.nv.vi.cmd_base import ViOperatorDef
 from NeoVintageous.nv.vi.cmd_defs import ViToggleMacroRecorder
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.modes import Mode as M, mode_names, mode_names_rev, text_to_modes, text_to_mode_alone
+from NeoVintageous.nv.vim import DEF, DEF_R, DEFM # config values, defaults + user
 from NeoVintageous.nv.vim import clean_view
 from NeoVintageous.nv.vim import enter_insert_mode
 from NeoVintageous.nv.vim import enter_normal_mode
@@ -69,70 +70,6 @@ _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
 
 
-DEF = {
-    'prefix' : '',
-    'suffix' : '',
-    'idmode' : 'vim-mode',
-    'idseq'  : 'vim-seq',
-}
-import copy
-DEF_R = copy.deepcopy(DEF) # save original defaults to reset statuses with old IDs
-DEF_R['update_idmode'] = False
-DEF_R['update_idseq']  = False
-DEFM = dict()
-for m in mode_names: # Mode.N enum variants
-    DEFM[m] = None
-
-def reload_with_user_data_kdl() -> None:
-    if hasattr(cfgU,'kdl') and (cfg := cfgU.kdl.get('status',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
-        global DEF, DEFM
-        _log.debug(f"@state: Parsing config status")
-        for cfg_key in DEF: # 1a. parse arguments for non-mode statuses
-            if (node := cfg.get(cfg_key,None)): # id_seq "vim-seq" node/arg pair
-                if (args := node.args):
-                    tag_val = args[0] #(t)"vim-seq" if (t) exists (though shouldn't)
-                    # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
-                    if hasattr(tag_val,'value'):
-                        val = tag_val.value # ignore tag
-                        _log.warn(f"node ‘{node.name}’ has unrecognized tag in argument ‘{tag_val}’")
-                    else:
-                        val = tag_val
-                    DEF[node.name] = val
-                    #print(f"status from argument ‘{node.name}’ is ‘{tag_val}’")
-                elif not args:
-                    _log.warn(f"node ‘{cfg_key}’ is missing arguments in its child ‘{node.name}’")
-                if len(args) > 1:
-                    _log.warn(f"node ‘{cfg_key}’ has extra arguments in its child ‘{node.name}’, only the 1st was used ‘{', '.join(args)}’")
-        for node in cfg.nodes: # 1b. parse arguments for mode statuses
-            for arg in node.args:
-                tag_val = arg #(t)"vim-seq" if (t) exists (though shouldn't)
-                # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
-                if hasattr(tag_val,'value'):
-                    val = tag_val.value # ignore tag
-                    _log.warn(f"node ‘{node.name}’ has unrecognized tag in argument ‘{tag_val}’")
-                else:
-                    val = tag_val
-                if node.name in mode_names_rev:
-                    mode = mode_names_rev[node.name]
-                    DEFM[mode] = val
-                    print(f"status mode DEFM ‘{mode}’ from ‘{node.name}’ argument ‘{val}’")
-        for i,key in enumerate(prop_d := node.props): # 2. parse properties id_seq="vim-seq", alternative notation to child node/arg pairs
-            tag_val = prop_d[key] #(t)"vim-seq" if (t) exists (though shouldn't)
-            # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
-            if hasattr(tag_val,'value'):
-                val = tag_val.value # ignore tag
-                _log.warn(f"node ‘{node.name}’ has unrecognized tag in property ‘{key}={tag_val}’")
-            else:
-                val = tag_val
-            if key in DEF: # 2a. for non-mode statuses
-                DEF[key] = val
-                #print(f"status from property ‘{key}={val}’")
-            elif key in mode_names_rev: # 2b. for mode statuses
-                mode = mode_names_rev[key]
-                DEFM[mode] = val
-                print(f"status mode DEFM from property ‘{key}={val}’")
-            else:
-                _log.error(f"node ‘{node.name}’ has unrecognized property ‘{key}={tag_val}’")
 # def reload_with_user_data() -> None:
 #     if hasattr(cfgU,'status') and (cfg := cfgU.status):
 #         global DEF
@@ -146,15 +83,15 @@ def reload_with_user_data_kdl() -> None:
 #             DEF['idseq'] = _val
 
 def update_status_line(view) -> None:
-    global DEF_R
-    if not DEF_R['update_idseq']:
-        if not DEF['idseq'] == DEF_R['idseq']: # reset old status if user config changed ID
-            view.erase_status(DEF_R['idseq'])
-            DEF_R['update_idseq'] = True
-    if not DEF_R['update_idmode']:
-        if not DEF['idmode'] == DEF_R['idmode']:
-            view.erase_status(DEF_R['idmode'])
-            DEF_R['update_idmode'] = True
+    #global DEF_R # doesn't seem to be required anymore with vim updated
+    #if not DEF_R['update_idseq']:
+    #    if not DEF['idseq'] == DEF_R['idseq']: # reset old status if user config changed ID
+    #        view.erase_status(DEF_R['idseq'])
+    #        DEF_R['update_idseq'] = True
+    #if not DEF_R['update_idmode']:
+    #    if not DEF['idmode'] == DEF_R['idmode']:
+    #        view.erase_status(DEF_R['idmode'])
+    #        DEF_R['update_idmode'] = True
     mode_txt  = get_mode(view) # mode_insert
     mode_enum = mode_names_rev.get(mode_txt,None) # Mode.Insert
     if mode_enum in DEFM and DEFM[mode_enum] is not None:

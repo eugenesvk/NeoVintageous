@@ -152,13 +152,41 @@ _indicator_ls = {
     "file_qleft" 	: '"'        	,# File name quotes
     "file_qright"	: '"'        	,# File name quotes
 }
-def reload_with_user_data() -> None:
-    if hasattr(cfgU,'indicator_ls') and (cfg := cfgU.indicator_ls):
+def reload_with_user_data_kdl() -> None:
+    if hasattr(cfgU,'kdl') and (nest := cfgU.kdl.get('indicator',None))\
+        and                    (cfg  :=     nest.get('ls'       ,None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
         global _indicator_ls
-        for _key in cfg: # 'current'
-            if type(_val := cfg[_key]) == str:
-                if _key in _indicator_ls:
-                    _indicator_ls[_key] = _val
+        # _log.debug(f"@registers: Parsing config indicator/register")
+        for cfg_key in _indicator_ls:
+            if (node := cfg.get(cfg_key,None)): # line "━" node/arg pair
+                if (args := node.args):
+                    tag_val = args[0] #(t)"━" if (t) exists (though shouldn't)
+                    # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
+                    if hasattr(tag_val,'value'):
+                        val = tag_val.value # ignore tag
+                        _log.warn(f"node ‘{node.name}’ has unrecognized tag in argument ‘{tag_val}’")
+                    else:
+                        val = tag_val
+                    _indicator_ls[node.name] = val
+                    # print(f"indicator ls from argument ‘{tag_val}’")
+                elif not args:
+                    _log.warn(f"node ‘{cfg_key}’ is missing arguments in its child ‘{node.name}’")
+                if len(args) > 1:
+                    _log.warn(f"node ‘{cfg_key}’ has extra arguments in its child ‘{node.name}’, only the 1st was used ‘{', '.join(args)}’")
+        node = cfg
+        for i,key in enumerate(prop_d := node.props): # line="━", alternative notation to child node/arg pairs
+            tag_val = prop_d[key] #line=(t)"━" if (t) exists (though shouldn't)
+            # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
+            if hasattr(tag_val,'value'):
+                val = tag_val.value # ignore tag
+                _log.warn(f"node ‘{node.name}’ has unrecognized tag in property ‘{key}={tag_val}’")
+            else:
+                val = tag_val
+            if key in _indicator_ls:
+                _indicator_ls[key] = val
+                # print(f"indicator ls from property ‘{key}={val}’")
+            else:
+                _log.error(f"node ‘{node.name}’ has unrecognized property ‘{key}={tag_val}’")
 def ex_buffers(window, **kwargs) -> None:
     def _format_buffer_line(view) -> str:
         cfg = _indicator_ls

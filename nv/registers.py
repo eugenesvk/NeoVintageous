@@ -262,6 +262,13 @@ def reload_with_user_data_kdl() -> None:
                 # print(f"indicator register from property ‘{key}={val}’")
             else:
                 _log.error(f"node ‘{node.name}’ has unrecognized property ‘{key}={tag_val}’")
+# def reload_with_user_data() -> None:
+#     if hasattr(cfgU,'indicator_register') and (cfg := cfgU.indicator_register):
+#         global _indicator_register
+#         for _key in cfg: # 'character'
+#             if type(_val := cfg[_key]) == str:
+#                 if _key in _indicator_register:
+#                     _indicator_register[_key] = _val
 def registers_get_all(view):
     cfg = _indicator_register
     for name in _ALL:

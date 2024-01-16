@@ -59,6 +59,7 @@ def open_config_file_kdl(window) -> None:
             f.write('  (run ‘NeoVintageous: Open new config file example (KDL)’ in Command Palette)\n')
             f.write('  See  ‘NeoVintageous.keymap-default.kdl’ for a list of default keybinds\n')
             f.write('  (run ‘NeoVintageous: Dump default keymap as KDL’ in Command Palette to generate it)\n')
+            f.write('  To reload run ‘NeoVintageous: Reload config"’ in Command Palette\n')
             f.write('\n')
             f.write('  Install ‘KDL’ package for syntax highlighting\n')
             f.write('  // Comment /*block/inline comment*/  /-node comment to disable the whole section\n')

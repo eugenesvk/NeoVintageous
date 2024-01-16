@@ -218,63 +218,169 @@ VALID_TARGETS  = 'ra@' # Delete targets
 VALID_TARGETS += '\'"`b()B{}[]<>t.,-_;:#~*\\/|+=&$' # targets for plugin github.com/wellle/targets.vim
 #IilpsWw plugin targets excluded
 
+resp = re.compile(r'\s+')
 def reload_with_user_data_kdl() -> None:
     if hasattr(cfgU,'kdl') and (nest := cfgU.kdl.get('plugin'  ,None))\
         and                    (cfg  :=     nest.get('surround',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
         global DEF, VALID_TARGETS
-        if (node := cfg.get('punctuationmarks'  ,None)): # ‘=‘’ “=“” key-value pairs
-            # _log.debug(f"@plugin surround: Parsing config punctuationmarks")
-            for i,key in enumerate(prop_d := node.props): #‘=‘’
-                tag_val = prop_d[key] #‘=(t)‘’ if (t) exists (though shouldn't)
-                val = tag_val.value if hasattr(tag_val,'value') else tag_val
-                if len(v_split := re.split(R'\s+',val)) > 1:
-                    DEF['punctuationmarks'][key] = (v_split[0],v_split[1]) # `'   '
-                elif (_len := len(val)) == 2:
-                    DEF['punctuationmarks'][key] = (val[0]    ,val[1])     # ‘    ’
-                else:
-                    _log.warn(f"node ‘{node.name}’ ‘{key}’ should have an argument of length 2, not ‘{_len}’")
-            if not node.props:
-                _log.warn(f"node ‘{node.name}’ is missing key=value properties")
-        if (node := cfg.get('punctuationalias'  ,None)): # clear g=‘ key-value pairs
-            # _log.debug(f"@plugin surround: Parsing config punctuationalias")
-            if 'clear' in node.args:
-                DEF['punctuationalias'].clear()
-            for i,key in enumerate(prop_d := node.props): #d="("
-                tag_val = prop_d[key] #d=(t)( if (t) exists (though shouldn't)
-                val = tag_val.value if hasattr(tag_val,'value') else tag_val
-                DEF['punctuationalias'][key] = val
-            if not node.props:
-                _log.warn(f"node ‘{node.name}’ is missing key=value properties")
-        if (node := cfg.get('appendspacetochars',None)): # )}]
-            # _log.debug(f"@plugin surround: Parsing config appendspacetochars")
-            if (args := node.args):
-                DEF['appendspacetochars'] = args[0]
-            if not args:
-                _log.warn(f"node ‘{node.name}’ is missing arguments")
-            if len(args) > 1:
-                _log.warn(f"node ‘{node.name}’ has extra arguments, only the 1st was used ‘{', '.join(args)}’")
-        if (node := cfg.get('steadycursor',None)): # add=true replace=true delete=true
-            # _log.debug(f"@plugin surround: Parsing config steadycursor")
-            for i,key in enumerate(prop_d := node.props):
-                tag_val = prop_d[key] #add=(t)true if (t) exists (though shouldn't)
-                val = tag_val.value if hasattr(tag_val,'value') else tag_val
-                if key in _STEADY_CURSOR_KEY:
-                    DEF['steadycursor'][key] = val
-            if not node.props:
-                _log.warn(f"node ‘{node.name}’ is missing key=value properties")
-        if (node := cfg.get('seekforward',None)): # ⎀a(b) don't delete () if false
-            # _log.debug(f"@plugin surround: Parsing config seekforward")
-            if (args := node.args):
-                if not isinstance(args[0],bool):
-                    _log.error(f"node ‘{node.name}’ argument should be ‘true’ or ‘false’, not ‘{args[0]}’")
-                else:
-                    DEF['seekforward'] = args[0]
-            if not args:
-                _log.warn(f"node ‘{node.name}’ is missing arguments")
-            if len(args) > 1:
-                _log.warn(f"node ‘{node.name}’ has extra arguments, only the 1st was used ‘{', '.join(args)}’")
+        for node_parent in cfg.nodes: # 'punctuation_marks'
+            # 1. Parse node child args: {‘ ‘’; “=“”;}
+            # 2. Parse node properties:  ‘=‘’  “=“”
+            if (cfg_key:=node_parent.name) == 'punctuationmarks':
+                # _log.debug(f"@plugin surround: Parsing config {cfg_key}")
+                for node in node_parent.nodes: # 1. ‘ ‘’ key_node value_arg pairs
+                    key = node.name
+                    if (args := node.args):
+                        tag_val = args[0] #(t)‘’ if (t) exists (though shouldn't)
+                        # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
+                        if hasattr(tag_val,'value'):
+                            val = tag_val.value # ignore tag
+                            _log.warn(f"node ‘{node.name}’ has unrecognized tag in ‘{key}’ argument ‘{tag_val}’")
+                        else:
+                            val = tag_val
+                        _warn = ''
+                        if     (_len := len(val)    ) == 2:
+                            DEF[    cfg_key][key] = (val[0]    ,val[1]    ) # ‘    ’
+                            _log.debug('DEF set to arg',cfg_key,key,val[0],val[1])
+                        else:
+                            _warn     = f"node ‘{node.name}’ ‘{key}’ should have an argument of length 2, not ‘{_len}’"
+                            v_split = resp.split(val)
+                            if (_len := len(v_split)) == 2:
+                                _warn = ''
+                                DEF[cfg_key][key] = (v_split[0],v_split[1]) # `'   '
+                                _log.debug('DEF set to arg v_split',cfg_key,key,v_split[0],v_split[1])
+                            else:
+                                _warn = f"node ‘{node.name}’ ‘{key}’ should have an argument of 2 space-separated substrings, not ‘{_len}’"
+                        if _warn:
+                            _log.warn(_warn)
+                    elif not args:
+                        _log.warn(f"node ‘{cfg_key}’ is missing arguments in its child ‘{node.name}’")
+                    if len(args) > 1:
+                        _log.warn(f"node ‘{cfg_key}’ has extra arguments in its child ‘{node.name}’, only the 1st was used ‘{', '.join(args)}’")
+                node = node_parent
+                for (key,tag_val) in node.props.items(): # 2. ‘=‘’ key=value pairs
+                    if hasattr(tag_val,'value'): #‘=(t)‘’ if (t) exists (though shouldn't)
+                        val = tag_val.value # ignore tag
+                        _log.warn(f"node ‘{node.name}’ has unrecognized tag  property ‘{key}={tag_val}’")
+                    else:
+                        val = tag_val
+                    # val = tag_val.value if hasattr(tag_val,'value') else tag_val
+                    _warn = ''
+                    if     (_len := len(val)    ) == 2:
+                        DEF[    cfg_key][key] = (val[0]    ,val[1]    ) # ‘    ’
+                        _log.debug('DEF set to prop',cfg_key,key,val[0],val[1])
+                    else:
+                        _warn     = f"node ‘{node.name}’ ‘{key}’ should have a value of length 2, not ‘{_len}’"
+                        v_split = resp.split(val)
+                        if (_len := len(v_split)) == 2:
+                            _warn = ''
+                            DEF[cfg_key][key] = (v_split[0],v_split[1]) # `'   '
+                            _log.debug('DEF set to prop v_split',cfg_key,key,v_split[0],v_split[1])
+                        else:
+                            _warn = f"node ‘{node.name}’ ‘{key}’ should have a value of 2 space-separated substrings, not ‘{_len}’"
+                    if _warn:
+                        _log.warn(_warn)
+                # if not node.props:
+                    # _log.warn(f"node ‘{cfg_key}’ is missing key=value properties")
+
+            if (cfg_key:=node_parent.name) == 'punctuationalias':
+                # _log.debug(f"@plugin surround: Parsing config {cfg_key}")
+                if node_parent.get('clear',None):
+                    DEF[cfg_key].clear()
+                for node in node_parent.nodes: # 1. d (  key_node value_arg pairs
+                    key = node.name
+                    if key == 'clear':
+                        continue # already cleared separately, don't clear our own values
+                    if (args := node.args):
+                        tag_val = args[0] #(t)"(" if (t) exists (though shouldn't)
+                        # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
+                        if hasattr(tag_val,'value'):
+                            val = tag_val.value # ignore tag
+                            _log.warn(f"node ‘{node.name}’ has unrecognized tag in ‘{key}’ argument ‘{tag_val}’")
+                        else:
+                            val = tag_val
+                        DEF[cfg_key][key] = val
+                        _log.debug('DEF set to arg',cfg_key,key,val)
+                    elif not args:
+                        _log.warn(f"node ‘{cfg_key}’ is missing arguments in its child ‘{node.name}’")
+                    if len(args) > 1:
+                        _log.warn(f"node ‘{cfg_key}’ has extra arguments in its child ‘{node.name}’, only the 1st was used ‘{', '.join(args)}’")
+                node = node_parent
+                for (key,tag_val) in node.props.items(): # 2. d=(   key=value pairs
+                    if hasattr(tag_val,'value'): #(t)"(" if (t) exists (though shouldn't)
+                        val = tag_val.value # ignore tag
+                        _log.warn(f"node ‘{node.name}’ has unrecognized tag  property ‘{key}={tag_val}’")
+                    else:
+                        val = tag_val
+                    # val = tag_val.value if hasattr(tag_val,'value') else tag_val
+                    DEF[cfg_key][key] = val
+                    _log.debug('DEF set to prop',cfg_key,key,val)
+                # if not node.props:
+                    # _log.warn(f"node ‘{cfg_key}’ is missing key=value properties")
+
+            if (cfg_key:=node_parent.name) == 'steadycursor':
+                # _log.debug(f"@plugin surround: Parsing config {cfg_key}")
+                for node in node_parent.nodes: # 1. add true  key_node value_arg pairs
+                    key = node.name
+                    if (args := node.args):
+                        tag_val = args[0] #(t)true if (t) exists (though shouldn't)
+                        # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
+                        if hasattr(tag_val,'value'):
+                            val = tag_val.value # ignore tag
+                            _log.warn(f"node ‘{node.name}’ has unrecognized tag in ‘{key}’ argument ‘{tag_val}’")
+                        else:
+                            val = tag_val
+                        if key in _STEADY_CURSOR_KEY:
+                            DEF[cfg_key][key] = val
+                            _log.debug('DEF set to arg',cfg_key,key,val)
+                        else:
+                            _log.warn(f"node ‘{cfg_key}’ has unrecognized property ‘{key}={val}’")
+                    elif not args:
+                        _log.warn(f"node ‘{cfg_key}’ is missing arguments in its child ‘{node.name}’")
+                    if len(args) > 1:
+                        _log.warn(f"node ‘{cfg_key}’ has extra arguments in its child ‘{node.name}’, only the 1st was used ‘{', '.join(args)}’")
+                node = node_parent
+                for (key,tag_val) in node.props.items(): # 2. add=true   key=value pairs
+                    if hasattr(tag_val,'value'): #(t)true if (t) exists (though shouldn't)
+                        val = tag_val.value # ignore tag
+                        _log.warn(f"node ‘{node.name}’ has unrecognized tag  property ‘{key}={tag_val}’")
+                    else:
+                        val = tag_val
+                    # val = tag_val.value if hasattr(tag_val,'value') else tag_val
+                    if key in _STEADY_CURSOR_KEY:
+                        DEF[cfg_key][key] = val
+                        _log.debug('DEF set to prop',cfg_key,key,val)
+                    else:
+                        _log.warn(f"node ‘{node.name}’ has unrecognized property ‘{key}={val}’")
+                # if not node.props:
+                    # _log.warn(f"node ‘{cfg_key}’ is missing key=value properties")
+
+            if (cfg_key:=node_parent.name) == 'appendspacetochars': # )}]
+                # _log.debug(f"@plugin surround: Parsing config {cfg_key}")
+                node = node_parent
+                if (args := node.args):
+                    if not isinstance(args[0],str):
+                        _log.error(f"node ‘{node.name}’ argument should be a string, not ‘{type(args[0])}’")
+                    else:
+                        DEF[cfg_key] = args[0]
+                if not args:
+                    _log.warn(f"node ‘{cfg_key}’ is missing arguments")
+                if len(args) > 1:
+                    _log.warn(f"node ‘{cfg_key}’ has extra arguments, only the 1st was used ‘{', '.join(args)}’")
+            if (cfg_key:=node_parent.name) == 'seekforward': # ⎀a(b) don't delete () if false
+                # _log.debug(f"@plugin surround: Parsing config {cfg_key}")
+                node = node_parent
+                if (args := node.args):
+                    if not isinstance(args[0],bool):
+                        _log.error(f"node ‘{node.name}’ argument should be ‘true’ or ‘false’, not ‘{args[0]}’")
+                    else:
+                        DEF[cfg_key] = args[0]
+                if not args:
+                    _log.warn(f"node ‘{cfg_key}’ is missing arguments")
+                if len(args) > 1:
+                    _log.warn(f"node ‘{cfg_key}’ has extra arguments, only the 1st was used ‘{', '.join(args)}’")
         VALID_TARGETS += "".join(((val:=DEF['punctuationmarks'][k])[0]+val[1]) for k in DEF['punctuationmarks']) # add marks
-        VALID_TARGETS += "".join(DEF['punctuationalias'].keys()) # add aliases
+        VALID_TARGETS += "".join(       DEF['punctuationalias'].keys()) # add aliases
 
 # def reload_with_user_data() -> None:
 #     if hasattr(cfgU,'surround') and (cfg := cfgU.surround): # skip on initial import when Plugin API isn't ready, so not settings are loaded

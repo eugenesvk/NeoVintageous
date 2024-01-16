@@ -27,7 +27,7 @@ keymap { // Use custom keymaps (non-QWERTY/non-Latin) in command mode
   // assigns to each command an extra keybind in alt layout so that said key can be used in the TO sublime-keymap field
 }
 edit { // Edit behavior |default|
-  move_left_on_insert_exit false	//|true| move cursor left on ⓘ→Ⓝ to be consistent with line-end editing https://vimhelp.org/vim_faq.txt.html#faq-10.2
+  move_left_on_insert_exit false	//|true| move cursor left on ⓘ→Ⓝ to be consistent with line-end editing vimhelp.org/vim_faq.txt.html#faq-10.2
 }
 events { // Run cli commands on entering/leaving a mode add a [list] of command + arguments in the 'events' dictionary:
   // available modes (CaSe sensitive): Insert Normal Replace Select Visual VisualBlock VisualLine
@@ -96,6 +96,10 @@ plugin {
         //                                                not ‘⎀(text_surr)’
       // surround   delete of ‘(’ in ‘(text_⎀surr)’ results in  ‘text_⎀surr’
         //                                                 not ‘⎀text_surr’
-    seek_forward false // in ‘⎀a(b)’ deleting ‘(’ will result in ‘⎀ab’ if true and no change if false (brackets only)
+    seek_forward true /* When looking for brackets, if the current text is NOT enclosed in them, but Targets plugin is enabled, seek the next pair of brackets, for example (⎀ is cursor position):
+        ⎀a(b)  with surround delete of ( will result in:
+        ⎀ab       if SEEK_FORWARD is true : the next pair of () after ⎀ found and deleted
+        ⎀a(b)     if SEEK_FORWARD is false: the next pair of () is ignored
+      */
   }
 }

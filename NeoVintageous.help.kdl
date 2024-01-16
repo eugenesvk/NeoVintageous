@@ -84,18 +84,19 @@ plugin {
       ⸨="⸨⸩" ⸩="⸨⸩"\
       【="【】" 】="【】"\
       「="「」" 」="「」"\
-      ␌="␌␌"
-    "append space to chars" ")}]" // "({["
+      ␌="␌␌"; /-punctuation_marks {‘ "‘’"; “ "“”";} //key val child node format is also allowed
     punctuation-alias "clear"/*clear defaults b) B} r] a>*/\
       d="(" f="[" g="‘" h="“"\
       j="{" k="\"" l="'"\
       r="‹" t="«" y="`'" o="〔" p="␌"\
-      z="⸨" n="【" m="「" " "="〈" .="⟪"
+      z="⸨" n="【" m="「" " "="〈" .="⟪"; /-punctuation_alias {clear; d "("; f "[";} //key val child node format is also allowed
+    "append space to chars" ")}]" // "({["
     steady_cursor add=true replace=true delete=true // don't 'move' ⎀cursor to the changed punctuation:
       // surround-word add of ‘(’ in  ‘text_⎀surr’  results in ‘(text_⎀surr)’
         //                                                not ‘⎀(text_surr)’
       // surround   delete of ‘(’ in ‘(text_⎀surr)’ results in  ‘text_⎀surr’
         //                                                 not ‘⎀text_surr’
+    /-steady_cursor {add true; replace true; delete true;} //key val child node format is  also allowed
     seek_forward true /* When looking for brackets, if the current text is NOT enclosed in them, but Targets plugin is enabled, seek the next pair of brackets, for example (⎀ is cursor position):
         ⎀a(b)  with surround delete of ( will result in:
         ⎀ab       if SEEK_FORWARD is true : the next pair of () after ⎀ found and deleted

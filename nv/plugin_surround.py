@@ -188,48 +188,49 @@ class Surroundcs(ViOperatorDef):
             'replacement': self.inp[1:]
         })
 
-
-_PUNCTUATION_MARKS = {
-    '(': ('(', ')'),
-    ')': ('(', ')'),
-    '{': ('{', '}'),
-    '}': ('{', '}'),
-    '[': ('[', ']'),
-    ']': ('[', ']'),
-    '<': ('<', '>'),
-    '>': ('<', '>'),
+DEF = {
+    'punctuationmarks' : {
+        '(': ('(', ')'),
+        ')': ('(', ')'),
+        '{': ('{', '}'),
+        '}': ('{', '}'),
+        '[': ('[', ']'),
+        ']': ('[', ']'),
+        '<': ('<', '>'),
+        '>': ('<', '>'),
+    },
+    'punctuationalias' : {
+        'b': ')',
+        'B': '}',
+        'r': ']',
+        'a': '>',
+    },
+    'appendspacetochars' : '({[',
+    'steadycursor' : dict(),
+    'seekforward' : False, # when looking for brackets, if the current text is NOT enclosed, but Targets plugin is enabled, seek the next pair of brackets
+      # ⎀a(b)  with surround delete of ( will result in:
+      # ⎀ab       True  SEEK_FORWARD
+      # ⎀a(b)     False SEEK_FORWARD
 }
-_PUNCTUTION_MARK_ALIASES = {
-    'b': ')',
-    'B': '}',
-    'r': ']',
-    'a': '>',
-}
-_APPEND_SPACE_TO_CHARS = '({['
-_STEADY_CURSOR = dict()
 for key in (_STEADY_CURSOR_KEY := ['add','replace','delete']):
-    _STEADY_CURSOR[key] = True
+    DEF['steadycursor'][key] = True
 VALID_TARGETS  = 'ra@' # Delete targets
 VALID_TARGETS += '\'"`b()B{}[]<>t.,-_;:#~*\\/|+=&$' # targets for plugin github.com/wellle/targets.vim
 #IilpsWw plugin targets excluded
-SEEK_FORWARD = False # when looking for brackets, if the current text is NOT enclosed, but Targets plugin is enabled, seek the next pair of brackets
-  # ⎀a(b)  with surround delete of ( will result in:
-  # ⎀ab       True  SEEK_FORWARD
-  # ⎀a(b)     False SEEK_FORWARD
 
 def reload_with_user_data_kdl() -> None:
     if hasattr(cfgU,'kdl') and (nest := cfgU.kdl.get('plugin'  ,None))\
         and                    (cfg  :=     nest.get('surround',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
-        global _PUNCTUATION_MARKS, _PUNCTUTION_MARK_ALIASES, _APPEND_SPACE_TO_CHARS, _STEADY_CURSOR, VALID_TARGETS, SEEK_FORWARD
+        global DEF, VALID_TARGETS
         if (node := cfg.get('punctuationmarks'  ,None)): # ‘=‘’ “=“” key-value pairs
             # _log.debug(f"@plugin surround: Parsing config punctuationmarks")
             for i,key in enumerate(prop_d := node.props): #‘=‘’
                 tag_val = prop_d[key] #‘=(t)‘’ if (t) exists (though shouldn't)
                 val = tag_val.value if hasattr(tag_val,'value') else tag_val
                 if len(v_split := re.split(R'\s+',val)) > 1:
-                    _PUNCTUATION_MARKS[key] = (v_split[0],v_split[1]) # `'   '
+                    DEF['punctuationmarks'][key] = (v_split[0],v_split[1]) # `'   '
                 elif (_len := len(val)) == 2:
-                    _PUNCTUATION_MARKS[key] = (val[0]    ,val[1])     # ‘    ’
+                    DEF['punctuationmarks'][key] = (val[0]    ,val[1])     # ‘    ’
                 else:
                     _log.warn(f"node ‘{node.name}’ ‘{key}’ should have an argument of length 2, not ‘{_len}’")
             if not node.props:
@@ -237,17 +238,17 @@ def reload_with_user_data_kdl() -> None:
         if (node := cfg.get('punctuationalias'  ,None)): # clear g=‘ key-value pairs
             # _log.debug(f"@plugin surround: Parsing config punctuationalias")
             if 'clear' in node.args:
-                _PUNCTUTION_MARK_ALIASES.clear()
+                DEF['punctuationalias'].clear()
             for i,key in enumerate(prop_d := node.props): #d="("
                 tag_val = prop_d[key] #d=(t)( if (t) exists (though shouldn't)
                 val = tag_val.value if hasattr(tag_val,'value') else tag_val
-                _PUNCTUTION_MARK_ALIASES[key] = val
+                DEF['punctuationalias'][key] = val
             if not node.props:
                 _log.warn(f"node ‘{node.name}’ is missing key=value properties")
         if (node := cfg.get('appendspacetochars',None)): # )}]
             # _log.debug(f"@plugin surround: Parsing config appendspacetochars")
             if (args := node.args):
-                _APPEND_SPACE_TO_CHARS = args[0]
+                DEF['appendspacetochars'] = args[0]
             if not args:
                 _log.warn(f"node ‘{node.name}’ is missing arguments")
             if len(args) > 1:
@@ -258,7 +259,7 @@ def reload_with_user_data_kdl() -> None:
                 tag_val = prop_d[key] #add=(t)true if (t) exists (though shouldn't)
                 val = tag_val.value if hasattr(tag_val,'value') else tag_val
                 if key in _STEADY_CURSOR_KEY:
-                    _STEADY_CURSOR[key] = val
+                    DEF['steadycursor'][key] = val
             if not node.props:
                 _log.warn(f"node ‘{node.name}’ is missing key=value properties")
         if (node := cfg.get('seekforward',None)): # ⎀a(b) don't delete () if false
@@ -267,29 +268,29 @@ def reload_with_user_data_kdl() -> None:
                 if not isinstance(args[0],bool):
                     _log.error(f"node ‘{node.name}’ argument should be ‘true’ or ‘false’, not ‘{args[0]}’")
                 else:
-                    SEEK_FORWARD = args[0]
+                    DEF['seekforward'] = args[0]
             if not args:
                 _log.warn(f"node ‘{node.name}’ is missing arguments")
             if len(args) > 1:
                 _log.warn(f"node ‘{node.name}’ has extra arguments, only the 1st was used ‘{', '.join(args)}’")
-        VALID_TARGETS += "".join(((val:=_PUNCTUATION_MARKS[k])[0]+val[1]) for k in _PUNCTUATION_MARKS) # add marks
-        VALID_TARGETS += "".join(_PUNCTUTION_MARK_ALIASES.keys()) # add aliases
+        VALID_TARGETS += "".join(((val:=DEF['punctuationmarks'][k])[0]+val[1]) for k in DEF['punctuationmarks']) # add marks
+        VALID_TARGETS += "".join(DEF['punctuationalias'].keys()) # add aliases
 
 # def reload_with_user_data() -> None:
 #     if hasattr(cfgU,'surround') and (cfg := cfgU.surround): # skip on initial import when Plugin API isn't ready, so not settings are loaded
-#         global _PUNCTUATION_MARKS, _PUNCTUTION_MARK_ALIASES, _APPEND_SPACE_TO_CHARS
+#         global DEF
 #         if (_key := 'punctuation marks') in cfg:
 #             for key,value in cfg[_key].items():
 #                 if not (_len := len(value)) == 2:
 #                     _log.warn(f"‘punctuation marks’ values should have 2 values, not ‘{_len}’ in ‘{value}’")
 #                     continue
-#                 _PUNCTUATION_MARKS[key] = (value[0], value[1])
+#                 DEF['punctuationmarks'][key] = (value[0], value[1])
 #         if (_key := 'punctuation alias') in cfg:
-#             _PUNCTUTION_MARK_ALIASES.clear()
+#             DEF['punctuationalias'].clear()
 #             for key,value in cfg[_key].items():
-#                 _PUNCTUTION_MARK_ALIASES[key] = value
+#                 DEF['punctuationalias'][key] = value
 #         if (_key := 'append space to chars') in cfg:
-#             _APPEND_SPACE_TO_CHARS = cfg[_key]
+#             DEF['appendspacetochars'] = cfg[_key]
 
 # Expand target punctuation marks:
   # (){}[]<> represent themselves/their counterparts
@@ -298,11 +299,11 @@ def reload_with_user_data_kdl() -> None:
 def _expand_targets(target: str) -> tuple:
     target = _resolve_target_aliases(target) # 'a' to '>'
 
-    return _PUNCTUATION_MARKS.get(target, (target, target)) # '>' to a tuple of (< , >) or self
+    return DEF['punctuationmarks'].get(target, (target, target)) # '>' to a tuple of (< , >) or self
 
 
 def _resolve_target_aliases(target: str) -> str:
-    return _PUNCTUTION_MARK_ALIASES.get(target, target) # 'a' to '>' or self
+    return DEF['punctuationalias'].get(target, target) # 'a' to '>' or self
 
 # )}]> wraps the text in the appropriate pair of characters
 # bBra aliases
@@ -337,7 +338,7 @@ def _expand_replacements(target: str) -> tuple:
 
     # Pair replacement
     target = _resolve_target_aliases(target)
-    append_addition_space = True if target in _APPEND_SPACE_TO_CHARS else False
+    append_addition_space = True if target in DEF['appendspacetochars'] else False
     begin, end = _expand_targets(target)
     if append_addition_space:
         begin = begin + ' '
@@ -428,7 +429,7 @@ def _do_replace(view, edit, mode: str, target: str, replacement: str, count=None
         return (s, (0,0))
 
     _res_view_sel_reverse = list()    # save cursor pos as they might be reset elsewhere
-    if _STEADY_CURSOR['replace']:
+    if DEF['steadycursor']['replace']:
         sels = reversed(list(view.sel())) # end→beg not to adjust for ∑replacements
         for sel in sels:
             _res_view_sel_reverse.append(sel)
@@ -480,7 +481,7 @@ def _do_delete(view, edit, mode: str, target: str, count=None, register=None) ->
         return (s, (0,0))
 
     _res_view_sel_reverse = list()    # save cursor pos as they might be reset elsewhere
-    if _STEADY_CURSOR['delete']:
+    if DEF['steadycursor']['delete']:
         sels = reversed(list(view.sel())) # end→beg not to adjust for ∑deletes
         for sel in sels:
             _res_view_sel_reverse.append(sel)
@@ -489,7 +490,7 @@ def _do_delete(view, edit, mode: str, target: str, count=None, register=None) ->
 
 
 def _get_regions_for_target(view, s: Region, target: str) -> tuple:
-    text_object = get_text_object_region(view, s, target, inclusive=True, seek_forward=SEEK_FORWARD)
+    text_object = get_text_object_region(view, s, target, inclusive=True, seek_forward=DEF['seekforward'])
     if not text_object:
         return (None, None)
 
@@ -550,7 +551,7 @@ def _do_add(view, edit, mode: str = None, motion=None, replacement: str = '"', c
         raise ValueError('motion required')
 
     _res_view_sel_reverse = list()    # save cursor pos as they are reset in run_motion
-    if _STEADY_CURSOR['add']:
+    if DEF['steadycursor']['add']:
         sels = reversed(list(view.sel())) # end→beg not to adjust for ∑inserts
         for sel in sels:
             _res_view_sel_reverse.append(sel)

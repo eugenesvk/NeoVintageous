@@ -68,21 +68,69 @@ _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
 
 
-_prefix = ''
-_suffix = ''
-_id_mode = 'vim-mode'
-_id_seq  = 'vim-seq'
-def reload_with_user_data() -> None:
-    if hasattr(cfgU,'status') and (cfg := cfgU.status):
-        global _prefix, _suffix, _id_mode, _id_seq
-        if (_key := 'prefix')  in cfg and type(_val := cfg[_key]) == str:
-            _prefix = _val
-        if (_key := 'suffix')  in cfg and type(_val := cfg[_key]) == str:
-            _suffix = _val
-        if (_key := 'id_mode') in cfg and type(_val := cfg[_key]) == str:
-            _id_mode = _val
-        if (_key := 'id_seq')  in cfg and type(_val := cfg[_key]) == str:
-            _id_seq = _val
+from NeoVintageous.nv.modes import mode_names, mode_names_rev
+DEF = {
+    'prefix' : '',
+    'suffix' : '',
+    'idmode' : 'vim-mode',
+    'idseq'  : 'vim-seq',
+}
+import copy
+DEF_R = copy.deepcopy(DEF) # save original defaults to reset statuses with old IDs
+DEFM = dict()
+for m in mode_names:
+    DEFM[m] = None
+
+def reload_with_user_data_kdl() -> None:
+    if hasattr(cfgU,'kdl') and (cfg := cfgU.kdl.get('status',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
+        global DEF, DEFM
+        _log.debug(f"@state: Parsing config status")
+        for cfg_key in DEF: # 1a. parse arguments for non-mode statuses
+            if (node := cfg.get(cfg_key,None)): # id_seq "vim-seq" node/arg pair
+                if (args := node.args):
+                    tag_val = args[0] #(t)"vim-seq" if (t) exists (though shouldn't)
+                    # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
+                    if hasattr(tag_val,'value'):
+                        val = tag_val.value # ignore tag
+                        _log.warn(f"node ‘{node.name}’ has unrecognized tag in argument ‘{tag_val}’")
+                    else:
+                        val = tag_val
+                    DEF[node.name] = val
+                    #print(f"status from argument ‘{node.name}’ is ‘{tag_val}’")
+                elif not args:
+                    _log.warn(f"node ‘{cfg_key}’ is missing arguments in its child ‘{node.name}’")
+                if len(args) > 1:
+                    _log.warn(f"node ‘{cfg_key}’ has extra arguments in its child ‘{node.name}’, only the 1st was used ‘{', '.join(args)}’")
+        for node in cfg.nodes: # 1b. parse arguments for mode statuses
+            for arg in node.args:
+                tag_val = arg #(t)"vim-seq" if (t) exists (though shouldn't)
+                # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
+                if hasattr(tag_val,'value'):
+                    val = tag_val.value # ignore tag
+                    _log.warn(f"node ‘{node.name}’ has unrecognized tag in argument ‘{tag_val}’")
+                else:
+                    val = tag_val
+                if node.name in mode_names_rev:
+                    mode = mode_names_rev[node.name]
+                    DEFM[mode] = val
+                    print(f"status mode DEFM ‘{mode}’ from ‘{node.name}’ argument ‘{val}’")
+        for i,key in enumerate(prop_d := node.props): # 2. parse properties id_seq="vim-seq", alternative notation to child node/arg pairs
+            tag_val = prop_d[key] #(t)"vim-seq" if (t) exists (though shouldn't)
+            # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
+            if hasattr(tag_val,'value'):
+                val = tag_val.value # ignore tag
+                _log.warn(f"node ‘{node.name}’ has unrecognized tag in property ‘{key}={tag_val}’")
+            else:
+                val = tag_val
+            if key in DEF: # 2a. for non-mode statuses
+                DEF[key] = val
+                #print(f"status from property ‘{key}={val}’")
+            elif key in mode_names_rev: # 2b. for mode statuses
+                mode = mode_names_rev[key]
+                DEFM[mode] = val
+                print(f"status mode DEFM from property ‘{key}={val}’")
+            else:
+                _log.error(f"node ‘{node.name}’ has unrecognized property ‘{key}={tag_val}’")
 
 def update_status_line(view) -> None:
     mode_name = mode_to_name(get_mode(view))

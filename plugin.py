@@ -55,7 +55,7 @@ import sublime  # noqa: E402
 try:
     _startup_exception = None
 
-    from NeoVintageous.nv.rc import load_rc, _import_plugins_with_user_data, _import_plugins_with_user_data_kdl
+    from NeoVintageous.nv.rc import load_rc, _import_plugins_with_user_data_kdl #,_import_plugins_with_user_data
     from NeoVintageous.nv.session import load_session
     from NeoVintageous.nv.vim import clean_views
 

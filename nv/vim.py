@@ -133,6 +133,17 @@ def reload_with_user_data_kdl() -> None:
                 # print(f"status mode DEFM from property ‘{key}={val}’")
             else:
                 _log.error(f"node ‘{node.name}’ has unrecognized property ‘{key}={tag_val}’")
+# def reload_with_user_data() -> None:
+#     if hasattr(cfgU,'status') and (cfg := cfgU.status):
+#         global _MODES, _id_mode, _id_seq
+#         for _key in cfg: # 'insert'
+#             if type(_val := cfg[_key]) == str:
+#                 if (modes := text_to_mode_alone(_key)):
+#                     _MODES[modes] = _val
+#         if (_key := 'id_mode') in cfg and type(_val := cfg[_key]) == str:
+#             _id_mode = _val
+#         if (_key := 'id_seq')  in cfg and type(_val := cfg[_key]) == str:
+#             _id_seq = _val
 
 
 def mode_to_name(mode: str) -> str:

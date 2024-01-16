@@ -212,9 +212,9 @@ class cfgU():
                                 _log.error(f"node ‘{g}’ already set as a child of ‘{nest}’, skipping this dupe")
                             else:
                                 cfgU.kdl[nest][g] = node
-        for g in cfg_group: # Rudimentary type checks
-            if  cfgU.kdl[g] and not (cfgU.kdl[g].nodes):
-                cfgU.kdl[g] = None; _log.warn(f"‘{g}’ in ‘{cfg_kdl_f}’ has no child nodes!")
+        #for g in cfg_group: # Rudimentary type checks (can have props, also empty is ok)
+        #    if  cfgU.kdl[g] and not (cfgU.kdl[g].nodes):
+        #        cfgU.kdl[g] = None; _log.warn(f"‘{g}’ in ‘{cfg_kdl_f}’ has no child nodes!")
 
         _import_plugins_with_user_data_kdl()
 

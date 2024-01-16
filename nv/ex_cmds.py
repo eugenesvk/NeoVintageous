@@ -187,6 +187,13 @@ def reload_with_user_data_kdl() -> None:
                 # print(f"indicator ls from property ‘{key}={val}’")
             else:
                 _log.error(f"node ‘{node.name}’ has unrecognized property ‘{key}={tag_val}’")
+# def reload_with_user_data() -> None:
+#     if hasattr(cfgU,'indicator_ls') and (cfg := cfgU.indicator_ls):
+#         global _indicator_ls
+#         for _key in cfg: # 'current'
+#             if type(_val := cfg[_key]) == str:
+#                 if _key in _indicator_ls:
+#                     _indicator_ls[_key] = _val
 def ex_buffers(window, **kwargs) -> None:
     def _format_buffer_line(view) -> str:
         cfg = _indicator_ls

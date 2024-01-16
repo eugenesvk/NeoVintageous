@@ -218,7 +218,8 @@ SEEK_FORWARD = False # when looking for brackets, if the current text is NOT enc
   # ⎀a(b)     False SEEK_FORWARD
 
 def reload_with_user_data_kdl() -> None:
-    if hasattr(cfgU,'cfg_kdl') and (cfg := cfgU.cfg_kdl.get('surround',None)): # skip on initial import when Plugin API isn't ready, so not settings are loaded
+    if hasattr(cfgU,'kdl') and (nest := cfgU.kdl.get('plugin'  ,None))\
+        and                    (cfg  :=     nest.get('surround',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
         global _PUNCTUATION_MARKS, _PUNCTUTION_MARK_ALIASES, _APPEND_SPACE_TO_CHARS, _STEADY_CURSOR, VALID_TARGETS, SEEK_FORWARD
         if (node := cfg.get('punctuationmarks'  ,None)): # ‘=‘’ “=“” key-value pairs
             # _log.debug(f"@plugin surround: Parsing config punctuationmarks")

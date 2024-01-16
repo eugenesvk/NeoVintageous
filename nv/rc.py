@@ -326,7 +326,7 @@ def load_cfgU_kdl() -> None:
         return
     kdl_docs = [] # list of KDL docs in the order of parsing, includes imports as separate items
     parse_kdl_config(cfg, cfg_f, kdl_docs)
-    cfgU.cfg_kdl_f = cfg_f
+    cfgU.kdl_f = cfg_f
     cfgU.load_kdl(kdl_docs)
 
 def load_cfgU() -> None:

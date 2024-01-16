@@ -1,0 +1,100 @@
+/* See ‘NeoVintageous.help.kdl’ for an example
+  (run ‘NeoVintageous: Open new config file example (KDL)’ in Command Palette)
+  See  ‘NeoVintageous.keymap-default.kdl’ for a list of default keybinds
+  (run ‘NeoVintageous: Dump default keymap as KDL’ in Command Palette to generate it)
+
+  Install ‘KDL’ package for syntax highlighting
+  // Comment /*block/inline comment*/  /-node comment to disable the whole section
+  Node names are CaSe, ␠whitespace⭾, and se-pa-rat_or insensitive: keymap = key-map = key_map = "key map"
+*/
+#v 0.1 // config format version to hopefully allow updates without breaking existing configs (‘#’ is optional)
+#import (keybind)"NeoVintageous.key.kdl"
+  /* import file name ↑ relative to this main config file (‘#’ is optional)
+    group  ↑ values in ‘keybind{}’, so the file itself can include only top-level ‘key command’ lines
+  */
+
+keymap { // Use custom keymaps (non-QWERTY/non-Latin) in command mode
+  // 1. add "lower"/"upper" keymaps below that match the position of QWERTY symbols
+  // 2. Run command "NeoVintageous: Generate non-QWERTY key bindings"
+  // (doesn't work for key combinations pending resolution of https://github.com/sublimehq/sublime_text/issues/5980)
+  /-qwerty  	r#"`12 34567890-=\ qwertyuiop[] asdfghjkl;' zxcvbnm,./"#
+  lower     	r#"ё12 34567890-=\ йцукенгшщзхъ фывапролджэ ячсмитьбю."#
+  upper     	r#"Ё!@ #$%^&*()_+| ЙЦУКЕНГШЩЗХЪ ФЫВАПРОЛДЖЭ ЯЧСМИТЬБЮ?"#
+  /-qwerty  	r#"~!@ #$%^&*()_+| QWERTYUIOP{} ASDFGHJKL:" ZXCVBNM<>?"#
+  /-upper   	r#"Ё!\"№;%:?*()_+/ ЙЦУКЕНГШЩЗХЪ ФЫВАПРОЛДЖЭ ЯЧСМИТЬБЮ,"# // remap some symbols to same to avoid issues with losing them in regular latin keybinds like ; being remapped to $ since ⇧4 is translated to ; in Ru
+  alias true	// 3. allows using `map й w` in .neovintageous to map non-latin keys separately from latin ones
+  // assigns to each command an extra keybind in alt layout so that said key can be used in the TO sublime-keymap field
+}
+edit { // Edit behavior |default|
+  move_left_on_insert_exit false	//|true| move cursor left on ⓘ→Ⓝ to be consistent with line-end editing https://vimhelp.org/vim_faq.txt.html#faq-10.2
+}
+events { // Run cli commands on entering/leaving a mode add a [list] of command + arguments in the 'events' dictionary:
+  // available modes (CaSe sensitive): Insert Normal Replace Select Visual VisualBlock VisualLine
+  // available mode events (CaSe sensitive): Enter Leave
+}
+status { // Set values/reorder the status bar mode indicator, indicator format is '<prefix><Mode><suffix>', where Mode's name can be either of the space-separated values:
+  /*normal     	Ⓝ N
+    insert     	ⓘ I
+    command    	Ⓒ C
+    visual     	Ⓥ V
+    visualblock	▋ VB
+    visualline 	━ VL
+    select     	Ⓢ S
+    operator   	Ⓞ O
+    terminal   	Ⓣ T
+    replace    	Ⓡ R
+    Ⓜ M        	 map
+               	 map!
+    Ⓛ L        	//
+    Ⓧ X        	//
+  so ‘insert "ⓘ"’ would set Insert's mode indicator to ⓘ, but so would ‘I "ⓘ"’
+  */
+  prefix 	""; suffix ""
+  insert 	"ⓘ"
+  normal 	" "         	// space roughly the width of an indicator to avoid jitter on mode change
+  id_mode	"00_nv_mode"	// '00_mode' number defines order priority of custom status bar statuses, so 00 should be left-most
+  id_seq 	"vim-seq"
+}; /-status insert="ⓘ" // prop=val format is also allowed
+indicator { // Set various indicator format
+  ls { // Set values for ‘ls’ command indicators |default|
+    current    	"•"	//|%|        	The buffer in the current window
+    modified   	"🖉"	//|+|        	Modified buffer
+    read_only  	"👓"	//|=|        	Readonly buffer
+    active     	"👁"	//|a|        	Active   buffer: loaded and visible
+    hidden     	" "	//|h|        	Hidden   buffer: loaded but invisible
+    line       	"━"	//|line |    	Line prefix
+    no_name    	"" 	//|[NO NAME]|	Name for a tab without a file
+    file_qleft 	"" 	//|"|        	File name quotes
+    file_qright	"" 	//|"|        	File name quotes
+  }; /-ls current="•" // prop=val format is also allowed
+  registers { // Set values for ‘registers’ command indicators
+    char	"c"	// Characterwise text
+    line	"━"	// Linewise      text
+  }; /-registers char="c" line="━━" // prop=val format is also allowed
+}
+plugin {
+  surround { // Use custom brackets in Surround plugin
+    punctuation_marks\/* add to defaults (){}[]<>*/
+      ‘="‘’" “="“”" ’="‘’" ”="“”" \
+      ‹="‹›" «="«»" ›="‹›" »="«»" \
+      〈="〈〉"   ⟪="⟪⟫" 〉="〈〉"   ⟫="⟪⟫" \
+      `'="`' '"\/*use space as a separator of the left vs right groups*/
+      〔="〔〕" 〕="〔〕"\
+      ⸨="⸨⸩" ⸩="⸨⸩"\
+      【="【】" 】="【】"\
+      「="「」" 」="「」"\
+      ␌="␌␌"
+    "append space to chars" ")}]" // "({["
+    punctuation-alias "clear"/*clear defaults b) B} r] a>*/\
+      d="(" f="[" g="‘" h="“"\
+      j="{" k="\"" l="'"\
+      r="‹" t="«" y="`'" o="〔" p="␌"\
+      z="⸨" n="【" m="「" " "="〈" .="⟪"
+    steady_cursor add=true replace=true delete=true // don't 'move' ⎀cursor to the changed punctuation:
+      // surround-word add of ‘(’ in  ‘text_⎀surr’  results in ‘(text_⎀surr)’
+        //                                                not ‘⎀(text_surr)’
+      // surround   delete of ‘(’ in ‘(text_⎀surr)’ results in  ‘text_⎀surr’
+        //                                                 not ‘⎀text_surr’
+    seek_forward false // in ‘⎀a(b)’ deleting ‘(’ will result in ‘⎀ab’ if true and no change if false (brackets only)
+  }
+}

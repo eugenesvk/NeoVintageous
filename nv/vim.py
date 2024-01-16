@@ -112,8 +112,8 @@ def reload_with_user_data_kdl() -> None:
                     _log.warn(f"node ‘{node.name}’ has unrecognized tag in argument ‘{tag_val}’")
                 else:
                     val = tag_val
-                if node.name in mode_names_rev:
-                    mode = mode_names_rev[node.name]
+                if (mode := mode_names_rev.get(node.name        ,\
+                            mode_names_rev.get(node.name.upper(),None))): # kdl keys are converted to lowercase, so check 'i' and 'I'
                     DEFM[mode] = val
                     # print(f"status mode DEFM ‘{mode}’ from ‘{node.name}’ argument ‘{val}’")
         for i,key in enumerate(prop_d := node.props): # 2. parse properties id_seq="vim-seq", alternative notation to child node/arg pairs

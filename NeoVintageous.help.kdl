@@ -2,6 +2,7 @@
   (run ‘NeoVintageous: Open new config file example (KDL)’ in Command Palette)
   See  ‘NeoVintageous.keymap-default.kdl’ for a list of default keybinds
   (run ‘NeoVintageous: Dump default keymap as KDL’ in Command Palette to generate it)
+  To reload run ‘NeoVintageous: Reload config"’ in Command Palette
 
   Install ‘KDL’ package for syntax highlighting
   // Comment /*block/inline comment*/  /-node comment to disable the whole section

@@ -29,9 +29,16 @@ keymap { // Use custom keymaps (non-QWERTY/non-Latin) in command mode
 edit { // Edit behavior |default|
   move_left_on_insert_exit false	//|true| move cursor left on ⓘ→Ⓝ to be consistent with line-end editing vimhelp.org/vim_faq.txt.html#faq-10.2
 }
-events { // Run cli commands on entering/leaving a mode add a [list] of command + arguments in the 'events' dictionary:
-  // available modes (CaSe sensitive): Insert Normal Replace Select Visual VisualBlock VisualLine
-  // available mode events (CaSe sensitive): Enter Leave
+events { /* Run cli commands on entering/leaving a mode by adding
+  (mode)Event {(os)cmd "arg1" "arg2";}
+  Mode 	: Normal Insert Replace Select Visual VisualBlock VisualLine (see ‘status’ for abbreviations)
+  Event	: in enter        out exit leave
+  OS   	: mac osx macos   lin linux        win Windows
+  */
+  (ⓘ)in   	{(mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓘ":1}"#;}
+  (ⓘ)out  	{(mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓘ":0}"#;}
+  /-(n)in 	{(mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓃ":1}"#;}
+  /-(n)out	{(mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓃ":0}"#;}
 }
 status { // Set values/reorder the status bar mode indicator, indicator format is '<prefix><Mode><suffix>', where Mode's name can be either of the space-separated values:
   /*normal     	Ⓝ N

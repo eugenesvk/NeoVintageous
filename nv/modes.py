@@ -14,15 +14,6 @@ UNKNOWN         	= 'mode_unknown'
 VISUAL          	= 'mode_visual'
 VISUAL_BLOCK    	= 'mode_visual_block'
 VISUAL_LINE     	= 'mode_visual_line'
-EVENT_MODES = {
-    INSERT          : 'Insert'
-  , NORMAL          : 'Normal'
-  , REPLACE         : 'Replace'
-  , SELECT          : 'Select'
-  , VISUAL          : 'Visual'
-  , VISUAL_BLOCK    : 'VisualBlock'
-  , VISUAL_LINE     : 'VisualLine'
-  }
 
 from enum import auto, Flag, IntFlag
 class Mode(Flag):
@@ -49,6 +40,8 @@ class Mode(Flag):
   Map            	=	N |       V | S | O
   Action         	= N |       VVV
   Motion         	= N |       VVV   | O
+  Event          	=     I                 | R | Action
+M_EVENT = [Mode.Insert, Mode.Normal, Mode.Replace, Mode.Select, Mode.Visual, Mode.VisualBlock, Mode.VisualLine] # in Sublime's Python 3.8 Enum Flag doesn't support iteration on its members (added in 3.11)
 
 
 mode_names = { # unique text abbreviations per mode (combinations are handled in the Mode enum)

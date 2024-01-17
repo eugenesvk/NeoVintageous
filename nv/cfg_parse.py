@@ -16,6 +16,8 @@ def clean_node_name(node:kdl.Node): # recursively clean KDL node names (remove s
   if not node.name == 'keymap': # don't normalize keybinds
     for node in node.nodes:
       clean_node_name(node)
+def clean_name(name:str): # clean name by remove separators ␠⭾-_. and converting to lowercase
+  return re.sub(node_separator,'',name.casefold())
 
 def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str=''):
   # print(f"  parse_kdl_config = {cfg_p}")

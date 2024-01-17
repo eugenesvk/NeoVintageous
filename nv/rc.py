@@ -192,7 +192,7 @@ class cfgU():
         cfgU.kdl = dict()
 
         # Split config into per-section/per-plugin group
-        cfg_group  = ['keymap','events','status','edit','keybind']
+        cfg_group  = ['keymap','event','status','edit','keybind']
         cfg_nest   = {'plugin'   :['surround']
             ,         'indicator':['ls','registers']}
         # Set config dictionaries to emtpy

@@ -312,6 +312,8 @@ def _import_plugins_with_user_data_kdl():
     ex_cmds.reload_with_user_data_kdl()
     from NeoVintageous.nv import registers
     registers.reload_with_user_data_kdl()
+    from NeoVintageous.nv import events_user
+    events_user.reload_with_user_data_kdl()
 
 # def _import_plugins_with_user_data():
 #     from NeoVintageous.nv import plugin_surround

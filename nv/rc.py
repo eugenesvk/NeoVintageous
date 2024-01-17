@@ -166,7 +166,6 @@ def _parse_line(line: str):
 
 
 from NeoVintageous.plugin import PACKAGE_NAME
-from NeoVintageous.nv.modes import EVENT_MODES
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.modes import Mode as M, text_to_modes, MODE_NAMES_OLD
 import NeoVintageous.dep.kdl as kdl

@@ -55,7 +55,7 @@ status { // Set values/reorder the status bar mode indicator, indicator format i
   normal 	" "         	// space roughly the width of an indicator to avoid jitter on mode change
   id_mode	"00_nv_mode"	// '00_mode' number defines order priority of custom status bar statuses, so 00 should be left-most
   id_seq 	"vim-seq"
-}; /-status insert="ⓘ" // prop=val format is also allowed
+}; /-status insert="ⓘ" // prop=val format also works
 indicator { // Set various indicator format
   ls { // Set values for ‘ls’ command indicators |default|
     current    	"•"	//|%|        	The buffer in the current window
@@ -65,17 +65,17 @@ indicator { // Set various indicator format
     hidden     	" "	//|h|        	Hidden   buffer: loaded but invisible
     line       	"━"	//|line |    	Line prefix
     no_name    	"" 	//|[NO NAME]|	Name for a tab without a file
-    file_qleft 	"" 	//|"|        	File name quotes
-    file_qright	"" 	//|"|        	File name quotes
-  }; /-ls current="•" // prop=val format is also allowed
+    file_qleft 	"" 	//|"|        	File name left  quote
+    file_qright	"" 	//|"|        	File name right quote
+  }; /-ls current="•" // prop=val format also works
   registers { // Set values for ‘registers’ command indicators
     char	"c"	// Characterwise text
     line	"━"	// Linewise      text
-  }; /-registers char="c" line="━━" // prop=val format is also allowed
+  }; /-registers char="c" line="━━" // prop=val format also works
 }
 plugin {
   surround { // Use custom brackets in Surround plugin
-    punctuation_marks\/* add to defaults (){}[]<>*/
+    punctuation_marks\/* add to default (){}[]<>*/
       ‘="‘’" “="“”" ’="‘’" ”="“”" \
       ‹="‹›" «="«»" ›="‹›" »="«»" \
       〈="〈〉"   ⟪="⟪⟫" 〉="〈〉"   ⟫="⟪⟫" \
@@ -84,20 +84,22 @@ plugin {
       ⸨="⸨⸩" ⸩="⸨⸩"\
       【="【】" 】="【】"\
       「="「」" 」="「」"\
-      ␌="␌␌"; /-punctuation_marks {‘ "‘’"; “ "“”";} //key val child node format is also allowed
+      ␌="␌␌"; /-punctuation_marks {‘ "‘’"; “ "“”";} //key val child node format also works
     punctuation-alias "clear"/*clear defaults b) B} r] a>*/\
       d="(" f="[" g="‘" h="“"\
       j="{" k="\"" l="'"\
       r="‹" t="«" y="`'" o="〔" p="␌"\
-      z="⸨" n="【" m="「" " "="〈" .="⟪"; /-punctuation_alias {clear; d "("; f "[";} //key val child node format is also allowed
+      z="⸨" n="【" m="「" " "="〈" .="⟪"; /-punctuation_alias {clear; d "(";} //key val child node format also works
     "append space to chars" ")}]" // "({["
-    steady_cursor add=true replace=true delete=true // don't 'move' ⎀cursor to the changed punctuation:
+    steady_cursor add=true delete=true replace=true // don't 'move' ⎀cursor to the changed punctuation:
       // surround-word add of ‘(’ in  ‘text_⎀surr’  results in ‘(text_⎀surr)’
         //                                                not ‘⎀(text_surr)’
       // surround   delete of ‘(’ in ‘(text_⎀surr)’ results in  ‘text_⎀surr’
         //                                                 not ‘⎀text_surr’
-    /-steady_cursor {add true; replace true; delete true;} //key val child node format is  also allowed
-    seek_forward true /* When looking for brackets, if the current text is NOT enclosed in them, but Targets plugin is enabled, seek the next pair of brackets, for example (⎀ is cursor position):
+      // surround  replace of ‘(’ in ‘(text_⎀surr)’ results in  ‘[text_⎀surr]’
+        //               with ‘[’                          not ‘⎀[text_surr]’
+    /-steady_cursor {add true; replace true; delete true;} //key val child node format also works
+    seek_forward false /* When looking for brackets, if the current text is NOT enclosed in them, but Targets plugin is enabled, seek the next pair of brackets, for example (⎀ is cursor position):
         ⎀a(b)  with surround delete of ( will result in:
         ⎀ab       if SEEK_FORWARD is true : the next pair of () after ⎀ found and deleted
         ⎀a(b)     if SEEK_FORWARD is false: the next pair of () is ignored

@@ -36,8 +36,8 @@ event { /* Run cli commands on entering/leaving a mode by adding
   Event	: in enter     out exit leave
   OS   	: ⌘  🍏 m mac osx macos     🐧 l lin linux     🪟 🗔 ⊞ w win windows
   */              //↓ CaSe, ␠whitespace⭾, and _.separator- sensitive
-  (ⓘ)in   	{(mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓘ":1}"#;}
-  (ⓘ)out  	{(mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓘ":0}"#;}
+  (ⓘ)in   	 (mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓘ":1}"#
+  (ⓘ)out  	{(mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓘ":0}"#;} //child node format also works
   /-(n)in 	{(mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓃ":1}"#;}
   /-(n)out	{(mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓃ":0}"#;}
 }

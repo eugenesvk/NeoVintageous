@@ -13,7 +13,7 @@ node_separator_p = r"\s|-|_|\."
 node_separator = re.compile(node_separator_p, flags=re_flags)
 def clean_node_name(node:kdl.Node): # recursively clean KDL node names (remove separators ␠⭾-_. etc)
   node.name = re.sub(node_separator,'',node.name.casefold())
-  if not node.name == 'keymap': # don't normalize keybinds
+  if node.name not in ['keymap','event']: # don't normalize keybinds and event cli commands
     for node in node.nodes:
       clean_node_name(node)
 def clean_name(name:str): # clean name by remove separators ␠⭾-_. and converting to lowercase

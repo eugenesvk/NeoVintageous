@@ -6,7 +6,8 @@
 
   Install ‘KDL’ package for syntax highlighting
   // Comment /*block/inline comment*/  /-node comment to disable the whole section
-  Node names are CaSe, ␠whitespace⭾, and se-pa-rat_or insensitive: keymap = key-map = key_map = "key map"
+  Node names are CaSe, ␠whitespace⭾, and _.separator- insensitive: keymap = key-map = key_map = "key map"
+  (except for ‘keybind’ and ‘event’ where such characters matter for keys/cli commands)
 */
 #v 0.1 // config format version to hopefully allow updates without breaking existing configs (‘#’ is optional)
 #import (keybind)"NeoVintageous.key.kdl"
@@ -29,12 +30,12 @@ keymap { // Use custom keymaps (non-QWERTY/non-Latin) in command mode
 edit { // Edit behavior |default|
   move_left_on_insert_exit false	//|true| move cursor left on ⓘ→Ⓝ to be consistent with line-end editing vimhelp.org/vim_faq.txt.html#faq-10.2
 }
-events { /* Run cli commands on entering/leaving a mode by adding
+event { /* Run cli commands on entering/leaving a mode by adding
   (mode)Event {(os)cmd "arg1" "arg2";}
   Mode 	: Normal Insert Replace Select Visual VisualBlock VisualLine (see ‘status’ for abbreviations)
-  Event	: in enter        out exit leave
-  OS   	: mac osx macos   lin linux        win Windows
-  */
+  Event	: in enter     out exit leave
+  OS   	: ⌘  🍏 m mac osx macos     🐧 l lin linux     🪟 🗔 ⊞ w win windows
+  */              //↓ CaSe, ␠whitespace⭾, and _.separator- sensitive
   (ⓘ)in   	{(mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓘ":1}"#;}
   (ⓘ)out  	{(mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓘ":0}"#;}
   /-(n)in 	{(mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓃ":1}"#;}

@@ -99,37 +99,25 @@ def reload_with_user_data_kdl() -> None:
           DEF[os][mode][evt] += [cmf_full] # append full command to the list as a list
           _log.debug(f"added a command from child to ‘{os}’‘{mode}’‘{evt}’ = ‘{cmf_full}’")
 
-def get_full_cmd(eventsU, event_name) -> list:
-  if type(eventsU) is dict:
-    eventsU_or_OS = None
-    if PLATFORM in eventsU:
-      if type(eventsU_OS := eventsU[PLATFORM]) is dict:
-        eventsU_or_OS = eventsU_OS
-    else:
-      eventsU_or_OS   = eventsU
-    if eventsU_or_OS and event_name in eventsU_or_OS:
-      full_cmd = eventsU_or_OS[event_name]
-      if   type(full_cmd) is list:
-        return  full_cmd
-      elif type(full_cmd) is str: # "path" → ["path"]
-        return [full_cmd]
+def get_full_cmd(os,mode,evt) -> list:
+  if     os   in DEF          :
+    if   mode in DEF[os]      :
+      if evt  in DEF[os][mode]:
+        return   DEF[os][mode][evt]
 
 def on_mode_change  (view   , current_mode, new_mode) -> None:
   _log.debug(f"mode Δ {current_mode} ⟶ {new_mode}")
-  if not hasattr(cfgU, 'events'):
+  mode_old = mode_names_rev.get(current_mode,None)
+  mode_new = mode_names_rev.get(new_mode    ,None)
+  if not (mode_old or mode_new):
+    _log.error(f"mode Δ: couldn't match both mode names to modes (‘{current_mode}’|{mode_old} to ‘{new_mode}’|{mode_new})")
     return
-  if not (eventsU := cfgU.events):
-    return
-  _log.debug(f"user events = {eventsU}")
-  for mode, mode_cfg_name in EVENT_MODES.items():
-    event_name = None
-    if current_mode == mode:
-      event_name = f'{mode_cfg_name}Leave'
-    if new_mode     == mode:
-      event_name = f'{mode_cfg_name}Enter'
-    if event_name:
-      if (full_cmd := get_full_cmd(eventsU, event_name)):
-        run_command(full_cmd, current_mode, new_mode)
+  if (cmd_l := get_full_cmd(PLATFORM,mode_old,'leave')):
+    for full_cmd in cmd_l:
+      run_command(full_cmd, current_mode, new_mode)
+  if (cmd_l := get_full_cmd(PLATFORM,mode_new,'enter')):
+    for full_cmd in cmd_l:
+      run_command(full_cmd, current_mode, new_mode)
 
 def run_command    (full_cmd, current_mode, new_mode) -> None:
   _log.debug(f"full_cmd = {full_cmd}")

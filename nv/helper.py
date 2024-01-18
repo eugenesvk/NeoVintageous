@@ -66,3 +66,9 @@ class Singleton(type): # doesn't deadlock: if both Class_1 and Class_2 implement
                 if not cls.__shared_instance__:
                     cls.__shared_instance__ = super(Singleton, cls).__call__(*args, **kwargs)
         return cls.__shared_instance__
+
+class Symbol:
+    def __init__(self, name=''):
+        self.name = f"Symbol({name})"
+    def __repr__(self):
+        return self.name

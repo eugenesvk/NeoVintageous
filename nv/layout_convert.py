@@ -59,12 +59,7 @@ def getUserKeymap(keymap_len) -> dict:
 
   return({"low":low,"upp":upp,"alias":keymap['alias']})
 
-class Symbol:
-  def __init__(self, name=''):
-    self.name = f"Symbol({name})"
-  def __repr__(self):
-    return self.name
-
+from NeoVintageous.nv.helper import Singleton, Symbol
 from enum import Enum
 class lyt(Enum):
   qwerty      = Symbol('qwerty')

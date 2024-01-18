@@ -167,25 +167,51 @@ def _parse_line(line: str):
 
 from NeoVintageous.plugin import PACKAGE_NAME
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
-from NeoVintageous.nv.modes import Mode as M, text_to_modes, MODE_NAMES_OLD
+from NeoVintageous.nv.modes import Mode as M, text_to_modes, MODE_NAMES_OLD, M_EVENT, M_ANY, M_CMDTXT
 import NeoVintageous.dep.kdl as kdl
 from typing import List, Union
 from pathlib import Path
+
+def _parse_keybind_kdl(keybind:kdl.Node):
+    from NeoVintageous.nv.mappings import mappings_add, mappings_add_text
+    if not (cfgT := type(keybind)) is kdl.Node:
+        _log.error(f"Type of ‘keybind’ should be kdl.Node, not {cfgT}")
+        return None
+    for node in keybind.nodes: # (Ⓝ)"q" "OpenNameSpace"
+        mode_s = node.tag             # ‘Ⓝ’
+        modes  = text_to_modes(mode_s) # ‘Mode.Normal’ enum for ‘Ⓝ’ (‘Mode.Any’ for None tag)
+        key    = node.name             # ‘q’
+        cmd_txt = []                   # ‘[OpenNameSpace]’
+        for cmd in (cmds := node.args):
+            cmd_txt.append(cmd)
+
+        if not modes:
+            _log.error(f"Couldn't parse ‘{mode_s}’ to a list of modes, skipping ‘{node}’")
+            continue
+        if not key:
+            _log.error(f"Missing keyboard shortcut, skipping ‘{node}’")
+            continue
+        if not cmd_txt:
+            _log.error(f"Missing text command(s), skipping ‘{node}’")
+            continue
+        if (m_inv := modes & ~M.CmdTxt): # if there are more modes than allowed
+            s = 's' if len(m_inv) > 1 else ''
+            _log.warn(f"Invalid mode{s} ‘{m_inv}’ in ‘{mode_s}’")
+
+        for mode in cfgU.text_commands: # iterate over all of the allowed modes
+            if mode & modes: # if it's part of the keybind's modes, register the key
+                cfgU.text_commands[mode][key] = cmd_txt
+                mappings_add_text(mode=MODE_NAMES_OLD[mode], lhs=key, rhs=cmd_txt)
+
 
 # cfgU_settings = (f'{PACKAGE_NAME}.sublime-settings')
 class cfgU(metaclass=Singleton):
     cfg_p = _file_path_config_kdl()
     cfg_f = Path(cfg_p).expanduser()
 
-    text_commands = {
-        M.Insert              : {},
-        M.Normal              : {},
-        M.OperatorPending    : {},
-        M.Select              : {},
-        M.Visual              : {},
-        M.VisualBlock        : {},
-        M.VisualLine         : {}
-    }  # type: dict
+    text_commands = dict()
+    for _m in M_CMDTXT:
+        text_commands[_m] = dict()
 
     @staticmethod
     def read_kdl_file() -> List[kdl.Document]:
@@ -250,8 +276,10 @@ class cfgU(metaclass=Singleton):
         cfgU.flat = flatten_kdl(cfgU.kdl, ignore=ignore) # store a flat dictionary for easy access
         # print('cfgU.flat', cfgU.flat)
 
-        _import_plugins_with_user_data_kdl()
+        if (keybind := cfgU.kdl['keybind']):
+            _parse_keybind_kdl(keybind)
 
+        _import_plugins_with_user_data_kdl()
 
     @staticmethod
     def unload_kdl():

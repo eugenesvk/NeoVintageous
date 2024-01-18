@@ -10,14 +10,18 @@ import re
 re_flags = 0
 re_flags |= re.MULTILINE | re.IGNORECASE
 node_separator_p = r"\s|-|_|\."
+path_separator_p = r"\s|-|_"
 node_separator = re.compile(node_separator_p, flags=re_flags)
+path_separator = re.compile(path_separator_p, flags=re_flags)
 def clean_node_name(node:kdl.Node): # recursively clean KDL node names (remove separators ␠⭾-_. etc)
   node.name = re.sub(node_separator,'',node.name.casefold())
   if node.name not in ['keymap','event']: # don't normalize keybinds and event cli commands
     for node in node.nodes:
       clean_node_name(node)
-def clean_name(name:str): # clean name by remove separators ␠⭾-_. and converting to lowercase
+def clean_name(name:str): # clean name by removing separators ␠⭾-_. and converting to lowercase
   return re.sub(node_separator,'',name.casefold())
+def clean_path(name:str): # clean path segment by removing separators ␠⭾-_ but NOT . and converting to lowercase
+  return re.sub(path_separator,'',name.casefold())
 
 def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str=''):
   # print(f"  parse_kdl_config = {cfg_p}")

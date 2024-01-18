@@ -15,7 +15,7 @@ node_separator = re.compile(node_separator_p, flags=re_flags)
 path_separator = re.compile(path_separator_p, flags=re_flags)
 def clean_node_name(node:kdl.Node): # recursively clean KDL node names (remove separators ␠⭾-_. etc)
   node.name = re.sub(node_separator,'',node.name.casefold())
-  if node.name not in ['keymap','event']: # don't normalize keybinds and event cli commands
+  if node.name not in ['keybind','event']: # don't normalize keybinds and event cli commands
     for node in node.nodes:
       clean_node_name(node)
 def clean_name(name:str): # clean name by removing separators ␠⭾-_. and converting to lowercase

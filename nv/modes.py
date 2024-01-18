@@ -41,7 +41,10 @@ class Mode(Flag):
   Action         	= N |       VVV
   Motion         	= N |       VVV   | O
   Event          	=     I                 | R | Action
+  Any            	= Map | MapN | T | Lng
 M_EVENT = [Mode.Insert, Mode.Normal, Mode.Replace, Mode.Select, Mode.Visual, Mode.VisualBlock, Mode.VisualLine] # in Sublime's Python 3.8 Enum Flag doesn't support iteration on its members (added in 3.11)
+M = Mode
+M_ANY = [M.N,M.I,M.C,M.X,M.VB,M.VL,M.S,M.O,M.T,M.Lng]
 
 
 mode_names = { # unique text abbreviations per mode (combinations are handled in the Mode enum)

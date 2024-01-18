@@ -11,39 +11,10 @@ import logging
 log = logging.getLogger(__name__)
 log.setLevel(logging.WARN)
 
-import time, threading
-class LogToStatus:
-  def __init__(self):
-    self.timeout  = 3
-    self.timer    = None
-    self.tag      = statusName
-
-  def s(self, view, msg, overwrite=False):
-    self.set_status(view, msg, overwrite)
-  def set_status(self, view, msg, overwrite=False):
-    self.cancel_timer()
-    self.view = view
-    if not view:
-      return
-    if overwrite:
-      self.view.set_status(self.tag, msg)
-    else:
-      status_cur  = view.get_status(self.tag)
-      sep         = '; ' if status_cur else ''
-      self.view.set_status(self.tag, status_cur +sep+ msg)
-    self.start_timer()
-
-  def cancel_timer(self):
-    if self.timer != None:
-      self.timer.cancel()
-
-  def start_timer(self):
-    self.timer = threading.Timer(self.timeout, self.clear)
-    self.timer.start()
-
-  def clear(self):
-    self.view.erase_status(self.tag)
+from NeoVintageous.nv.log import LogToStatus
 _l = LogToStatus()
+_l.tag = statusName
+
 
 
 from pathlib import Path

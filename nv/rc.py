@@ -23,7 +23,7 @@ import re
 import sublime
 
 from NeoVintageous.nv.polyfill import nv_message as message
-from NeoVintageous.nv.helper import flatten_dict, flatten_kdl
+from NeoVintageous.nv.helper import flatten_dict, flatten_kdl, Singleton
 
 
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
@@ -90,7 +90,7 @@ def _unload() -> None:
     clear_variables()
     clear_mappings()
     clear_options()
-    # _unload_cfgU()
+    _unload_cfgU()
 
 
 def _load() -> None:
@@ -112,7 +112,7 @@ def _load() -> None:
     except FileNotFoundError:
         _log.info('%s file not found', _file_path())
     # load_cfgU()
-    load_cfgU_kdl()
+    cfgU.load_kdl()
 
 
 def _source(window, source) -> None:
@@ -170,10 +170,13 @@ from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PEN
 from NeoVintageous.nv.modes import Mode as M, text_to_modes, MODE_NAMES_OLD
 import NeoVintageous.dep.kdl as kdl
 from typing import List, Union
+from pathlib import Path
 
 # cfgU_settings = (f'{PACKAGE_NAME}.sublime-settings')
-# cfgU_command = (f'{PACKAGE_NAME}.json')
-class cfgU():
+class cfgU(metaclass=Singleton):
+    cfg_p = _file_path_config_kdl()
+    cfg_f = Path(cfg_p).expanduser()
+
     text_commands = {
         M.Insert              : {},
         M.Normal              : {},
@@ -185,9 +188,28 @@ class cfgU():
     }  # type: dict
 
     @staticmethod
-    def load_kdl(cfg_l:List[kdl.Document]):
-        from NeoVintageous.nv.mappings import mappings_add, mappings_add_text
-        cfg_kdl_f = cfgU.kdl_f # config file path
+    def read_kdl_file() -> List[kdl.Document]:
+        cfg_p = cfgU.cfg_p
+        cfg_f = cfgU.cfg_f
+        if cfg_f.exists():
+            try:
+                with open(cfg_f, 'r', encoding='utf-8', errors='replace') as f:
+                    cfg = f.read()
+            except FileNotFoundError as e:
+                sublime.error_message(f"{PACKAGE_NAME}:\nTried and failed to load\n{cfg_f}")
+                return
+        else:
+            _log.info(f"Couldn't find {cfg_p}") # config file is optional
+            return
+        kdl_docs = [] # list of KDL docs in the order of parsing, includes imports as separate items
+        parse_kdl_config(cfg, cfg_f, kdl_docs)
+        return kdl_docs
+
+    @staticmethod
+    def load_kdl():
+        if hasattr(cfgU,'kdl') and cfgU.kdl: # avoid loading the same config multiple times
+            return
+        cfg_l:List[kdl.Document] = cfgU.read_kdl_file()
         cfgU.kdl = dict()
 
         # Split config into per-section/per-plugin group
@@ -220,7 +242,7 @@ class cfgU():
                                 cfgU.kdl[nest][g] = node
         #for g in cfg_group: # Rudimentary type checks (can have props, also empty is ok)
         #    if  cfgU.kdl[g] and not (cfgU.kdl[g].nodes):
-        #        cfgU.kdl[g] = None; _log.warn(f"‘{g}’ in ‘{cfg_kdl_f}’ has no child nodes!")
+        #        cfgU.kdl[g] = None; _log.warn(f"‘{g}’ in ‘{cfgU.cfg_f}’ has no child nodes!")
 
         ignore = {1:cfg_group, 2:[]} # ignore the lowest level dictionary groups as they repeat node names
         for g,subg in cfg_nest.items():
@@ -230,6 +252,14 @@ class cfgU():
 
         _import_plugins_with_user_data_kdl()
 
+
+    @staticmethod
+    def unload_kdl():
+        if cfgU.kdl: # reset config
+            cfgU.kdl = dict()
+            _log.debug(f'@cfgU.unload_kdl: erased current cfgU.kdl')
+        else:
+            _log.debug(f'@cfgU.unload_kdl: nothing to erase')
 
     # @staticmethod
     # def load():
@@ -333,45 +363,22 @@ def _import_plugins_with_user_data_kdl():
 #     from NeoVintageous.nv import registers
 #     registers.reload_with_user_data()
 
-from pathlib import Path
 from NeoVintageous.nv.cfg_parse import parse_kdl_config
-def load_cfgU_kdl() -> None:
-    global cfgU
-    cfg_p = _file_path_config_kdl()
-    if (cfg_f := Path(cfg_p).expanduser()).exists():
-        try:
-            with open(cfg_f, 'r', encoding='utf-8', errors='replace') as f:
-                cfg = f.read()
-        except FileNotFoundError as e:
-            sublime.error_message(f"{PACKAGE_NAME}:\nTried and failed to load\n{cfg_f}")
-            return
-    else:
-        # sublime.error_message(f"{PACKAGE_NAME}:\nCouldn't find\n{cfg_p}") # this config file is optional
-        return
-    kdl_docs = [] # list of KDL docs in the order of parsing, includes imports as separate items
-    parse_kdl_config(cfg, cfg_f, kdl_docs)
-    cfgU.kdl_f = cfg_f
-    cfgU.load_kdl(kdl_docs)
-
 # def load_cfgU() -> None:
 #     """load alternative user config file to a global class and add a watcher event to track changes"""
 #     global cfgU
-#     global user_settings, user_commands
+#     global user_settings
 
 #     try:
 #         user_settings = sublime.load_settings(cfgU_settings)
-#         user_commands = sublime.load_settings(cfgU_command)
 #         cfgU.load();
 #         user_settings.clear_on_change(PACKAGE_NAME)
 #         user_settings.add_on_change  (PACKAGE_NAME, lambda: cfgU.load())
-#         user_commands.clear_on_change(PACKAGE_NAME)
-#         user_commands.add_on_change  (PACKAGE_NAME, lambda: cfgU.load())
 #     except FileNotFoundError:
-#         _log.info(f'‘{cfgU_settings}’ or ‘{cfgU_command}’ file(s) not found')
+#         _log.info(f'‘{cfgU_settings}’ file not found')
 
-# def _unload_cfgU() -> None: # clear config change watcher
-#     global cfgU
-#     global user_settings, user_commands
-
+def _unload_cfgU() -> None: # clear old config, change watcher
+    global cfgU
+#     global user_settings
+    cfgU.unload_kdl()
 #     user_settings.clear_on_change(PACKAGE_NAME)
-#     user_commands.clear_on_change(PACKAGE_NAME)

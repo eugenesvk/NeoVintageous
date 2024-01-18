@@ -43,10 +43,12 @@ for       os in OS:
     DEF  [os][mode]      = dict()
     for             evt in EVENT:
       DEF[os][mode][evt] = [] # empty list of command
+import copy
+CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
 
 def reload_with_user_data_kdl() -> None:
   if hasattr(cfgU,'kdl') and (cfg := cfgU.kdl.get('event',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
-    global DEF
+    global CFG
     for node in cfg.nodes: # (ⓘ)in {(mac)"~/bin" "--var" r#"{"v":1}"#;}
       mode = mode_names_rev.get(clean_name(node.tag ),None) # ‘Mode.Insert’ for ‘ⓘ’
       evt  = EVENTrev      .get(clean_name(node.name),None) # ‘enter’       for ‘in’
@@ -73,7 +75,7 @@ def reload_with_user_data_kdl() -> None:
         else:
           cmf_full += [val] # append argument to command
       if  cmf_full:
-        DEF[os][mode][evt] += [cmf_full] # append full command to the list as a list
+        CFG[os][mode][evt] += [cmf_full] # append full command to the list as a list
         _log.debug(f"added a command from args to ‘{os}’‘{mode}’‘{evt}’ = ‘{cmf_full}’")
       # 2. Parse node children : {(os)exe arg;}
       for node_cmd in node.nodes:
@@ -96,14 +98,16 @@ def reload_with_user_data_kdl() -> None:
             _log.warn(f"node ‘{cfg.name}’ has unrecognized tag ‘{tag}’ in argument ‘{val}’, ignoring")
           cmf_full  += [val] # append argument to command
         if  cmf_full:
-          DEF[os][mode][evt] += [cmf_full] # append full command to the list as a list
+          CFG[os][mode][evt] += [cmf_full] # append full command to the list as a list
           _log.debug(f"added a command from child to ‘{os}’‘{mode}’‘{evt}’ = ‘{cmf_full}’")
+  else: # reset config to defaults
+    CFG = copy.deepcopy(DEF)
 
 def get_full_cmd(os,mode,evt) -> list:
-  if     os   in DEF          :
-    if   mode in DEF[os]      :
-      if evt  in DEF[os][mode]:
-        return   DEF[os][mode][evt]
+  if     os   in CFG          :
+    if   mode in CFG[os]      :
+      if evt  in CFG[os][mode]:
+        return   CFG[os][mode][evt]
 
 def on_mode_change  (view   , current_mode, new_mode) -> None:
   _log.debug(f"mode Δ {current_mode} ⟶ {new_mode}")

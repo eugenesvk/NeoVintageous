@@ -141,7 +141,7 @@ def ex_buffer(window, index: int = None, **kwargs) -> None:
         ui_bell('E86: Buffer %s does not exist' % index)
 
 
-_indicator_ls = {
+DEF = {
     "current"    	: "%"        	,# The buffer in the current window
     "modified"   	: "+"        	,# A modified buffer
     "read_only"  	: "="        	,# A readonly buffer
@@ -152,12 +152,15 @@ _indicator_ls = {
     "file_qleft" 	: '"'        	,# File name quotes
     "file_qright"	: '"'        	,# File name quotes
 }
+import copy
+CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
+
 def reload_with_user_data_kdl() -> None:
     if hasattr(cfgU,'kdl') and (nest := cfgU.kdl.get('indicator',None))\
         and                    (cfg  :=     nest.get('ls'       ,None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
-        global _indicator_ls
+        global CFG
         # _log.debug(f"@registers: Parsing config indicator/register")
-        for cfg_key in _indicator_ls:
+        for cfg_key in CFG:
             if (node := cfg.get(cfg_key,None)): # line "━" node/arg pair
                 if (args := node.args):
                     tag_val = args[0] #(t)"━" if (t) exists (though shouldn't)
@@ -167,7 +170,7 @@ def reload_with_user_data_kdl() -> None:
                         _log.warn(f"node ‘{node.name}’ has unrecognized tag in argument ‘{tag_val}’")
                     else:
                         val = tag_val
-                    _indicator_ls[node.name] = val
+                    CFG[node.name] = val
                     # print(f"indicator ls from argument ‘{tag_val}’")
                 elif not args:
                     _log.warn(f"node ‘{cfg_key}’ is missing arguments in its child ‘{node.name}’")
@@ -182,36 +185,31 @@ def reload_with_user_data_kdl() -> None:
                 _log.warn(f"node ‘{node.name}’ has unrecognized tag in property ‘{key}={tag_val}’")
             else:
                 val = tag_val
-            if key in _indicator_ls:
-                _indicator_ls[key] = val
+            if key in CFG:
+                CFG[key] = val
                 # print(f"indicator ls from property ‘{key}={val}’")
             else:
                 _log.error(f"node ‘{node.name}’ has unrecognized property ‘{key}={tag_val}’")
-# def reload_with_user_data() -> None:
-#     if hasattr(cfgU,'indicator_ls') and (cfg := cfgU.indicator_ls):
-#         global _indicator_ls
-#         for _key in cfg: # 'current'
-#             if type(_val := cfg[_key]) == str:
-#                 if _key in _indicator_ls:
-#                     _indicator_ls[_key] = _val
+    else:
+        CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
+
 def ex_buffers(window, **kwargs) -> None:
     def _format_buffer_line(view) -> str:
-        cfg = _indicator_ls
         path = view.file_name()
         if path:
             parent, leaf = os.path.split(path)
             path = os.path.join(os.path.basename(parent), leaf)
         else:
-            path = view.name() or cfg['no_name']
+            path = view.name() or CFG['no_name']
 
         lines = [str(view.rowcol(s.b)[0] + 1) for s in view.sel()]
 
-        current_indicator = cfg['current'] if view.id() == window.active_view().id() else ' '
-        readonly_indicator = cfg['read_only'] if is_view_read_only(view) else ' '
-        modified_indicator = cfg['modified'] if view.is_dirty() else ' '
+        current_indicator = CFG['current'] if view.id() == window.active_view().id() else ' '
+        readonly_indicator = CFG['read_only'] if is_view_read_only(view) else ' '
+        modified_indicator = CFG['modified'] if view.is_dirty() else ' '
 
         active_group_view = window.active_view_in_group(window.get_view_index(view)[0])
-        visibility_indicator = cfg['active'] if active_group_view and view.id() == active_group_view.id() else cfg['hidden']
+        visibility_indicator = CFG['active'] if active_group_view and view.id() == active_group_view.id() else CFG['hidden']
 
         return '%5d %s%s%s%s %-30s %s' % (
             view.id(),
@@ -219,8 +217,8 @@ def ex_buffers(window, **kwargs) -> None:
             visibility_indicator,
             readonly_indicator,
             modified_indicator,
-            '{}{}{}'.format(cfg['file_qleft'],path,cfg['file_qright']),
-            '{}{}'.format(cfg['line'],','.join(lines))
+            '{}{}{}'.format(CFG['file_qleft'],path,CFG['file_qright']),
+            '{}{}'.format(CFG['line'],','.join(lines))
         )
 
     output = CmdlineOutput(window)

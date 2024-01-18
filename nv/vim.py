@@ -75,19 +75,18 @@ DEF = {
     'idmode' : 'vim-mode',
     'idseq'  : 'vim-seq',
 }
-import copy
-DEF_R = copy.deepcopy(DEF) # save original defaults to reset statuses with old IDs
-DEF_R['update_idmode'] = False
-DEF_R['update_idseq']  = False
 DEFM = dict()
 for m in mode_names: # Mode.N enum variants
     DEFM[m] = None
+import copy
+CFG  = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
+CFGM = copy.deepcopy(DEFM)
 
 def reload_with_user_data_kdl() -> None:
     if hasattr(cfgU,'kdl') and (cfg := cfgU.kdl.get('status',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
-        global DEF, DEFM
+        global CFG, CFGM
         _log.debug(f"@nv.vim: Parsing config status")
-        for cfg_key in DEF: # 1a. parse arguments for non-mode statuses
+        for cfg_key in CFG: # 1a. parse arguments for non-mode statuses
             if (node := cfg.get(cfg_key,None)): # id_seq "vim-seq" node/arg pair
                 if (args := node.args):
                     tag_val = args[0] #(t)"vim-seq" if (t) exists (though shouldn't)
@@ -97,7 +96,7 @@ def reload_with_user_data_kdl() -> None:
                         _log.warn(f"node ‘{node.name}’ has unrecognized tag in argument ‘{tag_val}’")
                     else:
                         val = tag_val
-                    DEF[node.name] = val
+                    CFG[node.name] = val
                     #print(f"status from argument ‘{node.name}’ is ‘{tag_val}’")
                 elif not args:
                     _log.warn(f"node ‘{cfg_key}’ is missing arguments in its child ‘{node.name}’")
@@ -114,8 +113,8 @@ def reload_with_user_data_kdl() -> None:
                     val = tag_val
                 if (mode := mode_names_rev.get(node.name        ,\
                             mode_names_rev.get(node.name.upper(),None))): # kdl keys are converted to lowercase, so check 'i' and 'I'
-                    DEFM[mode] = val
-                    # print(f"status mode DEFM ‘{mode}’ from ‘{node.name}’ argument ‘{val}’")
+                    CFGM[mode] = val
+                    # print(f"status mode CFGM ‘{mode}’ from ‘{node.name}’ argument ‘{val}’")
         node = cfg
         for i,key in enumerate(prop_d := node.props): # 2. parse properties id_seq="vim-seq", alternative notation to child node/arg pairs
             tag_val = prop_d[key] #(t)"vim-seq" if (t) exists (though shouldn't)
@@ -125,26 +124,17 @@ def reload_with_user_data_kdl() -> None:
                 _log.warn(f"node ‘{node.name}’ has unrecognized tag in property ‘{key}={tag_val}’")
             else:
                 val = tag_val
-            if key in DEF: # 2a. for non-mode statuses
-                DEF[key] = val
+            if key in CFG: # 2a. for non-mode statuses
+                CFG[key] = val
                 #print(f"status from property ‘{key}={val}’")
             elif key in mode_names_rev: # 2b. for mode statuses
                 mode = mode_names_rev[key]
-                DEFM[mode] = val
-                # print(f"status mode DEFM from property ‘{key}={val}’")
+                CFGM[mode] = val
+                # print(f"status mode CFGM from property ‘{key}={val}’")
             else:
                 _log.error(f"node ‘{node.name}’ has unrecognized property ‘{key}={tag_val}’")
-# def reload_with_user_data() -> None:
-#     if hasattr(cfgU,'status') and (cfg := cfgU.status):
-#         global _MODES, _id_mode, _id_seq
-#         for _key in cfg: # 'insert'
-#             if type(_val := cfg[_key]) == str:
-#                 if (modes := text_to_mode_alone(_key)):
-#                     _MODES[modes] = _val
-#         if (_key := 'id_mode') in cfg and type(_val := cfg[_key]) == str:
-#             _id_mode = _val
-#         if (_key := 'id_seq')  in cfg and type(_val := cfg[_key]) == str:
-#             _id_seq = _val
+    else:
+        CFG = copy.deepcopy(CFG) # copy defaults to be able to reset values on config reload
 
 
 def mode_to_name(mode: str) -> str:
@@ -163,9 +153,9 @@ def mode_to_char(mode: str) -> str:
 
 
 def reset_status_line(view, mode: str) -> None:
-    view.erase_status(DEF['idseq'])
+    view.erase_status(CFG['idseq'])
     if mode == NORMAL:
-        view.set_status(DEF['idmode'], _MODES[M.Normal])
+        view.set_status(CFG['idmode'], _MODES[M.Normal])
 
 
 def is_visual_mode(mode: str) -> bool:

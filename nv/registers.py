@@ -223,16 +223,19 @@ def _get(view, name: str = _UNNAMED):
     return _get_data_values(name.lower())
 
 
-_indicator_register = {
+DEF = {
     'char'	: 'c'	,# Characterwise text
     'line'	: 'l'	,# Linewise      text
 }
+import copy
+CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
+
 def reload_with_user_data_kdl() -> None:
     if hasattr(cfgU,'kdl') and (nest := cfgU.kdl.get('indicator',None))\
         and                    (cfg  :=     nest.get('registers',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
-        global _indicator_register
+        global CFG
         # _log.debug(f"@registers: Parsing config indicator/register")
-        for cfg_key in _indicator_register:
+        for cfg_key in CFG:
             if (node := cfg.get(cfg_key,None)): # line "━" node/arg pair
                 if (args := node.args):
                     tag_val = args[0] #(t)"━" if (t) exists (though shouldn't)
@@ -242,7 +245,7 @@ def reload_with_user_data_kdl() -> None:
                         _log.warn(f"node ‘{node.name}’ has unrecognized tag in argument ‘{tag_val}’")
                     else:
                         val = tag_val
-                    _indicator_register[node.name] = val
+                    CFG[node.name] = val
                     # print(f"indicator register from argument ‘{tag_val}’")
                 elif not args:
                     _log.warn(f"node ‘{cfg_key}’ is missing arguments in its child ‘{node.name}’")
@@ -257,24 +260,20 @@ def reload_with_user_data_kdl() -> None:
                 _log.warn(f"node ‘{node.name}’ has unrecognized tag in property ‘{key}={tag_val}’")
             else:
                 val = tag_val
-            if key in _indicator_register:
-                _indicator_register[key] = val
+            if key in CFG:
+                CFG[key] = val
                 # print(f"indicator register from property ‘{key}={val}’")
             else:
                 _log.error(f"node ‘{node.name}’ has unrecognized property ‘{key}={tag_val}’")
-# def reload_with_user_data() -> None:
-#     if hasattr(cfgU,'indicator_register') and (cfg := cfgU.indicator_register):
-#         global _indicator_register
-#         for _key in cfg: # 'character'
-#             if type(_val := cfg[_key]) == str:
-#                 if _key in _indicator_register:
-#                     _indicator_register[_key] = _val
+    else:
+        CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
+
 def registers_get_all(view):
-    cfg = _indicator_register
+    cfg = CFG
     for name in _ALL:
         content = _get(view, name)
         if content:
-            yield (_indicator_register['line'] if _is_register_linewise(name) else _indicator_register['char'], name, content)
+            yield (CFG['line'] if _is_register_linewise(name) else CFG['char'], name, content)
 
 
 def registers_get_for_paste(view, register: str, mode: str) -> tuple:

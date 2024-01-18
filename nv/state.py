@@ -52,7 +52,7 @@ from NeoVintageous.nv.vi.cmd_base import ViOperatorDef
 from NeoVintageous.nv.vi.cmd_defs import ViToggleMacroRecorder
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.modes import Mode as M, mode_names, mode_names_rev, text_to_modes, text_to_mode_alone
-from NeoVintageous.nv.vim import DEF, DEF_R, DEFM # config values, defaults + user
+from NeoVintageous.nv.vim import CFG, CFGM # config values, defaults + user
 from NeoVintageous.nv.vim import clean_view
 from NeoVintageous.nv.vim import enter_insert_mode
 from NeoVintageous.nv.vim import enter_normal_mode
@@ -69,39 +69,17 @@ from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
 
-
-# def reload_with_user_data() -> None:
-#     if hasattr(cfgU,'status') and (cfg := cfgU.status):
-#         global DEF
-#         if (_key := 'prefix')  in cfg and type(_val := cfg[_key]) == str:
-#             DEF['prefix'] = _val
-#         if (_key := 'suffix')  in cfg and type(_val := cfg[_key]) == str:
-#             DEF['suffix'] = _val
-#         if (_key := 'idmode') in cfg and type(_val := cfg[_key]) == str:
-#             DEF['idmode'] = _val
-#         if (_key := 'idseq')  in cfg and type(_val := cfg[_key]) == str:
-#             DEF['idseq'] = _val
-
 def update_status_line(view) -> None:
-    #global DEF_R # doesn't seem to be required anymore with vim updated
-    #if not DEF_R['update_idseq']:
-    #    if not DEF['idseq'] == DEF_R['idseq']: # reset old status if user config changed ID
-    #        view.erase_status(DEF_R['idseq'])
-    #        DEF_R['update_idseq'] = True
-    #if not DEF_R['update_idmode']:
-    #    if not DEF['idmode'] == DEF_R['idmode']:
-    #        view.erase_status(DEF_R['idmode'])
-    #        DEF_R['update_idmode'] = True
     mode_txt  = get_mode(view) # mode_insert
     mode_enum = mode_names_rev.get(mode_txt,None) # Mode.Insert
-    if mode_enum in DEFM and DEFM[mode_enum] is not None:
-        mode_name = DEFM[mode_enum]
+    if mode_enum in CFGM and CFGM[mode_enum] is not None:
+        mode_name = CFGM[mode_enum]
     else:
         mode_name = mode_to_name(mode_txt)
     if mode_name:
-        view.set_status(DEF['idmode'], f"{DEF['prefix']}{mode_name}{DEF['suffix']}")
+        view.set_status(CFG['idmode'], f"{CFG['prefix']}{mode_name}{CFG['suffix']}")
 
-    view.set_status(DEF['idseq'], get_sequence(view))
+    view.set_status(CFG['idseq'], get_sequence(view))
 
 
 def must_collect_input(view, motion: ViMotionDef, action: ViOperatorDef) -> bool:

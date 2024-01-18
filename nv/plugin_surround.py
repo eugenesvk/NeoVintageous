@@ -214,15 +214,18 @@ DEF = {
 }
 for key in (_STEADY_CURSOR_KEY := ['add','replace','delete']):
     DEF['steadycursor'][key] = True
-VALID_TARGETS  = 'ra@' # Delete targets
-VALID_TARGETS += '\'"`b()B{}[]<>t.,-_;:#~*\\/|+=&$' # targets for plugin github.com/wellle/targets.vim
+VALID_TARGETS_DEF  = 'ra@' # Delete targets
+VALID_TARGETS_DEF += '\'"`b()B{}[]<>t.,-_;:#~*\\/|+=&$' # targets for plugin github.com/wellle/targets.vim
 #IilpsWw plugin targets excluded
+import copy
+CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
+VALID_TARGETS = copy.deepcopy(VALID_TARGETS_DEF)
 
 resp = re.compile(r'\s+')
 def reload_with_user_data_kdl() -> None:
     if hasattr(cfgU,'kdl') and (nest := cfgU.kdl.get('plugin'  ,None))\
         and                    (cfg  :=     nest.get('surround',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
-        global DEF, VALID_TARGETS
+        global CFG, VALID_TARGETS
         for node_parent in cfg.nodes: # 'punctuation_marks'
             # 1. Parse node child args: {‘ ‘’; “=“”;}
             # 2. Parse node properties:  ‘=‘’  “=“”
@@ -240,15 +243,15 @@ def reload_with_user_data_kdl() -> None:
                             val = tag_val
                         _warn = ''
                         if     (_len := len(val)    ) == 2:
-                            DEF[    cfg_key][key] = (val[0]    ,val[1]    ) # ‘    ’
-                            _log.debug('DEF set to arg',cfg_key,key,val[0],val[1])
+                            CFG[    cfg_key][key] = (val[0]    ,val[1]    ) # ‘    ’
+                            _log.debug('CFG set to arg',cfg_key,key,val[0],val[1])
                         else:
                             _warn     = f"node ‘{node.name}’ ‘{key}’ should have an argument of length 2, not ‘{_len}’"
                             v_split = resp.split(val)
                             if (_len := len(v_split)) == 2:
                                 _warn = ''
-                                DEF[cfg_key][key] = (v_split[0],v_split[1]) # `'   '
-                                _log.debug('DEF set to arg v_split',cfg_key,key,v_split[0],v_split[1])
+                                CFG[cfg_key][key] = (v_split[0],v_split[1]) # `'   '
+                                _log.debug('CFG set to arg v_split',cfg_key,key,v_split[0],v_split[1])
                             else:
                                 _warn = f"node ‘{node.name}’ ‘{key}’ should have an argument of 2 space-separated substrings, not ‘{_len}’"
                         if _warn:
@@ -267,15 +270,15 @@ def reload_with_user_data_kdl() -> None:
                     # val = tag_val.value if hasattr(tag_val,'value') else tag_val
                     _warn = ''
                     if     (_len := len(val)    ) == 2:
-                        DEF[    cfg_key][key] = (val[0]    ,val[1]    ) # ‘    ’
-                        _log.debug('DEF set to prop',cfg_key,key,val[0],val[1])
+                        CFG[    cfg_key][key] = (val[0]    ,val[1]    ) # ‘    ’
+                        _log.debug('CFG set to prop',cfg_key,key,val[0],val[1])
                     else:
                         _warn     = f"node ‘{node.name}’ ‘{key}’ should have a value of length 2, not ‘{_len}’"
                         v_split = resp.split(val)
                         if (_len := len(v_split)) == 2:
                             _warn = ''
-                            DEF[cfg_key][key] = (v_split[0],v_split[1]) # `'   '
-                            _log.debug('DEF set to prop v_split',cfg_key,key,v_split[0],v_split[1])
+                            CFG[cfg_key][key] = (v_split[0],v_split[1]) # `'   '
+                            _log.debug('CFG set to prop v_split',cfg_key,key,v_split[0],v_split[1])
                         else:
                             _warn = f"node ‘{node.name}’ ‘{key}’ should have a value of 2 space-separated substrings, not ‘{_len}’"
                     if _warn:
@@ -286,7 +289,7 @@ def reload_with_user_data_kdl() -> None:
             if (cfg_key:=node_parent.name) == 'punctuationalias':
                 # _log.debug(f"@plugin surround: Parsing config {cfg_key}")
                 if node_parent.get('clear',None):
-                    DEF[cfg_key].clear()
+                    CFG[cfg_key].clear()
                 for node in node_parent.nodes: # 1. d (  key_node value_arg pairs
                     key = node.name
                     if key == 'clear':
@@ -299,8 +302,8 @@ def reload_with_user_data_kdl() -> None:
                             _log.warn(f"node ‘{node.name}’ has unrecognized tag in ‘{key}’ argument ‘{tag_val}’")
                         else:
                             val = tag_val
-                        DEF[cfg_key][key] = val
-                        _log.debug('DEF set to arg',cfg_key,key,val)
+                        CFG[cfg_key][key] = val
+                        _log.debug('CFG set to arg',cfg_key,key,val)
                     elif not args:
                         _log.warn(f"node ‘{cfg_key}’ is missing arguments in its child ‘{node.name}’")
                     if len(args) > 1:
@@ -313,8 +316,8 @@ def reload_with_user_data_kdl() -> None:
                     else:
                         val = tag_val
                     # val = tag_val.value if hasattr(tag_val,'value') else tag_val
-                    DEF[cfg_key][key] = val
-                    _log.debug('DEF set to prop',cfg_key,key,val)
+                    CFG[cfg_key][key] = val
+                    _log.debug('CFG set to prop',cfg_key,key,val)
                 # if not node.props:
                     # _log.warn(f"node ‘{cfg_key}’ is missing key=value properties")
 
@@ -331,8 +334,8 @@ def reload_with_user_data_kdl() -> None:
                         else:
                             val = tag_val
                         if key in _STEADY_CURSOR_KEY:
-                            DEF[cfg_key][key] = val
-                            _log.debug('DEF set to arg',cfg_key,key,val)
+                            CFG[cfg_key][key] = val
+                            _log.debug('CFG set to arg',cfg_key,key,val)
                         else:
                             _log.warn(f"node ‘{cfg_key}’ has unrecognized property ‘{key}={val}’")
                     elif not args:
@@ -348,8 +351,8 @@ def reload_with_user_data_kdl() -> None:
                         val = tag_val
                     # val = tag_val.value if hasattr(tag_val,'value') else tag_val
                     if key in _STEADY_CURSOR_KEY:
-                        DEF[cfg_key][key] = val
-                        _log.debug('DEF set to prop',cfg_key,key,val)
+                        CFG[cfg_key][key] = val
+                        _log.debug('CFG set to prop',cfg_key,key,val)
                     else:
                         _log.warn(f"node ‘{node.name}’ has unrecognized property ‘{key}={val}’")
                 # if not node.props:
@@ -362,7 +365,7 @@ def reload_with_user_data_kdl() -> None:
                     if not isinstance(args[0],str):
                         _log.error(f"node ‘{node.name}’ argument should be a string, not ‘{type(args[0])}’")
                     else:
-                        DEF[cfg_key] = args[0]
+                        CFG[cfg_key] = args[0]
                 if not args:
                     _log.warn(f"node ‘{cfg_key}’ is missing arguments")
                 if len(args) > 1:
@@ -374,29 +377,16 @@ def reload_with_user_data_kdl() -> None:
                     if not isinstance(args[0],bool):
                         _log.error(f"node ‘{node.name}’ argument should be ‘true’ or ‘false’, not ‘{args[0]}’")
                     else:
-                        DEF[cfg_key] = args[0]
+                        CFG[cfg_key] = args[0]
                 if not args:
                     _log.warn(f"node ‘{cfg_key}’ is missing arguments")
                 if len(args) > 1:
                     _log.warn(f"node ‘{cfg_key}’ has extra arguments, only the 1st was used ‘{', '.join(args)}’")
-        VALID_TARGETS += "".join(((val:=DEF['punctuationmarks'][k])[0]+val[1]) for k in DEF['punctuationmarks']) # add marks
-        VALID_TARGETS += "".join(       DEF['punctuationalias'].keys()) # add aliases
-
-# def reload_with_user_data() -> None:
-#     if hasattr(cfgU,'surround') and (cfg := cfgU.surround): # skip on initial import when Plugin API isn't ready, so not settings are loaded
-#         global DEF
-#         if (_key := 'punctuation marks') in cfg:
-#             for key,value in cfg[_key].items():
-#                 if not (_len := len(value)) == 2:
-#                     _log.warn(f"‘punctuation marks’ values should have 2 values, not ‘{_len}’ in ‘{value}’")
-#                     continue
-#                 DEF['punctuationmarks'][key] = (value[0], value[1])
-#         if (_key := 'punctuation alias') in cfg:
-#             DEF['punctuationalias'].clear()
-#             for key,value in cfg[_key].items():
-#                 DEF['punctuationalias'][key] = value
-#         if (_key := 'append space to chars') in cfg:
-#             DEF['appendspacetochars'] = cfg[_key]
+        VALID_TARGETS += "".join(((val:=CFG['punctuationmarks'][k])[0]+val[1]) for k in CFG['punctuationmarks']) # add marks
+        VALID_TARGETS += "".join(       CFG['punctuationalias'].keys()) # add aliases
+    else: # reset config to defaults
+        CFG = copy.deepcopy(DEF)
+        VALID_TARGETS = copy.deepcopy(VALID_TARGETS_DEF)
 
 # Expand target punctuation marks:
   # (){}[]<> represent themselves/their counterparts
@@ -405,11 +395,11 @@ def reload_with_user_data_kdl() -> None:
 def _expand_targets(target: str) -> tuple:
     target = _resolve_target_aliases(target) # 'a' to '>'
 
-    return DEF['punctuationmarks'].get(target, (target, target)) # '>' to a tuple of (< , >) or self
+    return CFG['punctuationmarks'].get(target, (target, target)) # '>' to a tuple of (< , >) or self
 
 
 def _resolve_target_aliases(target: str) -> str:
-    return DEF['punctuationalias'].get(target, target) # 'a' to '>' or self
+    return CFG['punctuationalias'].get(target, target) # 'a' to '>' or self
 
 # )}]> wraps the text in the appropriate pair of characters
 # bBra aliases
@@ -444,7 +434,7 @@ def _expand_replacements(target: str) -> tuple:
 
     # Pair replacement
     target = _resolve_target_aliases(target)
-    append_addition_space = True if target in DEF['appendspacetochars'] else False
+    append_addition_space = True if target in CFG['appendspacetochars'] else False
     begin, end = _expand_targets(target)
     if append_addition_space:
         begin = begin + ' '
@@ -535,7 +525,7 @@ def _do_replace(view, edit, mode: str, target: str, replacement: str, count=None
         return (s, (0,0))
 
     _res_view_sel_reverse = list()    # save cursor pos as they might be reset elsewhere
-    if DEF['steadycursor']['replace']:
+    if CFG['steadycursor']['replace']:
         sels = reversed(list(view.sel())) # end→beg not to adjust for ∑replacements
         for sel in sels:
             _res_view_sel_reverse.append(sel)
@@ -587,7 +577,7 @@ def _do_delete(view, edit, mode: str, target: str, count=None, register=None) ->
         return (s, (0,0))
 
     _res_view_sel_reverse = list()    # save cursor pos as they might be reset elsewhere
-    if DEF['steadycursor']['delete']:
+    if CFG['steadycursor']['delete']:
         sels = reversed(list(view.sel())) # end→beg not to adjust for ∑deletes
         for sel in sels:
             _res_view_sel_reverse.append(sel)
@@ -596,7 +586,7 @@ def _do_delete(view, edit, mode: str, target: str, count=None, register=None) ->
 
 
 def _get_regions_for_target(view, s: Region, target: str) -> tuple:
-    text_object = get_text_object_region(view, s, target, inclusive=True, seek_forward=DEF['seekforward'])
+    text_object = get_text_object_region(view, s, target, inclusive=True, seek_forward=CFG['seekforward'])
     if not text_object:
         return (None, None)
 
@@ -657,7 +647,7 @@ def _do_add(view, edit, mode: str = None, motion=None, replacement: str = '"', c
         raise ValueError('motion required')
 
     _res_view_sel_reverse = list()    # save cursor pos as they are reset in run_motion
-    if DEF['steadycursor']['add']:
+    if CFG['steadycursor']['add']:
         sels = reversed(list(view.sel())) # end→beg not to adjust for ∑inserts
         for sel in sels:
             _res_view_sel_reverse.append(sel)

@@ -63,6 +63,11 @@ mode_names = { # unique text abbreviations per mode (combinations are handled in
   Mode.Map 	: ['Ⓜ','M' 	,'map'           	                 	],
   Mode.MapN	: [        	 'map!'          	                 	],
 }
+for mode,mode_text_l in mode_names.items(): # add casefolded items as well
+  for mode_text in mode_text_l:
+    if not (_low := mode_text.casefold()) in mode_text_l:
+      mode_names[mode] += [_low]
+
 #  Mode→  |Nor|Ins|Cmd|Vis|Sel|Opr|Term|Lng|
 # ↓Cmd    +---+---+---+---+---+---+--- +---+
 #   map   | • |   |   | • | • | • |    |   |

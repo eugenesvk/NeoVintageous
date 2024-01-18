@@ -135,9 +135,9 @@ def text_to_modes(mode_str:Union[str,None]):
   if not (cfgT := type(mode_str)) is str:
     _log.error(f"Type of ‘{mode_str}’ should be str, not {cfgT}")
     return None
+
   modes = Mode(0)
   mode_s = clean_name(mode_str)
-
   mode_s_list = [] # mode_names_re has longest→shortest regex match to avoid N from matching mode_Normal
   mode_s_list.extend([i for i in mode_clean_names_re.findall(mode_s)])
   for mode_s_match in mode_s_list:
@@ -152,6 +152,7 @@ def text_to_modes(mode_str:Union[str,None]):
   else:
     _log.debug(f"no modes found in ‘{mode_str}’")
     return None
+
 def text_to_mode_alone(mode_string:str): # convert user mode input like 'N' or 'normal' into an enum entry
   modes = text_to_modes(mode_string)
   if modes and hasattr(Mode, modes.name): # got a single enum, not a combo

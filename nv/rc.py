@@ -23,7 +23,7 @@ import re
 import sublime
 
 from NeoVintageous.nv.polyfill import nv_message as message
-from NeoVintageous.nv.helper import flatten_dict
+from NeoVintageous.nv.helper import flatten_dict, flatten_kdl
 
 
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
@@ -221,6 +221,12 @@ class cfgU():
         #for g in cfg_group: # Rudimentary type checks (can have props, also empty is ok)
         #    if  cfgU.kdl[g] and not (cfgU.kdl[g].nodes):
         #        cfgU.kdl[g] = None; _log.warn(f"‘{g}’ in ‘{cfg_kdl_f}’ has no child nodes!")
+
+        ignore = {1:cfg_group, 2:[]} # ignore the lowest level dictionary groups as they repeat node names
+        for g,subg in cfg_nest.items():
+            ignore[2] += subg
+        cfgU.flat = flatten_kdl(cfgU.kdl, ignore=ignore) # store a flat dictionary for easy access
+        # print('cfgU.flat', cfgU.flat)
 
         _import_plugins_with_user_data_kdl()
 

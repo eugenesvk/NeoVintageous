@@ -63,11 +63,6 @@ mode_names = { # unique text abbreviations per mode (combinations are handled in
   Mode.Map 	: ['Ⓜ','M' 	,'map'           	                 	],
   Mode.MapN	: [        	 'map!'          	                 	],
 }
-for mode,mode_text_l in mode_names.items(): # add casefolded items as well
-  for mode_text in mode_text_l:
-    if not (_low := mode_text.casefold()) in mode_text_l:
-      mode_names[mode] += [_low]
-
 #  Mode→  |Nor|Ins|Cmd|Vis|Sel|Opr|Term|Lng|
 # ↓Cmd    +---+---+---+---+---+---+--- +---+
 #   map   | • |   |   | • | • | • |    |   |
@@ -96,23 +91,34 @@ MODE_NAMES_OLD = { # ToDo: replace all with just enums, this is for temporary ge
   Mode.VisualLine     	: VISUAL_LINE,
 }
 mode_names_rev = dict() # reverse mode dictionary for easier mapping of user strings to modes
+mode_clean_names_rev = dict() # with clean names for easier clean text name matching
 for mode,mode_text in mode_names.items():
   if isinstance(mode_text, str):
     if   mode_text     in mode_names_rev:
       _log.debug(f" ‘{mode_text}’ is not unique, check ‘mode_names’")
     else:
-      mode_names_rev  [mode_text]      = mode
+      mode_names_rev                   [mode_text    ]  = mode
+      mode_clean_names_rev  [clean_name(mode_text    )] = mode
   if isinstance(mode_text, list):
     for         mode_text_str in mode_text:
       if mode_text_str in mode_names_rev:
         _log.debug(f" ‘{mode_text_str}’ is not unique, check ‘mode_names’")
       else:
-        mode_names_rev[mode_text_str]  = mode
+        mode_names_rev                 [mode_text_str]  = mode
+        mode_clean_names_rev[clean_name(mode_text_str)] = mode
 # mode_names_rev { # print('mode_names_rev',mode_names_rev)
 # Ⓥ         : <Mode.V: 72>,
 # V          : <Mode.V: 72>,
 # visual     : <Mode.V: 72>,
 # mode_visual: <Mode.V: 72>, }
+mode_names_sort           	= list(mode_names_rev      .keys())
+mode_clean_names_sort     	= list(mode_clean_names_rev.keys())
+mode_names_sort      .sort	(key=len,reverse=True)
+mode_clean_names_sort.sort	(key=len,reverse=True)
+re_flags = 0
+re_flags |= re.MULTILINE | re.IGNORECASE
+mode_names_re       	= re.compile("|".join(re.escape(x) for x in mode_names_sort      ), flags=re_flags)
+mode_clean_names_re 	= re.compile("|".join(re.escape(x) for x in mode_clean_names_sort), flags=re_flags)
 
 import re
 resp  	= re.compile(r'\s+')

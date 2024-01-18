@@ -1,4 +1,8 @@
 import logging
+import re
+from typing import Union
+
+from NeoVintageous.nv.cfg_parse import clean_name
 
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
@@ -120,25 +124,33 @@ re_flags |= re.MULTILINE | re.IGNORECASE
 mode_names_re       	= re.compile("|".join(re.escape(x) for x in mode_names_sort      ), flags=re_flags)
 mode_clean_names_re 	= re.compile("|".join(re.escape(x) for x in mode_clean_names_sort), flags=re_flags)
 
-import re
-resp  	= re.compile(r'\s+')
-resubw	= re.compile(r'[-_]')
-def text_to_modes(mode_string:str): # convert user mode input like 'NI' or 'normal' into enum entries
-  mode = Mode(0)
-  mode_list = resp.split(mode_string)
-  for  mode_text in mode_list: # 'NI' or 'normal'
-    mode_text_rep = resubw.sub('', mode_text.lower()) # 'Normal' → 'normal'
-    if   mode_text     in mode_names_rev:
-      mode     |= mode_names_rev[mode_text]
-    elif mode_text_rep in mode_names_rev:
-      mode     |= mode_names_rev[mode_text_rep]
-    else: # 'NI' to 'N' and 'I'
-      for  sym in mode_text:
-        if sym in mode_names_rev:
-          mode |= mode_names_rev[sym]
-  if mode.name:
-    return mode
+def text_to_modes(mode_str:Union[str,None]):
+  """convert an abbreviated mode string ‘mode_normalIvb’ to mode enum ‘M.Normal|M.Insert|M.VisualBlock’"""
+  if mode_str is None:
+    _log.debug(f"parsed ‘{mode_str}’ into modes ‘{Mode.Any}’")
+    return Mode.Any
+  if not mode_str:
+    _log.error(f"Expected a valid mode_str argument, not ‘{mode_str}’")
+    return None
+  if not (cfgT := type(mode_str)) is str:
+    _log.error(f"Type of ‘{mode_str}’ should be str, not {cfgT}")
+    return None
+  modes = Mode(0)
+  mode_s = clean_name(mode_str)
+
+  mode_s_list = [] # mode_names_re has longest→shortest regex match to avoid N from matching mode_Normal
+  mode_s_list.extend([i for i in mode_clean_names_re.findall(mode_s)])
+  for mode_s_match in mode_s_list:
+    if (mode := mode_clean_names_rev.get(mode_s_match,None)):
+      modes |= mode
+  if (mode_s_remain := mode_clean_names_re.sub('', mode_s)):
+    # mode_s_list_up = [i.upper() for i in mode_s_list if len(i) == 1]
+    _log.error(f"mode_str ‘{mode_str}’ has unrecognized modes ‘{mode_s_remain}’")
+  if modes.name:
+    _log.debug(f"parsed ‘{mode_str}’ into modes ‘{modes}’")
+    return modes
   else:
+    _log.debug(f"no modes found in ‘{mode_str}’")
     return None
 def text_to_mode_alone(mode_string:str): # convert user mode input like 'N' or 'normal' into an enum entry
   modes = text_to_modes(mode_string)

@@ -50,3 +50,19 @@ def _flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore):
 def flatten_kdl(kdl_dic:Union[kdl.Document,kdl.Node,dict], key_parent:str = '', sep:str = '.', lvl:int=0, ignore:dict={1:[],2:[]}):
     """convert KDL document or a dictionary of KDL nodes into a flat dictionary, ignoring 2nd+ argument, but retaining key=val properties"""
     return dict(_flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore))
+
+import threading
+class Singleton(type): # doesn't deadlock: if both Class_1 and Class_2 implement old singleton pattern, calling the constructor of Class_1 in Class_2 (or vice versa) would dead-lock since all the classes implemented through that meta-class share the same lock
+    def __new__(mcs, name, bases, attrs): # Assume target class is created (=this method to be called) in the main thread
+        cls = super(Singleton, mcs).__new__(mcs, name, bases, attrs)
+        cls.__shared_instance__ = None
+        cls.__shared_instance_lock__ = threading.Lock() # class implementing primitive lock objects. It allows the thread running our code to be the only thread accessing the code within the lock's context manager (cls._lock block), so long as it holds the lock
+        return cls
+    def __call__(cls, *args, **kwargs):
+        if cls.__shared_instance__ is None: # check twice to avoid the edge case when 2 classes are created (alternative is to wrap it in a lock, but it's expensive):
+            # 1. cls._instance is None in this thread
+            # 2. another thread is about to call cls._instance = super(Singleton, cls).__new__(cls)
+            with cls.__shared_instance_lock__: # another thread could have created the instance before we acquired the lock. So check that the instance is still nonexistent
+                if not cls.__shared_instance__:
+                    cls.__shared_instance__ = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls.__shared_instance__

@@ -148,7 +148,7 @@ def text_to_modes(mode_str:Union[str,None]):
   if (mode_s_remain := mode_clean_names_re.sub('', mode_s)):
     # mode_s_list_up = [i.upper() for i in mode_s_list if len(i) == 1]
     _log.error(f"mode_str ‘{mode_str}’ has unrecognized modes ‘{mode_s_remain}’")
-  if modes.name:
+  if modes: # modes.name fails in py3.8?
     _log.debug(f"parsed ‘{mode_str}’ into modes ‘{modes}’")
     return modes
   else:

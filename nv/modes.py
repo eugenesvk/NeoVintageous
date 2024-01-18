@@ -39,16 +39,18 @@ class Mode(Flag):
   #↓ combo       	abbreviations
   V              	=           X | S
   VVV            	=           V | VL | VB
-  L              	=     I | C             | Lng
+  L              	=     I | C                 | Lng
   MapN           	=     I | C
   Map            	= N |       V | S | O
   Action         	= N |       VVV
   Motion         	= N |       VVV   | O
-  Event          	=     I                 | R | Action
-  Any            	= Map | MapN | T | Lng
-M_EVENT = [Mode.Insert, Mode.Normal, Mode.Replace, Mode.Select, Mode.Visual, Mode.VisualBlock, Mode.VisualLine] # in Sublime's Python 3.8 Enum Flag doesn't support iteration on its members (added in 3.11)
-M = Mode
-M_ANY = [M.N,M.I,M.C,M.X,M.VB,M.VL,M.S,M.O,M.T,M.Lng]
+  Event          	=     I                 | R       | Action
+  Any            	= Map | MapN            | T | Lng
+  CmdTxt         	=     I                           | Motion
+M = Mode # in Sublime's Py3.8 Enum Flag's members aren't iterable (need Py3.11)
+M_EVENT  = [M.N,M.I    ,M.X,M.VB,M.VL,M.S        ,M.R]
+M_ANY    = [M.N,M.I,M.C,M.X,M.VB,M.VL,M.S,M.O,M.T,M.Lng]
+M_CMDTXT = [M.N,M.I    ,M.X,M.VB,M.VL,M.S,M.O]
 
 
 mode_names = { # unique text abbreviations per mode (combinations are handled in the Mode enum)

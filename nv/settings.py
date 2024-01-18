@@ -31,6 +31,7 @@ from NeoVintageous.nv.events_user import on_mode_change
 
 from NeoVintageous.nv.log import addLoggingLevel, stream_handler
 from NeoVintageous.nv.rc import cfgU
+from NeoVintageous.nv.cfg_parse import clean_name, clean_path
 
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
@@ -44,7 +45,7 @@ def get_config(path:str, default=None):
     if not (pathT := type(path)) is str:
         _log.warn(f"‘{path}’ should be a string, not {pathT}")
         return None
-    return cfgU.flat.get(path, default)
+    return cfgU.flat.get(clean_path(path), default)
 
 def get_setting(view, name: str, default=None):
     return view.settings().get('vintageous_%s' % name, default)

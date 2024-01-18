@@ -36,8 +36,8 @@ class Mode(Flag):
   V              	=           X | S
   VVV            	=           V | VL | VB
   L              	=     I | C             | Lng
-  MapN           	=	    I | C
-  Map            	=	N |       V | S | O
+  MapN           	=     I | C
+  Map            	= N |       V | S | O
   Action         	= N |       VVV
   Motion         	= N |       VVV   | O
   Event          	=     I                 | R | Action

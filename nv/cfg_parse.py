@@ -13,11 +13,15 @@ node_separator_p = r"\s|-|_|\."
 path_separator_p = r"\s|-|_"
 node_separator = re.compile(node_separator_p, flags=re_flags)
 path_separator = re.compile(path_separator_p, flags=re_flags)
-def clean_node_name(node:kdl.Node): # recursively clean KDL node names (remove separators ␠⭾-_. etc)
+def clean_node_name(node:kdl.Node,rec:bool=True): # recursively clean KDL node names (remove separators ␠⭾-_. etc)
   node.name = re.sub(node_separator,'',node.name.casefold())
-  if node.name not in ['keybind','event']: # don't normalize keybinds and event cli commands
+  if rec:
+    if   node.name == 'keybind': # don't normalize keybinds commands
+      return
+    elif node.name == 'event'  : # don't normalize event cli commands (but normalize the initial (mode)Event node)
+      rec = False
     for node in node.nodes:
-      clean_node_name(node)
+      clean_node_name(node, rec=rec)
 def clean_name(name:str): # clean name by removing separators ␠⭾-_. and converting to lowercase
   return re.sub(node_separator,'',name.casefold())
 def clean_path(name:str): # clean path segment by removing separators ␠⭾-_ but NOT . and converting to lowercase

@@ -21,64 +21,43 @@ from pathlib import Path
 import re
 import json
 
-def getUserKeymap(keymap_len):
-  win        	= sublime.active_window()
-  view       	= win.active_view()
-  cfg_key_map	= 'keymap'
-  cfg_key_low	= 'lower'
-  cfg_key_upp	= 'upper'
-  cfg_key_als	= 'alias'
-  nv_cfg     	= None
-  cfg_fname  	= f"{PACKAGE_NAME}.sublime-settings"
-  if view:
-    nv_cfg	= sublime.load_settings(cfg_fname)
-  else: # no view, no config: likely at plugin load, so Sublime API is not ready
-    cfg_path 	= Path(Path() / sublime.packages_path() / "User" / cfg_fname).expanduser()
-    msg_error	= None
-    if cfg_path.is_file():
-      cfg_file	= cfg_path.read_text()
-      cfg_tree	= json5kit.parse(cfg_file) # allows comments
-      nv_cfg  	= json.loads(cfg_tree.to_json())
+from NeoVintageous.nv.rc import cfgU
+from NeoVintageous.nv.settings import get_config
+
+def getUserKeymap(keymap_len) -> dict:
+  win      	= sublime.active_window()
+  view     	= win.active_view()
+  cfg_fname	= cfgU.cfg_f.name
+
+  if not hasattr(cfgU,'kdl') or (cfg := cfgU.kdl.get('keymap',None)) is None: # skip on initial import when Plugin API isn't ready, so no settings are loaded
+    msg_error = f"no ‘keymap’ settings found in ‘{cfg_fname}’"
+    # log.error(msg_error); _l.s(view, msg_error)
+    log.info(msg_error) # config is optional
+    return
+
+  keymap = dict()
+  for cfg_field in ['lower','upper']: # mandatory
+    if (cfg_value := get_config('keymap'+'.'+cfg_field)):
+      keymap[cfg_field] = cfg_value
     else:
-      msg_error = f"no '{cfg_path}' file found"
+      msg_error = f"‘keymap’ config group has no ‘{cfg_field}’ field (in ‘{cfg_fname}’)"
       log.error(msg_error); _l.s(view, msg_error)
       return
+  for cfg_field in ['alias']: # optional
+    keymap[cfg_field] = get_config('keymap'+'.'+cfg_field)
 
-  if not nv_cfg:
-    msg_error = f"no settings found in '{cfg_fname}'"
-    log.error(msg_error); _l.s(view, msg_error)
-    return
-  if not isinstance(nv_cfg, dict) and\
-     not isinstance(nv_cfg, sublime.Settings):
-    msg_error = f"setting should be of type dictionary/Setting, not {type(nv_cfg)} (in '{cfg_fname}')"
-    log.error(msg_error); _l.s(view, msg_error)
-    return
-  if not cfg_key_map in nv_cfg:
-    msg_error = f"no '{cfg_key_map}' field (in '{cfg_fname}')"
-    log.error(msg_error); _l.s(view, msg_error)
-    return
-  keymap = nv_cfg[cfg_key_map]
-  if not 'upper' in keymap:
-    msg_error = f"'{cfg_key_map}' setting has no 'upper' field (in '{cfg_fname}')"
-    log.error(msg_error); _l.s(view, msg_error)
-    return
-  if not cfg_key_low in keymap:
-    msg_error = f"'{cfg_key_map}' setting has no '{cfg_key_low}' field (in '{cfg_fname}')"
-    log.error(msg_error); _l.s(view, msg_error)
-    return
-  low = re.sub(r'\s','',keymap[cfg_key_low])
-  upp = re.sub(r'\s','',keymap[cfg_key_upp])
+  low = re.sub(r'\s','',keymap['lower'])
+  upp = re.sub(r'\s','',keymap['upper'])
   if not (ln := len(low)) == keymap_len:
-    msg_error = f"'{cfg_key_map}' → '{cfg_key_low}' setting should have '{keymap_len}' characters, not '{ln}' (in '{cfg_fname}')"
+    msg_error = f"‘keymap’ config group's ‘lower’ field should have ‘{keymap_len}’ characters, not ‘{ln}’ (in ‘{cfg_fname}’)"
     log.error(msg_error); _l.s(view, msg_error)
     return
   if not (ln := len(upp)) == keymap_len:
-    msg_error = f"'{cfg_key_map}' → '{cfg_key_upp}' setting should have '{keymap_len}' characters, not '{ln}' (in '{cfg_fname}')"
+    msg_error = f"‘keymap’ config group's ‘upper’ field should have ‘{keymap_len}’ characters, not ‘{ln}’ (in ‘{cfg_fname}’)"
     log.error(msg_error); _l.s(view, msg_error)
     return
-  alias = keymap['alias'] if "alias" in keymap else False
 
-  return({"low":low,"upp":upp,"alias":alias})
+  return({"low":low,"upp":upp,"alias":keymap['alias']})
 
 class Symbol:
   def __init__(self, name=''):
@@ -132,7 +111,7 @@ class LayoutConverter:
     if userKeymap:
       layout_str[lyt.user] = userKeymap
       self.isUser = True
-      if 'alias' in userKeymap and userKeymap['alias']:
+      if userKeymap['alias']:
         self.isAlias = True
 
     translations = dict() # generate translation dictionaries for use in str.translate(dict)
@@ -151,11 +130,11 @@ class LayoutConverter:
     translations  = self.translations
     layouts       = self.layouts
     if not layout_from in layouts: # todo: or fail silently and return src?
-      msg_error = f"'{layout_from}' invalid, must be one of '{layouts}')"
+      msg_error = f"‘{layout_from}’ invalid, must be one of '{layouts}')"
       log.error(msg_error); _l.s(view, msg_error)
       return None
     if not layout_to   in layouts:
-      msg_error = f"'{layout_to}' invalid, must be one of '{layouts}')"
+      msg_error = f"‘{layout_to}’ invalid, must be one of '{layouts}')"
       log.error(msg_error); _l.s(view, msg_error)
       return None
     return src.translate(translations[layout_from][layout_to])

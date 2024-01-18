@@ -9,8 +9,8 @@ from NeoVintageous.plugin import PACKAGE_NAME
 import re
 re_flags = 0
 re_flags |= re.MULTILINE | re.IGNORECASE
-node_separator_p = r"\s|-|_|\."
-path_separator_p = r"\s|-|_"
+node_separator_p = r"\s|-|−|–|—|⁃|_|\."
+path_separator_p = r"\s|-|−|–|—|⁃|_"
 node_separator = re.compile(node_separator_p, flags=re_flags)
 path_separator = re.compile(path_separator_p, flags=re_flags)
 def clean_node_name(node:kdl.Node,rec:bool=True): # recursively clean KDL node names (remove separators ␠⭾-_. etc)

@@ -42,6 +42,7 @@ if _log.hasHandlers(): # clear existing handlers, including sublime's
     _log.addHandler(stream_handler)
 
 def get_config(path:str, default=None):
+    cfgU.load_kdl()
     if not (pathT := type(path)) is str:
         _log.warn(f"‘{path}’ should be a string, not {pathT}")
         return None

@@ -127,6 +127,6 @@ def run_command    (full_cmd, current_mode, new_mode) -> None:
     err   = proc.stderr.decode().rstrip('\n')
     retn  = proc.returncode
     if err:
-      _log.ERROR(f"Δ mode ‘{current_mode}’ ⟶ ‘{new_mode}’\n and running ‘{full_cmd}’\n{err}")
+      _log.error(f"Δ mode ‘{current_mode}’ ⟶ ‘{new_mode}’\n and running ‘{full_cmd}’\n{err}")
   else:
-    _log.ERROR(f"Δ mode ‘{current_mode}’ ⟶ ‘{new_mode},’\n executable does NOT exist: ‘{bin_path}’")
+    _log.error(f"Δ mode ‘{current_mode}’ ⟶ ‘{new_mode},’\n executable does NOT exist: ‘{bin_path}’")

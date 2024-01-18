@@ -258,8 +258,10 @@ class cfgU(metaclass=Singleton):
         if cfgU.kdl: # reset config
             cfgU.kdl = dict()
             _log.debug(f'@cfgU.unload_kdl: erased current cfgU.kdl')
-        else:
-            _log.debug(f'@cfgU.unload_kdl: nothing to erase')
+        if cfgU.flat: # reset flat config
+            cfgU.flat = dict()
+            _log.debug(f'@cfgU.unload_kdl: erased current cfgU.flat')
+        _import_plugins_with_user_data_kdl() # reset plugin defaults
 
 def _import_plugins_with_user_data_kdl():
     from NeoVintageous.nv import plugin_surround

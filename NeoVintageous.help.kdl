@@ -42,21 +42,14 @@ event { /* Run cli commands on entering/leaving a mode by adding
   /-(n)out	{(mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓃ":0}"#;}
 }
 status { // Set values/reorder the status bar mode indicator, indicator format is '<prefix><Mode><suffix>', where Mode's name can be either of the space-separated values:
-  /*normal     	Ⓝ N
-    insert     	ⓘ I
-    command    	Ⓒ C
-    visual     	Ⓥ V
-    visualblock	▋ VB
-    visualline 	━ VL
-    select     	Ⓢ S
-    operator   	Ⓞ O
-    terminal   	Ⓣ T
-    replace    	Ⓡ R
-    Ⓜ M        	 map
-               	 map!
-    Ⓛ L        	//
-    Ⓧ X        	//
-  so ‘insert "ⓘ"’ would set Insert's mode indicator to ⓘ, but so would ‘I "ⓘ"’
+  /*normal  	Ⓝ N	     visual     	Ⓥ V
+    insert  	ⓘ I	     visualblock	▋ VB
+    command 	Ⓒ C	     visualline 	━ VL
+    select  	Ⓢ S	     terminal   	Ⓣ T
+    operator	Ⓞ O	     replace    	Ⓡ R
+    map     	Ⓜ M	                	Ⓛ L
+    map!    	   	                	Ⓧ X
+    so ‘insert "ⓘ"’ would set Insert's mode indicator to ⓘ, but so would ‘I "ⓘ"’
   */
   prefix 	""; suffix ""
   insert 	"ⓘ"

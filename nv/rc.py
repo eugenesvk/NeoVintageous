@@ -195,8 +195,8 @@ def _parse_keybind_kdl(keybind:kdl.Node):
             _log.error(f"Missing text command(s), skipping ‘{node}’")
             continue
         if (m_inv := modes & ~M.CmdTxt): # if there are more modes than allowed
-            s = 's' if len(m_inv) > 1 else ''
-            _log.warn(f"Invalid mode{s} ‘{m_inv}’ in ‘{mode_s}’")
+            # s = 's' if len(m_inv) > 1 else '' # TODO len fails in py3.8
+            _log.warn(f"Invalid ‘{m_inv}’ in ‘{mode_s}’ in node ‘{node}’")
 
         for mode in cfgU.text_commands: # iterate over all of the allowed modes
             if mode & modes: # if it's part of the keybind's modes, register the key

@@ -261,82 +261,6 @@ class cfgU(metaclass=Singleton):
         else:
             _log.debug(f'@cfgU.unload_kdl: nothing to erase')
 
-    # @staticmethod
-    # def load():
-    #     from NeoVintageous.nv.mappings import mappings_add, mappings_add_text
-    #     global user_settings, user_commands
-
-    #     win = sublime.active_window()
-
-    #     _log.debug(f'🌕️@cfgU.load: user_settings={user_settings.to_dict()}\nuser_commands={user_commands.to_dict()}')
-
-    #     cfgU.flat = flatten_dict(user_settings.to_dict()) # store a flat dictionary for easy access
-    #     # but also do some validation
-    #     cfgU.keymap = user_settings.get('keymap'    , None)
-
-    #     cfgU.events = user_settings.get('events'    , None)
-    #     if not (evtT := type(cfgU.events)) is dict:
-    #         _log.warn(f"‘events’ in ‘{cfgU_settings}’ should be a dictionary, not {evtT}")
-    #         cfgU.events = None
-
-    #     cfgU.status   = user_settings.get('status'  , None)
-    #     if not (cfgT := type(cfgU.status)) is dict:
-    #         _log.warn(f"‘status’ in ‘{cfgU_settings}’ should be a dictionary, not {cfgT}")
-    #         cfgU.status = None
-
-    #     cfgU.indicator_ls   = user_settings.get('indicator_ls'  , None)
-    #     if not (cfgT := type(cfgU.indicator_ls)) is dict:
-    #         _log.warn(f"‘indicator_ls’ in ‘{cfgU_settings}’ should be a dictionary, not {cfgT}")
-    #         cfgU.indicator_ls = None
-
-    #     cfgU.indicator_register   = user_settings.get('indicator_register'  , None)
-    #     if not (cfgT := type(cfgU.indicator_register)) is dict:
-    #         _log.warn(f"‘indicator_register’ in ‘{cfgU_settings}’ should be a dictionary, not {cfgT}")
-    #         cfgU.indicator_register = None
-
-    #     cfgU.surround   = user_settings.get('surround'  , None)
-    #     if not (cfgT := type(cfgU.surround)) is dict:
-    #         _log.warn(f"‘surround’ in ‘{cfgU_settings}’ should be a dictionary, not {cfgT}")
-    #         cfgU.surround = None
-
-    #     cfgU.edit   = user_settings.get('edit'  , None)
-    #     if not (cfgT := type(cfgU.edit)) is dict:
-    #         _log.warn(f"‘edit’ in ‘{cfgU_settings}’ should be a dictionary, not {cfgT}")
-    #         cfgU.edit = None
-
-    #     # _import_plugins_with_user_data()
-
-    #     # todo: #? convert mappings_add to a helper function that accepts enum2|enum2
-    #     keybinds = user_commands.get('keybind')
-    #     if   not               keybinds:
-    #         pass
-    #     elif not (cfgT := type(keybinds)) is dict:
-    #         _log.warn(f"Type of ‘keybind’ @ ‘{cfgU_command}’ should be dict, not {cfgT}")
-    #     else:
-    #         for mode_string,command_list in keybinds.items():
-    #             #{↑"NI"    :↑[{"m":"cmd1"},{"n":"cmd2"},]}
-    #             if not (cfgT := type(command_list)) is list:
-    #                 _log.warn(f"Type of ‘{mode_string}’ @ ‘{cfgU_command}’ should be list, not {cfgT}")
-    #                 break
-    #             modes = text_to_modes(mode_string) # "NI" → M.Normal | M.Insert
-    #             if not modes:
-    #                 _log.warn(f"Couldn't parse ‘{mode_string}’ @ ‘{cfgU_command}’ to a list of modes")
-    #                 break
-    #             if hasattr(M, modes.name): # create an iterable from a single item for ↓
-    #                 modes = [modes]
-    #             for mode in modes: # M.Normal
-    #                 if not mode in cfgU.text_commands:
-    #                     _log.warn(f"Invalid mode ‘{mode}’ in ‘{mode_string}’ in ‘{cfgU_command}’")
-    #                     break
-    #                 for command_dict in command_list: # {"m":"cmd1"}
-    #                     if not (cfgT := type(command_dict)) is dict:
-    #                         _log.warn(f"Type of ‘{command_dict}’ within ‘{mode_string}’ @‘{cfgU_command}’ should be dict, not {cfgT}")
-    #                         break
-    #                     for key,text_command in command_dict.items():
-    #                         #{↑"m":↑"cmd1"}
-    #                         cfgU.text_commands[mode][key] = text_command
-    #                         mappings_add_text(mode=MODE_NAMES_OLD[mode], lhs=key, rhs=text_command)
-
 def _import_plugins_with_user_data_kdl():
     from NeoVintageous.nv import plugin_surround
     plugin_surround.reload_with_user_data_kdl()
@@ -350,18 +274,6 @@ def _import_plugins_with_user_data_kdl():
     registers.reload_with_user_data_kdl()
     from NeoVintageous.nv import events_user
     events_user.reload_with_user_data_kdl()
-
-# def _import_plugins_with_user_data():
-#     from NeoVintageous.nv import plugin_surround
-#     plugin_surround.reload_with_user_data()
-#     from NeoVintageous.nv import vim
-#     vim.reload_with_user_data()
-#     from NeoVintageous.nv import state
-#     state.reload_with_user_data()
-#     from NeoVintageous.nv import ex_cmds
-#     ex_cmds.reload_with_user_data()
-#     from NeoVintageous.nv import registers
-#     registers.reload_with_user_data()
 
 from NeoVintageous.nv.cfg_parse import parse_kdl_config
 # def load_cfgU() -> None:

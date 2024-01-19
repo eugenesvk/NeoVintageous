@@ -85,16 +85,16 @@ mode_names = { # unique text abbreviations per mode (combinations are handled in
 # Normal, Insert, Command-line, Visual, Select, Operator-pending, Terminal-Job, Lang-Arg
 
 MODE_NAMES_OLD = { # ToDo: replace all with just enums, this is for temporary getting old names from the enums
-  Mode.Insert         	: INSERT,
-  Mode.InternalNormal 	: INTERNAL_NORMAL,
   Mode.Normal         	: NORMAL,
-  Mode.OperatorPending	: OPERATOR_PENDING,
-  Mode.Replace        	: REPLACE,
-  Mode.Select         	: SELECT,
-  Mode.Unknown        	: UNKNOWN,
+  Mode.Insert         	: INSERT,
   Mode.Visual         	: VISUAL,
   Mode.VisualBlock    	: VISUAL_BLOCK,
   Mode.VisualLine     	: VISUAL_LINE,
+  Mode.Select         	: SELECT,
+  Mode.OperatorPending	: OPERATOR_PENDING,
+  Mode.Replace        	: REPLACE,
+  Mode.InternalNormal 	: INTERNAL_NORMAL,
+  Mode.Unknown        	: UNKNOWN,
 }
 mode_names_rev = dict() # reverse mode dictionary for easier mapping of user strings to modes
 mode_clean_names_rev = dict() # with clean names for easier clean text name matching
@@ -123,8 +123,8 @@ mode_names_sort      .sort	(key=len,reverse=True)
 mode_clean_names_sort.sort	(key=len,reverse=True)
 re_flags = 0
 re_flags |= re.MULTILINE | re.IGNORECASE
-mode_names_re       	= re.compile("|".join(re.escape(x) for x in mode_names_sort      ), flags=re_flags)
-mode_clean_names_re 	= re.compile("|".join(re.escape(x) for x in mode_clean_names_sort), flags=re_flags)
+mode_names_re      	= re.compile("|".join(re.escape(x) for x in mode_names_sort      ), flags=re_flags)
+mode_clean_names_re	= re.compile("|".join(re.escape(x) for x in mode_clean_names_sort), flags=re_flags)
 
 def text_to_modes(mode_str:Union[str,None]):
   """convert an abbreviated mode string ‘mode_normalIvb’ to mode enum ‘M.Normal|M.Insert|M.VisualBlock’"""

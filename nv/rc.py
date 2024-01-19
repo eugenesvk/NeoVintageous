@@ -321,6 +321,9 @@ class cfgU(metaclass=Singleton):
         if cfgU.flat: # reset flat config
             cfgU.flat = dict()
             _log.debug(f'@cfgU.unload_kdl: erased current cfgU.flat')
+        if cfgU.text_commands: # reset text_commands config
+            cfgU.text_commands = dict()
+            _log.debug(f'@cfgU.unload_kdl: erased current cfgU.text_commands')
         _import_plugins_with_user_data_kdl() # reset plugin defaults
 
 def _import_plugins_with_user_data_kdl():

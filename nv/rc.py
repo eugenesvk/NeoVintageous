@@ -167,7 +167,7 @@ def _parse_line(line: str):
 
 from NeoVintageous.plugin import PACKAGE_NAME
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
-from NeoVintageous.nv.modes import Mode as M, text_to_modes, MODE_NAMES_OLD, M_EVENT, M_ANY, M_CMDTXT
+from NeoVintageous.nv.modes import Mode as M, text_to_modes, mode_names, MODE_NAMES_OLD, M_EVENT, M_ANY, M_CMDTXT
 import NeoVintageous.dep.kdl as kdl
 from typing import List, Union
 from pathlib import Path
@@ -196,7 +196,12 @@ def _parse_keybind_kdl(keybind:kdl.Node):
             continue
         if (m_inv := modes & ~M.CmdTxt): # if there are more modes than allowed
             # s = 's' if len(m_inv) > 1 else '' # TODO len fails in py3.8
-            _log.warn(f"Invalid ‘{m_inv}’ in ‘{mode_s}’ in node ‘{node}’")
+            mode_sym = ''
+            for mode in M_ANY: # TODO: m_inv iteration fails in py3.8
+                if mode & m_inv: # todo: store original re matches in text_to_mode to allow roundtrip of modes matching user input
+                    mode_sym += mode_names[mode][0]
+            s = 's' if len(mode_sym) > 1 else ''
+            _log.warn(f"Invalid mode{s} ‘{mode_sym}’ in ‘{mode_s}’ in node ‘{node}’")
 
         for mode in cfgU.text_commands: # iterate over all of the allowed modes
             if mode & modes: # if it's part of the keybind's modes, register the key

@@ -60,6 +60,7 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
      `nnoremap d b` why do you need to remember that `b` moves by words backwards if you never use it?
      `vnoremap d b` oh, can you can't even add a comment on the same line to clarify it
      And the whole `noremap` doesn't need to be repeated on every single line
+     + command repeat count in keybinds: `(Ⓝ)d (#4)"MoveByBigWordsBackward"` (or `№` `#` `c` `n` prefix) will move by 4 Words
 
 
 [0.5.1341]: https://github.com/eugenesvk/NeoVintageous/releases/tag/0.5.1341

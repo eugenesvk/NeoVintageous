@@ -159,7 +159,7 @@ def reload_with_user_data_kdl() -> None:
     if hasattr(cfgU,'kdl') and (nest := cfgU.kdl.get('indicator',None))\
         and                    (cfg  :=     nest.get('ls'       ,None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
         global CFG
-        # _log.debug(f"@registers: Parsing config indicator/register")
+        # _log.debug(f"@registers: Parsing config indicator/ls")
         for cfg_key in CFG:
             if (node := cfg.get(cfg_key,None)): # line "━" node/arg pair
                 if (args := node.args):

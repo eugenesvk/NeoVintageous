@@ -25,7 +25,7 @@ class Mode(Flag):
   Normal         	= auto(); N 	= Normal
   Insert         	= auto(); I 	= Insert
   Command        	= auto(); C 	= Command
-  Visual         	= auto(); X 	= Visual
+  Visual         	= auto(); VV	= Visual
   VisualBlock    	= auto(); VB	= VisualBlock
   VisualLine     	= auto(); VL	= VisualLine
   Select         	= auto(); S 	= Select
@@ -37,27 +37,27 @@ class Mode(Flag):
   Unknown        	= auto()
   InternalNormal 	= auto()
   #↓ combo       	abbreviations
+  X              	=           VV| VL| VB
   V              	=           X | S
-  VVV            	=           V | VL | VB
-  L              	=     I | C                 | Lng
+  L              	=     I | C                | Lng
   MapN           	=     I | C
-  Map            	= N |       V | S | O
-  Action         	= N |       VVV
-  Motion         	= N |       VVV   | O
-  Event          	=     I                 | R       | Action
-  Any            	= Map | MapN            | T | Lng
-  CmdTxt         	=     I                           | Motion
+  Map            	= N |       X | S | O
+  Action         	= N |       X
+  Motion         	= N |       X     | O
+  Event          	=     I                | R       | Action
+  Any            	= Map | MapN           | T | Lng
+  CmdTxt         	=     I                          | Motion
 M = Mode # in Sublime's Py3.8 Enum Flag's members aren't iterable (need Py3.11)
-M_EVENT  = [M.N,M.I    ,M.X,M.VB,M.VL,M.S        ,M.R]
-M_ANY    = [M.N,M.I,M.C,M.X,M.VB,M.VL,M.S,M.O,M.T,M.R,M.Lng]
-M_CMDTXT = [M.N,M.I    ,M.X,M.VB,M.VL,M.S,M.O]
+M_EVENT  = [M.N,M.I    ,M.VV,M.VB,M.VL,M.S        ,M.R]
+M_ANY    = [M.N,M.I,M.C,M.VV,M.VB,M.VL,M.S,M.O,M.T,M.R,M.Lng]
+M_CMDTXT = [M.N,M.I    ,M.VV,M.VB,M.VL,M.S,M.O]
 
 
 mode_names = { # unique text abbreviations per mode (combinations are handled in the Mode enum)
   Mode.N   	: ['Ⓝ','N' 	,'normal'         	,NORMAL          	],
   Mode.I   	: ['ⓘ','I' 	,'insert'         	,INSERT          	],
   Mode.C   	: ['Ⓒ','C' 	,'command','cli'  	                 	],
-  Mode.X   	: ['Ⓥ','V' 	,'visual'         	,VISUAL          	],
+  Mode.VV  	: ['Ⓥ','V' 	,'visual'         	,VISUAL          	],
   Mode.VB  	: ['▋','VB'	,'visualblock'    	,VISUAL_BLOCK    	],
   Mode.VL  	: ['━','VL'	,'visualline'     	,VISUAL_LINE     	],
   Mode.S   	: ['Ⓢ','S' 	,'select'         	,SELECT          	],
@@ -65,7 +65,7 @@ mode_names = { # unique text abbreviations per mode (combinations are handled in
   Mode.T   	: ['Ⓣ','T' 	,'terminal','job' 	                 	],
   Mode.R   	: ['Ⓡ','R' 	,'replace'        	,REPLACE         	],
   Mode.Lng 	: ['Ⓛ','L' 	,'language','lang'	,'lng'           	],
-  # Mode.V 	: ['Ⓧ','X' 	                  	                 	],
+  Mode.X   	: ['Ⓧ','X' 	                  	                 	],
   Mode.Map 	: ['Ⓜ','M' 	,'map'            	                 	],
   Mode.MapN	: [        	 'map!'           	                 	],
 }

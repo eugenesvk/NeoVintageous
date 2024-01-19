@@ -172,7 +172,14 @@ import NeoVintageous.dep.kdl as kdl
 from typing import List, Union
 from pathlib import Path
 
+from NeoVintageous.nv.cfg_parse import clean_name
 re_count = re.compile(r"[№#cn](\d+)")
+re_filetype = re.compile(r"[\s,]+")
+_keybind_prop = {
+    'desc':['d','des','desc','description','inf','info'],
+    'icon':['i','icn','icon','img','image'],
+    'file':['ft','file','filetype'],
+    }
 def _parse_keybind_kdl(keybind:kdl.Node):
     from NeoVintageous.nv.mappings import mappings_add, mappings_add_text
     if not (cfgT := type(keybind)) is kdl.Node:
@@ -183,14 +190,27 @@ def _parse_keybind_kdl(keybind:kdl.Node):
         modes  = text_to_modes(mode_s) # ‘Mode.Normal’ enum for ‘Ⓝ’ (‘Mode.Any’ for None tag)
         key    = node.name             # ‘q’
         cmd_txt = []                   # ‘[OpenNameSpace]’
-        for arg in node.args:
-            tag = arg.tag   if hasattr(arg,'tag'  ) else ''
-            cmd = arg.value if hasattr(arg,'value') else arg
+        for arg in node.args:          # Parse arguments
+            tag = clean_name(arg.tag   if hasattr(arg,'tag'  ) else '' )
+            cmd = clean_name(arg.value if hasattr(arg,'value') else arg)
             count = 1
             if count_l := re_count.findall(tag):
                 count = int(count_l[0])
             for i in range(1,1+(count if count > 1 else 1)):
                 cmd_txt.append(cmd)
+
+        prop = dict()                  # Parse properties
+        for pkey,tag_val in node.props.items(): # ‘i="✗" d="Close a tab"’
+            tag = arg.tag   if hasattr(tag_val,'tag'  ) else ''
+            val = arg.value if hasattr(tag_val,'value') else tag_val
+            for dkey,key_abbrev in _keybind_prop.items():
+                if dkey == 'file':
+                    if pkey in key_abbrev: # ['ft','file','filetype']
+                        prop[dkey] = []
+                        prop[dkey].extend(re_filetype.split(val))
+                else:
+                    if pkey in key_abbrev:
+                        prop[dkey] = val
 
         if not modes:
             _log.error(f"Couldn't parse ‘{mode_s}’ to a list of modes, skipping ‘{node}’")
@@ -213,7 +233,7 @@ def _parse_keybind_kdl(keybind:kdl.Node):
         for mode in cfgU.text_commands: # iterate over all of the allowed modes
             if mode & modes: # if it's part of the keybind's modes, register the key
                 cfgU.text_commands[mode][key] = cmd_txt
-                mappings_add_text(mode=MODE_NAMES_OLD[mode], lhs=key, rhs=cmd_txt)
+                mappings_add_text(mode=MODE_NAMES_OLD[mode], key=key, cmd=cmd_txt, prop=prop)
 
 
 # cfgU_settings = (f'{PACKAGE_NAME}.sublime-settings')

@@ -15,6 +15,7 @@ from NeoVintageous.plugin import PACKAGE_NAME
 __all__ = [
   'NvUserKeymap',
   'NvDefaultKeymapKdl',
+  'NvOldCfgKeymapKdl',
 ]
 
 def isJstr(key, strVal) -> bool:
@@ -230,3 +231,103 @@ class NvDefaultKeymapKdl(ApplicationCommand):
         sublime.message_dialog(f"{PACKAGE_NAME}:\nKeymap in KDL generated at '{dest}'")
     except FileNotFoundError as e:
       sublime.error_message(f"{PACKAGE_NAME}:\nTried and failed to save generated keymap to\n{dest}")
+
+
+class NvOldCfgKeymapKdl(ApplicationCommand):
+  def __init__(self):
+    self.keymap	= "NeoVintageous.key-user.kdl"
+    self.dest  	= f"$packages/{PACKAGE_NAME}/{self.keymap}" # ($platform)
+
+  def run(self, **kwargs):
+    from NeoVintageous.nv.vi.keys  import  mappings as kbDef # [mode][<C-x>]=cls<ViDecrement>
+    from NeoVintageous.nv.mappings import _mappings as kbUsr # [m][w]    =f
+    #                                                          [m][<C-J>]=:SwapLineDown<CR>
+    # with filetype                                             = {'':cmd_all, 'go':cmd}
+    from NeoVintageous.nv.vi.keys import map_cmd2textcmd, map_textcmd2cmd
+    # map_textcmd2cmd[cmd] = cls(*args,**kwargs)
+    # map_cmd2textcmd[cls internal command Name] = [textual,command,name(s)] from ↑ (preserves CaSe)
+
+    key2cmd_ft_m = {} # {<C-w>:{'ViDelete':{'file':[mode_insert,mode_normal]}}}
+    def add_one(mode:M, key, fileT, cmd): # add 1 combo to key2cmd_ft_m
+      if   key in key2cmd_ft_m:
+        if cmd in key2cmd_ft_m[key]:
+          if fileT in key2cmd_ft_m[key][cmd]:
+            key2cmd_ft_m[key] [cmd] [fileT] |= mode  # add an extra               mode
+          else:
+            key2cmd_ft_m[key] [cmd] [fileT]  = mode  # add a new             file/mode
+        else:
+          key2cmd_ft_m  [key] [cmd]={fileT:    mode} # add a new         cmd/file/mode
+      else:
+        key2cmd_ft_m    [key]={cmd :{fileT:    mode}} #add a new keybind/cmd/file/mode
+
+    for   mode_s ,mode_d      in  kbUsr.items(): # generate key2cmd_ft_m
+      mode:M = mode_names_rev[mode_s]
+      for keybind,cmd_or_file in mode_d.items(): # <C-x>  <ViDecrement> or 'go':<ViDecrement>
+        if isinstance(cmd_or_file  , str):
+          fileT = ''
+          cmd = cmd_or_file # <ViDecrement>
+          add_one(  mode=mode, key=keybind, fileT=fileT, cmd=cmd)
+        elif isinstance(cmd_or_file, dict):
+          for fileT,cmd in cmd_or_file.items(): #'':cmd1 , 'go':cmd2
+            add_one(mode=mode, key=keybind, fileT=fileT, cmd=cmd)
+        else:
+          print(f"error parsing keybind=‘{keybind}’ , cmd_or_file=‘{cmd_or_file}’")
+    # print('key2cmd_ft_m', key2cmd_ft_m)
+
+    keymap_kdl = parse_kdl_doc('')
+    for     keybind,keybind_d in key2cmd_ft_m.items():  # generate keymap_kdl from User keybinds
+      for   cmd_s  ,fileT_d   in    keybind_d.items():
+        fileT_d_rev_comb = dict() # store a list of filetypes per unique mode combo to avoid 1 line per each file
+        for fileT  ,modes     in      fileT_d.items(): # combine file types if modes are the same
+          if modes in fileT_d_rev_comb:
+            fileT_d_rev_comb[modes] += [fileT]
+          else:
+            fileT_d_rev_comb[modes]  = [fileT]
+
+        for modes  ,fileT     in fileT_d_rev_comb.items():
+          (mode_l_sort,m_enum) = mode_group_sort(modes)
+          mode_s = "".join(mode_l_sort) # Ⓝⓘ
+          cmd_txt = cmd_s
+          props = {}
+          fileT_noblank = [f for f in fileT if not f == ''] # ignore '' file types that mean any
+          if fileT_noblank:
+            props['file'] = " ".join(fileT_noblank)
+
+          for  mode in M_ANY: # TODO: m_enum iteration fails in py3.8
+            if mode & modes:
+              mode_name = MODE_NAMES_OLD[mode]
+              if mode_name not in kbDef: # empty modes or _ fillers
+                continue
+              elif (cmd_cls := kbDef[mode_name].get(cmd_s)): # b → <...ViMoveByWordsBackward>
+                T = type(cmd_cls)
+                cmd_txt = map_cmd2textcmd[T][0] # ViMoveByWordsBackward → MoveByWordsBackward
+                props['def'] = cmd_s # save ‘b’ default vim key to props ‘def’
+                break
+          if '"' in cmd_txt: # create a raw string to avoid escaping quotes
+            arg = kdl.RawString(tag=None,value=cmd_txt)
+          else:
+            arg = kdl.   String(tag=None,value=cmd_txt)
+          node_key = kdl.Node(tag=mode_s, name=keybind, args=[arg], props=props)
+          # (Ⓝ)d "MoveByWordsBackward" def="b"
+
+          keymap_kdl.nodes.append(node_key)
+
+    dest = expand(kwargs.get('file',self.dest)) # expand Sublime variables
+    if not (parent := Path(dest).parent).exists():
+      try:
+        os.mkdir(parent)
+        print(f"{PACKAGE_NAME}: created folder ‘{parent}’ to store the generated keybinds as KDL")
+      except FileNotFoundError as e:
+        sublime.error_message(f"{PACKAGE_NAME}: need to create user keybinds at ‘{dest}’, but its grand-parent folder doesn't exist:\n‘{e}’")
+        return
+      except FileExistsError as e:
+        pass
+    try:
+      with open(dest, 'w') as file:
+        print(f"/*Autogenerated user ‘{PACKAGE_NAME}’ keybinds in KDL (from .neovintageousrc) via ‘{self.name()}’ command, changes will be overwritten", file=file)
+        print(f' (mode)Key "CommandName"   where mode is an abbreviated name or icon from:{MODE_HELP}*/', file=file)
+        print(keymap_kdl, file=file)
+        sublime.message_dialog(f"{PACKAGE_NAME}:\nKeybinds in KDL generated at '{dest}'")
+      sublime.active_window().open_file(dest)
+    except FileNotFoundError as e:
+      sublime.error_message(f"{PACKAGE_NAME}:\nTried and failed to save generated keybinds to\n{dest}")

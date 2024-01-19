@@ -11,5 +11,5 @@
   "default"  :"{\n\t$0\n}\n"}},
 {"caption":"NeoVintageous: Open new config file example (KDL)"     	,"command":"open_file"    	,"args":{"file":"${packages}/NeoVintageous/NeoVintageous.help.kdl"}},
 {"caption":"NeoVintageous: Open old config file (.neovintageousrc)"	,"command":"neovintageous"	,"args":{"action":"open_rc_file"}},
-{"caption":"NeoVintageous: Dump default keymap as KDL"             	,"command":"nv_default_keymap_kdl"},
+{"caption":"NeoVintageous: Convert default keymap to KDL"          	,"command":"nv_default_keymap_kdl"},
 ]

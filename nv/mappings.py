@@ -169,30 +169,19 @@ def mappings_add(mode: str, lhs: str, rhs: str) -> None:
 
     _mappings[mode][_normalise_lhs(lhs)] = rhs
 
-def mappings_add_text(mode: str, lhs: str, rhs: Union[str, list]) -> None:
-    # {"m":"cmd1"} or {"m":["cmd1","cmd2"]}
-    _log.map(f" mappings_add_text mode={mode} ‹¦{lhs}¦ ¦{rhs}¦›")
-    if re.match('^FileType$', lhs):
-        parsed = re.match('^([^ ]+) ([^ ]+)\\s+', rhs)
-        if parsed:
-            for file_type in parsed.group(1).split(','):
-                file_type_lhs = parsed.group(2)
-                file_type_rhs = rhs[len(parsed.group(0)):]
-
-                file_type_lhs_norm = _normalise_lhs(file_type_lhs)
-
-                match = _mappings_text[mode].get(file_type_lhs_norm)
-
-                if not match:
-                    _mappings_text[mode][file_type_lhs_norm] = {}
-                elif isinstance(match, str):
-                    _mappings_text[mode][file_type_lhs_norm] = {'': match}
-
-                _mappings_text[mode][file_type_lhs_norm][file_type] = file_type_rhs
-
-            return
-
-    _mappings_text[mode][_normalise_lhs(lhs)] = rhs
+def mappings_add_text(mode:str, key:str, cmd:Union[str,list], prop:dict={}) -> None:
+    #           mode_normal     W        MoveByBigWords       {file:['txt','rs']}
+    _log.map(f" mappings_add_text ¦{mode}¦ ‹¦{key}¦⟶¦{cmd}¦› @file¦{prop.get('file','')}¦")
+    key_norm = _normalise_lhs(key)
+    if 'file' in prop:
+        for file_type in prop['file']:
+            if not (match := _mappings_text[mode].get(key_norm)):
+                _mappings_text[mode][key_norm]            = {}
+            elif isinstance(match, str):
+                _mappings_text[mode][key_norm]            = {'': match}
+            _mappings_text    [mode][key_norm][file_type] = cmd
+        return
+    _mappings_text            [mode][key_norm]            = cmd
 
 
 def mappings_remove(mode: str, lhs: str) -> None:

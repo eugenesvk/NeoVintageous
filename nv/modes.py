@@ -49,25 +49,25 @@ class Mode(Flag):
   CmdTxt         	=     I                           | Motion
 M = Mode # in Sublime's Py3.8 Enum Flag's members aren't iterable (need Py3.11)
 M_EVENT  = [M.N,M.I    ,M.X,M.VB,M.VL,M.S        ,M.R]
-M_ANY    = [M.N,M.I,M.C,M.X,M.VB,M.VL,M.S,M.O,M.T,M.Lng]
+M_ANY    = [M.N,M.I,M.C,M.X,M.VB,M.VL,M.S,M.O,M.T,M.R,M.Lng]
 M_CMDTXT = [M.N,M.I    ,M.X,M.VB,M.VL,M.S,M.O]
 
 
 mode_names = { # unique text abbreviations per mode (combinations are handled in the Mode enum)
-  Mode.N   	: ['Ⓝ','N' 	,'normal'        	,NORMAL          	],
-  Mode.I   	: ['ⓘ','I' 	,'insert'        	,INSERT          	],
-  Mode.C   	: ['Ⓒ','C' 	,'command','cli' 	                 	],
-  Mode.V   	: ['Ⓥ','V' 	,'visual'        	,VISUAL          	],
-  Mode.VB  	: ['▋','VB'	,'visualblock'   	,VISUAL_BLOCK    	],
-  Mode.VL  	: ['━','VL'	,'visualline'    	,VISUAL_LINE     	],
-  Mode.S   	: ['Ⓢ','S' 	,'select'        	,SELECT          	],
-  Mode.O   	: ['Ⓞ','O' 	,'operator'      	,OPERATOR_PENDING	],
-  Mode.T   	: ['Ⓣ','T' 	,'terminal','job'	                 	],
-  Mode.R   	: ['Ⓡ','R' 	,'replace'       	,REPLACE         	],
-  Mode.L   	: ['Ⓛ','L' 	                 	                 	],
-  Mode.X   	: ['Ⓧ','X' 	                 	                 	],
-  Mode.Map 	: ['Ⓜ','M' 	,'map'           	                 	],
-  Mode.MapN	: [        	 'map!'          	                 	],
+  Mode.N   	: ['Ⓝ','N' 	,'normal'         	,NORMAL          	],
+  Mode.I   	: ['ⓘ','I' 	,'insert'         	,INSERT          	],
+  Mode.C   	: ['Ⓒ','C' 	,'command','cli'  	                 	],
+  Mode.X   	: ['Ⓥ','V' 	,'visual'         	,VISUAL          	],
+  Mode.VB  	: ['▋','VB'	,'visualblock'    	,VISUAL_BLOCK    	],
+  Mode.VL  	: ['━','VL'	,'visualline'     	,VISUAL_LINE     	],
+  Mode.S   	: ['Ⓢ','S' 	,'select'         	,SELECT          	],
+  Mode.O   	: ['Ⓞ','O' 	,'operator'       	,OPERATOR_PENDING	],
+  Mode.T   	: ['Ⓣ','T' 	,'terminal','job' 	                 	],
+  Mode.R   	: ['Ⓡ','R' 	,'replace'        	,REPLACE         	],
+  Mode.Lng 	: ['Ⓛ','L' 	,'language','lang'	,'lng'           	],
+  # Mode.V 	: ['Ⓧ','X' 	                  	                 	],
+  Mode.Map 	: ['Ⓜ','M' 	,'map'            	                 	],
+  Mode.MapN	: [        	 'map!'           	                 	],
 }
 #  Mode→  |Nor|Ins|Cmd|Vis|Sel|Opr|Term|Lng|
 # ↓Cmd    +---+---+---+---+---+---+--- +---+

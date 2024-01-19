@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import dataclasses
+import re
 from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
 from dataclasses import dataclass
@@ -49,15 +50,14 @@ class Document:
         for node in self.nodes:
             if node.matchesKey(key):
                 return node
-        msg = printNodeKey(key)
-        raise KeyError(msg)
+        raise KeyError(key)
 
     def getAll(
         self,
         key: t.NodeKey,
     ) -> t.Iterable[Node]:
         for node in self.nodes:
-            if node.matchesKey(key):
+            if nodeMatchesKey(node, key):
                 yield node
 
     def __str__(self) -> str:
@@ -144,28 +144,28 @@ class Node:
         for node in self.nodes:
             if node.matchesKey(key):
                 return node
-        msg = printNodeKey(key)
-        raise KeyError(msg)
+        raise KeyError(key)
 
     def getAll(
         self,
         key: t.NodeKey,
     ) -> t.Iterable[Node]:
         for node in self.nodes:
-            if node.matchesKey(key):
+            if nodeMatchesKey(node, key):
                 yield node
 
     def matchesKey(self, key: t.NodeKey) -> bool:
-        if key is None:
-            return True
-        if isinstance(key, str):
-            return self.name == key
-        tag, name = key
-        if self.tag != tag:
-            return False
-        if name is None:
-            return True
-        return self.name == name
+        return nodeMatchesKey(self, key)
+
+    def getProps(self, key: t.ValueKey) -> t.Iterable[tuple[str, t.Any]]:
+        for name, val in self.props.items():
+            if valueMatchesKey(val, key):
+                yield name, val
+
+    def getArgs(self, key: t.ValueKey) -> t.Iterable[t.Any]:
+        for val in self.args:
+            if valueMatchesKey(val, key):
+                yield val
 
     def __str__(self) -> str:
         return self.print()
@@ -178,6 +178,9 @@ class Value(metaclass=ABCMeta):
     @abstractmethod
     def print(self, config: t.PrintConfig | None = None) -> str:
         pass
+
+    def matchesKey(self, key: t.ValueKey) -> bool:
+        return valueMatchesKey(self, key)
 
 
 @dataclass
@@ -384,7 +387,6 @@ def toKdlValue(val: t.Any) -> t.KDLValue:
     import datetime
     import decimal
     import ipaddress
-    import re
     import urllib
     import uuid
 
@@ -437,7 +439,6 @@ def isKdlishValue(val: t.Any) -> bool:
     import datetime
     import decimal
     import ipaddress
-    import re
     import urllib
     import uuid
 
@@ -472,12 +473,70 @@ def printTag(tag: str | None) -> str:
         return ""
 
 
-def printNodeKey(key: t.NodeKey) -> str:
-    if key is None:
-        return ""
-    if isinstance(key, str):
-        return key
-    return f"({key[0]}){key[1] or ''}"
+def nodeMatchesKey(node: t.Any, key: t.NodeKey) -> bool:
+    if not isinstance(node, Node):
+        node = node.to_kdl()
+    if isinstance(key, tuple):
+        tagKey, nameKey = key
+        return tagMatchesKey(node.tag, tagKey) and nameMatchesKey(node.name, nameKey)
+    else:
+        return nameMatchesKey(node.name, key)
+
+
+def valueMatchesKey(value: t.Any, key: t.ValueKey) -> bool:
+    # Need to allow for both Value and values that were converted to other types
+    # non-Value objects are untagged, by definition
+    if isinstance(value, Value):
+        tag = value.tag
+    else:
+        tag = None
+    if isinstance(key, tuple):
+        tagKey, typeKey = key
+        return tagMatchesKey(tag, tagKey) and typeMatchesKey(value, typeKey)
+    else:
+        return tagMatchesKey(tag, key)
+
+
+def tagMatchesKey(val: str | None, key: t.TagKey) -> bool:
+    if key == Ellipsis:
+        return True
+    elif key is None:
+        return val is None
+    elif isinstance(key, str):
+        return val == key
+    elif isinstance(key, re.Pattern):
+        if val is None:
+            return False
+        return bool(key.match(val))
+    elif callable(key):
+        return bool(key(val))
+    msg = f"Invalid TagKey {key!r}"
+    raise Exception(msg)
+
+
+def nameMatchesKey(val: str, key: t.NameKey) -> bool:
+    if key == Ellipsis:
+        return True
+    elif key is None:
+        return True
+    elif isinstance(key, str):
+        return val == key
+    elif isinstance(key, re.Pattern):
+        return bool(key.match(val))
+    elif callable(key):
+        return bool(key(val))
+    msg = f"Invalid NameKey {key!r}"
+    raise Exception(msg)
+
+
+def typeMatchesKey(val: Value, key: t.TypeKey) -> bool:
+    if key == Ellipsis:
+        return True
+    try:
+        return isinstance(val, t.cast("t._ClassInfo", key))
+    except Exception as e:
+        msg = f"Invalid TypeKey {key!r}"
+        raise Exception(msg) from e
 
 
 def escapedFromRaw(chars: str) -> str:

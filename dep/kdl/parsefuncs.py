@@ -76,7 +76,10 @@ def parseNode(s: Stream, start: int) -> Result:
                     node,
                     ParseFragment(s[start:nameEnd], s, start),
                 )
-                break
+                if node == NotImplemented:
+                    continue
+                else:
+                    break
         return Result(node, i)
 
 
@@ -200,18 +203,23 @@ def parseValue(s: Stream, start: int) -> Result:
         val, i = parseKeyword(s, i)
         if val is Failure:
             val, i = parseString(s, i)
+    val.tag = tag
     if val is not Failure:
-        if tag is None and s.config.nativeUntaggedValues:
-            val = val.value
+        for key, converter in s.config.valueConverters.items():
+            if val.matchesKey(key):
+                val = converter(
+                    val,
+                    ParseFragment(s[valueStart:i], s, i),
+                )
+                if val == NotImplemented:
+                    continue
+                else:
+                    break
         else:
-            val.tag = tag
-        if tag is not None and tag in s.config.valueConverters:
-            val = s.config.valueConverters[tag](
-                val,
-                ParseFragment(s[valueStart:i], s, i),
-            )
-        if tag is not None and s.config.nativeTaggedValues and isinstance(val, types.Value):
-            val = converters.toNative(val, ParseFragment(s[valueStart:i], s, i))
+            if tag is None and s.config.nativeUntaggedValues:
+                val = val.value
+            if tag is not None and s.config.nativeTaggedValues:
+                val = converters.toNative(val, ParseFragment(s[valueStart:i], s, i))
         return Result((None, val), i)
 
     if s[i] == "'":

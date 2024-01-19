@@ -172,6 +172,7 @@ import NeoVintageous.dep.kdl as kdl
 from typing import List, Union
 from pathlib import Path
 
+re_count = re.compile(r"[№#cn](\d+)")
 def _parse_keybind_kdl(keybind:kdl.Node):
     from NeoVintageous.nv.mappings import mappings_add, mappings_add_text
     if not (cfgT := type(keybind)) is kdl.Node:
@@ -182,8 +183,14 @@ def _parse_keybind_kdl(keybind:kdl.Node):
         modes  = text_to_modes(mode_s) # ‘Mode.Normal’ enum for ‘Ⓝ’ (‘Mode.Any’ for None tag)
         key    = node.name             # ‘q’
         cmd_txt = []                   # ‘[OpenNameSpace]’
-        for cmd in (cmds := node.args):
-            cmd_txt.append(cmd)
+        for arg in node.args:
+            tag = arg.tag   if hasattr(arg,'tag'  ) else ''
+            cmd = arg.value if hasattr(arg,'value') else arg
+            count = 1
+            if count_l := re_count.findall(tag):
+                count = int(count_l[0])
+            for i in range(1,1+(count if count > 1 else 1)):
+                cmd_txt.append(cmd)
 
         if not modes:
             _log.error(f"Couldn't parse ‘{mode_s}’ to a list of modes, skipping ‘{node}’")

@@ -173,7 +173,7 @@ from typing import List, Union
 from pathlib import Path
 
 from NeoVintageous.nv.cfg_parse import clean_name
-re_count = re.compile(r"[№#cn](\d+)")
+re_count = re.compile(r"[№#⌗cn](\d+)")
 re_filetype = re.compile(r"[\s,]+")
 _keybind_prop = {
     'desc':['d','des','desc','description','inf','info'],

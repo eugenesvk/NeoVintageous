@@ -52,7 +52,7 @@ _MODES = {
     M.InternalNormal 	: '',
     M.Normal         	: 'Ⓝ',
     M.OperatorPending	: 'Ⓞ',
-    M.V              	: 'Ⓥ',
+    M.VV             	: 'Ⓥ',
     M.Visual         	: 'Ⓥ',
     M.VisualBlock    	: 'Ⓥ▋',
     M.VisualLine     	: 'Ⓥ━',

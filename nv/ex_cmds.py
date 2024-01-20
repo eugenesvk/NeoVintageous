@@ -1394,14 +1394,11 @@ def do_ex_cmdline(window, line: str) -> None:
         raise RuntimeError('cmdline must start with a colon')
 
     if (cmd_sublime := line[1:]).startswith('"command"'): # Run Sublime commands beginning with "command"
-        user_sublime_commands = _parse_user_sublime_cmdline(window, cmd_sublime)
-        if not user_sublime_commands:
+        cmd_subl = parse_user_sublime_cmdline(cmd_sublime)
+        if not cmd_subl:
             return status_message('invalid Sublime command')
-        _log.debug('execute user Sublime ex command: %s', user_sublime_commands)
-
-        for command in user_sublime_commands:
-            window.run_command(command['command'], command['args'])
-
+        _log.debug('execute user Sublime ex command: %s', cmd_subl)
+        window.run_command(cmd_subl['command'], cmd_subl['args'])
         return
     if (semi_double := (line[1] == ':')) or line[1].isupper():
         # Run user command. User commands begin with an uppercase letter or ::

@@ -13,4 +13,5 @@
 {"caption":"NeoVintageous: Open old config file (.neovintageousrc)"	,"command":"neovintageous"	,"args":{"action":"open_rc_file"}},
 {"caption":"NeoVintageous: Dump default key bindings as KDL"       	,"command":"nv_default_keymap_kdl"},
 {"caption":"NeoVintageous: Dump old config key bindings as KDL"    	,"command":"nv_old_cfg_keymap_kdl"},
+{"caption":"NeoVintageous: Dump old config as KDL"                 	,"command":"nv_old_cfg_kdl"},
 ]

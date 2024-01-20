@@ -54,23 +54,22 @@ M_CMDTXT = [M.N,M.I    ,M.VV,M.VB,M.VL,M.S,M.O]
 
 
 mode_names = { # unique text abbreviations per mode (combinations are handled in the Mode enum)
-  Mode.N   	: ['Ⓝ','N'  	,'normal'                   	,NORMAL          	],
-  Mode.I   	: ['ⓘ','I'  	,'insert'                   	,INSERT          	],
-  Mode.C   	: ['Ⓒ','C'  	,'command','cli'            	                 	],
-  Mode.VV  	: ['Ⓥ','VV' 	,'visual'                   	,VISUAL          	],
-  Mode.VB  	: ['▋','VB' 	,'visualblock','vblock'     	,VISUAL_BLOCK    	],
-  Mode.VL  	: ['━','VL' 	,'visualline' ,'vline'      	,VISUAL_LINE     	],
-  Mode.S   	: ['Ⓢ','S'  	,'select'                   	,SELECT          	],
-  Mode.O   	: ['Ⓞ','O'  	,'operator'                 	,OPERATOR_PENDING	],
-  Mode.T   	: ['Ⓣ','T'  	,'terminal','job'           	                 	],
-  Mode.R   	: ['Ⓡ','R'  	,'replace'                  	,REPLACE         	],
-  Mode.Lng 	: ['Ⓛ','L'  	,'language','lang'          	,'lng'           	],
-  #        	  Combos    	                            	                 	#
-  Mode.V   	: ['Ⓥ','V'  	,'vmap'                     	                 	],
-  Mode.X   	: ['Ⓥ³','V³'	,'Ⓥ3','V3','VVV','VLB','VBL'	                 	],
-  Mode.X   	: ['Ⓧ','X'  	,'xmap'                     	                 	],
-  Mode.Map 	: ['Ⓜ','M'  	,'map'                      	                 	],
-  Mode.MapN	: [         	 'map!'                     	                 	],
+  Mode.N   	: ['Ⓝ','N'  	,'normal'                  	,NORMAL           	],
+  Mode.I   	: ['ⓘ','I'  	,'insert'                  	,INSERT           	],
+  Mode.C   	: ['Ⓒ','C'  	,'command','cli'           	                  	],
+  Mode.VV  	: ['ⓋⓋ','VV'	,'visual'                  	,VISUAL           	],
+  Mode.VB  	: ['▋','VB' 	,'visualblock','vblock'    	,VISUAL_BLOCK     	],
+  Mode.VL  	: ['━','VL' 	,'visualline' ,'vline'     	,VISUAL_LINE      	],
+  Mode.S   	: ['Ⓢ','S'  	,'select'                  	,SELECT           	],
+  Mode.O   	: ['Ⓞ','O'  	,'operator'                	,OPERATOR_PENDING 	],
+  Mode.T   	: ['Ⓣ','T'  	,'terminal','job'          	                  	],
+  Mode.R   	: ['Ⓡ','R'  	,'replace'                 	,REPLACE          	],
+  Mode.Lng 	: ['Ⓛ','L'  	,'language','lang'         	,'lng'            	],
+  #        	  Combos    	                           	                  	#
+  Mode.V   	: ['Ⓥ','V'  	,'vmap'                    	                  	],
+  Mode.X   	: ['Ⓧ','X'  	,'xmap','Ⓥ³','V³','Ⓥ3','V3'	,'VVV','VLB','VBL'	],
+  Mode.Map 	: ['Ⓜ','M'  	,'map'                     	                  	],
+  Mode.MapN	: [         	 'map!'                    	                  	],
 }
 #  Mode→  │Nor│Ins│Cmd│Vis│Sel│Opr│Ter│Lng│VL │VB │
 # ↓Cmd    ┼───┼───┼───┼───┼───┼───┼───┼───┼───┼───┼
@@ -102,16 +101,17 @@ MODE_NAMES_OLD = { # ToDo: replace all with just enums, this is for temporary ge
 mode_names_rev = dict() # reverse mode dictionary for easier mapping of user strings to modes
 mode_clean_names_rev = dict() # with clean names for easier clean text name matching
 for mode,mode_text in mode_names.items():
-  if isinstance(mode_text, str):
+  # Mode.N  ['Ⓝ','N','normal',NORMAL]
+  if isinstance(mode_text, str): #'N'
     if   mode_text     in mode_names_rev:
-      _log.debug(f" ‘{mode_text}’ is not unique, check ‘mode_names’")
+      _log.error(f" ‘{mode_text}’ is not unique, check ‘mode_names’")
     else:
       mode_names_rev                   [mode_text    ]  = mode
       mode_clean_names_rev  [clean_name(mode_text    )] = mode
-  if isinstance(mode_text, list):
+  if isinstance(mode_text, list): #['Ⓝ','N','normal',NORMAL]
     for         mode_text_str in mode_text:
       if mode_text_str in mode_names_rev:
-        _log.debug(f" ‘{mode_text_str}’ is not unique, check ‘mode_names’")
+        _log.error(f" ‘{mode_text_str}’ is not unique, check ‘mode_names’")
       else:
         mode_names_rev                 [mode_text_str]  = mode
         mode_clean_names_rev[clean_name(mode_text_str)] = mode

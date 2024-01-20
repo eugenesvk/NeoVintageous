@@ -33,6 +33,7 @@ from NeoVintageous.nv.vi.cmd_base import CommandNotFound
 from NeoVintageous.nv.vi.keys import to_bare_command_name
 from NeoVintageous.nv.vi.keys import tokenize_keys
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
+from NeoVintageous.nv.modes import mode_names, mode_names_rev, mode_full_to_abbrev, mode_group_sort
 from NeoVintageous.nv.log import addLoggingLevel, stream_handler
 
 _log = logging.getLogger(__name__)
@@ -143,31 +144,52 @@ def _normalise_lhs(lhs: str) -> str:
         return lhs
 
 
-def mappings_add(mode: str, lhs: str, rhs: str) -> None:
+import NeoVintageous.dep.kdl as kdl
+import NeoVintageous.nv.cfg_parse
+from NeoVintageous.nv.cfg_parse import _dump_to_kdl
+def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
     # nnoremap FileType go gd :LspSymbolDefinition<CR>
     _log.map(f" @mappings_add mode={mode} lhs={lhs} rhs={rhs}")
+    modes = [mode] if isinstance(mode, str) else mode
+    key = _normalise_lhs(lhs)
+    if _dump_to_kdl:
+        (mode_l_sort,m_enum) = mode_group_sort(modes)
+        mode_s = "".join(mode_l_sort) # Ⓝⓘ
+        if '"' in rhs: # create a raw string to avoid escaping quotes
+            arg = kdl.RawString(tag=None,value=rhs)
+        else:
+            arg = kdl.   String(tag=None,value=rhs)
+
     if re.match('^FileType$', lhs):
         parsed = re.match('^([^ ]+) ([^ ]+)\\s+', rhs)
         if parsed:
-            for file_type in parsed.group(1).split(','):
-                file_type_lhs = parsed.group(2)
-                file_type_rhs = rhs[len(parsed.group(0)):]
-
-                file_type_lhs_norm = _normalise_lhs(file_type_lhs)
-
-                match = _mappings[mode].get(file_type_lhs_norm)
-
-                if not match:
-                    _mappings[mode][file_type_lhs_norm] = {}
-                elif isinstance(match, str):
-                    _mappings[mode][file_type_lhs_norm] = {'': match}
-
-                _mappings[mode][file_type_lhs_norm][file_type] = file_type_rhs
-                #                 gd                   go        :LspSymbolDefinition<CR>
-
+            file_types = parsed.group(1)
+            key_s      = parsed.group(2)
+            key        = _normalise_lhs(key_s)
+            cmd_txt    = rhs[len(parsed.group(0)):]
+            if _dump_to_kdl:
+                if '"' in cmd_txt: # create a raw string to avoid escaping quotes
+                    arg = kdl.RawString(tag=None,value=cmd_txt)
+                else:
+                    arg = kdl.   String(tag=None,value=cmd_txt)
+                props = {'file':file_types}
+                node_key = kdl.Node(tag=mode_s, name=key, args=[arg], props=props)
+                NeoVintageous.nv.cfg_parse._NVRC_KDL.nodes.append(node_key)
+            for file_type in file_types.split(','):
+                for mode in modes:
+                    if not (match := _mappings[mode].get(key)):
+                        _mappings[mode][key] = {}
+                    elif isinstance(match, str):
+                        _mappings[mode][key] = {'': match}
+                    _mappings    [mode][key][file_type] = cmd_txt
+                    #                   gd   go           :LspSymbolDefinition<CR>
             return
 
-    _mappings[mode][_normalise_lhs(lhs)] = rhs
+    if _dump_to_kdl:
+        node_key = kdl.Node(tag=mode_s, name=key, args=[arg])
+        NeoVintageous.nv.cfg_parse._NVRC_KDL.nodes.append(node_key)
+    for mode in modes:
+        _mappings[mode][key] = rhs
 
 def mappings_add_text(mode:str, key:str, cmd:Union[str,list], prop:dict={}) -> None:
     #           mode_normal     W        MoveByBigWords       {file:['txt','rs']}

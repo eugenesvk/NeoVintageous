@@ -54,34 +54,37 @@ M_CMDTXT = [M.N,M.I    ,M.VV,M.VB,M.VL,M.S,M.O]
 
 
 mode_names = { # unique text abbreviations per mode (combinations are handled in the Mode enum)
-  Mode.N   	: ['Ⓝ','N' 	,'normal'         	,NORMAL          	],
-  Mode.I   	: ['ⓘ','I' 	,'insert'         	,INSERT          	],
-  Mode.C   	: ['Ⓒ','C' 	,'command','cli'  	                 	],
-  Mode.VV  	: ['Ⓥ','V' 	,'visual'         	,VISUAL          	],
-  Mode.VB  	: ['▋','VB'	,'visualblock'    	,VISUAL_BLOCK    	],
-  Mode.VL  	: ['━','VL'	,'visualline'     	,VISUAL_LINE     	],
-  Mode.S   	: ['Ⓢ','S' 	,'select'         	,SELECT          	],
-  Mode.O   	: ['Ⓞ','O' 	,'operator'       	,OPERATOR_PENDING	],
-  Mode.T   	: ['Ⓣ','T' 	,'terminal','job' 	                 	],
-  Mode.R   	: ['Ⓡ','R' 	,'replace'        	,REPLACE         	],
-  Mode.Lng 	: ['Ⓛ','L' 	,'language','lang'	,'lng'           	],
-  Mode.X   	: ['Ⓧ','X' 	                  	                 	],
-  Mode.Map 	: ['Ⓜ','M' 	,'map'            	                 	],
-  Mode.MapN	: [        	 'map!'           	                 	],
+  Mode.N   	: ['Ⓝ','N'  	,'normal'                   	,NORMAL          	],
+  Mode.I   	: ['ⓘ','I'  	,'insert'                   	,INSERT          	],
+  Mode.C   	: ['Ⓒ','C'  	,'command','cli'            	                 	],
+  Mode.VV  	: ['Ⓥ','VV' 	,'visual'                   	,VISUAL          	],
+  Mode.VB  	: ['▋','VB' 	,'visualblock','vblock'     	,VISUAL_BLOCK    	],
+  Mode.VL  	: ['━','VL' 	,'visualline' ,'vline'      	,VISUAL_LINE     	],
+  Mode.S   	: ['Ⓢ','S'  	,'select'                   	,SELECT          	],
+  Mode.O   	: ['Ⓞ','O'  	,'operator'                 	,OPERATOR_PENDING	],
+  Mode.T   	: ['Ⓣ','T'  	,'terminal','job'           	                 	],
+  Mode.R   	: ['Ⓡ','R'  	,'replace'                  	,REPLACE         	],
+  Mode.Lng 	: ['Ⓛ','L'  	,'language','lang'          	,'lng'           	],
+  #        	  Combos    	                            	                 	#
+  Mode.V   	: ['Ⓥ','V'  	,'vmap'                     	                 	],
+  Mode.X   	: ['Ⓥ³','V³'	,'Ⓥ3','V3','VVV','VLB','VBL'	                 	],
+  Mode.X   	: ['Ⓧ','X'  	,'xmap'                     	                 	],
+  Mode.Map 	: ['Ⓜ','M'  	,'map'                      	                 	],
+  Mode.MapN	: [         	 'map!'                     	                 	],
 }
-#  Mode→  |Nor|Ins|Cmd|Vis|Sel|Opr|Term|Lng|
-# ↓Cmd    +---+---+---+---+---+---+--- +---+
-#   map   | • |   |   | • | • | • |    |   |
-#   map!  |   | • | • |   |   |   |    |   |
-# v map   |   |   |   | • | • |   |    |   |
-# n map   | • |   |   |   |   |   |    |   |
-# i map   |   | • |   |   |   |   |    |   |
-# c map   |   |   | • |   |   |   |    |   |
-# x map   |   |   |   | • |   |   |    |   |
-# s map   |   |   |   |   | • |   |    |   |
-# o map   |   |   |   |   |   | • |    |   |
-# t map   |   |   |   |   |   |   | •  |   |
-# l map   |   | • | • |   |   |   |    | • |
+#  Mode→  │Nor│Ins│Cmd│Vis│Sel│Opr│Ter│Lng│VL │VB │
+# ↓Cmd    ┼───┼───┼───┼───┼───┼───┼───┼───┼───┼───┼
+#   map   │ • │   │   │ • │ • │ • │   │   │   │   │
+#   map!  │   │ • │ • │   │   │   │   │   │   │   │
+# v map   │   │   │   │ • │ • │   │   │   │ • │ • │
+# n map   │ • │   │   │   │   │   │   │   │   │   │
+# i map   │   │ • │   │   │   │   │   │   │   │   │
+# c map   │   │   │ • │   │   │   │   │   │   │   │
+# x map   │   │   │   │ • │   │   │   │   │ • │ • │
+# s map   │   │   │   │   │ • │   │   │   │   │   │
+# o map   │   │   │   │   │   │ • │   │   │   │   │
+# t map   │   │   │   │   │   │   │ • │   │   │   │
+# l map   │   │ • │ • │   │   │   │   │ • │   │   │
 # Normal, Insert, Command-line, Visual, Select, Operator-pending, Terminal-Job, Lang-Arg
 
 MODE_NAMES_OLD = { # ToDo: replace all with just enums, this is for temporary getting old names from the enums

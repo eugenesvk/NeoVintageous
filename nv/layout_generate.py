@@ -285,6 +285,9 @@ class NvOldCfgKeymapKdl(ApplicationCommand):
 
           keymap_kdl.nodes.append(node_key)
 
+    self.save_file(keymap_kdl, **kwargs)
+
+  def save_file(self, keymap_kdl, **kwargs):
     dest = expand(kwargs.get('file',self.dest)) # expand Sublime variables
     if not (parent := Path(dest).parent).exists():
       try:

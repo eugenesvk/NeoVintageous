@@ -179,6 +179,7 @@ _keybind_prop = {
     'desc':['d','des','desc','description','inf','info'],
     'icon':['i','icn','icon','img','image'],
     'file':['ft','file','filetype'],
+    'def':['def','default'],
     }
 def _parse_keybind_kdl(keybind:kdl.Node):
     from NeoVintageous.nv.mappings import mappings_add, mappings_add_text

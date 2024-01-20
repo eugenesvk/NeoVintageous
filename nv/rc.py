@@ -119,7 +119,6 @@ def _load() -> None:
 
 
 import NeoVintageous.nv.cfg_parse
-from NeoVintageous.nv.cfg_parse import _dump_to_kdl
 def _source(window, source) -> None:
     # The import is inline to avoid circular dependency errors.
     from NeoVintageous.nv.ex_cmds import do_ex_cmdline
@@ -130,7 +129,7 @@ def _source(window, source) -> None:
             ex_cmdline = _parse_line(line)
             if ex_cmdline:
                 do_ex_cmdline(window, ex_cmdline)
-            elif _dump_to_kdl:
+            elif NeoVintageous.nv.cfg_parse._dump_to_kdl:
                 node_key = kdl.Node(tag=None, name='-', args=[kdl.RawString(line.rstrip())])
                 NeoVintageous.nv.cfg_parse._NVRC_KDL.nodes.append(node_key)
     finally:

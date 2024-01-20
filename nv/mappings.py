@@ -146,14 +146,13 @@ def _normalise_lhs(lhs: str) -> str:
 
 import NeoVintageous.dep.kdl as kdl
 import NeoVintageous.nv.cfg_parse
-from NeoVintageous.nv.cfg_parse import _dump_to_kdl
 def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
     # nnoremap FileType go gd :LspSymbolDefinition<CR>
     _log.map(f" @mappings_add mode={mode} lhs={lhs} rhs={rhs}")
     modes = [mode] if isinstance(mode, str) else mode
     key = _normalise_lhs(lhs)
     # tag = None
-    if _dump_to_kdl:
+    if NeoVintageous.nv.cfg_parse._dump_to_kdl:
         (mode_l_sort,m_enum) = mode_group_sort(modes)
         mode_s = "".join(mode_l_sort) # Ⓝⓘ
         # if (cmd_sublime := rhs[1:]).startswith('"command"'): # Sublime commands
@@ -175,7 +174,7 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
             key_s      = parsed.group(2)
             key        = _normalise_lhs(key_s)
             cmd_txt    = rhs[len(parsed.group(0)):]
-            if _dump_to_kdl:
+            if NeoVintageous.nv.cfg_parse._dump_to_kdl:
                 if '"' in cmd_txt: # create a raw string to avoid escaping quotes
                     arg = kdl.RawString(tag=None,value=cmd_txt)
                 else:
@@ -193,7 +192,7 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
                     #                   gd   go           :LspSymbolDefinition<CR>
             return
 
-    if _dump_to_kdl:
+    if NeoVintageous.nv.cfg_parse._dump_to_kdl:
         node_key = kdl.Node(tag=mode_s, name=key, args=[arg])
         NeoVintageous.nv.cfg_parse._NVRC_KDL.nodes.append(node_key)
     for mode in modes:

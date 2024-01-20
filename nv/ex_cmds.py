@@ -101,7 +101,7 @@ from NeoVintageous.nv.window import window_tab_control
 
 import NeoVintageous.dep.kdl as kdl
 import NeoVintageous.nv.cfg_parse
-from NeoVintageous.nv.cfg_parse import _dump_to_kdl, parse_user_sublime_cmdline
+from NeoVintageous.nv.cfg_parse import parse_user_sublime_cmdline
 
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
@@ -469,7 +469,7 @@ def ex_inoremap(lhs: str = None, rhs: str = None, **kwargs) -> None:
 
 
 def ex_let(name, value, **kwargs) -> None: # mapleader <space>
-    if _dump_to_kdl:
+    if NeoVintageous.nv.cfg_parse._dump_to_kdl:
         node_key = kdl.Node(tag=None, name='let', props={name:value})
         NeoVintageous.nv.cfg_parse._NVRC_KDL.nodes.append(node_key)
     variables.set(name, re.sub('^(?:"|\')(.*)(?:"|\')$', '\\1', value))
@@ -739,7 +739,7 @@ def ex_registers(window, view, **kwargs) -> None:
 
 
 def ex_set(option: str, value, **kwargs) -> None:
-    if _dump_to_kdl:
+    if NeoVintageous.nv.cfg_parse._dump_to_kdl:
         node_key = kdl.Node(tag=None, name='set', props={option:value})
         NeoVintageous.nv.cfg_parse._NVRC_KDL.nodes.append(node_key)
     view = kwargs.get('view', None)

@@ -166,6 +166,39 @@ def mode_full_to_abbrev(mode_full:str,i=1):
     return mode_full
   return mode_names[mode_names_rev[mode_full]][i] # mode_names = {Mode.N:['Ⓝ','N','normal',NORMAL]
 
+def mode_group_sort(modes:Union[list,M], filler:str='') -> list:
+  """group individual modes (VV+VB+VL=V) and sort to move NIV first"""
+  sort_order   = [[M.Map,M.N],[M.I],[M.V,M.X,M.VV]]
+  m_enum = M(0)
+  if   isinstance(modes, list):
+    for m in modes: # convert to enum
+      m_enum |= mode_names_rev.get(m,M(0))
+  elif isinstance(modes, M):
+    m_enum = modes
+  else:
+    print(f"Modes should be of type list or Mode, not ‘{type(modes)}’")
+    return []
+
+  mode_l_sort = []
+  filler = '' # '_'
+  for   mgroup in sort_order: # move grouped then NIV modes first, ordered
+    isFill = True # if no single mode from a group matches, add a filler
+    for m in mgroup:
+      mode_sym = mode_names[m][0]
+      if m in m_enum:
+        mode_l_sort	+= [mode_sym]
+        m_enum     	^= m    	# remove
+        isFill     	 = False	# don't add filler since at least 1 from mode group matched
+    if isFill:
+      mode_l_sort += [filler]
+  for m in M_ANY: # TODO: m_enum iteration fails in py3.8
+    if m & m_enum:
+      mode_sym = mode_names[m][0]
+      mode_l_sort += [mode_sym] # add the remaining modes
+  # print(f"from {modes} to {mode_l_sort}")
+  return (mode_l_sort,m_enum)
+
+
 class NvDefaultKeymapKdl(ApplicationCommand):
   def __init__(self):
     self.keymap	= "NeoVintageous.key-def.kdl"

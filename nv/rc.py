@@ -19,9 +19,12 @@ import builtins
 import logging
 import os
 import re
+from pathlib import Path
+from typing import List, Union
 
 import sublime
 
+import NeoVintageous.dep.kdl as kdl
 from NeoVintageous.nv.polyfill import nv_message as message
 from NeoVintageous.nv.helper import flatten_dict, flatten_kdl, Singleton
 
@@ -168,9 +171,6 @@ def _parse_line(line: str):
 from NeoVintageous.plugin import PACKAGE_NAME
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.modes import Mode as M, text_to_modes, mode_names, MODE_NAMES_OLD, M_EVENT, M_ANY, M_CMDTXT
-import NeoVintageous.dep.kdl as kdl
-from typing import List, Union
-from pathlib import Path
 
 from NeoVintageous.nv.cfg_parse import clean_name
 re_count = re.compile(r"[№#⌗cn](\d+)")

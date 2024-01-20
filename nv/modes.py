@@ -69,22 +69,30 @@ mode_names = { # unique text abbreviations per mode (combinations are handled in
   Mode.V   	: ['Ⓥ','V'  	,'vmap'                    	                  	],
   Mode.X   	: ['Ⓧ','X'  	,'xmap','Ⓥ³','V³','Ⓥ3','V3'	,'VVV','VLB','VBL'	],
   Mode.Map 	: ['Ⓜ','M'  	,'map'                     	                  	],
-  Mode.MapN	: [         	 'map!'                    	                  	],
+  Mode.MapN	: ['Ⓜ!','M!'	,'map!'                    	                  	],
 }
-#  Mode→  │Nor│Ins│Cmd│Vis│Sel│Opr│Ter│Lng│VL │VB │
-# ↓Cmd    ┼───┼───┼───┼───┼───┼───┼───┼───┼───┼───┼
-#   map   │ • │   │   │ • │ • │ • │   │   │   │   │
-#   map!  │   │ • │ • │   │   │   │   │   │   │   │
-# v map   │   │   │   │ • │ • │   │   │   │ • │ • │
-# n map   │ • │   │   │   │   │   │   │   │   │   │
-# i map   │   │ • │   │   │   │   │   │   │   │   │
-# c map   │   │   │ • │   │   │   │   │   │   │   │
-# x map   │   │   │   │ • │   │   │   │   │ • │ • │
-# s map   │   │   │   │   │ • │   │   │   │   │   │
-# o map   │   │   │   │   │   │ • │   │   │   │   │
-# t map   │   │   │   │   │   │   │ • │   │   │   │
-# l map   │   │ • │ • │   │   │   │   │ • │   │   │
-# Normal, Insert, Command-line, Visual, Select, Operator-pending, Terminal-Job, Lang-Arg
+MODE_HELP = """
+┌────────┬─┬─┬─┬V┬V┬V┬─┬─┬─┬─┐
+│   Mode→│N│I│C│V│L│B│S│O│T│L│
+├↓Cmd────┼─┼─┼─┼─┼─┼─┼─┼─┼─┼─┤↓Icon
+│  map   │•│ │ │•│•│•│•│•│ │ │Ⓜ
+│  map!  │ │•│•│ │ │ │ │ │ │ │Ⓜ!
+│v map   │ │ │ │•│•│•│•│ │ │ │Ⓥ
+│x map   │ │ │ │•│•│•│ │ │ │ │Ⓧ
+│l map   │ │•│•│ │ │ │ │ │ │•│none
+│n map   │•│ │ │ │ │ │ │ │ │ │Ⓝ
+│i map   │ │•│ │ │ │ │ │ │ │ │ⓘ
+│c map   │ │ │•│ │ │ │ │ │ │ │Ⓒ
+│        │ │ │ │•│ │ │ │ │ │ │ⓋⓋ
+│        │ │ │ │ │•│ │ │ │ │ │━
+│        │ │ │ │ │ │•│ │ │ │ │▋
+│s map   │ │ │ │ │ │ │•│ │ │ │Ⓢ
+│o map   │ │ │ │ │ │ │ │•│ │ │Ⓞ
+│t map   │ │ │ │ │ │ │ │ │•│ │Ⓣ
+│        │ │ │ │ │ │ │ │ │ │•│Ⓛ
+└────────┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┘
+Normal Insert Command-line Visual Visual-Linewise Visual-Blockwise Select Operator-pending Terminal-Job Lang-Arg
+"""
 
 MODE_NAMES_OLD = { # ToDo: replace all with just enums, this is for temporary getting old names from the enums
   Mode.Normal         	: NORMAL,

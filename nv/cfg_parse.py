@@ -102,3 +102,8 @@ def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str=''):
   kdl_docs += [doc] # append parsed doc to the list
 
   return doc
+
+_dump_to_kdl = False
+_NVRC_KDL = None
+if _dump_to_kdl:
+  _NVRC_KDL = parse_kdl_doc('')

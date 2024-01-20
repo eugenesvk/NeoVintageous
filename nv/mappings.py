@@ -152,9 +152,17 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
     _log.map(f" @mappings_add mode={mode} lhs={lhs} rhs={rhs}")
     modes = [mode] if isinstance(mode, str) else mode
     key = _normalise_lhs(lhs)
+    # tag = None
     if _dump_to_kdl:
         (mode_l_sort,m_enum) = mode_group_sort(modes)
         mode_s = "".join(mode_l_sort) # Ⓝⓘ
+        # if (cmd_sublime := rhs[1:]).startswith('"command"'): # Sublime commands
+        #     # tag = "subl" # reserve this tag for parsed commands, not raw ones?
+        #     cmd_subl = parse_user_sublime_cmdline(window, cmd_sublime)
+        #     if not cmd_subl:
+        #         _log.error(f"invalid Sublime command ‘{cmd_sublime}’")
+        #     else:
+        #         window.run_command(command['command'], command['args'])
         if '"' in rhs: # create a raw string to avoid escaping quotes
             arg = kdl.RawString(tag=None,value=rhs)
         else:

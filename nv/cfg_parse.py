@@ -27,6 +27,22 @@ def clean_name(name:str): # clean name by removing separators ␠⭾-_. and conv
 def clean_path(name:str): # clean path segment by removing separators ␠⭾-_ but NOT . and converting to lowercase
   return re.sub(path_separator,'',name.casefold())
 
+def parse_kdl_doc(s,v_untag:bool=False,v_tag:bool=False):
+  parseConfig = kdl.ParseConfig(
+    nativeUntaggedValues    = v_untag  #|True| produce native Py objects (str int float bool None) untagged values (no (foo)prefix), or kdl-Py objects (kdl.String kdl.Decimal...)
+    ,nativeTaggedValues     = v_tag    #|True| produce native Py objects for (tagged)values for predefined tags like i8..u64 f32 uuid url regex
+  )
+  printConfig = kdl.PrintConfig(
+    indent              ="  "   #|"\t"|
+    ,semicolons         =False  #|False|
+    ,printNullArgs      =True   #|True| if False, skip over any "null"/None arguments. Corrupts docs that use "null" keyword intentionally, but can be useful if you'd prefer to use a None value as a signal that the argument has been removed
+    ,printNullProps     =True   #|True| =printNullArgs, but applies to properties
+    ,respectStringType  =True   #|True| output strings as the same type they were in the input, either raw (r#"foo"#) or normal ("foo") (only kdl-Py, not native ones (e.g, set nativeUntaggedValues=False))
+    ,respectRadix       =True   #|True| ≈respectStringType, output numbers as the radix they were in the input, like 0x1b for hex numbers. False: print decimal numbers (kdl-Py)
+    ,exponent           ="e"    #|e| character to use for the exponent part of decimal numbers, when printed with scientific notation, "e" or "E" (kdl-Py)
+  )
+  return kdl.Parser(parseConfig, printConfig).parse(s)
+
 def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str=''):
   # print(f"  parse_kdl_config = {cfg_p}")
 

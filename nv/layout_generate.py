@@ -143,21 +143,7 @@ def expand(string):
 
 # Command to generate the KDL version of the default keymap
 import NeoVintageous.dep.kdl as kdl
-def parse_kdl_doc(s):
-  parseConfig = kdl.ParseConfig(
-    nativeUntaggedValues    =False  #|True| produce native Py objects (str int float bool None) untagged values (no (foo)prefix), or kdl-Py objects (kdl.String kdl.Decimal...)
-    ,nativeTaggedValues     =False  #|True| produce native Py objects for (tagged)values for predefined tags like i8..u64 f32 uuid url regex
-  )
-  printConfig = kdl.PrintConfig(
-    indent              ="  "   #|"\t"|
-    ,semicolons         =False  #|False|
-    ,printNullArgs      =True   #|True| if False, skip over any "null"/None arguments. Corrupts docs that use "null" keyword intentionally, but can be useful if you'd prefer to use a None value as a signal that the argument has been removed
-    ,printNullProps     =True   #|True| =printNullArgs, but applies to properties
-    ,respectStringType  =True   #|True| output strings as the same type they were in the input, either raw (r#"foo"#) or normal ("foo") (only kdl-Py, not native ones (e.g, set nativeUntaggedValues=False))
-    ,respectRadix       =True   #|True| ≈respectStringType, output numbers as the radix they were in the input, like 0x1b for hex numbers. False: print decimal numbers (kdl-Py)
-    ,exponent           ="e"    #|e| character to use for the exponent part of decimal numbers, when printed with scientific notation, "e" or "E" (kdl-Py)
-  )
-  return kdl.Parser(parseConfig, printConfig).parse(s)
+from NeoVintageous.nv.cfg_parse import parse_kdl_doc
 
 from NeoVintageous.nv.modes import Mode as M, M_ANY, INSERT,INTERNAL_NORMAL,NORMAL,OPERATOR_PENDING,REPLACE,SELECT,UNKNOWN,VISUAL,VISUAL_BLOCK,VISUAL_LINE
 from NeoVintageous.nv.modes import mode_names, mode_names_rev, mode_full_to_abbrev, mode_group_sort, MODE_NAMES_OLD, MODE_HELP

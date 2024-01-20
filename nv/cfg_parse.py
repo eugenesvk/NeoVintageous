@@ -103,6 +103,14 @@ def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str=''):
 
   return doc
 
+def parse_user_sublime_cmdline(line:str) -> Union[str,None]:
+  command = sublime.decode_value('{'+line+'}')
+  if   not  'command' in command:
+    return None
+  elif not  'args'    in command:
+    command['args'] = None
+  return command
+
 _dump_to_kdl = False
 _NVRC_KDL = None
 if _dump_to_kdl:

@@ -1486,16 +1486,3 @@ def do_ex_user_cmdline(window, line: str) -> None:
             raise RuntimeError('user cmdline must begin with a colon')
 
         return window.run_command('nv_cmdline', args={'initial_text': line})
-
-
-def _parse_user_sublime_cmdline(window, line:str) -> None:
-  # todos: add multiline split? for line in _split_cmdline_lines(line):
-  commands = []
-  command	= sublime.decode_value('{'+line+'}')
-  if   not  'command' in command:
-    return None
-  elif not  'args'    in command:
-    command['args'] = None
-  commands.append(command)
-
-  return commands

@@ -526,12 +526,7 @@ def ex_noremap(lhs: str = None, rhs: str = None, **kwargs) -> None:
     if not (lhs and rhs):
         return status_message('Listing key mappings is not implemented')
 
-    mappings_add(NORMAL, lhs, rhs)
-    mappings_add(OPERATOR_PENDING, lhs, rhs)
-    mappings_add(SELECT, lhs, rhs)
-    mappings_add(VISUAL, lhs, rhs)
-    mappings_add(VISUAL_BLOCK, lhs, rhs)
-    mappings_add(VISUAL_LINE, lhs, rhs)
+    mappings_add([NORMAL,OPERATOR_PENDING,SELECT,VISUAL,VISUAL_BLOCK,VISUAL_LINE], lhs, rhs)
 
 
 def ex_nunmap(lhs: str, **kwargs) -> None:
@@ -1026,10 +1021,7 @@ def ex_vnoremap(lhs: str = None, rhs: str = None, **kwargs) -> None:
     if not (lhs and rhs):
         return status_message('Listing key mappings is not implemented')
 
-    mappings_add(SELECT, lhs, rhs)
-    mappings_add(VISUAL, lhs, rhs)
-    mappings_add(VISUAL_BLOCK, lhs, rhs)
-    mappings_add(VISUAL_LINE, lhs, rhs)
+    mappings_add([SELECT,VISUAL,VISUAL_BLOCK,VISUAL_LINE], lhs, rhs)
 
 
 def ex_vsplit(window, file: str = None, **kwargs) -> None:
@@ -1150,9 +1142,7 @@ def ex_xnoremap(lhs: str = None, rhs: str = None, **kwargs) -> None:
     if not (lhs and rhs):
         return status_message('Listing key mappings is not implemented')
 
-    mappings_add(VISUAL, lhs, rhs)
-    mappings_add(VISUAL_LINE, lhs, rhs)
-    mappings_add(VISUAL_BLOCK, lhs, rhs)
+    mappings_add([VISUAL,VISUAL_LINE,VISUAL_BLOCK], lhs, rhs)
 
 
 def ex_xunmap(lhs: str, **kwargs) -> None:

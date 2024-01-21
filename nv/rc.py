@@ -237,7 +237,7 @@ def _parse_keybind_kdl(keybind:kdl.Node):
             s = 's' if len(mode_sym) > 1 else ''
             _log.warn(f"Invalid mode{s} ‘{mode_sym}’ in ‘{mode_s}’ in node ‘{node}’")
 
-        for mode in cfgU.text_commands: # iterate over all of the allowed modes
+        for mode in M_CMDTXT: # iterate over all of the allowed modes
             if mode & modes: # if it's part of the keybind's modes, register the key
                 cfgU.text_commands[mode][key] = cmd_txt
                 mappings_add_text(mode=MODE_NAMES_OLD[mode], key=key, cmd=cmd_txt, prop=prop)

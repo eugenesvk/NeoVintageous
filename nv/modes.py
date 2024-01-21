@@ -47,6 +47,71 @@ class Mode(Flag):
   Event          	=     I                | R       | Action
   Any            	= Map | MapN           | T | Lng
   CmdTxt         	=     I                          | Map
+  def __format__(self, spec):
+    """ print an icon of a (group of) mode(s) like f"{Mode.N:®} or :i"""
+    ret = ''
+    s_remain = self
+    if spec in ['®','i','icon','img','image']:
+      if s_remain == Mode.Map           : # group modes
+        ret += 'Ⓜ'
+        s_remain ^= (s_remain & Mode.Map) # cut off all the modes that are part of the group
+      if s_remain == Mode.MapN          :
+        ret += 'Ⓜ!'
+        s_remain ^= (s_remain & Mode.MapN)
+      if s_remain == Mode.V             :
+        ret += 'Ⓥ'
+        s_remain ^= (s_remain & Mode.V)
+      if s_remain == Mode.X             :
+        ret += 'Ⓧ'
+        s_remain ^= (s_remain & Mode.X)
+      if s_remain & Mode.Normal         : # individual modes
+        ret += "Ⓝ"
+        s_remain ^= Mode.Normal
+      if s_remain & Mode.Insert         :
+        ret += "ⓘ"
+        s_remain ^= Mode.Insert
+      if s_remain & Mode.Command        :
+        ret += "Ⓒ"
+        s_remain ^= Mode.Command
+      if s_remain & Mode.Visual         :
+        ret += "ⓋⓋ"
+        s_remain ^= Mode.Visual
+      if s_remain & Mode.VisualBlock    :
+        ret += "▋"
+        s_remain ^= Mode.VisualBlock
+      if s_remain & Mode.VisualLine     :
+        ret += "━"
+        s_remain ^= Mode.VisualLine
+      if s_remain & Mode.Select         :
+        ret += "Ⓢ"
+        s_remain ^= Mode.Select
+      if s_remain & Mode.OperatorPending:
+        ret += "Ⓞ"
+        s_remain ^= Mode.OperatorPending
+      if s_remain & Mode.Terminal       :
+        ret += "Ⓣ"
+        s_remain ^= Mode.Terminal
+      if s_remain & Mode.Replace        :
+        ret += "Ⓡ"
+        s_remain ^= Mode.Replace
+      if s_remain & Mode.Lng            :
+        ret += "Ⓛ"
+        s_remain ^= Mode.Lng
+      if s_remain & Mode.InternalNormal :
+        ret += ""
+        s_remain ^= Mode.InternalNormal
+      if s_remain & Mode.Unknown        :
+        ret += "❓"
+        s_remain ^= Mode.Unknown
+      if s_remain & Mode.Empty          :
+        ret += "␀"
+        s_remain ^= Mode.Empty
+      if s_remain                       :
+        ret += "{s_remain.name}"
+        s_remain = Mode(0)
+      if ret:
+        return ret
+    return f"{self.name}"
 M = Mode # in Sublime's Py3.8 Enum Flag's members aren't iterable (need Py3.11)
 M_EVENT  = [M.N,M.I    ,M.VV,M.VB,M.VL,M.S        ,M.R]
 M_ANY    = [M.N,M.I,M.C,M.VV,M.VB,M.VL,M.S,M.O,M.T,M.R,M.Lng]
@@ -54,42 +119,42 @@ M_CMDTXT = [M.N,M.I    ,M.VV,M.VB,M.VL,M.S,M.O]
 
 
 mode_names = { # unique text abbreviations per mode (combinations are handled in the Mode enum)
-  Mode.N   	: ['Ⓝ','N'  	,'normal'                  	,NORMAL           	],
-  Mode.I   	: ['ⓘ','I'  	,'insert'                  	,INSERT           	],
-  Mode.C   	: ['Ⓒ','C'  	,'command','cli'           	                  	],
-  Mode.VV  	: ['ⓋⓋ','VV'	,'visual'                  	,VISUAL           	],
-  Mode.VB  	: ['▋','VB' 	,'visualblock','vblock'    	,VISUAL_BLOCK     	],
-  Mode.VL  	: ['━','VL' 	,'visualline' ,'vline'     	,VISUAL_LINE      	],
-  Mode.S   	: ['Ⓢ','S'  	,'select'                  	,SELECT           	],
-  Mode.O   	: ['Ⓞ','O'  	,'operator'                	,OPERATOR_PENDING 	],
-  Mode.T   	: ['Ⓣ','T'  	,'terminal','job'          	                  	],
-  Mode.R   	: ['Ⓡ','R'  	,'replace'                 	,REPLACE          	],
-  Mode.Lng 	: ['Ⓛ','L'  	,'language','lang'         	,'lng'            	],
-  #        	  Combos    	                           	                  	#
-  Mode.V   	: ['Ⓥ','V'  	,'vmap'                    	                  	],
-  Mode.X   	: ['Ⓧ','X'  	,'xmap','Ⓥ³','V³','Ⓥ3','V3'	,'VVV','VLB','VBL'	],
-  Mode.Map 	: ['Ⓜ','M'  	,'map'                     	                  	],
-  Mode.MapN	: ['Ⓜ!','M!'	,'map!'                    	                  	],
+  Mode.N   	: [f"{M.N:®}",'N'    	,'normal'                  	,NORMAL           	],
+  Mode.I   	: [f"{M.I:®}",'I'    	,'insert'                  	,INSERT           	],
+  Mode.C   	: [f"{M.C:®}",'C'    	,'command','cli'           	                  	],
+  Mode.VV  	: [f"{M.VV:®}",'VV'  	,'visual'                  	,VISUAL           	],
+  Mode.VB  	: [f"{M.VB:®}",'VB'  	,'visualblock','vblock'    	,VISUAL_BLOCK     	],
+  Mode.VL  	: [f"{M.VL:®}",'VL'  	,'visualline' ,'vline'     	,VISUAL_LINE      	],
+  Mode.S   	: [f"{M.S:®}",'S'    	,'select'                  	,SELECT           	],
+  Mode.O   	: [f"{M.O:®}",'O'    	,'operator'                	,OPERATOR_PENDING 	],
+  Mode.T   	: [f"{M.T:®}",'T'    	,'terminal','job'          	                  	],
+  Mode.R   	: [f"{M.R:®}",'R'    	,'replace'                 	,REPLACE          	],
+  Mode.Lng 	: [f"{M.Lng:®}",'L'  	,'language','lang'         	,'lng'            	],
+  #        	  Combos             	                           	                  	#
+  Mode.V   	: [f"{M.V:®}",'V'    	,'vmap'                    	                  	],
+  Mode.X   	: [f"{M.X:®}",'X'    	,'xmap','Ⓥ³','V³','Ⓥ3','V3'	,'VVV','VLB','VBL'	],
+  Mode.Map 	: [f"{M.Map:®}",'M'  	,'map'                     	                  	],
+  Mode.MapN	: [f"{M.MapN:®}",'M!'	,'map!'                    	                  	],
 }
-MODE_HELP = """
+MODE_HELP = f"""
 ┌────────┬─┬─┬─┬V┬V┬V┬─┬─┬─┬─┐
 │   Mode→│N│I│C│V│L│B│S│O│T│L│
 ├↓Cmd────┼─┼─┼─┼─┼─┼─┼─┼─┼─┼─┤↓Icon
-│  map   │•│ │ │•│•│•│•│•│ │ │Ⓜ
-│  map!  │ │•│•│ │ │ │ │ │ │ │Ⓜ!
-│v map   │ │ │ │•│•│•│•│ │ │ │Ⓥ
-│x map   │ │ │ │•│•│•│ │ │ │ │Ⓧ
+│  map   │•│ │ │•│•│•│•│•│ │ │{M.Map:®}
+│  map!  │ │•│•│ │ │ │ │ │ │ │{M.MapN:®}
+│v map   │ │ │ │•│•│•│•│ │ │ │{M.V:®}
+│x map   │ │ │ │•│•│•│ │ │ │ │{M.X:®}
 │l map   │ │•│•│ │ │ │ │ │ │•│none
-│n map   │•│ │ │ │ │ │ │ │ │ │Ⓝ
-│i map   │ │•│ │ │ │ │ │ │ │ │ⓘ
-│c map   │ │ │•│ │ │ │ │ │ │ │Ⓒ
-│        │ │ │ │•│ │ │ │ │ │ │ⓋⓋ
-│        │ │ │ │ │•│ │ │ │ │ │━
-│        │ │ │ │ │ │•│ │ │ │ │▋
-│s map   │ │ │ │ │ │ │•│ │ │ │Ⓢ
-│o map   │ │ │ │ │ │ │ │•│ │ │Ⓞ
-│t map   │ │ │ │ │ │ │ │ │•│ │Ⓣ
-│        │ │ │ │ │ │ │ │ │ │•│Ⓛ
+│n map   │•│ │ │ │ │ │ │ │ │ │{M.N:®}
+│i map   │ │•│ │ │ │ │ │ │ │ │{M.I:®}
+│c map   │ │ │•│ │ │ │ │ │ │ │{M.C:®}
+│        │ │ │ │•│ │ │ │ │ │ │{M.VV:®}
+│        │ │ │ │ │•│ │ │ │ │ │{M.VL:®}
+│        │ │ │ │ │ │•│ │ │ │ │{M.VB:®}
+│s map   │ │ │ │ │ │ │•│ │ │ │{M.S:®}
+│o map   │ │ │ │ │ │ │ │•│ │ │{M.O:®}
+│t map   │ │ │ │ │ │ │ │ │•│ │{M.T:®}
+│        │ │ │ │ │ │ │ │ │ │•│{M.Lng:®}
 └────────┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┘
 Normal Insert Command-line Visual Visual-Linewise Visual-Blockwise Select Operator-pending Terminal-Job Lang-Arg
 """

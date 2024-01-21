@@ -207,7 +207,7 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
             arg = kdl.RawString(tag=None,value=cmd_txt)
         else:
             arg = kdl.   String(tag=None,value=cmd_txt)
-        node_key = kdl.Node(tag=mode_s, name=key, args=[arg])
+        node_key = kdl.Node(tag=mode_s, name=key, args=[arg], props=props)
         NeoVintageous.nv.cfg_parse._NVRC_KDL.nodes.append(node_key)
 
     for mode in modes:

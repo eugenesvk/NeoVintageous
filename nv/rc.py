@@ -167,7 +167,7 @@ def _parse_line(line: str):
 
 from NeoVintageous.plugin import PACKAGE_NAME
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
-from NeoVintageous.nv.modes import Mode as M, text_to_modes, mode_names, MODE_NAMES_OLD, M_EVENT, M_ANY, M_CMDTXT
+from NeoVintageous.nv.modes import Mode, Mode as M, text_to_modes, mode_names, MODE_NAMES_OLD, M_EVENT, M_ANY, M_CMDTXT
 
 from NeoVintageous.nv.cfg_parse import clean_name, clean_cmd
 re_count = re.compile(r"[№#⌗cn](\d+)")
@@ -178,65 +178,87 @@ _keybind_prop = {
     'file':['ft','file','filetype'],
     'def':['def','default'],
     }
-def _parse_keybind_kdl(keybind:kdl.Node):
+def _parse_keybind_arg(node:kdl.Node):
+    cmd_l   = []
+    isChain = False
+    for arg in node.args:          # Parse arguments
+        tag = clean_name(arg.tag   if hasattr(arg,'tag'  ) else '' )
+        cmd = clean_cmd (arg.value if hasattr(arg,'value') else arg)
+        count = 1
+        if cmd == 'chain':
+            isChain = True
+            continue
+        if count_l := re_count.findall(tag): # find a count tag and add commands×count
+            count = int(count_l[0])
+        for i in range(1,1+(count if count > 1 else 1)):
+            cmd_l.append(cmd)
+    return (cmd_l, isChain)
+def _parse_keybinds_kdl(keybinds:kdl.Node):
+    for kb_node in keybinds.nodes: # (Ⓝ)"q" "OpenNameSpace"
+        _parse_keybind_kdl(keybind=kb_node)
+def _parse_keybind_kdl(keybind:kdl.Node, gmodes:Mode=Mode(0)):
     from NeoVintageous.nv.mappings import mappings_add, mappings_add_text
     if not (cfgT := type(keybind)) is kdl.Node:
         _log.error("Type of ‘keybind’ should be kdl.Node, not ‘%s’",cfgT)
         return None
-    for node in keybind.nodes: # (Ⓝ)"q" "OpenNameSpace"
-        mode_s = node.tag             # ‘Ⓝ’
-        modes  = text_to_modes(mode_s) # ‘Mode.Normal’ enum for ‘Ⓝ’ (‘Mode.Any’ for None tag)
-        key    = node.name             # ‘q’
-        cmd_txt = []                   # ‘[OpenNameSpace]’
-        if key == '-': # skip comment nodes (todo: when lib supports roundtrip, save as actual comments)
-            continue
-        for arg in node.args:          # Parse arguments
-            tag = clean_name(arg.tag   if hasattr(arg,'tag'  ) else '' )
-            cmd = clean_cmd (arg.value if hasattr(arg,'value') else arg)
-            count = 1
-            if count_l := re_count.findall(tag):
-                count = int(count_l[0])
-            for i in range(1,1+(count if count > 1 else 1)):
-                cmd_txt.append(cmd)
-
-        prop = dict()                  # Parse properties
-        for pkey,tag_val in node.props.items(): # ‘i="✗" d="Close a tab"’
-            tag = arg.tag   if hasattr(tag_val,'tag'  ) else ''
-            val = arg.value if hasattr(tag_val,'value') else tag_val
-            for dkey,key_abbrev in _keybind_prop.items():
-                if dkey == 'file':
-                    if pkey in key_abbrev: # ['ft','file','filetype']
-                        prop[dkey] = []
-                        prop[dkey].extend(re_filetype.split(val))
-                else:
-                    if pkey in key_abbrev:
-                        prop[dkey] = val
-
-        if not modes:
-            _log.error("Couldn't parse ‘%s’ to a list of modes, skipping ‘%s’"
-                ,                     mode_s,                            node)
-            continue
-        if not key:
-            _log.error("Missing keyboard shortcut, skipping ‘%s’",node)
-            continue
-        if not cmd_txt:
-            _log.error("Missing text command(s), skipping ‘%s’",node)
-            continue
-        if (m_inv := modes & ~M.CmdTxt): # if there are more modes than allowed
-            # s = 's' if len(m_inv) > 1 else '' # TODO len fails in py3.8
-            mode_sym = ''
-            for mode in M_ANY: # TODO: m_inv iteration fails in py3.8
-                if mode & m_inv: # todo: store original re matches in text_to_mode to allow roundtrip of modes matching user input
-                    mode_sym += mode_names[mode][0]
-            s = 's' if len(mode_sym) > 1 else ''
-            _log.warn("Invalid mode%s ‘%s’ in ‘%s’ in node ‘%s’"
-                ,                  s,mode_sym,mode_s,     node)
-
+    node = keybind                 # (Ⓝ)"q" "OpenNameSpace"
+    mode_s = node.tag              # ‘Ⓝ’
+    modes  = text_to_modes(mode_s) # ‘Mode.Normal’ enum for ‘Ⓝ’ (‘Mode.Any’ for None tag)
+    if gmodes:
+        if mode_s:
+            modes |= gmodes        # append modes from a group
+        else:
+            modes  = gmodes        # replace ‘Mode.Any’ with group mode
+    key    = node.name             # ‘q’
+    children = node.nodes          # either full keybinds or just commands with Chain argument
+    cmd_txt = []                   # ‘[OpenNameSpace]’
+    if key == '-': # skip comment nodes (todo: when lib supports roundtrip, save as actual comments)
+        return
+    (cmd,isChain)         = _parse_keybind_arg(node=node)
+    cmd_txt.extend(cmd)
+    if children and isChain:           # with Chain argument...
+        for child in children:         # ...parse children as commands
+            (cmd,_) = _parse_keybind_arg(node=child)
+            cmd_txt.extend(cmd)
+    prop = dict()                  # Parse properties
+    for pkey,tag_val in node.props.items(): # ‘i="✗" d="Close a tab"’
+        tag = arg.tag   if hasattr(tag_val,'tag'  ) else ''
+        val = arg.value if hasattr(tag_val,'value') else tag_val
+        for dkey,key_abbrev in _keybind_prop.items():
+            if dkey == 'file':
+                if pkey in key_abbrev: # ['ft','file','filetype']
+                    prop[dkey] = []
+                    prop[dkey].extend(re_filetype.split(val))
+            else:
+                if pkey in key_abbrev:
+                    prop[dkey] = val
+    if not modes:
+        _log.error("Couldn't parse ‘%s’ to a list of modes, skipping ‘%s’"
+            ,                     mode_s,                            node)
+        return
+    if not key:
+        _log.error("Missing keyboard shortcut, skipping ‘%s’",node)
+        return
+    if not cmd_txt and not children:
+        _log.error("Missing text command(s), skipping ‘%s’",node)
+        return
+    if (m_inv := modes & ~M.CmdTxt): # if there are more modes than allowed
+        # s = 's' if len(m_inv) > 1 else '' # TODO len fails in py3.8
+        mode_sym = ''
+        for mode in M_ANY: # TODO: m_inv iteration fails in py3.8
+            if mode & m_inv: # todo: store original re matches in text_to_mode to allow roundtrip of modes matching user input
+                mode_sym += mode_names[mode][0]
+        s = 's' if len(mode_sym) > 1 else ''
+        _log.warn("Invalid mode%s ‘%s’ in ‘%s’ in node ‘%s’"
+            ,                  s,mode_sym,mode_s,     node)
+    if cmd_txt:
         for mode in M_CMDTXT: # iterate over all of the allowed modes
-            if mode & modes: # if it's part of the keybind's modes, register the key
+            if mode & modes:  # if it's part of the keybind's modes, register the key
                 cfgU.text_commands[mode][key] = cmd_txt
                 mappings_add_text(mode=MODE_NAMES_OLD[mode], key=key, cmd=cmd_txt, prop=prop)
-
+    if children and not isChain:       # without Chain argument...
+        for child in children:         # ...parse children as keybinds
+            _parse_keybind_kdl(keybind=child, gmodes=modes)
 
 # cfgU_settings = (f'{PACKAGE_NAME}.sublime-settings')
 class cfgU(metaclass=Singleton):
@@ -313,7 +335,7 @@ class cfgU(metaclass=Singleton):
         # print('cfgU.flat', cfgU.flat)
 
         if (keybind := cfgU.kdl['keybind']):
-            _parse_keybind_kdl(keybind)
+            _parse_keybinds_kdl(keybinds=keybind)
 
         _import_plugins_with_user_data_kdl()
 

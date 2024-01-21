@@ -173,7 +173,7 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
             if NeoVintageous.nv.cfg_parse._dump_to_kdl:
                 cmd_txt = cmd_s
                 for mode in modes: # find the first matching default key #todo: might be wrong if diff modes have diff defaults for the same command?
-                    if (cmd_cls := keys.mappings[mode_name].get(cmd_s)): # ‘b’ → <...ViMoveByWordsBackward>
+                    if (cmd_cls := keys.mappings[mode].get(cmd_s)): # ‘b’ → <...ViMoveByWordsBackward>
                         T = type(cmd_cls)
                         cmd_txt = map_cmd2textcmd[T][0] # ViMoveByWordsBackward → MoveByWordsBackward
                         props['def'] = cmd_s # save ‘b’ default vim key to props ‘def’
@@ -198,7 +198,7 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
         cmd_s   = rhs
         cmd_txt = cmd_s
         for mode in modes: # find the first matching default key #todo: might be wrong if diff modes have diff defaults for the same command?
-            if (cmd_cls := keys.mappings[mode_name].get(cmd_s)): # ‘b’ → <...ViMoveByWordsBackward>
+            if (cmd_cls := keys.mappings[mode].get(cmd_s)): # ‘b’ → <...ViMoveByWordsBackward>
                 T = type(cmd_cls)
                 cmd_txt = map_cmd2textcmd[T][0] # ViMoveByWordsBackward → MoveByWordsBackward
                 props['def'] = cmd_s # save ‘b’ default vim key to props ‘def’

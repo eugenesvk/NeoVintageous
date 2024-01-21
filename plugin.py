@@ -30,11 +30,11 @@ if not logger.hasHandlers(): # Avoid duplicate loggers e.g., if the plugin is re
     _DEBUG = os.getenv('SUBLIME_NEOVINTAGEOUS_DEBUG')
     if _DEBUG:
         logger.setLevel(getattr(logging, _DEBUG.upper(), logging.DEBUG))
-        print(f"+env, set logging level at {getattr(logging, _DEBUG.upper(), logging.DEBUG)}")
+        # print(f"+env, set log level at {getattr(logging, _DEBUG.upper(), logging.DEBUG)}")
     else:
         from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
         logger.setLevel(DEFAULT_LOG_LEVEL)
-        print(f"-env, set logging level at {DEFAULT_LOG_LEVEL}")
+        # print(f"-env, set log level at {DEFAULT_LOG_LEVEL}")
     stream_handler = logging.StreamHandler()
     from NeoVintageous.nv.log import formatter
     stream_handler.setFormatter(formatter)

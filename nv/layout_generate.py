@@ -272,7 +272,7 @@ class NvOldCfgKeymapKdl(ApplicationCommand):
               mode_name = MODE_NAMES_OLD[mode]
               if mode_name not in kbDef: # empty modes or _ fillers
                 continue
-              elif (cmd_cls := kbDef[mode_name].get(cmd_s)): # b → <...ViMoveByWordsBackward>
+              elif (cmd_cls := kbDef[mode_name].get(cmd_s)): # ‘b’ → <...ViMoveByWordsBackward>
                 T = type(cmd_cls)
                 cmd_txt = map_cmd2textcmd[T][0] # ViMoveByWordsBackward → MoveByWordsBackward
                 props['def'] = cmd_s # save ‘b’ default vim key to props ‘def’

@@ -329,7 +329,10 @@ class cfgU(metaclass=Singleton):
             cfgU.flat = dict()
             _log.debug(f'@cfgU.unload_kdl: erased current cfgU.flat')
         if cfgU.text_commands: # reset text_commands config
-            cfgU.text_commands = dict()
+            text_commands = dict()
+            for _m in M_CMDTXT:
+                text_commands[_m] = dict()
+            cfgU.text_commands = text_commands
             _log.debug(f'@cfgU.unload_kdl: erased current cfgU.text_commands')
         _import_plugins_with_user_data_kdl() # reset plugin defaults
 

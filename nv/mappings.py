@@ -31,7 +31,7 @@ from NeoVintageous.nv.variables import expand_keys
 from NeoVintageous.nv.vi import keys
 from NeoVintageous.nv.vi.cmd_base import CommandNotFound
 from NeoVintageous.nv.vi.keys import to_bare_command_name
-from NeoVintageous.nv.vi.keys import tokenize_keys
+from NeoVintageous.nv.vi.keys import tokenize_keys, map_cmd2textcmd, map_textcmd2cmd
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.modes import mode_names, mode_names_rev, mode_full_to_abbrev, mode_group_sort
 from NeoVintageous.nv.log import addLoggingLevel, stream_handler
@@ -153,6 +153,7 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
     key = _normalise_lhs(lhs)
     # tag = None
     if NeoVintageous.nv.cfg_parse._dump_to_kdl:
+        props = dict()
         (mode_l_sort,m_enum) = mode_group_sort(modes)
         mode_s = "".join(mode_l_sort) # Ⓝⓘ
         # if (cmd_sublime := rhs[1:]).startswith('"command"'): # Sublime commands
@@ -162,24 +163,26 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
         #         _log.error(f"invalid Sublime command ‘{cmd_sublime}’")
         #     else:
         #         window.run_command(command['command'], command['args'])
-        if '"' in rhs: # create a raw string to avoid escaping quotes
-            arg = kdl.RawString(tag=None,value=rhs)
-        else:
-            arg = kdl.   String(tag=None,value=rhs)
 
     if re.match('^FileType$', lhs):
-        parsed = re.match('^([^ ]+) ([^ ]+)\\s+', rhs)
-        if parsed:
+        if (parsed := re.match('^([^ ]+) ([^ ]+)\\s+', rhs)):
             file_types = parsed.group(1)
             key_s      = parsed.group(2)
             key        = _normalise_lhs(key_s)
-            cmd_txt    = rhs[len(parsed.group(0)):]
+            cmd_s      = rhs[len(parsed.group(0)):]
             if NeoVintageous.nv.cfg_parse._dump_to_kdl:
+                cmd_txt = cmd_s
+                for mode in modes: # find the first matching default key #todo: might be wrong if diff modes have diff defaults for the same command?
+                    if (cmd_cls := keys.mappings[mode_name].get(cmd_s)): # ‘b’ → <...ViMoveByWordsBackward>
+                        T = type(cmd_cls)
+                        cmd_txt = map_cmd2textcmd[T][0] # ViMoveByWordsBackward → MoveByWordsBackward
+                        props['def'] = cmd_s # save ‘b’ default vim key to props ‘def’
+                        break
                 if '"' in cmd_txt: # create a raw string to avoid escaping quotes
                     arg = kdl.RawString(tag=None,value=cmd_txt)
                 else:
                     arg = kdl.   String(tag=None,value=cmd_txt)
-                props = {'file':file_types}
+                props['file'] = file_types
                 node_key = kdl.Node(tag=mode_s, name=key, args=[arg], props=props)
                 NeoVintageous.nv.cfg_parse._NVRC_KDL.nodes.append(node_key)
             for file_type in file_types.split(','):
@@ -188,13 +191,25 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
                         _mappings[mode][key] = {}
                     elif isinstance(match, str):
                         _mappings[mode][key] = {'': match}
-                    _mappings    [mode][key][file_type] = cmd_txt
+                    _mappings    [mode][key][file_type] = cmd_s
                     #                   gd   go           :LspSymbolDefinition<CR>
             return
-
     if NeoVintageous.nv.cfg_parse._dump_to_kdl:
+        cmd_s   = rhs
+        cmd_txt = cmd_s
+        for mode in modes: # find the first matching default key #todo: might be wrong if diff modes have diff defaults for the same command?
+            if (cmd_cls := keys.mappings[mode_name].get(cmd_s)): # ‘b’ → <...ViMoveByWordsBackward>
+                T = type(cmd_cls)
+                cmd_txt = map_cmd2textcmd[T][0] # ViMoveByWordsBackward → MoveByWordsBackward
+                props['def'] = cmd_s # save ‘b’ default vim key to props ‘def’
+                break
+        if '"' in cmd_txt: # create a raw string to avoid escaping quotes
+            arg = kdl.RawString(tag=None,value=cmd_txt)
+        else:
+            arg = kdl.   String(tag=None,value=cmd_txt)
         node_key = kdl.Node(tag=mode_s, name=key, args=[arg])
         NeoVintageous.nv.cfg_parse._NVRC_KDL.nodes.append(node_key)
+
     for mode in modes:
         _mappings[mode][key] = rhs
 

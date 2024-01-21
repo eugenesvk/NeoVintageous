@@ -206,7 +206,7 @@ def mappings_add_text(mode:str, key:str, cmd:Union[str,list], prop:dict={}) -> N
         for file_type in prop['file']:
             if not (match := _mappings_text[mode].get(key_norm)):
                 _mappings_text[mode][key_norm]            = {}
-            elif isinstance(match, str):
+            elif (isinstance(match, str) or isinstance(match, list)):
                 _mappings_text[mode][key_norm]            = {'': match}
             _mappings_text    [mode][key_norm][file_type] = cmd
         return

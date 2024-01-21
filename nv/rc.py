@@ -251,17 +251,17 @@ class cfgU(metaclass=Singleton):
     def read_kdl_file() -> List[kdl.Document]:
         cfg_p = cfgU.cfg_p
         cfg_f = cfgU.cfg_f
+        kdl_docs = [] # list of KDL docs in the order of parsing, includes imports as separate items
         if cfg_f.exists():
             try:
                 with open(cfg_f, 'r', encoding='utf-8', errors='replace') as f:
                     cfg = f.read()
             except FileNotFoundError as e:
                 sublime.error_message(f"{PACKAGE_NAME}:\nTried and failed to load\n{cfg_f}")
-                return
+                return kdl_docs
         else:
             _log.info("Couldn't find ‘%s’",cfg_p) # config file is optional
-            return
-        kdl_docs = [] # list of KDL docs in the order of parsing, includes imports as separate items
+            return kdl_docs
         parse_kdl_config(cfg, cfg_f, kdl_docs)
         return kdl_docs
 

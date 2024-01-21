@@ -1,8 +1,16 @@
-/* See ‘NeoVintageous.help.kdl’ for an example
-  (run ‘NeoVintageous: Open new config file example (KDL)’ in Command Palette)
-  See  ‘NeoVintageous.keymap-default.kdl’ for a list of default keybinds
-  (run ‘NeoVintageous: Dump default keymap as KDL’ in Command Palette to generate it)
-  To reload run ‘NeoVintageous: Reload config"’ in Command Palette
+/* Below is a sample of ‘NeoVintageous.kdl’ config file
+  (run ‘NeoVintageous: Open new config file example (KDL)’ in Command Palette to open)
+  (run ‘Preferences: NeoVintageous New Settings (KDL)’ in Command Palette to open it along with your config)
+  For an example of how to configure keybinds see:
+      ↓ defined within the plugin's Python code
+    Default:  ‘NeoVintageous.key-def.kdl’  (run ‘NeoVintageous: Dump default key bindings as KDL’)
+    User   :  ‘NeoVintageous.key-user.kdl’ (run ‘NeoVintageous: Dump old config key bindings as KDL’)
+      ↑ converted from your existing ‘.neovintageousrc’, where same command/key combinations in different modes are grouped into one
+  For for the line-by-line converted version of ‘.neovintageousrc’, including settings and comments:
+    see ‘NeoVintageous.rc.kdl’ (run ‘NeoVintageous: Dump old config as KDL’) (not 100% complete)
+  ‘NeoVintageous.kdl’ is loaded after ‘.neovintageousrc’, so you can transition gradually
+
+  To reload run ‘NeoVintageous: Reload config’
 
   Install ‘KDL’ package for syntax highlighting
   // Comment /*block/inline comment*/  /-node comment to disable the whole section

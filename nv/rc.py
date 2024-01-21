@@ -195,6 +195,8 @@ def _parse_keybind_kdl(keybind:kdl.Node):
         modes  = text_to_modes(mode_s) # ‘Mode.Normal’ enum for ‘Ⓝ’ (‘Mode.Any’ for None tag)
         key    = node.name             # ‘q’
         cmd_txt = []                   # ‘[OpenNameSpace]’
+        if key == '-': # skip comment nodes (todo: when lib supports roundtrip, save as actual comments)
+            continue
         for arg in node.args:          # Parse arguments
             tag = clean_name(arg.tag   if hasattr(arg,'tag'  ) else '' )
             cmd = clean_name(arg.value if hasattr(arg,'value') else arg)

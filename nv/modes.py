@@ -177,14 +177,14 @@ for mode,mode_text in mode_names.items():
   # Mode.N  ['Ⓝ','N','normal',NORMAL]
   if isinstance(mode_text, str): #'N'
     if   mode_text     in mode_names_rev:
-      _log.error(f" ‘{mode_text}’ is not unique, check ‘mode_names’")
+      _log.error(" ‘%s’ is not unique, check ‘mode_names’",mode_text)
     else:
       mode_names_rev                   [mode_text    ]  = mode
       mode_clean_names_rev  [clean_name(mode_text    )] = mode
   if isinstance(mode_text, list): #['Ⓝ','N','normal',NORMAL]
     for         mode_text_str in mode_text:
       if mode_text_str in mode_names_rev:
-        _log.error(f" ‘{mode_text_str}’ is not unique, check ‘mode_names’")
+        _log.error(" ‘%s’ is not unique, check ‘mode_names’",mode_text_str)
       else:
         mode_names_rev                 [mode_text_str]  = mode
         mode_clean_names_rev[clean_name(mode_text_str)] = mode
@@ -205,13 +205,13 @@ mode_clean_names_re	= re.compile("|".join(re.escape(x) for x in mode_clean_names
 def text_to_modes(mode_str:Union[str,None]):
   """convert an abbreviated mode string ‘mode_normalIvb’ to mode enum ‘M.Normal|M.Insert|M.VisualBlock’"""
   if mode_str is None:
-    _log.debug(f"parsed ‘{mode_str}’ into modes ‘{Mode.Any}’")
+    _log.debug("parsed ‘%s’ into modes ‘%s’",mode_str,Mode.Any)
     return Mode.Any
   if not mode_str:
-    _log.error(f"Expected a valid mode_str argument, not ‘{mode_str}’")
+    _log.error("Expected a valid mode_str argument, not ‘%s’",mode_str)
     return None
   if not (cfgT := type(mode_str)) is str:
-    _log.error(f"Type of ‘{mode_str}’ should be str, not {cfgT}")
+    _log.error("Type of ‘%s’ should be str, not ‘%s’",mode_str,cfgT)
     return None
 
   modes = Mode(0)
@@ -223,12 +223,12 @@ def text_to_modes(mode_str:Union[str,None]):
       modes |= mode
   if (mode_s_remain := mode_clean_names_re.sub('', mode_s)):
     # mode_s_list_up = [i.upper() for i in mode_s_list if len(i) == 1]
-    _log.error(f"mode_str ‘{mode_str}’ has unrecognized modes ‘{mode_s_remain}’")
+    _log.error("mode_str ‘%s’ has unrecognized modes ‘%s’",mode_str,mode_s_remain)
   if modes: # modes.name fails in py3.8?
-    _log.debug(f"parsed ‘{mode_str}’ into modes ‘{modes}’")
+    _log.debug("parsed ‘%s’ into modes ‘%s’",mode_str,modes)
     return modes
   else:
-    _log.debug(f"no modes found in ‘{mode_str}’")
+    _log.debug("no modes found in ‘%s’",mode_str)
     return None
 
 def text_to_mode_alone(mode_string:str): # convert user mode input like 'N' or 'normal' into an enum entry

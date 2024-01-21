@@ -182,7 +182,7 @@ class FeedKeyHandler():
 
     def _handle(self) -> None:
         self._dbg_seq, self._dbg_txt = '',''
-        _log.key(f"       ———————————@_handle {time.asctime()}")
+        _log.key("       ———————————@_handle ‘%s’",time.asctime())
         # If the user has defined a mapping that starts with a number i.e. count
         # then the count handler has to be skipped otherwise it won't resolve.
         # See https://github.com/NeoVintageous/NeoVintageous/issues/434.

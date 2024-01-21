@@ -188,7 +188,7 @@ _keybind_prop = {
 def _parse_keybind_kdl(keybind:kdl.Node):
     from NeoVintageous.nv.mappings import mappings_add, mappings_add_text
     if not (cfgT := type(keybind)) is kdl.Node:
-        _log.error(f"Type of ‘keybind’ should be kdl.Node, not {cfgT}")
+        _log.error("Type of ‘keybind’ should be kdl.Node, not ‘%s’",cfgT)
         return None
     for node in keybind.nodes: # (Ⓝ)"q" "OpenNameSpace"
         mode_s = node.tag             # ‘Ⓝ’
@@ -220,13 +220,14 @@ def _parse_keybind_kdl(keybind:kdl.Node):
                         prop[dkey] = val
 
         if not modes:
-            _log.error(f"Couldn't parse ‘{mode_s}’ to a list of modes, skipping ‘{node}’")
+            _log.error("Couldn't parse ‘%s’ to a list of modes, skipping ‘%s’"
+                ,                     mode_s,                            node)
             continue
         if not key:
-            _log.error(f"Missing keyboard shortcut, skipping ‘{node}’")
+            _log.error("Missing keyboard shortcut, skipping ‘%s’",node)
             continue
         if not cmd_txt:
-            _log.error(f"Missing text command(s), skipping ‘{node}’")
+            _log.error("Missing text command(s), skipping ‘%s’",node)
             continue
         if (m_inv := modes & ~M.CmdTxt): # if there are more modes than allowed
             # s = 's' if len(m_inv) > 1 else '' # TODO len fails in py3.8
@@ -235,7 +236,8 @@ def _parse_keybind_kdl(keybind:kdl.Node):
                 if mode & m_inv: # todo: store original re matches in text_to_mode to allow roundtrip of modes matching user input
                     mode_sym += mode_names[mode][0]
             s = 's' if len(mode_sym) > 1 else ''
-            _log.warn(f"Invalid mode{s} ‘{mode_sym}’ in ‘{mode_s}’ in node ‘{node}’")
+            _log.warn("Invalid mode%s ‘%s’ in ‘%s’ in node ‘%s’"
+                ,                  s,mode_sym,mode_s,     node)
 
         for mode in M_CMDTXT: # iterate over all of the allowed modes
             if mode & modes: # if it's part of the keybind's modes, register the key
@@ -264,7 +266,7 @@ class cfgU(metaclass=Singleton):
                 sublime.error_message(f"{PACKAGE_NAME}:\nTried and failed to load\n{cfg_f}")
                 return
         else:
-            _log.info(f"Couldn't find {cfg_p}") # config file is optional
+            _log.info("Couldn't find ‘%s’",cfg_p) # config file is optional
             return
         kdl_docs = [] # list of KDL docs in the order of parsing, includes imports as separate items
         parse_kdl_config(cfg, cfg_f, kdl_docs)
@@ -298,11 +300,13 @@ class cfgU(metaclass=Singleton):
                     for g in cfg_nest[nest]:                 # 'surround'
                         if (node := node_nest.get(g, None)): # 'surround' child node
                             if g in cfgU.kdl[nest]: # dupe, but the other is less specific, overwrite
-                                _log.error(f"node ‘{g}’ already set as a direct node, overwriting")
+                                _log.error("node ‘%s’ already set as a direct node, overwriting"
+                                    ,             g)
                             cfgU.kdl[nest][g] = node
                         if (node := cfg.get(g, None)):       # 'surround' direct node
                             if g in cfgU.kdl[nest]: # dupe, but     this  is less specific, ignore
-                                _log.error(f"node ‘{g}’ already set as a child of ‘{nest}’, skipping this dupe")
+                                _log.error("node ‘%s’ already set as a child of ‘%s’, skipping this dupe"
+                                    ,             g,                            nest)
                             else:
                                 cfgU.kdl[nest][g] = node
         #for g in cfg_group: # Rudimentary type checks (can have props, also empty is ok)
@@ -324,16 +328,16 @@ class cfgU(metaclass=Singleton):
     def unload_kdl():
         if cfgU.kdl: # reset config
             cfgU.kdl = dict()
-            _log.debug(f'@cfgU.unload_kdl: erased current cfgU.kdl')
+            _log.debug('@cfgU.unload_kdl: erased current cfgU.kdl')
         if cfgU.flat: # reset flat config
             cfgU.flat = dict()
-            _log.debug(f'@cfgU.unload_kdl: erased current cfgU.flat')
+            _log.debug('@cfgU.unload_kdl: erased current cfgU.flat')
         if cfgU.text_commands: # reset text_commands config
             text_commands = dict()
             for _m in M_CMDTXT:
                 text_commands[_m] = dict()
             cfgU.text_commands = text_commands
-            _log.debug(f'@cfgU.unload_kdl: erased current cfgU.text_commands')
+            _log.debug('@cfgU.unload_kdl: erased current cfgU.text_commands')
         _import_plugins_with_user_data_kdl() # reset plugin defaults
 
 def _import_plugins_with_user_data_kdl():

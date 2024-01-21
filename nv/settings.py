@@ -44,7 +44,8 @@ if _log.hasHandlers(): # clear existing handlers, including sublime's
 def get_config(path:str, default=None):
     cfgU.load_kdl()
     if not (pathT := type(path)) is str:
-        _log.warn(f"‘{path}’ should be a string, not {pathT}")
+        _log.warn("‘%s’ should be a string, not ‘%s’"
+            ,      path,                        pathT)
         return None
     return cfgU.flat.get(clean_path(path), default)
 

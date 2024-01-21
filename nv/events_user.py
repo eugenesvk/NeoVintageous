@@ -53,10 +53,12 @@ def reload_with_user_data_kdl() -> None:
       mode = mode_names_rev.get(clean_name(node.tag ),None) # ‘Mode.Insert’ for ‘ⓘ’
       evt  = EVENTrev      .get(clean_name(node.name),None) # ‘enter’       for ‘in’
       if not mode in M.Event:
-        _log.error(f"node ‘{cfg.name}’ has unrecognized mode in tag ‘({node.tag}){node.name}’, skipping")
+        _log.error("node ‘%s’ has unrecognized mode in tag ‘(%s)%s’, skipping"
+          ,            cfg.name,                       node.tag,node.name)
         continue
       if not evt  in EVENT:
-        _log.error(f"node ‘{cfg.name}’ has unrecognized event in name ‘({node.tag}){node.name}’, skipping")
+        _log.error("node ‘%s’ has unrecognized event in name ‘(%s)%s’, skipping"
+          ,            cfg.name,                       node.tag,node.name)
         continue
       # 1. Parse node arguments:  (os)exe arg;
       cmf_full = None
@@ -66,17 +68,20 @@ def reload_with_user_data_kdl() -> None:
         if i == 0: # check the os tag in the first argument
           if tag_os:
             if not (os := OSrev.get(tag_os,None)):
-              _log.error(f"node ‘{cfg.name}’ has unrecognized OS tag ‘{os}’ in ‘{arg}’, skipping")
+              _log.error("node ‘%s’ has unrecognized OS tag ‘%s’ in ‘%s’, skipping"
+                ,               cfg.name,                    os,     arg)
               break # stop parsing arguments
           else:
-            _log.error(f"node ‘{cfg.name}’ has no OS tag in ‘{arg}’, skipping")
+            _log.error("node ‘%s’ has no OS tag in ‘%s’, skipping"
+              ,               cfg.name,             arg)
             break # stop parsing arguments
           cmf_full  = [val] # start a new command
         else:
           cmf_full += [val] # append argument to command
       if  cmf_full:
         CFG[os][mode][evt] += [cmf_full] # append full command to the list as a list
-        _log.debug(f"added a command from args to ‘{os}’‘{mode}’‘{evt}’ = ‘{cmf_full}’")
+        _log.debug("added a command from args to ‘%s’‘%s’‘%s’ = ‘%s’"
+          ,                                      os,mode,evt,   cmf_full)
       # 2. Parse node children : {(os)exe arg;}
       for node_cmd in node.nodes:
         cmf_full = None
@@ -86,20 +91,25 @@ def reload_with_user_data_kdl() -> None:
           if (os := OSrev.get(tag_os,None)):
             cmf_full = [exe] # start a new command
           else:
-            _log.error(f"node ‘{cfg.name}’ has unrecognized OS tag ‘{os}’ in ‘{exe}’, skipping")
+            _log.error("node ‘%s’ has unrecognized OS tag ‘%s’ in ‘%s’, skipping"
+              ,               cfg.name,                    os,      exe)
             continue # skip to another node
         else:
-          _log.error(f"node ‘{cfg.name}’ has no OS tag in ‘{exe}’, skipping")
+          _log.error("node ‘%s’ has no OS tag in ‘%s’, skipping"
+            ,               cfg.name,             exe)
           continue # skip to another node
         for i,arg in enumerate(node_cmd.args):
           tag = arg.tag   if hasattr(arg,'tag'  ) else ''
           val = arg.value if hasattr(arg,'value') else arg
           if tag:
-            _log.warn(f"node ‘{cfg.name}’ has unrecognized tag ‘{tag}’ in argument ‘{val}’, ignoring")
+            _log.warn("node ‘%s’ has unrecognized tag ‘%s’ in argument ‘%s’, ignoring"
+              ,            cfg.name,                   tag,             val)
           cmf_full  += [val] # append argument to command
         if  cmf_full:
           CFG[os][mode][evt] += [cmf_full] # append full command to the list as a list
-          _log.debug(f"added a command from child to ‘{os}’‘{mode}’‘{evt}’ = ‘{cmf_full}’")
+          _log.debug("added a command from child to ‘%s’‘%s’‘%s’ = ‘%s’"
+          ,                                      os,mode,evt,   cmf_full)
+
   else: # reset config to defaults
     CFG = copy.deepcopy(DEF)
 
@@ -110,11 +120,13 @@ def get_full_cmd(os,mode,evt) -> list:
         return   CFG[os][mode][evt]
 
 def on_mode_change  (view   , current_mode, new_mode) -> None:
-  _log.debug(f"mode Δ {current_mode} ⟶ {new_mode}")
+  _log.debug("mode Δ %s ⟶ %s"
+    ,      current_mode  ,  new_mode)
   mode_old = mode_names_rev.get(current_mode,None)
   mode_new = mode_names_rev.get(new_mode    ,None)
   if not (mode_old or mode_new):
-    _log.error(f"mode Δ: couldn't match both mode names to modes (‘{current_mode}’|{mode_old} to ‘{new_mode}’|{mode_new})")
+    _log.error("mode Δ: couldn't match both mode names to modes (‘%s’|%s to ‘%s’|%s)"
+      ,                                                current_mode,mode_old, new_mode,mode_new)
     return
   if (cmd_l := get_full_cmd(PLATFORM,mode_old,'leave')):
     for full_cmd in cmd_l:
@@ -124,13 +136,15 @@ def on_mode_change  (view   , current_mode, new_mode) -> None:
       run_command(full_cmd, current_mode, new_mode)
 
 def run_command    (full_cmd, current_mode, new_mode) -> None:
-  _log.debug(f"full_cmd = {full_cmd}")
+  _log.debug("full_cmd = ‘%s’",full_cmd)
   if (bin_path := Path(full_cmd[0]).expanduser()).exists():
     proc  = subprocess.run([bin_path] + full_cmd[1:],capture_output=True)
     out   = proc.stdout.decode().rstrip('\n')
     err   = proc.stderr.decode().rstrip('\n')
     retn  = proc.returncode
     if err:
-      _log.error(f"Δ mode ‘{current_mode}’ ⟶ ‘{new_mode}’\n and running ‘{full_cmd}’\n{err}")
+      _log.error("Δ mode ‘%s’ ⟶ ‘%s’\n and running ‘%s’\n%s"
+          ,     current_mode,new_mode,        full_cmd  ,err)
   else:
-    _log.error(f"Δ mode ‘{current_mode}’ ⟶ ‘{new_mode},’\n executable does NOT exist: ‘{bin_path}’")
+    _log.error("Δ mode ‘%s’ ⟶ ‘%s,’\n executable does NOT exist: ‘%s’"
+        ,     current_mode,new_mode,                             bin_path)

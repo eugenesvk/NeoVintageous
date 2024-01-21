@@ -148,7 +148,8 @@ import NeoVintageous.dep.kdl as kdl
 import NeoVintageous.nv.cfg_parse
 def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
     # nnoremap FileType go gd :LspSymbolDefinition<CR>
-    _log.map(f" @mappings_add mode={mode} lhs={lhs} rhs={rhs}")
+    _log.map(" @mappings_add mode=%s lhs=%s rhs=%s"
+        ,                      mode,    lhs,   rhs)
     modes = [mode] if isinstance(mode, str) else mode
     key = _normalise_lhs(lhs)
     # tag = None
@@ -289,7 +290,8 @@ def _text_to_command(view, text: str):
     """
     cmd_plugin  = plugin.map_textcmd2cmd.get(text)
     cmd_keys    =   keys.map_textcmd2cmd.get(text)
-    _log.map(f" cmd_text ‘{text}’ → cmd_plugin ‘{cmd_plugin}’ cmd_keys = ‘{cmd_keys}’")
+    _log.map(" cmd_text ‘%s’ → cmd_plugin ‘%s’ cmd_keys = ‘%s’"
+        ,               text,       cmd_plugin,         cmd_keys)
     if cmd_plugin and is_plugin_enabled(view, cmd_plugin):
         return cmd_plugin
     if cmd_keys:
@@ -316,7 +318,7 @@ def _seq_to_command(view, seq: str, mode: str):
 
     if mode in keys.mappings:
         command = keys.mappings[mode].get(seq)
-        _log.map(f" keys_cmd={command} from seq={seq}")
+        _log.map(" keys_cmd=%s from seq=%s",command,seq)
         if command:
             return command
 
@@ -345,7 +347,7 @@ def mappings_resolve(view, sequence: str = None, mode: str = None, check_user_ma
 
     # We usually need to look at the partial sequence, but some commands do
     # weird things, like ys, which isn't a namespace but behaves as such.
-    _log.map(f"  inSEQ¦{sequence}¦ part_seq¦{get_partial_sequence(view)}¦")
+    _log.map("  inSEQ¦%s¦ part_seq¦%s¦",sequence,get_partial_sequence(view))
     seq = sequence or get_partial_sequence(view)
 
     command = None
@@ -367,7 +369,7 @@ def mappings_resolve(view, sequence: str = None, mode: str = None, check_user_ma
         # off the responsibility to the feed key command.
 
         command = _seq_to_mapping(view, seq)
-        _log.map(f" inSEQ user_map _seq_to_mapping¦{command}")
+        _log.map(" inSEQ user_map _seq_to_mapping¦‘%s’",command)
 
         if not command:
             if not sequence:
@@ -376,9 +378,12 @@ def mappings_resolve(view, sequence: str = None, mode: str = None, check_user_ma
 
     if not command:
         command = _seq_to_command(view, to_bare_command_name(seq), mode or get_mode(view))
-        _log.map(f" inSEQ _seq_to_command¦{command}")
+        _log.map(" inSEQ _seq_to_command¦‘%s’",command)
 
-    _log.info('resolved %s mode=%s sequence=%s %s', command, mode, sequence, command.__class__.__mro__)
+    _log.map(' @mapRes → lhs‘%s’ rhs‘%s’ m‘%s’ seq=‘%s’ ‘%s’'
+        ,command.lhs if hasattr(command, 'lhs') else ''
+        ,command.rhs if hasattr(command, 'rhs') else ''
+        ,                                mode, sequence, command.__class__.__mro__)
 
     return command
 
@@ -391,19 +396,19 @@ def mappings_resolve_text(view, text_commands: list = None, mode: str = None, ch
     # → Mapping |  CommandNotFound
 
     # We usually need to look at the partial sequence, but some commands do weird things, like ys, which isn't a namespace but behaves as such.
-    _log.map(f"  inTXT text_commands = {text_commands}  get_partial_text = {get_partial_text(view)}")
+    _log.map("  inTXT text_commands = ‘%s’  get_partial_text = ‘%s’", text_commands,get_partial_text(view))
     text_cmd = text_commands or get_partial_text(view)
     command = None
     if check_user_mappings:
         command = _text_cmd_to_mapping(view, text_cmd)
-        _log.map(f"  inTXT user_map _text_cmd_to_mapping¦{command}")
+        _log.map("  inTXT user_map _text_cmd_to_mapping¦‘%s’",command)
         if not command:
             if not text_cmd:
                 if _has_partial_matches_text(view, get_mode(view), text_cmd):
                     return IncompleteMapping()
     if not command:
         command = _text_to_command(view, text_cmd)
-        _log.map(f"  inTXT _text_to_command¦{command}")
+        _log.map("  inTXT _text_to_command¦‘%s’",command)
     lhs = command.lhs if hasattr(command, 'lhs') else ''
     rhs = command.rhs if hasattr(command, 'rhs') else ''
     # _log.info(f' @mapRes_text usr‘{check_user_mappings}’→ lhs‘{lhs}’ rhs‘{rhs}’ m‘{mode}’ text_cmd=‘{text_cmd}’ ‘{command.__class__.__mro__}’')

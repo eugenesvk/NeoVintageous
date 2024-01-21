@@ -133,7 +133,8 @@ def _handle_rhs_text(view, rhs: Union[str, list]) -> None: # find a key that is 
                 dict_cls_to_cmd = mappings[mode]
                 for clsT,seq in dict_cls_to_cmd.items():
                     if clsT == type(command_txt):
-                        _log.debug(f"key that matches our command_txt is ¦{seq}¦ from plugin_dict's class ¦{clsT}¦")
+                        _log.debug("command_txt matched to key ‘¦%s¦’ from plugin_dict's class ‘¦%s¦’"
+                            ,                                    seq,                         clsT)
                         win.run_command('nv_process_notation',{'keys':seq, 'check_user_mappings':False,})
                         break
             if mode in (mappings := keys.mappings_reverse):
@@ -141,6 +142,7 @@ def _handle_rhs_text(view, rhs: Union[str, list]) -> None: # find a key that is 
                 value_prev = None
                 for clsT,seq in dict_cls_to_cmd.items():
                     if clsT == type(command_txt):
-                        _log.debug(f"key that matches our command_txt is ¦{seq}¦ from keys_dict's class ¦{clsT}¦")
+                        _log.debug("command_txt matched to key ‘¦%s¦’ from keys_dict's class ‘¦%s¦’"
+                            ,                                    seq,                         clsT)
                         win.run_command('nv_process_notation',{'keys':seq, 'check_user_mappings':False,})
                         break

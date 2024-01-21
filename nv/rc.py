@@ -57,18 +57,11 @@ def open_rc(window) -> None:
 def open_config_file_kdl(window) -> None:
     file = _file_path_config_kdl()
     if not os.path.exists(file):
-        with builtins.open(file, 'w', encoding='utf-8') as f: # todo
+        with builtins.open(file, 'w', encoding='utf-8') as f:
             f.write('/* See ‘NeoVintageous.help.kdl’ for an example\n')
-            f.write('  (run ‘NeoVintageous: Open new config file example (KDL)’ in Command Palette)\n')
-            f.write('  See  ‘NeoVintageous.keymap-default.kdl’ for a list of default keybinds\n')
-            f.write('  (run ‘NeoVintageous: Dump default keymap as KDL’ in Command Palette to generate it)\n')
-            f.write('  To reload run ‘NeoVintageous: Reload config"’ in Command Palette\n')
-            f.write('\n')
-            f.write('  Install ‘KDL’ package for syntax highlighting\n')
-            f.write('  // Comment /*block/inline comment*/  /-node comment to disable the whole section\n')
-            f.write('  Node names are CaSe, ␠whitespace⭾, and se-pa-rat_or insensitive: keymap = key-map = key_map = "key map"\n')
+            f.write('  (run ‘NeoVintageous: Open new config file example (KDL)’ in Command Palette to open it)\n')
+            f.write('  (run ‘Preferences: NeoVintageous New Settings (KDL)’ in Command Palette to open it along with your config)\n')
             f.write('*/\n')
-            f.write('\n')
             f.write('#v 0.1 // config format version to hopefully allow updates without breaking existing configs (‘#’ is optional)\n')
     window.open_file(file)
 

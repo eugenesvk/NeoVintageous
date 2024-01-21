@@ -200,17 +200,23 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
 
 def mappings_add_text(mode:str, key:str, cmd:Union[str,list], prop:dict={}) -> None:
     #           mode_normal     W        MoveByBigWords       {file:['txt','rs']}
-    _log.map(f" mappings_add_text ¦{mode}¦ ‹¦{key}¦⟶¦{cmd}¦› @file¦{prop.get('file','')}¦")
     key_norm = _normalise_lhs(key)
-    if 'file' in prop:
-        for file_type in prop['file']:
-            if not (match := _mappings_text[mode].get(key_norm)):
+    old_cmd_ftype = _mappings_text[mode].get(key_norm)
+    _log.map(" map+txt ¦%s¦ ‹¦%s ≈ %s¦⟶¦%s¦› @file¦%s¦ oldcmd¦%s¦"
+      ,                mode, key,key_norm,cmd,prop.get('file',''),old_cmd_ftype)
+    if (file_types := prop.get('file')):
+        for file_type in file_types:
+            if not old_cmd_ftype:
                 _mappings_text[mode][key_norm]            = {}
-            elif (isinstance(match, str) or isinstance(match, list)):
-                _mappings_text[mode][key_norm]            = {'': match}
+            elif (isinstance(old_cmd_ftype,str ) or\
+                  isinstance(old_cmd_ftype,list)):
+                _mappings_text[mode][key_norm]            = {'':old_cmd_ftype}
             _mappings_text    [mode][key_norm][file_type] = cmd
         return
-    _mappings_text            [mode][key_norm]            = cmd
+    if           (isinstance(old_cmd_ftype,dict)): # don't overwrite existing filetype commands
+        _mappings_text        [mode][key_norm][''       ] = cmd
+    else:                                          # ok to overwrite old commands
+        _mappings_text        [mode][key_norm]            = cmd
 
 
 def mappings_remove(mode: str, lhs: str) -> None:

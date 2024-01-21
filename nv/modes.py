@@ -46,7 +46,7 @@ class Mode(Flag):
   Motion         	= N |       X     | O
   Event          	=     I                | R       | Action
   Any            	= Map | MapN           | T | Lng
-  CmdTxt         	=     I                          | Motion
+  CmdTxt         	=     I                          | Map
 M = Mode # in Sublime's Py3.8 Enum Flag's members aren't iterable (need Py3.11)
 M_EVENT  = [M.N,M.I    ,M.VV,M.VB,M.VL,M.S        ,M.R]
 M_ANY    = [M.N,M.I,M.C,M.VV,M.VB,M.VL,M.S,M.O,M.T,M.R,M.Lng]

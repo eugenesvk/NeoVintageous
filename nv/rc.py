@@ -214,6 +214,9 @@ def _parse_keybind_kdl(keybind:kdl.Node, gmodes:Mode=Mode(0)):
     cmd_txt = []                   # ‘[OpenNameSpace]’
     if key == '-': # skip comment nodes (todo: when lib supports roundtrip, save as actual comments)
         return
+    if key in ['let', 'set']:
+        _log.warn("Keybind config group shouldn't have ‘let’/‘set’ (%s)",keybind)
+        return
     (cmd,isChain)         = _parse_keybind_arg(node=node)
     cmd_txt.extend(cmd)
     if children and isChain:           # with Chain argument...

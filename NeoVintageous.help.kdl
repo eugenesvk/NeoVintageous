@@ -22,6 +22,27 @@
   /* import file name ↑ relative to this main config file (‘#’ is optional)
     group  ↑ values in ‘keybind{}’, so the file itself can include only top-level ‘key command’ lines
   */
+keybind { // or add keybinds in the main config file
+  // moves back in a .KDL file, but forward elsewhere (2nd keybind doesn't overwrite the 1st's file types)
+    (Ⓝ_)q (#2)"MoveByBigWordsBackward" file="kdl"
+    (Ⓝ_)q (#2)"MoveByBigWords"
+  // execute two Sublime Text commands without any "chain" intermediary
+    (Ⓝ)w r#":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"# r#":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"#
+  // execute multiple         commands with    a   "chain" intermediary
+    // helpful when a chained command  needs to have dedicated properties (not shown in the example below)
+    // childrens' node names are ignored, so use ‘-’ or whatever
+    (Ⓝ)e r#":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"# "chain" {
+      ↓/*node names are ignored*/ "MoveByBigWords"
+      - r#":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"#
+      - r#":"command":"move","args":{"by":"words","forward":true,"extend":true}<CR>"#
+    }
+  // group normal-mode keybinds without having to specify Normal mode for each keybind
+    // can add more modes to a keybind, but NOT remove the group mode(s)
+    (Ⓝ)my_normal_group { // should move only once in normal mode since 2nd command switches to visual mode
+      a "MoveByBigWordsBackward" r#":"command":"move","args":{"by":"words","forward":false,"extend":true }<CR>"#
+      s "MoveByBigWords"         r#":"command":"move","args":{"by":"words","forward":true ,"extend":true }<CR>"#
+    }
+}
 
 keymap { // Use custom keymaps (non-QWERTY/non-Latin) in command mode
   // 1. add "lower"/"upper" keymaps below that match the position of QWERTY symbols

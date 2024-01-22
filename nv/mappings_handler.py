@@ -126,9 +126,12 @@ def _handle_rhs_text(view, rhs: Union[str, list]) -> None: # find a key that is 
     win = view.window()
     mode = get_mode(view)
     for text_command in (text_commands := [rhs] if isinstance(rhs, str) else rhs):
-        if ':' in text_command:
+        if text_command.startswith('"command"'):
+            _log.debug(" redirect Sublime's text ‘\"command\"’ to _handle_rhs=%s",text_command)
+            _handle_rhs(win, ':'+text_command)
+        elif ':' in text_command:
             _log.debug(" redirect text command with ‘:’ command to _handle_rhs=%s",text_command)
-            _handle_rhs(win, text_command)
+            _handle_rhs(win,     text_command)
         else:
             command_txt = mappings_resolve_text(view, text_commands=text_command, mode=mode, check_user_mappings=False)
             if isinstance(command_txt, CommandNotFound):

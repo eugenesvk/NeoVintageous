@@ -169,7 +169,7 @@ from NeoVintageous.plugin import PACKAGE_NAME
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.modes import Mode as M, text_to_modes, mode_names, MODE_NAMES_OLD, M_EVENT, M_ANY, M_CMDTXT
 
-from NeoVintageous.nv.cfg_parse import clean_name
+from NeoVintageous.nv.cfg_parse import clean_name, clean_cmd
 re_count = re.compile(r"[№#⌗cn](\d+)")
 re_filetype = re.compile(r"[\s,]+")
 _keybind_prop = {

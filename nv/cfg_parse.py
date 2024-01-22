@@ -25,6 +25,8 @@ def clean_node_name(node:kdl.Node,rec:bool=True): # recursively clean KDL node n
       clean_node_name(node, rec=rec)
 def clean_name(name:str): # clean name by removing separators ␠⭾-_. and converting to lowercase
   return re.sub(node_separator,'',name.casefold())
+def clean_cmd (name:str): # convert command name to lowercase (don't remove _ since sublime uses those as seps)
+  return name.casefold()
 def clean_path(name:str): # clean path segment by removing separators ␠⭾-_ but NOT . and converting to lowercase
   return re.sub(path_separator,'',name.casefold())
 

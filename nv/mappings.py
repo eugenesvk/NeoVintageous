@@ -409,8 +409,9 @@ def mappings_resolve_text(view, text_commands: list = None, mode: str = None, ch
     if not command:
         command = _text_to_command(view, text_cmd)
         _log.map("  inTXT _text_to_command¦‘%s’",command)
-    lhs = command.lhs if hasattr(command, 'lhs') else ''
-    rhs = command.rhs if hasattr(command, 'rhs') else ''
-    # _log.info(f' @mapRes_text usr‘{check_user_mappings}’→ lhs‘{lhs}’ rhs‘{rhs}’ m‘{mode}’ text_cmd=‘{text_cmd}’ ‘{command.__class__.__mro__}’')
-    # _log.info(f' @mapRes_text → ‘{command}’ .lhs‘{command.lhs}’ .rhs‘{command.rhs}’ m‘{mode}’ text_cmd=‘{text_cmd}’ ‘{command.__class__.__mro__}’')
+    _log.map(' @MapResText usr‘%s’ → lhs‘%s’ rhs‘%s’ m‘%s’ text_cmd‘%s’ cmd‘%s’'
+        ,check_user_mappings
+        ,command.lhs if hasattr(command,'lhs') else ''
+        ,command.rhs if hasattr(command,'rhs') else ''
+        ,                                mode, text_cmd, command.__class__.__mro__)
     return command

@@ -61,6 +61,21 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
      `vnoremap d b` oh, can you can't even add a comment on the same line to clarify it
      And the whole `noremap` doesn't need to be repeated on every single line
      + command repeat count in keybinds: `(Ⓝ)d (#4)"MoveByBigWordsBackward"` (or `№` `#` `⌗` `c` `n` prefix) will move by 4 Words
+     + list of commands is executed as a single chain without the need to specify `chain` command (`(Ⓝ)q "MoveByBigWords" "MoveByBigWords"`)
+     + `chain` argument to add node children as a sequence of commands for the same keybind (in case they need to set their own properties)
+       ```kdl
+       (Ⓝ)q "MoveByBigWords" "chain" {
+         ↓/*node names are ignored*/ "MoveByBigWords"
+         - r#":"command":"move","args":{"by":"words","forward":true,"extend":true}<CR>"#
+       }
+       ```
+     + group keybinds under a single mode without having to repeat mode's name in each keybind
+       ```kdl
+       (Ⓝ)my_normal_group {
+         d "MoveByBigWordsBackward"
+         f "MoveByBigWords"
+       }
+       ```
 
 
 [0.5.1341]: https://github.com/eugenesvk/NeoVintageous/releases/tag/0.5.1341

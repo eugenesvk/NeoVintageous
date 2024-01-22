@@ -192,7 +192,7 @@ def _parse_keybind_kdl(keybind:kdl.Node):
             continue
         for arg in node.args:          # Parse arguments
             tag = clean_name(arg.tag   if hasattr(arg,'tag'  ) else '' )
-            cmd =            arg.value if hasattr(arg,'value') else arg
+            cmd = clean_cmd (arg.value if hasattr(arg,'value') else arg)
             count = 1
             if count_l := re_count.findall(tag):
                 count = int(count_l[0])

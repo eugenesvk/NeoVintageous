@@ -118,10 +118,10 @@ def _handle_rhs(window, rhs: str) -> None:
             'check_user_mappings': False,
         })
 
-from NeoVintageous.nv.vi.cmd_base import CommandNotFound
-from NeoVintageous.nv         	import plugin
-from NeoVintageous.nv.vi      	import keys
-from NeoVintageous.nv.mappings	import mappings_resolve_text
+from NeoVintageous.nv            	import plugin
+from NeoVintageous.nv.vi         	import keys
+from NeoVintageous.nv.vi.cmd_base	import CommandNotFound
+from NeoVintageous.nv.mappings   	import mappings_resolve_text
 def _handle_rhs_text(view, rhs: Union[str, list]) -> None: # find a key that is mapped to the same internal function as from text_command, and pass that key for later processing. Removes the need to repeat internal functions to handle text_commands
     win = view.window()
     mode = get_mode(view)
@@ -136,19 +136,18 @@ def _handle_rhs_text(view, rhs: Union[str, list]) -> None: # find a key that is 
                 continue
             else:
                 if mode in (mappings := plugin.mappings_reverse):
-                    dict_cls_to_cmd = mappings[mode]
-                    for clsT,seq in dict_cls_to_cmd.items():
-                        if clsT == type(command_txt):
-                            _log.debug("command_txt matched to key ‘¦%s¦’ from plugin_dict's class ‘¦%s¦’"
-                                ,                                    seq,                         clsT)
-                            win.run_command('nv_process_notation',{'keys':seq, 'check_user_mappings':False,})
-                            break
+                    dict_cls_to_cmd = mappings[mode] # <...plugin_commentary.CommentaryMotion'>:'gc'
+                    cmdT = type(command_txt)
+                    if (seq := dict_cls_to_cmd.get(cmdT,None)):
+                        _log.debug("command_txt matched to key ‘¦%s¦’ from plugin_dict's class ‘¦%s¦’"
+                            ,                                    seq,                         cmdT)
+                        win.run_command('nv_process_notation',{'keys':seq, 'check_user_mappings':False,})
+                        continue
                 if mode in (mappings := keys.mappings_reverse):
-                    dict_cls_to_cmd = mappings[mode]
-                    value_prev = None
-                    for clsT,seq in dict_cls_to_cmd.items():
-                        if clsT == type(command_txt):
-                            _log.debug("command_txt matched to key ‘¦%s¦’ from keys_dict's class ‘¦%s¦’"
-                                ,                                    seq,                         clsT)
-                            win.run_command('nv_process_notation',{'keys':seq, 'check_user_mappings':False,})
-                            break
+                    dict_cls_to_cmd = mappings[mode] # <...cmd_defs.ViUndo'>:'u'
+                    cmdT = type(command_txt)
+                    if (seq := dict_cls_to_cmd.get(cmdT,None)):
+                        _log.debug("command_txt matched to key ‘¦%s¦’ from keys_dict's class ‘¦%s¦’"
+                            ,                                    seq,                         cmdT)
+                        win.run_command('nv_process_notation',{'keys':seq, 'check_user_mappings':False,})
+                        continue

@@ -14,11 +14,76 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
   - Internationalization support of:
     + :sparkles: non-QWERTY/non-Latin layouts based on custom user `keymap` dictionary in `User/NeoVintageous.sublime-settings` (see [example config](https://github.com/eugenesvk/NeoVintageous/blob/master/NeoVintageous.sublime-settings)). Requires manually running `NeoVintageous: Generate non-QWERTY keymap` command to convert default NeoVintageous keybinds to use this keymap
     + :sparkles: non-Latin maps in `.neovintageous`, e.g., `noremap ц b` to move back by word when a Cyrillic layout is on (does not work with modifier keys since Sublime Text doesn't report non-Latin keys in key combos, see [this ST issue](https://github.com/sublimehq/sublime_text/issues/5980))
-  - (a wish to) Support nicer configuration:
+  - :sparkles: better configuration file format `NeoVintageous.kdl` with:
+    + Fewer quotes (and in the future v2 version with even fewer quotes):
+      ```
+       plugin    {  surround    {  punctuation_marks    ‘="‘’"    “="“”"    ‹="‹›"   «="«»" ;};}
+      "plugin" : { "surround" : { "punctuation_marks":{"‘":"‘’", "“":"“”", "‹":"‹›","«":"«»"}} },
+      ```
+    + Inline comments:
+      ```
+      punctuation-alias "clear"/*clear defaults d=")" B="}" r="]" a=">" }*/\
+                                                 d="(" f="[" g="‘" h="“"
+      ```
+    + Support for raw strings so you don't need to escape anything:
+      ```
+       upper 	r#"l;'\"
+      "upper"	: "l;'\\",
+      ```
+  + :sparkles: support for importing other config files
+    ```
+    #import (keybind)"NeoVintageous.key.kdl"
+    /*↑ or ‘import’ to import ↑ file name relative to this main config file
+    group values↑ in ‘keybind{}’, so the file itself can include only top-level ‘key command’ lines
+    */
+    ```
+  + :sparkles: human-readable format for setting keyboard shortcuts
+    `(nv)d "MoveByWordsBackward" // understandable command name`
+    instead of `.neovintageousrc`'s
+    `nnoremap d b` why do you need to remember that `b` moves by words backwards if you never use it?
+    `vnoremap d b` oh, can you can't even add a comment on the same line to clarify it
+    And the whole `noremap` doesn't need to be repeated on every single line
+    + command repeat count in keybinds: `(Ⓝ)d (#4)"MoveByBigWordsBackward"` (or `№` `#` `⌗` `c` `n` prefix) will move by 4 Words
+    + list of commands is executed as a single chain without the need to specify `chain` command (`(Ⓝ)q "MoveByBigWords" "MoveByBigWords"`)
+    + `chain` argument to add node children as a sequence of commands for the same keybind (in case they need to set their own properties)
+      ```kdl
+      (Ⓝ)q "MoveByBigWords" "chain" {
+        ↓/*node names are ignored*/ "MoveByBigWords"
+        - r#":"command":"move","args":{"by":"words","forward":true,"extend":true}<CR>"#
+      }
+      ```
+    + group keybinds under a single mode without having to repeat mode's name in each keybind
+      ```kdl
+      (Ⓝ)my_normal_group {
+        d "MoveByBigWordsBackward"
+        f "MoveByBigWords"
+      }
+      ```
+    + execute Sublime Text commands by writing arguments in a `prop=value` format
+      ```kdl
+      (Ⓝ)r (subl)"move" by="words" forward=true extend=false
+      //- r#":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"#
+      // ! but this is NOT suitable for chains since prop=val in KDL do not maintain position vs. arguments, so to execute multiple Sublime Text commands with arguments you'd still need to "chain them"
+      (Ⓝ)t "chain" {
+        - (#5subl)"move" by="words" forward=true extend=false
+        - (#5subl)"move" by="words" forward=true extend=true
+      }
+      // ! also, this doesn't work for nested arguments, those still require pasting the full json snippet
+      ```
+  - Support nicer configuration even in the old format:
     + :sparkles: support for raw Sublime Text commands in user config without having to convert their names or arguments (or just the command names by adding extra `:` prefix)
     + :sparkles: rudimentary foundations to support custom key symbols in user config, e.g., `noremap ⇟ w` to move by word with a <kbd>⇟</kbd>PageDown key
   - a few other extensions:
     + :sparkles: surround: allow users to configure marks, mark aliases, when to append an extra space
+    + :sparkles: surround: option to not seek the next set brackets if current text isn't enclosed in one — `⎀a(b)` with surround  delete will result in:
+      - `⎀a(b)` if `seek_forward` is `false` (default)
+      - `⎀ab`   if `seek_forward` is `true`
+    + :sparkles: surround: option to maintain cursor position on text edits, e.g., adding `'` to `my_⎀word` (⎀ denotes cursor position) will leave cursor at the same spot in the new `'my_⎀word'` while previously it moved it to the first inserted punctuation `⎀'my_word'`
+  - and other changes:
+   + :sparkles: nowrap alternative to tab switch Ex commands (`tabnextnowrap`/`tabpreviousnowrap`)
+   + :sparkles: allow user to set values of various indicators:
+     + for `ls` command, e.g., replace `+` modified file mark with `🖉` similar to how a modified tab is marked
+     + for `registers` command, e.g., replace `l` for linewise with `━`
 
 ## About NeoVintageous
 

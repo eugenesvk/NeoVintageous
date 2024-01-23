@@ -163,6 +163,42 @@ _keybind_prop = {
     'def':['def','default'],
     }
 
+def _parse_set_kdl(node:kdl.Node,cfg='') -> None:
+    from NeoVintageous.nv.ex_cmds import ex_set # inline import to avoid circular dependency errors
+    win  = sublime.active_window()
+    view = win.active_view()
+    args = dict()
+    if win:
+        args['window'] = win
+    if view:
+        args['view']   = view
+
+    for arg in node.args:          # Parse arguments
+        tag = clean_name(arg.tag   if hasattr(arg,'tag'  ) else '' )
+        val = clean_cmd (arg.value if hasattr(arg,'value') else arg)
+        _log.debug(f"set option from kdl arg: ¦{val}¦")
+        ex_set(option=val,value=None, **args)
+    for pkey,tag_val in node.props.items(): # Parse properties
+        tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
+        val = tag_val.value if hasattr(tag_val,'value') else tag_val
+        _log.debug(f"set option from kdl prop: ¦{pkey}¦=¦{val}¦")
+        if   val == True:
+            opt_key =       pkey
+            opt_val = None
+        elif val == False:
+            opt_key = 'no' +pkey
+            opt_val = None
+        elif val in ['inv','invert','!']:
+            opt_key = 'inv'+pkey
+            opt_val = None
+        elif val in ['show','?']:
+            opt_key =       pkey+'?'
+            opt_val = None
+        else:
+            opt_key =       pkey
+            opt_val = val
+        ex_set(option=opt_key,value=opt_val, **args)
+
 from NeoVintageous.nv import variables
 def _parse_let_kdl(node:kdl.Node,cfg='') -> None:
     if not node.props:
@@ -220,8 +256,8 @@ def _parse_keybind_kdl(keybind:kdl.Node, gmodes:Mode=Mode(0)):
     if key == 'let':
         _parse_let_kdl(node)
         return
-    if key in ['set']:
-        _log.warn("Keybind config group shouldn't have ‘let’/‘set’ (%s)",keybind)
+    if key == 'set':
+        _parse_set_kdl(node)
         return
     prop = dict()                  # Parse properties
     prop_rest = dict()             # Properties left from known defaults (e.g., part of Sublime commands)

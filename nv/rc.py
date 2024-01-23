@@ -97,8 +97,7 @@ def _load() -> None:
 
 import NeoVintageous.nv.cfg_parse
 def _source(window, source) -> None:
-    # The import is inline to avoid circular dependency errors.
-    from NeoVintageous.nv.ex_cmds import do_ex_cmdline
+    from NeoVintageous.nv.ex_cmds import do_ex_cmdline # inline import to avoid circular dependency errors
 
     try:
         window.settings().set('_nv_sourcing', True)

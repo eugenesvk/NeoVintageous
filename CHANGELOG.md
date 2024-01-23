@@ -76,7 +76,17 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
          f "MoveByBigWords"
        }
        ```
-
+     + execute Sublime Text commands by writing arguments in a `prop=value` format
+       ```kdl
+       (Ⓝ)r (subl)"move" by="words" forward=true extend=false
+       //- r#":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"#
+       // ! but this is NOT suitable for chains since prop=val in KDL do not maintain position vs. arguments, so to execute multiple Sublime Text commands with arguments you'd still need to "chain them"
+       (Ⓝ)t "chain" {
+         - (#5subl)"move" by="words" forward=true extend=false
+         - (#5subl)"move" by="words" forward=true extend=true
+       }
+       // ! also, this doesn't work for nested arguments, those still require pasting the full json snippet
+       ```
 
 [0.5.1341]: https://github.com/eugenesvk/NeoVintageous/releases/tag/0.5.1341
 ## [0.5.1341]

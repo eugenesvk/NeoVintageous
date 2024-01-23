@@ -56,7 +56,7 @@ def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str=''):
     # raise parse_fragment.error("str_err") # kdl.errors.ParseError: 1:N parse error: str_err
     # .error(str) takes a custom error message and returns a kdl.ParseError with the ParseFragment's location already built in, ready for you to raise. This should be used if your conversion fails for any reason, so your errors look the same as native parse errors
     return kdl_py_obj
-  def fn_import(kdl_py_obj, parse_fragment, kdl_docs=kdl_docs): # todo fails (None,None) https://github.com/tabatkins/kdlpy/issues/8
+  def fn_import(kdl_py_obj, parse_fragment, kdl_docs=kdl_docs):
     import_var = {}
     for i,key in enumerate(prop_d := kdl_py_obj.props):
       val = prop_d[key]

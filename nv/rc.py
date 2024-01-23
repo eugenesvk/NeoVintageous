@@ -210,6 +210,27 @@ def _parse_let_kdl(node:kdl.Node,cfg='') -> None:
         _log.debug(f"set var from kdl: ¦{pkey}¦=¦{val}¦")
         variables.set(pkey,val)
 
+def _parse_general_g_kdl(general_g:kdl.Node):
+    for node in general_g.nodes: # set relativenumber=true
+        _parse_general_cfg_kdl(general_cfg=node)
+def _parse_general_cfg_kdl(general_cfg:kdl.Node) -> None:
+    if not (cfgT := type(general_cfg)) is kdl.Node:
+        _log.error("Type of ‘general’ config group should be kdl.Node, not ‘%s’",cfgT)
+        return None
+    node = general_cfg          # set relativenumber=true
+    opt_name    = node.name     # ‘set’
+    if   opt_name == '-': # skip comment nodes (todo: when lib supports roundtrip, save as actual comments)
+        return
+    elif opt_name == 'let':
+        _parse_let_kdl(node)
+        return None
+    elif opt_name == 'set':
+        _parse_set_kdl(node)
+        return None
+    else:
+        _log.error("Unrecognized option type within ‘general’ config group, expecting ‘let’/‘set’/‘-’, not ‘%s’",opt_name)
+        return None
+
 def _parse_keybind_arg(node:kdl.Node, prop_subl={}):
     cmd_l   = []
     isChain = False
@@ -351,7 +372,7 @@ class cfgU(metaclass=Singleton):
         cfgU.kdl = dict()
 
         # Split config into per-section/per-plugin group
-        cfg_group  = ['keymap','event','status','edit','keybind']
+        cfg_group  = ['keymap','event','status','edit','keybind','general']
         cfg_nest   = {'plugin'   :['surround']
             ,         'indicator':['ls','registers']}
         # Set config dictionaries to emtpy
@@ -392,6 +413,9 @@ class cfgU(metaclass=Singleton):
 
         if (keybind := cfgU.kdl['keybind']):
             _parse_keybinds_kdl(keybinds=keybind)
+
+        if (general_g := cfgU.kdl['general']):
+            _parse_general_g_kdl(general_g=general_g)
 
         _import_plugins_with_user_data_kdl()
 

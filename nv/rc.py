@@ -162,6 +162,18 @@ _keybind_prop = {
     'file':['ft','file','filetype'],
     'def':['def','default'],
     }
+
+from NeoVintageous.nv import variables
+def _parse_let_kdl(node:kdl.Node,cfg='') -> None:
+    if not node.props:
+        _log.warn("%sconfig has a ‘let’ command without var=value properties (%s)",
+            f'‘{cfg}’ ' if cfg else '',                                     node)
+    for pkey,tag_val in node.props.items():
+        tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
+        val = tag_val.value if hasattr(tag_val,'value') else tag_val
+        _log.debug(f"set var from kdl: ¦{pkey}¦=¦{val}¦")
+        variables.set(pkey,val)
+
 def _parse_keybind_arg(node:kdl.Node, prop_subl={}):
     cmd_l   = []
     isChain = False
@@ -205,7 +217,10 @@ def _parse_keybind_kdl(keybind:kdl.Node, gmodes:Mode=Mode(0)):
     cmd_txt = []                   # ‘[OpenNameSpace]’
     if key == '-': # skip comment nodes (todo: when lib supports roundtrip, save as actual comments)
         return
-    if key in ['let', 'set']:
+    if key == 'let':
+        _parse_let_kdl(node)
+        return
+    if key in ['set']:
         _log.warn("Keybind config group shouldn't have ‘let’/‘set’ (%s)",keybind)
         return
     prop = dict()                  # Parse properties

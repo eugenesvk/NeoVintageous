@@ -2,6 +2,7 @@ import builtins
 import logging
 import os
 import re
+import json
 from pathlib import Path
 from typing import List, Union
 
@@ -154,6 +155,7 @@ from NeoVintageous.nv.modes import Mode, Mode as M, text_to_modes, mode_names, M
 
 from NeoVintageous.nv.cfg_parse import clean_name, clean_cmd
 re_count = re.compile(r"[№#⌗cn](\d+)")
+re_subl_tag = re.compile(r"subl|sublime|st")
 re_filetype = re.compile(r"[\s,]+")
 _keybind_prop = {
     'desc':['d','des','desc','description','inf','info'],
@@ -161,16 +163,23 @@ _keybind_prop = {
     'file':['ft','file','filetype'],
     'def':['def','default'],
     }
-def _parse_keybind_arg(node:kdl.Node):
+def _parse_keybind_arg(node:kdl.Node, prop_subl={}):
     cmd_l   = []
     isChain = False
     for arg in node.args:          # Parse arguments
         tag = clean_name(arg.tag   if hasattr(arg,'tag'  ) else '' )
-        cmd = clean_cmd (arg.value if hasattr(arg,'value') else arg)
+        val = clean_cmd (arg.value if hasattr(arg,'value') else arg)
         count = 1
-        if cmd == 'chain':
+        if val == 'chain':
             isChain = True
             continue
+        if re_subl_tag.search(tag): # Sublime command per tag, serialize into a json dump
+            subl_arg = f',"args":{json.dumps(prop_subl)}' if prop_subl else ''
+            cmd      = f'"command":"{val}"{subl_arg}<CR>'
+            # (Ⓝ)q (subl)"move" by="words" forward=true extend=true
+            # →"command":"move","args":{"by": "words", "forward": true, "extend": true}<CR>
+        else:
+            cmd = val
         if count_l := re_count.findall(tag): # find a count tag and add commands×count
             count = int(count_l[0])
         for i in range(1,1+(count if count > 1 else 1)):
@@ -200,13 +209,8 @@ def _parse_keybind_kdl(keybind:kdl.Node, gmodes:Mode=Mode(0)):
     if key in ['let', 'set']:
         _log.warn("Keybind config group shouldn't have ‘let’/‘set’ (%s)",keybind)
         return
-    (cmd,isChain)         = _parse_keybind_arg(node=node)
-    cmd_txt.extend(cmd)
-    if children and isChain:           # with Chain argument...
-        for child in children:         # ...parse children as commands
-            (cmd,_) = _parse_keybind_arg(node=child)
-            cmd_txt.extend(cmd)
     prop = dict()                  # Parse properties
+    prop_rest = dict()             # Properties left from known defaults (e.g., part of Sublime commands)
     for pkey,tag_val in node.props.items(): # ‘i="✗" d="Close a tab"’
         tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
         val = tag_val.value if hasattr(tag_val,'value') else tag_val
@@ -218,6 +222,22 @@ def _parse_keybind_kdl(keybind:kdl.Node, gmodes:Mode=Mode(0)):
             else:
                 if pkey in key_abbrev:
                     prop[dkey] = val
+            if pkey not in key_abbrev: # non-specified key=val pairs
+                prop_rest[pkey] = val
+    (cmd,isChain)         = _parse_keybind_arg(node=node, prop_subl=prop_rest) # Parse arguments
+    cmd_txt.extend(cmd)
+    if children and isChain:           # with Chain argument...
+        for child in children:         # ...parse children as commands
+            prop_rest = dict()
+            for pkey,tag_val in child.props.items(): #
+                tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
+                val = tag_val.value if hasattr(tag_val,'value') else tag_val
+                for dkey,key_abbrev in _keybind_prop.items():
+                    if pkey not in key_abbrev: # non-specified key=val pairs
+                        prop_rest[pkey] = val
+            (cmd,_) = _parse_keybind_arg(node=child, prop_subl=prop_rest)
+            cmd_txt.extend(cmd)
+
     if not modes:
         _log.error("Couldn't parse ‘%s’ to a list of modes, skipping ‘%s’"
             ,                     mode_s,                            node)

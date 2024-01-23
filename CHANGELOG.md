@@ -2,7 +2,7 @@
 
 All notable changes are documented in this file using the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
-[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.5.1341...HEAD
+[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.6.1341...HEAD
 ## [Unreleased]
   <!-- - __Added__ -->
    <!-- + :sparkles: ??? -->
@@ -22,6 +22,8 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
   <!-- - __Security__ -->
    <!-- + :lock: ??? -->
    <!-- vulnerabilities -->
+[0.6.1341]: https://github.com/eugenesvk/NeoVintageous/releases/tag/0.6.1341
+## [0.6.1341]
   - __Added__
    + :sparkles: nowrap alternative to tab switch Ex commands (`tabnextnowrap`/`tabpreviousnowrap`)
    + :sparkles: allow user to set values various indicators:

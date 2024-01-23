@@ -42,6 +42,15 @@ keybind { // or add keybinds in the main config file
       a "MoveByBigWordsBackward" r#":"command":"move","args":{"by":"words","forward":false,"extend":true }<CR>"#
       s "MoveByBigWords"         r#":"command":"move","args":{"by":"words","forward":true ,"extend":true }<CR>"#
     }
+  // execute Sublime Text commands by writing arguments in a prop=value format
+    (Ⓝ)r (subl)"move" by="words" forward=true extend=false
+    // - r#":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"#
+    // ! but this is NOT suitable for chains since prop=val in KDL do not maintain position vs. arguments, so to execute multiple Sublime Text commands with arguments you'd still need to "chain them"
+    (Ⓝ)t "chain" {
+      - (#5subl)"move" by="words" forward=true extend=false
+      - (#5subl)"move" by="words" forward=true extend=true
+    }
+    // ! also, this doesn't work for nested arguments, those still require pasting the full json snippet
 }
 
 keymap { // Use custom keymaps (non-QWERTY/non-Latin) in command mode

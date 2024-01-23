@@ -208,8 +208,8 @@ def _parse_keybind_kdl(keybind:kdl.Node, gmodes:Mode=Mode(0)):
             cmd_txt.extend(cmd)
     prop = dict()                  # Parse properties
     for pkey,tag_val in node.props.items(): # ‘i="✗" d="Close a tab"’
-        tag = arg.tag   if hasattr(tag_val,'tag'  ) else ''
-        val = arg.value if hasattr(tag_val,'value') else tag_val
+        tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
+        val = tag_val.value if hasattr(tag_val,'value') else tag_val
         for dkey,key_abbrev in _keybind_prop.items():
             if dkey == 'file':
                 if pkey in key_abbrev: # ['ft','file','filetype']

@@ -57,6 +57,7 @@ DEF = {
     'suffix' : '',
     'idmode' : 'vim-mode',
     'idseq'  : 'vim-seq',
+    'statepopup'  : False,
 }
 DEFM = dict()
 for m in mode_names: # Mode.N enum variants
@@ -66,8 +67,12 @@ CFG  = copy.deepcopy(DEF) # copy defaults to be able to reset values on config r
 CFGM = copy.deepcopy(DEFM)
 
 def reload_with_user_data_kdl() -> None:
+    global CFG, CFGM
+    if hasattr(cfgU,'kdl'): # skip on initial import when Plugin API isn't ready, so no settings are loaded
+        from NeoVintageous.nv.state import CFG as SCFG
+        CFG['statepopup'] = SCFG['enable']
+
     if hasattr(cfgU,'kdl') and (cfg := cfgU.kdl.get('status',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
-        global CFG, CFGM
         _log.debug("@nv.vim: Parsing config status")
         for cfg_key in CFG: # 1a. parse arguments for non-mode statuses
             if (node := cfg.get(cfg_key,None)): # id_seq "vim-seq" node/arg pair
@@ -145,6 +150,8 @@ def reset_status_line(view, mode: str) -> None:
     view.erase_status(CFG['idseq'])
     if mode == NORMAL:
         view.set_status(CFG['idmode'], _MODES[M.Normal])
+    if CFG['statepopup'] and view.is_popup_visible():
+        view.hide_popup()
 
 
 def is_visual_mode(mode: str) -> bool:

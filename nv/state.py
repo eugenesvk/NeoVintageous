@@ -1,6 +1,8 @@
+import re
 import logging
+import sublime  # noqa: E402
 
-from sublime import active_window
+from sublime import active_window, PopupFlags
 
 from NeoVintageous.nv import macros
 from NeoVintageous.nv import plugin
@@ -35,7 +37,7 @@ from NeoVintageous.nv.vi.cmd_base import ViOperatorDef
 from NeoVintageous.nv.vi.cmd_defs import ViToggleMacroRecorder
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.modes import Mode as M, mode_names, mode_names_rev, text_to_modes, text_to_mode_alone
-from NeoVintageous.nv.vim import CFG, CFGM # config values, defaults + user
+from NeoVintageous.nv.vim import CFG as VCFG, CFGM as VCFGM # config values, defaults + user
 from NeoVintageous.nv.vim import clean_view
 from NeoVintageous.nv.vim import enter_insert_mode
 from NeoVintageous.nv.vim import enter_normal_mode
@@ -52,17 +54,89 @@ from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
 
+DEF = dict(
+     enable   	= True
+    ,prefix   	= ''
+    ,template 	= '''<body id="nv_motion_count"><span>{prefix}{count}</span></body>'''
+    ,maxwidth 	= 80
+    ,maxheight	= 30
+)
+import copy
+CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
+def reload_with_user_data_kdl() -> None:
+    if hasattr(cfgU,'kdl') and (nest := cfgU.kdl.get('indicator',None))\
+        and                    (cfg  :=     nest.get('count'    ,None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
+        global CFG
+        _log.debug("@registers: Parsing config indicator/count")
+        for cfg_key in CFG:
+            if (node := cfg.get(cfg_key,None)): # prefix "⌗" node/arg pair
+                if (args := node.args):
+                    tag_val = args[0] #(t)"⌗" if (t) exists (though shouldn't)
+                    # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
+                    if hasattr(tag_val,'value'):
+                        val = tag_val.value # ignore tag
+                        _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
+                            ,      node.name,                               tag_val)
+                    else:
+                        val = tag_val
+                    CFG[node.name] = val
+                    # print(f"indicator count from argument ‘{tag_val}’")
+                elif not args:
+                    _log.warn("node ‘%s’ is missing arguments in its child ‘%s’"
+                        ,         cfg_key,                               node.name)
+                if len(args) > 1:
+                    _log.warn("node ‘%s’ has extra arguments in its child ‘%s’, only the 1st was used ‘%s’"
+                        ,         cfg_key,                              node.name,         {', '.join(args)})
+        node = cfg
+        for i,key in enumerate(prop_d := node.props): # prefix="⌗", alternative notation to child node/arg pairs
+            tag_val = prop_d[key] #prefix=(t)"⌗" if (t) exists (though shouldn't)
+            # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
+            if hasattr(tag_val,'value'):
+                val = tag_val.value # ignore tag
+                _log.warn("node ‘%s’ has unrecognized tag in property ‘%s=%s’"
+                    ,             node.name,                         key,tag_val)
+            else:
+                val = tag_val
+            if key in CFG:
+                CFG[key] = val
+                # print(f"indicator count from property ‘{key}={val}’")
+            else:
+                _log.error("node ‘%s’ has unrecognized property ‘%s=%s’"
+                    ,             node.name,                   key,tag_val)
+    else:
+        CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
+
+def get_popup_html(sym) -> str:
+    return CFG['template'].format_map(dict(prefix=CFG['prefix'],count=sym))
+def show_popup_count(view:sublime.View, sym:str, point:int=-1) -> None:
+    view.show_popup(
+      content     	= get_popup_html(sym)               	# str
+      , flags     	= PopupFlags.HIDE_ON_CHARACTER_EVENT	#
+      , location  	= point                             	# Point -1
+      , max_width 	= CFG['maxwidth']                   	# DIP
+      , max_height	= CFG['maxheight']                  	# DIP
+    )
+
+re_flags = 0
+re_flags |= re.MULTILINE | re.IGNORECASE
+re_cmd_count_p = r"<k([0-9])>"
+re_cmd_count   = re.compile(re_cmd_count_p, flags=re_flags)
 def update_status_line(view) -> None:
     mode_txt  = get_mode(view) # mode_insert
     mode_enum = mode_names_rev.get(mode_txt,None) # Mode.Insert
-    if mode_enum in CFGM and CFGM[mode_enum] is not None:
-        mode_name = CFGM[mode_enum]
+    if mode_enum in VCFGM and VCFGM[mode_enum] is not None:
+        mode_name = VCFGM[mode_enum]
     else:
         mode_name = mode_to_name(mode_txt)
     if mode_name:
-        view.set_status(CFG['idmode'], f"{CFG['prefix']}{mode_name}{CFG['suffix']}")
+        view.set_status(VCFG['idmode'], f"{VCFG['prefix']}{mode_name}{VCFG['suffix']}")
 
-    view.set_status(CFG['idseq'], get_sequence(view))
+    seq_txt = get_sequence(view)
+    view.set_status(VCFG['idseq'], seq_txt)
+
+    if CFG['enable'] and (match := re_cmd_count.findall(seq_txt)): # show popup
+        count_s = ''.join(match)
+        show_popup_count(view, count_s)
 
 
 def must_collect_input(view, motion: ViMotionDef, action: ViOperatorDef) -> bool:

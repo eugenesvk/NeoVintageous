@@ -24,6 +24,7 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
    <!-- vulnerabilities -->
 ## [Unreleased]
   - __Added__
+   + :sparkles: show a popup with a count indicator
    + `general` group to the new KDL config format `NeoVintageous.kdl` with support for `set` and `let` options
    + support for `set` and `let` options in the `keybind` group
 

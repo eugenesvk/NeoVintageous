@@ -22,6 +22,11 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
   <!-- - __Security__ -->
    <!-- + :lock: ??? -->
    <!-- vulnerabilities -->
+## [Unreleased]
+  - __Added__
+   + `general` group to the new KDL config format `NeoVintageous.kdl` with support for `set` and `let` options
+   + support for `set` and `let` options in the `keybind` group
+
 [0.6.1341]: https://github.com/eugenesvk/NeoVintageous/releases/tag/0.6.1341
 ## [0.6.1341]
   - __Added__

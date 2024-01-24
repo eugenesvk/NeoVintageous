@@ -53,6 +53,11 @@ keybind { // or add keybinds in the main config file
     // ! also, this doesn't work for nested arguments, those still require pasting the full json snippet
 }
 
+general { // General options
+  let mapleader="<space>"
+  set "relativenumber"=true relativenumber="inv" "relativenumber?" // support for vim "noargument" format and a more explicit config=value
+}
+
 keymap { // Use custom keymaps (non-QWERTY/non-Latin) in command mode
   // 1. add "lower"/"upper" keymaps below that match the position of QWERTY symbols
   // 2. Run command "NeoVintageous: Generate non-QWERTY key bindings"

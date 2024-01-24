@@ -2,7 +2,7 @@
 
 All notable changes are documented in this file using the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
-[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.6.1341...HEAD
+[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.7.1341...HEAD
 ## [Unreleased]
   <!-- - __Added__ -->
    <!-- + :sparkles: ??? -->
@@ -22,7 +22,9 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
   <!-- - __Security__ -->
    <!-- + :lock: ??? -->
    <!-- vulnerabilities -->
-## [Unreleased]
+
+[0.7.1341]: https://github.com/eugenesvk/NeoVintageous/releases/tag/0.7.1341
+## [0.7.1341]
   - __Added__
    + :sparkles: show a popup with a count indicator
    + `general` group to the new KDL config format `NeoVintageous.kdl` with support for `set` and `let` options

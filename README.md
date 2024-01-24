@@ -14,7 +14,7 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
   - Internationalization support of:
     + :sparkles: non-QWERTY/non-Latin layouts based on custom user `keymap` dictionary in `User/NeoVintageous.sublime-settings` (see [example config](https://github.com/eugenesvk/NeoVintageous/blob/master/NeoVintageous.sublime-settings)). Requires manually running `NeoVintageous: Generate non-QWERTY keymap` command to convert default NeoVintageous keybinds to use this keymap
     + :sparkles: non-Latin maps in `.neovintageous`, e.g., `noremap ц b` to move back by word when a Cyrillic layout is on (does not work with modifier keys since Sublime Text doesn't report non-Latin keys in key combos, see [this ST issue](https://github.com/sublimehq/sublime_text/issues/5980))
-  - :sparkles: better configuration file format `NeoVintageous.kdl` with:
+  - :sparkles: better configuration file format `NeoVintageous.kdl` (see [example](./NeoVintageous.help.kdl)) with:
     + Fewer quotes (and in the future v2 version with even fewer quotes):
       ```
        plugin    {  surround    {  punctuation_marks    ‘="‘’"    “="“”"    ‹="‹›"   «="«»" ;};}

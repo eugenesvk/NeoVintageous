@@ -116,6 +116,13 @@ indicator { // Set various indicator format
     char	"c"	// Characterwise text
     line	"━"	// Linewise      text
   }; /-registers char="c" line="━━" // prop=val format also works
+  count { // Set values for command ‘count’ popup indicator
+    enable    	true	//|true|	Show a popup at cursor location with a command repeat count
+    prefix    	""  	//||    	Prefix label shown before count number (e.g., ⌗3)
+    max_width 	80  	//|80|  	max popup width
+    max_height	30  	//|30|  	max popup height
+    template  	r#"<body id="nv_motion_count"><span>{prefix}{count}</span></body>"# //|<body id="nv_motion_count"><span>{prefix}{count}</span></body>| Full HTML popup template replacement that will receive two variables: prefix and count
+  }; /-count prefix="⌗" // prop=val format is also allowed
 }
 plugin {
   surround { // Use custom brackets in Surround plugin

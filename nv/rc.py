@@ -275,11 +275,17 @@ def _parse_keybind_arg(node:kdl.Node, prop_subl={}):
         for i in range(1,1+(count if count > 1 else 1)):
             cmd_l.append(cmd)
     return (cmd_l, isChain)
-def _parse_vars_kdl(node_vars:kdl.Node):
-    var_d = dict()
-    var_set = dict()
-    pre='‘'
-    pos='’'
+def _parse_vars_kdl(node_vars:kdl.Node,var_d:dict={}):
+    # print(f"var_d pre {var_d}")
+    # use var_d from #import key=val props to seed initial values
+    pre = CFG['var_def'][0] #‘
+    pos = CFG['var_def'][1] #’
+    if 'def' in var_d:
+        var_def = var_d['def']
+        if len(var_def) >= 2:
+            pre = var_def[0]
+            pos = var_def[1]
+    var_set = var_d['set'] if 'set' in var_d else dict()
     for node in node_vars.getAll('vardef'):
         tag_val = node.name
         tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
@@ -318,13 +324,14 @@ def _parse_vars_kdl(node_vars:kdl.Node):
     var_d['def'] = var_def
     var_d['set'] = var_set
     var_d['re']  = re_var_set
+    # print(f"var_d pos {var_d}")
     return var_d
 
-def _parse_keybinds_kdl(keybinds:kdl.Node):
-    var_d = _parse_vars_kdl(keybinds)
+def _parse_keybinds_kdl(keybinds:kdl.Node,var_d:dict={}):
+    var_d_combo = _parse_vars_kdl(keybinds,var_d)
     for kb_node in keybinds.nodes: # (Ⓝ)"q" "OpenNameSpace"
-        _parse_keybind_kdl(keybind=kb_node, var_d=var_d)
-def _parse_keybind_kdl(keybind:kdl.Node, gmodes:Mode=Mode(0), var_d={}):
+        _parse_keybind_kdl(keybind=kb_node, var_d=var_d_combo)
+def _parse_keybind_kdl(keybind:kdl.Node, gmodes:Mode=Mode(0), var_d:dict={}):
     from NeoVintageous.nv.mappings import mappings_add, mappings_add_text
     if not (cfgT := type(keybind)) is kdl.Node:
         _log.error("Type of ‘keybind’ should be kdl.Node, not ‘%s’",cfgT)
@@ -445,7 +452,7 @@ class cfgU(metaclass=Singleton):
     def load_kdl():
         if hasattr(cfgU,'kdl') and cfgU.kdl: # avoid loading the same config multiple times
             return
-        cfg_l:List[kdl.Document] = cfgU.read_kdl_file()
+        cfg_l:List[(kdl.Document,dict)] = cfgU.read_kdl_file()
         cfgU.kdl = dict()
 
         # Split config into per-section/per-plugin group
@@ -461,13 +468,13 @@ class cfgU(metaclass=Singleton):
             for g in nest:
                 cfgU.kdl[nest][g] = None
         # Fill config dictionaries
-        for cfg in cfg_l: # store the latest existing value in any of the docs
+        for (cfg,var_d) in cfg_l: # store the latest existing value in any of the docs
             for g in cfg_group:   # direct config groups like 'keymap'
                 if (node := cfg.get(g, None)):
                     if g == 'keybind':
-                        cfgU.kdl[g] += [node]
+                        cfgU.kdl[g] += [(node,var_d)]
                     else:
-                        cfgU.kdl  [g] = node
+                        cfgU.kdl[g]  = node
             for nest in cfg_nest: # nested config groups like 'surround' within 'plugin'
                 if (node_nest := cfg.get(nest, None)):       # 'plugin'   node
                     for g in cfg_nest[nest]:                 # 'surround'
@@ -482,17 +489,6 @@ class cfgU(metaclass=Singleton):
                                     ,             g,                            nest)
                             else:
                                 cfgU.kdl[nest][g] = node
-        if               cfgU.kdl['keybind']: # convert a list of nodes into a single node
-            if len(      cfgU.kdl['keybind']) > 0:
-                _combo_n = []
-                for n in cfgU.kdl['keybind']:
-                    _combo_n += n.nodes
-                cfgU         .kdl['keybind'] = kdl.Node(name='keybind',nodes=_combo_n)
-            else:
-                cfgU         .kdl['keybind'] = cfgU.kdl['keybind'][0]
-        #for g in cfg_group: # Rudimentary type checks (can have props, also empty is ok)
-        #    if  cfgU.kdl[g] and not (cfgU.kdl[g].nodes):
-        #        cfgU.kdl[g] = None; _log.warn(f"‘{g}’ in ‘{cfgU.cfg_f}’ has no child nodes!")
 
         ignore = {1:cfg_group, 2:[]} # ignore the lowest level dictionary groups as they repeat node names
         for g,subg in cfg_nest.items():
@@ -500,11 +496,11 @@ class cfgU(metaclass=Singleton):
         cfgU.flat = flatten_kdl(cfgU.kdl, ignore=ignore) # store a flat dictionary for easy access
         # print('cfgU.flat', cfgU.flat)
 
-        if (keybind := cfgU.kdl['keybind']):
-            _parse_keybinds_kdl(keybinds=keybind)
-
         if (general_g := cfgU.kdl['general']):
             _parse_general_g_kdl(general_g=general_g)
+
+        for (keybind,var_d) in cfgU.kdl['keybind']:
+            _parse_keybinds_kdl(keybinds=keybind,var_d=var_d)
 
         _import_plugins_with_user_data_kdl()
 

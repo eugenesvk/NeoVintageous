@@ -57,6 +57,9 @@ def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d
     # .error(str) takes a custom error message and returns a kdl.ParseError with the ParseFragment's location already built in, ready for you to raise. This should be used if your conversion fails for any reason, so your errors look the same as native parse errors
     return kdl_py_obj
   def fn_import(kdl_py_obj, parse_fragment, kdl_docs=kdl_docs):
+    # print(f"kdl_py_obj = |{kdl_py_obj}|") # #import "NV.key.kdl" tvar=(var)"a"
+    # print(f"tag=|{kdl_py_obj.tag}| name=|{kdl_py_obj.name}|") #tag=None val=#import
+    # print(f"parse_fragment.fragment=|{parse_fragment.fragment}|") # "#import" raw text of the value after the tag
     import_var = {}
     for i,key in enumerate(prop_d := kdl_py_obj.props):
       val = prop_d[key]

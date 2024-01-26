@@ -298,9 +298,10 @@ def _parse_vars_kdl(node_vars:kdl.Node):
     return var_d
 
 def _parse_keybinds_kdl(keybinds:kdl.Node):
+    var_d = _parse_vars_kdl(keybinds)
     for kb_node in keybinds.nodes: # (Ⓝ)"q" "OpenNameSpace"
-        _parse_keybind_kdl(keybind=kb_node)
-def _parse_keybind_kdl(keybind:kdl.Node, gmodes:Mode=Mode(0)):
+        _parse_keybind_kdl(keybind=kb_node, var_d=var_d)
+def _parse_keybind_kdl(keybind:kdl.Node, gmodes:Mode=Mode(0), var_d={}):
     from NeoVintageous.nv.mappings import mappings_add, mappings_add_text
     if not (cfgT := type(keybind)) is kdl.Node:
         _log.error("Type of ‘keybind’ should be kdl.Node, not ‘%s’",cfgT)
@@ -316,6 +317,8 @@ def _parse_keybind_kdl(keybind:kdl.Node, gmodes:Mode=Mode(0)):
     key    = node.name             # ‘q’
     children = node.nodes          # either full keybinds or just commands with Chain argument
     cmd_txt = []                   # ‘[OpenNameSpace]’
+    if key in ['vardef','varset'] and node.tag is None: # skip variables (parsed earlier)
+        return
     if key == '-': # skip comment nodes (todo: when lib supports roundtrip, save as actual comments)
         return
     if key == 'let':
@@ -324,6 +327,13 @@ def _parse_keybind_kdl(keybind:kdl.Node, gmodes:Mode=Mode(0)):
     if key == 'set':
         _parse_set_kdl(node)
         return
+    if var_d and var_d['set']:
+        # key_old = key # ‘var_name’ → var_value (match ‘var_name’, but need to find value for var_name, so use index to find the ‘(var_name)’ regex match)
+        key = var_d['re'].sub(lambda m: m.group().replace(m.group(),var_d['set'][m[m.lastindex]],1), key)
+        # if not key_old == key:
+            # _log.debug("replaced var in key: %s → %s"
+                # ,                        key_old, key)
+
     prop = dict()                  # Parse properties
     prop_rest = dict()             # Properties left from known defaults (e.g., part of Sublime commands)
     for pkey,tag_val in node.props.items(): # ‘i="✗" d="Close a tab"’

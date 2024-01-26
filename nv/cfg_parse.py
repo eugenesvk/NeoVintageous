@@ -66,20 +66,22 @@ def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str=''):
 
     # print(import_var)
     for arg in kdl_py_obj.args:
-      tag = arg.tag   if hasattr(arg,'tag'  ) else ''
+      tag = arg.tag   if hasattr(arg,'tag'  ) else enclose_in # todo: or enclose twice?
       val = arg.value if hasattr(arg,'value') else arg
+      enclose_pre = (tag + ' {\n') if tag else ''
+      enclose_pos =          '\n}' if tag else ''
       # print(arg, f"tag={tag}", f"val={val}")
       if (cfg_import_f := Path(cfg_p.parent,val).expanduser()).exists():
         try:
           with open(cfg_import_f, 'r', encoding='utf-8', errors='replace') as f:
-            cfg_import = (tag + '{\n' if tag else '') + f.read() + ('\n}' if tag else '')
+            cfg_import = enclose_pre + f.read() + enclose_pos
         except FileNotFoundError as e:
           sublime.error_message(f"{PACKAGE_NAME}:\nTried and failed to load\n{cfg_import_f}")
           break
       else:
         sublime.error_message(f"{PACKAGE_NAME}:\nCouldn't find config\n{cfg_import_f}\nimported in\n{cfg_p}")
         break
-      parse_kdl_config(cfg_import, cfg_import_f, kdl_docs, enclose_in='keybind')
+      parse_kdl_config(cfg_import, cfg_import_f, kdl_docs, enclose_in=tag)
     return None # consume imports, successfull will be stored as separate docs, so drop kdl_py_obj
 
   parseConfig = kdl.ParseConfig(

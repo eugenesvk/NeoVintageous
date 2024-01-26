@@ -210,6 +210,11 @@ def _parse_let_kdl(node:kdl.Node,cfg='') -> None:
         _log.debug(f"set var from kdl: ¦{pkey}¦=¦{val}¦")
         variables.set(pkey,val)
 
+DEF = dict()
+DEF['var_def'] = ['‘','’']
+import copy
+CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
+
 def _parse_general_g_kdl(general_g:kdl.Node):
     for node in general_g.nodes: # set relativenumber=true
         _parse_general_cfg_kdl(general_cfg=node)
@@ -226,6 +231,23 @@ def _parse_general_cfg_kdl(general_cfg:kdl.Node) -> None:
         return None
     elif opt_name == 'set':
         _parse_set_kdl(node)
+        return None
+    elif opt_name in ['#vardef','vardef']: #vardef pre="‹" pos="›"
+        # print('CFG pre',CFG)
+        tag_val = node.name
+        tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
+        val = tag_val.value if hasattr(tag_val,'value') else tag_val
+        if tag: # vardef should have no tags
+            _log.warn("node ‘%s’ has unrecognized tag",node.name)
+            return None
+        for pkey,tag_val in node.props.items(): # parse definition properties
+            tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
+            val = tag_val.value if hasattr(tag_val,'value') else tag_val
+            if pkey == 'pre':
+                CFG['var_def'][0] = val #‹
+            if pkey == 'pos':
+                CFG['var_def'][1] = val #›
+        # print('CFG pos',CFG)
         return None
     else:
         _log.error("Unrecognized option type within ‘general’ config group, expecting ‘let’/‘set’/‘-’, not ‘%s’",opt_name)
@@ -488,6 +510,7 @@ class cfgU(metaclass=Singleton):
 
     @staticmethod
     def unload_kdl():
+        global CFG
         if cfgU.kdl: # reset config
             cfgU.kdl = dict()
             _log.debug('@cfgU.unload_kdl: erased current cfgU.kdl')
@@ -500,6 +523,7 @@ class cfgU(metaclass=Singleton):
                 text_commands[_m] = dict()
             cfgU.text_commands = text_commands
             _log.debug('@cfgU.unload_kdl: erased current cfgU.text_commands')
+        CFG = copy.deepcopy(DEF) # reset to defaults on reload
         _import_plugins_with_user_data_kdl() # reset plugin defaults
 
 def _import_plugins_with_user_data_kdl():

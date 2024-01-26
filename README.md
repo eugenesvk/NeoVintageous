@@ -52,6 +52,16 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
         - r#":"command":"move","args":{"by":"words","forward":true,"extend":true}<CR>"#
       }
       ```
+    + template variables to, e.g., import the same keybind with a single modifier variation per mode to make them toggle relative lines with <kbd>[</kbd> in Normal mode and <kbd>⎈</kbd><kbd>[</kbd> in Insert mode
+      `NeoVintageous.keyB.kdl` file (`‘’` are default template variable pre/pos delimiters)
+      ```kdl
+      (‘m’)"‘ipre’[‘ipos’" ":set invrnu<CR>"
+      ```
+      `NeoVintageous.key.kdl` file that will import ↑
+      ```kdl
+      #import "NeoVintageous.keyB.kdl" m=(var)"Ⓝ" ipre=(var)""    ipos=(var)""  //  (Ⓝ)[
+      #import "NeoVintageous.keyB.kdl" m=(var)"ⓘ" ipre=(var)"<C-" ipos=(var)">" //  (ⓘ)<C-[>
+      ```
     + group keybinds under a single mode without having to repeat mode's name in each keybind
       ```kdl
       (Ⓝ)my_normal_group {

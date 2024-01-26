@@ -418,6 +418,7 @@ def _parse_keybind_kdl(keybind:kdl.Node, gmodes:Mode=Mode(0), var_d:dict={}):
             if mode & modes:  # if it's part of the keybind's modes, register the key
                 cfgU.text_commands[mode][key] = cmd_txt
                 mappings_add_text(mode=MODE_NAMES_OLD[mode], key=key, cmd=cmd_txt, prop=prop)
+                # print(f"kb map+ ({mode}){key}={cmd_txt} with {prop}")
     if children and not isChain:       # without Chain argument...
         for child in children:         # ...parse children as keybinds
             _parse_keybind_kdl(keybind=child, gmodes=modes)

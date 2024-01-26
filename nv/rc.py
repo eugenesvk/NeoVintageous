@@ -253,6 +253,50 @@ def _parse_keybind_arg(node:kdl.Node, prop_subl={}):
         for i in range(1,1+(count if count > 1 else 1)):
             cmd_l.append(cmd)
     return (cmd_l, isChain)
+def _parse_vars_kdl(node_vars:kdl.Node):
+    pre='‘'
+    pos='’'
+    var_set = dict()
+    for node in node_vars.getAll('vardef'):
+        tag_val = node.name
+        tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
+        val = tag_val.value if hasattr(tag_val,'value') else tag_val
+        if tag: # vardef should have no tags
+            _log.warn("node ‘%s’ has unrecognized tag",node.name)
+            continue
+        for pkey,tag_val in node.props.items(): # parse definition properties
+            tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
+            val = tag_val.value if hasattr(tag_val,'value') else tag_val
+            if pkey == 'pre':
+                pre = val
+            if pkey == 'pos':
+                pos = val
+    var_def = [pre,pos]
+    for node in keybinds.getAll('varset'):
+        tag_val = node.name
+        tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
+        val = tag_val.value if hasattr(tag_val,'value') else tag_val
+        if tag: # vardef/set should have no tags
+            continue
+        for (key,tag_val) in node.props.items(): # 2. testvar=⎇ key=value pairs
+            if hasattr(tag_val,'value'): #=(t)⎇ if (t) exists (though shouldn't)
+                val = tag_val.value # ignore tag
+                _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
+                    ,      node.name,                               tag_val)
+            else:
+                val = tag_val
+            var_set[key.lower()] = val
+    _log.debug("found in keybinds vardef¦%s¦ and varset¦%s¦"
+        ,                              var_def,         var_set)
+    re_flags = 0
+    re_flags |= re.MULTILINE | re.IGNORECASE
+    re_var_set_p = f'{pre}(' + f'){pos}|{pre}('.join(var_set.keys()) + f'){pos}'
+    re_var_set = re.compile(re_var_set_p, flags=re_flags)
+    var_d['def'] = var_def
+    var_d['set'] = var_set
+    var_d['re']  = re_var_set
+    return var_d
+
 def _parse_keybinds_kdl(keybinds:kdl.Node):
     for kb_node in keybinds.nodes: # (Ⓝ)"q" "OpenNameSpace"
         _parse_keybind_kdl(keybind=kb_node)

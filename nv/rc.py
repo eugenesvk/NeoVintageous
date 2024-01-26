@@ -433,6 +433,7 @@ class cfgU(metaclass=Singleton):
         # Set config dictionaries to emtpy
         for g in cfg_group:
             cfgU.kdl          [g] = None
+        cfgU.kdl      ['keybind'] = [] # allow concatenation of keybinds from various imports
         for nest in cfg_nest:
             cfgU.kdl    [nest]    = dict()
             for g in nest:
@@ -441,7 +442,10 @@ class cfgU(metaclass=Singleton):
         for cfg in cfg_l: # store the latest existing value in any of the docs
             for g in cfg_group:   # direct config groups like 'keymap'
                 if (node := cfg.get(g, None)):
-                    cfgU.kdl  [g] = node
+                    if g == 'keybind':
+                        cfgU.kdl[g] += [node]
+                    else:
+                        cfgU.kdl  [g] = node
             for nest in cfg_nest: # nested config groups like 'surround' within 'plugin'
                 if (node_nest := cfg.get(nest, None)):       # 'plugin'   node
                     for g in cfg_nest[nest]:                 # 'surround'
@@ -456,6 +460,14 @@ class cfgU(metaclass=Singleton):
                                     ,             g,                            nest)
                             else:
                                 cfgU.kdl[nest][g] = node
+        if               cfgU.kdl['keybind']: # convert a list of nodes into a single node
+            if len(      cfgU.kdl['keybind']) > 0:
+                _combo_n = []
+                for n in cfgU.kdl['keybind']:
+                    _combo_n += n.nodes
+                cfgU         .kdl['keybind'] = kdl.Node(name='keybind',nodes=_combo_n)
+            else:
+                cfgU         .kdl['keybind'] = cfgU.kdl['keybind'][0]
         #for g in cfg_group: # Rudimentary type checks (can have props, also empty is ok)
         #    if  cfgU.kdl[g] and not (cfgU.kdl[g].nodes):
         #        cfgU.kdl[g] = None; _log.warn(f"‘{g}’ in ‘{cfgU.cfg_f}’ has no child nodes!")

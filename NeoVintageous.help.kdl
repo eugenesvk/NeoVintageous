@@ -51,6 +51,13 @@ keybind { // or add keybinds in the main config file
       - (#5subl)"move" by="words" forward=true extend=true
     }
     // ! also, this doesn't work for nested arguments, those still require pasting the full json snippet
+
+  // Import the same group of keybinds twice to make a slight tweak via variables
+    //      [    toggle relative lines in Normal mode
+    // Ctrl+[                             Insert
+    // Content of NeoVintageous.keyB.kdl:                                 (‘m’)"‘ipre’[‘ipos’" ":set invrnu<CR>"
+    #import "NeoVintageous.keyB.kdl" m=(var)"Ⓝ" ipre=(var)""    ipos=(var)""  //  (Ⓝ)[
+    #import "NeoVintageous.keyB.kdl" m=(var)"ⓘ" ipre=(var)"<C-" ipos=(var)">" //  (ⓘ)<C-[>
 }
 
 general { // General options

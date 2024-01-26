@@ -254,9 +254,10 @@ def _parse_keybind_arg(node:kdl.Node, prop_subl={}):
             cmd_l.append(cmd)
     return (cmd_l, isChain)
 def _parse_vars_kdl(node_vars:kdl.Node):
+    var_d = dict()
+    var_set = dict()
     pre='‘'
     pos='’'
-    var_set = dict()
     for node in node_vars.getAll('vardef'):
         tag_val = node.name
         tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
@@ -272,7 +273,7 @@ def _parse_vars_kdl(node_vars:kdl.Node):
             if pkey == 'pos':
                 pos = val
     var_def = [pre,pos]
-    for node in keybinds.getAll('varset'):
+    for node in node_vars.getAll('varset'):
         tag_val = node.name
         tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
         val = tag_val.value if hasattr(tag_val,'value') else tag_val
@@ -286,8 +287,8 @@ def _parse_vars_kdl(node_vars:kdl.Node):
             else:
                 val = tag_val
             var_set[key.lower()] = val
-    _log.debug("found in keybinds vardef¦%s¦ and varset¦%s¦"
-        ,                              var_def,         var_set)
+    _log.debug("found in vardef¦%s¦ and varset¦%s¦"
+        ,                  var_def,         var_set)
     re_flags = 0
     re_flags |= re.MULTILINE | re.IGNORECASE
     re_var_set_p = f'{pre}(' + f'){pos}|{pre}('.join(var_set.keys()) + f'){pos}'

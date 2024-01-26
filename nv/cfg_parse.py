@@ -46,7 +46,7 @@ def parse_kdl_doc(s,v_untag:bool=False,v_tag:bool=False):
   )
   return kdl.Parser(parseConfig, printConfig).parse(s)
 
-def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str=''):
+def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d:dict={}):
   # print(f"  parse_kdl_config = {cfg_p}")
 
   def fn_i(kdl_py_obj, parse_fragment):
@@ -65,6 +65,15 @@ def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str=''):
         import_var[key] = val
 
     # print(import_var)
+    var_set = dict()
+    var_d   = dict()
+    for pkey,tag_val in kdl_py_obj.props.items(): # Parse properties for var_name=(var)"val" pairs
+      tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''      #(var)
+      val = tag_val.value if hasattr(tag_val,'value') else tag_val #"val"
+      if tag == 'var':
+        var_set[pkey] = val
+    var_d['set'] = var_set
+
     for arg in kdl_py_obj.args:
       tag = arg.tag   if hasattr(arg,'tag'  ) else enclose_in # todo: or enclose twice?
       val = arg.value if hasattr(arg,'value') else arg
@@ -81,7 +90,7 @@ def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str=''):
       else:
         sublime.error_message(f"{PACKAGE_NAME}:\nCouldn't find config\n{cfg_import_f}\nimported in\n{cfg_p}")
         break
-      parse_kdl_config(cfg_import, cfg_import_f, kdl_docs, enclose_in=tag)
+      parse_kdl_config(cfg_import, cfg_import_f, kdl_docs, enclose_in=tag, var_d=var_d)
     return None # consume imports, successfull will be stored as separate docs, so drop kdl_py_obj
 
   parseConfig = kdl.ParseConfig(
@@ -104,9 +113,9 @@ def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str=''):
   for node in doc.nodes:
     clean_node_name(node)
   # print(type(doc),'\n',doc)
-  kdl_docs += [doc] # append parsed doc to the list
+  kdl_docs += [(doc,var_d)] # append parsed doc to the list
 
-  return doc
+  return (doc,var_d)
 
 def parse_user_sublime_cmdline(line:str) -> Union[str,None]:
   command = sublime.decode_value('{'+line+'}')

@@ -338,12 +338,6 @@ def _parse_keybind_kdl(keybind:kdl.Node, gmodes:Mode=Mode(0), var_d:dict={}):
         return None
     node = keybind                 # (Ⓝ)"q" "OpenNameSpace"
     mode_s = node.tag              # ‘Ⓝ’
-    modes  = text_to_modes(mode_s) # ‘Mode.Normal’ enum for ‘Ⓝ’ (‘Mode.Any’ for None tag)
-    if gmodes:
-        if mode_s:
-            modes |= gmodes        # append modes from a group
-        else:
-            modes  = gmodes        # replace ‘Mode.Any’ with group mode
     key    = node.name             # ‘q’
     children = node.nodes          # either full keybinds or just commands with Chain argument
     cmd_txt = []                   # ‘[OpenNameSpace]’
@@ -359,10 +353,17 @@ def _parse_keybind_kdl(keybind:kdl.Node, gmodes:Mode=Mode(0), var_d:dict={}):
         return
     if var_d and var_d['set']:
         # key_old = key # ‘var_name’ → var_value (match ‘var_name’, but need to find value for var_name, so use index to find the ‘(var_name)’ regex match)
-        key = var_d['re'].sub(lambda m: m.group().replace(m.group(),var_d['set'][m[m.lastindex]],1), key)
+        key    = var_d['re'].sub(lambda m: m.group().replace(m.group(),var_d['set'][m[m.lastindex]],1), key   )
+        mode_s = var_d['re'].sub(lambda m: m.group().replace(m.group(),var_d['set'][m[m.lastindex]],1), mode_s)
         # if not key_old == key:
             # _log.debug("replaced var in key: %s → %s"
                 # ,                        key_old, key)
+    modes  = text_to_modes(mode_s) # ‘Mode.Normal’ enum for ‘Ⓝ’ (‘Mode.Any’ for None tag)
+    if gmodes:
+        if mode_s:
+            modes |= gmodes        # append modes from a group
+        else:
+            modes  = gmodes        # replace ‘Mode.Any’ with group mode
 
     prop = dict()                  # Parse properties
     prop_rest = dict()             # Properties left from known defaults (e.g., part of Sublime commands)

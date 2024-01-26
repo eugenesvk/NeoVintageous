@@ -22,6 +22,10 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
   <!-- - __Security__ -->
    <!-- + :lock: ??? -->
    <!-- vulnerabilities -->
+  - __Added__
+   + :sparkles: template variable in the new config to allow importing the same keybinds with minor variations per mode (e.g., add an extra modifier in Insert mode to otherwise mimic Normal mode commands)
+  - __Changed__
+   + allow concatenation of multiple `keybind` config groups (helpful to combine keybinds from multiple files)
 
 [0.7.1341]: https://github.com/eugenesvk/NeoVintageous/releases/tag/0.7.1341
 ## [0.7.1341]

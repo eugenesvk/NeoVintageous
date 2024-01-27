@@ -63,6 +63,72 @@ keybind { // or add keybinds in the main config file
 general { // General options
   let mapleader="<space>"
   set "relativenumber"=true relativenumber="inv" "relativenumber?" // support for vim "noargument" format and a more explicit config=value
+
+  default_mode                  	"normal"	//|""|  	default mode when activating or switching views (Visual selections are retained when the window loses focus)
+  reset_mode_when_switching_tabs	false   	//|true|	reset to Normal when a view is activated
+
+  highlighted_yank                  	true   	//|true| 	github.com/machakann/vim-highlightedyank
+  highlighted_yank_duration         	1000   	//|1000| 	ms
+  highlighted_yank_style            	"fill" 	//|fill| 	¦outline¦underline¦squiggly_underline¦stippled_underline¦
+  search_cur_style                  	"fill" 	//|fill| 	¦↑¦ current     search style
+  search_inc_style                  	"fill" 	//|fill| 	¦↑¦ incremental search style
+  search_occ_style                  	"fill" 	//|fill| 	¦↑¦ occurrences search style
+  bell                              	"blink"	//|blink|	¦view¦views¦ Visual bell style type
+  bell_color_scheme                 	"dark" 	//|dark| 	¦light¦path/to/scheme¦ Visual bell color-scheme
+  auto_nohlsearch_on_normal_enter   	true   	//|true| Clear search highlighting when entering Normal (usually occurs on ⎋)
+    // :noh[lsearch]                	       	// clear search highlighting directly
+    // noremap <C-l> :nohlsearch<CR>	       	// map a key combination to clear search highlighting
+
+  // NeoVintageous Plugins
+  enable_abolish         	true	//|true |	github.com/tpope/vim-abolish
+  enable_commentary      	true	//|true |	github.com/tpope/vim-commentary
+  enable_multiple_cursors	true	//|true |	github.com/terryma/vim-multiple-cursors
+  enable_sneak           	true	//|false|	github.com/justinmk/vim-sneak
+  enable_sublime         	true	//|true |	Sublime Text tweaks
+  enable_surround        	true	//|true |	github.com/tpope/vim-surround
+  enable_targets         	true	//|true |	github.com/wellle/targets.vim
+  enable_unimpaired      	true	//|true |	github.com/tpope/vim-unimpaired
+
+  use_ctrl_keys  	true	//|true|	Enable key bindings prefaced by ⎈
+  use_super_keys 	true	//|true|	Enable key bindings prefaced by ◆ (⌘ Mac, ❖ Windows)
+  /-handle_keys \	    	 //|{}| 	ignore keys (handled by ST)
+    "<C-q>"=false  "<C-w>"=false "<C-e>"=false "<C-r>"=false "<C-t>"=false "<C-y>"=false "<C-u>"=true "<C-i>"=false "<C-o>"=false \
+    "<C-a>"=false  "<C-s>"=false "<C-f>"=false "<C-g>"=false "<C-h>"=false "<C-j>"=false "<C-k>"=false "<C-l>"=false \
+    "<C-z>"=false  "<C-x>"=false "<C-c>"=false "<C-v>"=false "<C-b>"=true  "<C-m>"=false \
+    "<C-Q>"=false  "<C-W>"=false "<C-E>"=false "<C-R>"=false "<C-T>"=false "<C-Y>"=false "<C-U>"=true "<C-I>"=false "<C-O>"=false "<C-P>"=false \
+    "<C-A>"=false  "<C-S>"=false "<C-F>"=false "<C-G>"=false "<C-H>"=false "<C-J>"=false "<C-K>"=false "<C-L>"=false \
+    "<C-Z>"=false  "<C-X>"=false "<C-C>"=false "<C-V>"=false "<C-B>"=true  "<C-N>"=false "<C-M>"=false \
+    "<C-[>"=true   "<C-]>"=true  "<C-;>"=false "<C-.>"=false "<C-/>"=false "<C-0>"=true \
+    "<C-{>"=false  "<C-}>"=false "<C-=>"=false "<C-<>"=false "<C->>"=false "<C-?>"=false \
+    "<C-'>"=false  "<C-|>"=false \
+    "<C-\">"=false "<C-\\>"=false
+  //              	     	ignore ⎈f `{"<C-f>":false}` or `{"i_<C-f>": false}` in insert
+  //              	     	`n_`orm `i_`ns `v_`is `V_`visLine `b_`visBlock `s_`el
+  // "i_escape_jj"	true 	//|false|	Map insert mode jj to ⎋
+  // "i_escape_jk"	true 	//|false|	Map insert mode jk to ⎋
+  "nvⓘ_⎋←ii"      	false	//|false|	Map insert mode ii to ⎋
+  "nvⓘ_⎋←;i"      	true 	//|false|	Map insert mode ;i to ⎋
+
+  use_sys_clipboard                  	true                  	//|false|	Propagate copy actions to the system clipboard
+  clear_auto_indent_on_esc           	true                  	//|true |	delete indent if you type nothing after ␤ (⎋ after O)
+  auto_complete_exit_from_insert_mode	true                  	//|true |	⎋ to exit to Normal mode (always closes auto complete)
+  multi_cursor_exit_from_visual_mode 	false                 	//|false|	false: quit key ⎋¦J in Visual mode will delete existing cursors (can operate on all the cursors)
+  lsp_save                           	false                 	//|false|	Override native save to handle LSP Code-Actions-On-Save. See https://github.com/sublimelsp/LSP/issues/1725
+  shell_silent                       	false                 	//|false|	Show output panel from shell commands
+  show_marks_in_gutter               	true                  	//|true |	Show marks in the gutter
+  sneak_use_ic_scs                   	1                     	//|0    |	0=Always case-sensitive 1=Case sensitivity is determined by `ignorecase` and `smartcase`
+  exit_when_quitting_last_window     	true                  	//|true |	Behavior of commands like ZZ, :quit, :wq, etc.
+    //                               	true                  	  exit ST on closing the last view
+    //                               	false                 	  keep ST on closing the last view
+    //                               	unless_sidebar_visible	  exit ST only if the sidebar is hidden
+
+  source	null	 // Read Ex commands from a resource before the neovintageousrc resource is sourced. This means you can still override these ex commands in your neovintageousrc file, for example:
+    // Packages/NeoVintageousDvorak/dvorak.neovintageous   // See github.com/gerardroche/NeoVintageousDvorak
+    // Packages/NeoVintageousColemak/colemak.neovintageous // See github.com/gerardroche/NeoVintageousColemak
+  auto_switch_input_method        	false	//|false| Enable automatic switching of input methods.
+  auto_switch_input_method_default	""   	// Configure the default input method to be used. Examples: "xkb:us::eng", "us", "0", "1", "2", "com.apple.keylayout.US", "1033"
+  auto_switch_input_method_get_cmd	""   	///path/to/im-select Specify the complete command path for retrieving the current input method key. Examples: "/usr/bin/ibus engine", "/usr/local/bin/xkb-switch", "/usr/bin/fcitx-remote", "/path/to/im-get", "/usr/bin/qdbus org.kde.keyboard /Layouts getLayout", "/usr/local/bin/im-select", "D:\\bin\\im-select.exe"
+  auto_switch_input_method_set_cmd	""   	///path/to/im-select {im} Provide the complete command path for switching input methods, using {im} as a placeholder for the input method key. Examples: "/usr/bin/ibus engine {im}", "/usr/local/bin/xkb-switch -s {im}", "/usr/bin/fcitx-remote -t {im}", "/path/to/im-set {im}", "/usr/bin/qdbus org.kde.keyboard /Layouts setLayout {im}", "/usr/local/bin/im-select {im}", "D:\\bin\\im-select.exe {im}"
 }
 
 keymap { // Use custom keymaps (non-QWERTY/non-Latin) in command mode

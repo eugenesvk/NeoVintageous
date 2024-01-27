@@ -22,6 +22,8 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
   <!-- - __Security__ -->
    <!-- + :lock: ??? -->
    <!-- vulnerabilities -->
+  - __Added__
+   + support setting general plugin values currently set in `Preferences.sublime-settings` in the new KDL config format (but without the needless `neovintageous_` prefix)
 
 [0.8.1341]: https://github.com/eugenesvk/NeoVintageous/releases/tag/0.8.1341
 ## [0.8.1341]

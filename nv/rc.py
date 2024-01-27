@@ -267,7 +267,7 @@ def _set_general_def() -> None:
             val_def 	= opt_d['v']
             if val_def:
                 st_pref.set(f"{name_def}", val_def)
-                print(f"set default {name_def}={val_def}")
+                # print(f"set default {name_def}={val_def}")
 
 def _parse_general_g_kdl(general_g:kdl.Node):
     st_pref = sublime.load_settings('Preferences.sublime-settings')
@@ -315,7 +315,7 @@ def _parse_general_cfg_kdl(general_cfg:kdl.Node,st_pref=None) -> None:
                         ,                             opt_name,                                   type_def)
             elif st_pref:
                 st_pref.set(f"{name_def}", node.props)
-                print(f"set user dict ‘{name_def}’=‘{node.props}’  ({type(node.props)})")
+                # print(f"set user dict ‘{name_def}’=‘{node.props}’  ({type(node.props)})")
             return None
         else:
             for arg in node.args:
@@ -338,6 +338,7 @@ def _parse_general_cfg_kdl(general_cfg:kdl.Node,st_pref=None) -> None:
                     return None
                 if st_pref:
                     st_pref.set(f"{name_def}", val)
+                    # print(f"set user ‘{name_def}={val}’  ({type(val)})")
                 return None
     else:
         _log.error("Unrecognized option type within ‘general’ config group, expecting ‘let’/‘set’/‘-’, not ‘%s’",opt_name)

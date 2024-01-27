@@ -29,6 +29,7 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
 ## [0.8.1341]
   - __Added__
    + :sparkles: template variable in the new config to allow importing the same keybinds with minor variations per mode (e.g., add an extra modifier in Insert mode to otherwise mimic Normal mode commands)
+   + allow running raw nvimrc initialization commands within `NeoVintageous.kdl`'s `rc` config group
   - __Changed__
    + allow concatenation of multiple `keybind` config groups (helpful to combine keybinds from multiple files)
 

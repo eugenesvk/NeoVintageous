@@ -258,6 +258,15 @@ DEF['general'] = {
 import copy
 CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
 
+def _set_general_def() -> None:
+    if (st_pref := sublime.load_settings('Preferences.sublime-settings')):
+        for opt_name in CFG['general']:
+            opt_d   	= CFG['general'][opt_name]
+            name_def	= opt_d['key']
+            type_def	= opt_d['t']
+            val_def 	= opt_d['v']
+            st_pref.set(f"vintageous_{name_def}", val_def)
+
 def _parse_general_g_kdl(general_g:kdl.Node):
     for node in general_g.nodes: # set relativenumber=true
         _parse_general_cfg_kdl(general_cfg=node)

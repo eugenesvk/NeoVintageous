@@ -268,9 +268,10 @@ def _set_general_def() -> None:
             st_pref.set(f"vintageous_{name_def}", val_def)
 
 def _parse_general_g_kdl(general_g:kdl.Node):
+    st_pref = sublime.load_settings('Preferences.sublime-settings')
     for node in general_g.nodes: # set relativenumber=true
-        _parse_general_cfg_kdl(general_cfg=node)
-def _parse_general_cfg_kdl(general_cfg:kdl.Node) -> None:
+        _parse_general_cfg_kdl(general_cfg=node,st_pref=st_pref)
+def _parse_general_cfg_kdl(general_cfg:kdl.Node,st_pref=None) -> None:
     if not (cfgT := type(general_cfg)) is kdl.Node:
         _log.error("Type of ‘general’ config group should be kdl.Node, not ‘%s’",cfgT)
         return None
@@ -301,6 +302,23 @@ def _parse_general_cfg_kdl(general_cfg:kdl.Node) -> None:
                 CFG['var_def'][1] = val #›
         # print('CFG pos',CFG)
         return None
+    elif opt_name in CFG['general']:
+        opt_d = CFG['general'][opt_name]
+        name_def  = opt_d['key']
+        type_def = opt_d['t']
+        val_def  = opt_d['v']
+        for arg in node.args:
+            tag = arg.tag   if hasattr(arg,'tag'  ) else ''
+            val = arg.value if hasattr(arg,'value') else arg
+            # print(arg, f"tag={tag}", f"val={val}")
+            if not isinstance(val,type_def):
+                _log.error("Unrecognized option type for %s in the ‘general’ config group, expecting %s not ‘%s’"
+                        ,                             opt_name,                                   type_def,type(val))
+                return None
+            else:
+                if st_pref:
+                    st_pref.set(f"vintageous_{name_def}", val)
+                return None
     else:
         _log.error("Unrecognized option type within ‘general’ config group, expecting ‘let’/‘set’/‘-’, not ‘%s’",opt_name)
         return None

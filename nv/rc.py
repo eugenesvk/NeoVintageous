@@ -212,7 +212,7 @@ def _parse_let_kdl(node:kdl.Node,cfg='') -> None:
 
 DEF = dict()
 DEF['var_def'] = ['‘','’']
-DEF['general'] = {
+DEF['general'] = { # todo: replace float with int when kdl-py issue is fixed
     # clean name                    	: dict(type   default value	 old/internal key name
     'defaultmode'                   	: dict(t=str ,v="normal"   	,key='vintageous_default_mode'),
     'resetmodewhenswitchingtabs'    	: dict(t=bool,v=False      	,key='vintageous_reset_mode_when_switching_tabs'),

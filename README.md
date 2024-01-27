@@ -176,10 +176,20 @@ NeoVintageous is an advanced Vim emulator for [Sublime Text](https://www.sublime
     - On Linux: `~/.config/sublime-text/Packages`
 3. Clone the plugin repository directly into the Packages directory using Git:
    ```
-   git clone https://github.com/NeoVintageous/NeoVintageous.git
+   git clone https://github.com/eugenesvk/NeoVintageous.git
    ```
 
 ## Settings
+
+Preferences and initialization `vimrc` commands are consolidated into a single new config file: run `Command Palette` → `Preferences: NeoVintageous New Settings (KDL)` to open
+  - your `NeoVintageous.kdl` consolidated config and
+  - a `NeoVintageous.help.kdl` helper file with the list of supported settings
+
+Reload with `NeoVintageous: Reload config` on changes (autoreload is not supported with `Preferences.sublime-settings`)<br/>
+Or open only `NeoVintageous.kdl`: run `NeoVintageous: Open new config file (KDL)`<br/>
+Or open only `NeoVintageous.help.kdl`: run `NeoVintageous: Open new config file example (KDL)`)
+
+To edit the neovintageousrc file, follow these steps:
 
 Command Palette → Preferences: NeoVintageous Settings
 
@@ -244,6 +254,8 @@ Command Palette → Preferences: NeoVintageous Settings
 | Multiple-cursor mode               | `CTRL-n` or `gh`
 
 ## neovintageousrc
+
+(see [Settings](Settings) re. the new consolidated config file that also includes initialization commands)
 
 A file that contains initialization commands is typically referred to as a "vimrc" file. In NeoVintageous, this file is called "neovintageousrc". Each line in the neovintageousrc file is executed as an Ex command at startup.
 

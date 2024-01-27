@@ -293,7 +293,21 @@ def _parse_rc_cfg_kdl(win,rc_cfg:kdl.Node) -> None:
         return None
 
 def _parse_general_g_kdl(general_g:kdl.Node):
+    win = sublime.active_window()
     st_pref = sublime.load_settings('Preferences.sublime-settings')
+    if (src_pre := general_g.get((None,"source"))):
+        if (args := src_pre.args):
+            tag_val = args[0] #(t)"/dvorak.neovintageous" if (t) exists (though shouldn't)
+            # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
+            if hasattr(tag_val,'value'):
+                val = tag_val.value # ignore tag
+                _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
+                    ,      src_pre.name,                               tag_val)
+            else:
+                val = tag_val
+            # print(f"loading source first ‘{val}’")
+            _pre_load(win,val)
+
     for node in general_g.nodes: # set relativenumber=true
         _parse_general_cfg_kdl(general_cfg=node,st_pref=st_pref)
 def _parse_general_cfg_kdl(general_cfg:kdl.Node,st_pref=None) -> None:
@@ -303,6 +317,8 @@ def _parse_general_cfg_kdl(general_cfg:kdl.Node,st_pref=None) -> None:
     node = general_cfg          # set relativenumber=true
     opt_name    = node.name     # ‘set’
     if   opt_name == '-': # skip comment nodes (todo: when lib supports roundtrip, save as actual comments)
+        return
+    elif opt_name == 'source': # source was loaded before
         return
     elif opt_name == 'let':
         _parse_let_kdl(node)
@@ -612,11 +628,11 @@ class cfgU(metaclass=Singleton):
         cfgU.flat = flatten_kdl(cfgU.kdl, ignore=ignore) # store a flat dictionary for easy access
         # print('cfgU.flat', cfgU.flat)
 
-        if (rc_g := cfgU.kdl['rc']):
-            _parse_rc_g_kdl(rc_g=rc_g)
-
         if (general_g := cfgU.kdl['general']):
             _parse_general_g_kdl(general_g=general_g)
+
+        if (rc_g := cfgU.kdl['rc']):
+            _parse_rc_g_kdl(rc_g=rc_g)
 
         for (keybind,var_d) in cfgU.kdl['keybind']:
             _parse_keybinds_kdl(keybinds=keybind,var_d=var_d)

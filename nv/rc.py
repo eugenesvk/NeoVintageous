@@ -305,21 +305,39 @@ def _parse_general_cfg_kdl(general_cfg:kdl.Node,st_pref=None) -> None:
         # print('CFG pos',CFG)
         return None
     elif opt_name in CFG['general']:
-        opt_d = CFG['general'][opt_name]
-        name_def  = opt_d['key']
-        type_def = opt_d['t']
-        val_def  = opt_d['v']
-        for arg in node.args:
-            tag = arg.tag   if hasattr(arg,'tag'  ) else ''
-            val = arg.value if hasattr(arg,'value') else arg
-            # print(arg, f"tag={tag}", f"val={val}")
-            if not isinstance(val,type_def):
-                _log.error("Unrecognized option type for %s in the ‘general’ config group, expecting %s not ‘%s’"
-                        ,                             opt_name,                                   type_def,type(val))
-                return None
-            else:
+        opt_d    =   CFG['general'][opt_name]
+        name_def = opt_d['key'] # vintageous_auto_switch_input_method
+        type_def = opt_d['t']   # bool
+        val_def  = opt_d['v']   # False
+        if type_def == dict: # todo: iterate over values to strip tags?
+            if not node.props:
+                _log.error("Unrecognized option type for %s in the ‘general’ config group, expecting %s, but there are no key=val properties!"
+                        ,                             opt_name,                                   type_def)
+            elif st_pref:
+                st_pref.set(f"{name_def}", node.props)
+                print(f"set user dict ‘{name_def}’=‘{node.props}’  ({type(node.props)})")
+            return None
+        else:
+            for arg in node.args:
+                tag = arg.tag   if hasattr(arg,'tag'  ) else ''
+                val = arg.value if hasattr(arg,'value') else arg
+                # print(arg, f"tag={tag}", f"val={val}")
+                if not val:
+                    return None
+                isSameType = False
+                if   isinstance(type_def,type ):
+                    if isinstance(val,type_def):
+                        isSameType = True
+                elif isinstance(type_def,list):
+                    for t_ in type_def:
+                        if isinstance(val,t_):
+                            isSameType = True
+                if not isSameType:
+                    _log.error("Unrecognized option type for %s in the ‘general’ config group, expecting %s not ‘%s’ (‘%s’)"
+                        ,                             opt_name,                                   type_def,type(val),val)
+                    return None
                 if st_pref:
-                    st_pref.set(f"vintageous_{name_def}", val)
+                    st_pref.set(f"{name_def}", val)
                 return None
     else:
         _log.error("Unrecognized option type within ‘general’ config group, expecting ‘let’/‘set’/‘-’, not ‘%s’",opt_name)

@@ -60,6 +60,10 @@ keybind { // or add keybinds in the main config file
     #import "NeoVintageous.keyB.kdl" m=(var)"ⓘ" ipre=(var)"<C-" ipos=(var)">" //  (ⓘ)<C-[>
 }
 
+rc { // Literal Ex commands
+  r#":set relativenumber?"# // must have no arguments/properties, only a single node (use r#"raw"# strings to avoid any escapes
+}
+
 general { // General options
   let mapleader="<space>"
   set "relativenumber"=true relativenumber="inv" "relativenumber?" // support for vim "noargument" format and a more explicit config=value

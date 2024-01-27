@@ -126,7 +126,7 @@ general { // General options
     //                               	false                 	  keep ST on closing the last view
     //                               	unless_sidebar_visible	  exit ST only if the sidebar is hidden
 
-  source	null	 // Read Ex commands from a resource before the neovintageousrc resource is sourced. This means you can still override these ex commands in your neovintageousrc file, for example:
+  source	null	 // Read Ex commands from a resource before the NeoVintageous.kdl is loaded, so you can still override these Ex commands in your config file, for example:
     // Packages/NeoVintageousDvorak/dvorak.neovintageous   // See github.com/gerardroche/NeoVintageousDvorak
     // Packages/NeoVintageousColemak/colemak.neovintageous // See github.com/gerardroche/NeoVintageousColemak
   auto_switch_input_method        	false	//|false| Enable automatic switching of input methods.

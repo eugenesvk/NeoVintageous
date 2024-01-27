@@ -30,6 +30,7 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
        upper 	r#"l;'\"
       "upper"	: "l;'\\",
       ```
+    + Shorter general config option names without the `neovintageous_` prefix (`default_mode "normal"` instead of `"vintageous_default_mode" : "normal",`
     - BUT automatic reload on file change isn't supported, use `NeoVintageous: Reload config` command manually
   + :sparkles: support for importing other config files
     ```

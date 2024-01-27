@@ -17,7 +17,7 @@ path_separator = re.compile(path_separator_p, flags=re_flags)
 def clean_node_name(node:kdl.Node,rec:bool=True): # recursively clean KDL node names (remove separators ␠⭾-_. etc)
   node.name = re.sub(node_separator,'',node.name.casefold())
   if rec:
-    if   node.name == 'keybind': # don't normalize keybinds commands
+    if   node.name in ['keybind','rc']: # don't normalize keybind/init Ex commands
       return
     elif node.name == 'event'  : # don't normalize event cli commands (but normalize the initial (mode)Event node)
       rec = False

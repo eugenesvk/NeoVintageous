@@ -96,7 +96,7 @@ def _load() -> None:
 
 
 import NeoVintageous.nv.cfg_parse
-def _source(window, source) -> None:
+def _source(window, source, nodump=False) -> None:
     from NeoVintageous.nv.ex_cmds import do_ex_cmdline # inline import to avoid circular dependency errors
 
     try:
@@ -105,7 +105,7 @@ def _source(window, source) -> None:
             ex_cmdline = _parse_line(line)
             if ex_cmdline:
                 do_ex_cmdline(window, ex_cmdline)
-            elif NeoVintageous.nv.cfg_parse._dump_to_kdl:
+            elif NeoVintageous.nv.cfg_parse._dump_to_kdl and not nodump:
                 node_key = kdl.Node(tag=None, name='-', args=[kdl.RawString(line.rstrip())])
                 NeoVintageous.nv.cfg_parse._NVRC_KDL.nodes.append(node_key)
     finally:
@@ -268,6 +268,26 @@ def _set_general_def() -> None:
             if val_def:
                 st_pref.set(f"{name_def}", val_def)
                 # print(f"set default {name_def}={val_def}")
+
+def _parse_rc_g_kdl(rc_g:kdl.Node):
+    win = sublime.active_window()
+    st_pref = sublime.load_settings('Preferences.sublime-settings')
+    for node in rc_g.nodes: # r#":set invrelativenumber"#
+        _parse_rc_cfg_kdl(win,rc_cfg=node)
+def _parse_rc_cfg_kdl(win,rc_cfg:kdl.Node) -> None:
+    if not (cfgT := type(rc_cfg)) is kdl.Node:
+        _log.error("Type of ‘rc’ config group should be kdl.Node, not ‘%s’",cfgT)
+        return None
+    node = rc_cfg               # r#":set invrelativenumber"#
+    if node.args or\
+       node.props:
+        _log.warn("‘rc’ config nodes must have no arguments/properties ‘%s’",node)
+        return None
+    opt_name = node.name     # r#":set invrelativenumber"#
+    if opt_name:
+        # print(f"‘rc’ config: node with no args/props, running as an Ex command ‘{node}’")
+        _source(win, [opt_name], nodump=True)
+        return None
 
 def _parse_general_g_kdl(general_g:kdl.Node):
     st_pref = sublime.load_settings('Preferences.sublime-settings')
@@ -549,7 +569,7 @@ class cfgU(metaclass=Singleton):
         cfgU.kdl = dict()
 
         # Split config into per-section/per-plugin group
-        cfg_group  = ['keymap','event','status','edit','keybind','general']
+        cfg_group  = ['keymap','event','status','edit','keybind','general','rc']
         cfg_nest   = {'plugin'   :['surround']
             ,         'indicator':['ls','registers','count']}
         # Set config dictionaries to emtpy
@@ -588,6 +608,9 @@ class cfgU(metaclass=Singleton):
             ignore[2] += subg
         cfgU.flat = flatten_kdl(cfgU.kdl, ignore=ignore) # store a flat dictionary for easy access
         # print('cfgU.flat', cfgU.flat)
+
+        if (rc_g := cfgU.kdl['rc']):
+            _parse_rc_g_kdl(rc_g=rc_g)
 
         if (general_g := cfgU.kdl['general']):
             _parse_general_g_kdl(general_g=general_g)

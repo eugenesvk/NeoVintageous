@@ -73,17 +73,20 @@ def _unload() -> None:
     _unload_cfgU()
 
 
-def _load() -> None:
-    window = sublime.active_window()
-
-    settings = sublime.load_settings('Preferences.sublime-settings')
-    source = settings.get('vintageous_source')
+def _pre_load(window,source) -> None:
     if source and isinstance(source, str):
         try:
             _source(window, iter(sublime.load_resource(source).splitlines()))
             _log.info('sourced %s', source)
         except FileNotFoundError as e:
             print('NeoVintageous:', e)
+
+def _load() -> None:
+    window = sublime.active_window()
+
+    settings = sublime.load_settings('Preferences.sublime-settings')
+    source = settings.get('vintageous_source')
+    _pre_load(window,source)
 
     try:
         with builtins.open(_file_path(), 'r', encoding='utf-8', errors='replace') as f:

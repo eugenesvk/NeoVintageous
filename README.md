@@ -30,6 +30,7 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
        upper 	r#"l;'\"
       "upper"	: "l;'\\",
       ```
+    - BUT automatic reload on file change isn't supported, use `NeoVintageous: Reload config` command manually
   + :sparkles: support for importing other config files
     ```
     #import (keybind)"NeoVintageous.key.kdl"
@@ -41,7 +42,7 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
     `(nv)d "MoveByWordsBackward" // understandable command name`
     instead of `.neovintageousrc`'s
     `nnoremap d b` why do you need to remember that `b` moves by words backwards if you never use it?
-    `vnoremap d b` oh, can you can't even add a comment on the same line to clarify it
+    `vnoremap d b "b=MoveByWordsBackward` oh, and you can't even add a comment on the same line to clarify it
     And the whole `noremap` doesn't need to be repeated on every single line
     + command repeat count in keybinds: `(Ⓝ)d (#4)"MoveByBigWordsBackward"` (or `№` `#` `⌗` `c` `n` prefix) will move by 4 Words
     + list of commands is executed as a single chain without the need to specify `chain` command (`(Ⓝ)q "MoveByBigWords" "MoveByBigWords"`)

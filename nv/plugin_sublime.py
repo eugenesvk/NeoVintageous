@@ -1,6 +1,6 @@
 # A plugin to support functionality specific to Sublime Text.
 
-from NeoVintageous.nv.plugin import register
+from NeoVintageous.nv.plugin import register, register_text
 from NeoVintageous.nv.settings import set_reset_during_init
 from NeoVintageous.nv.vi import seqs
 from NeoVintageous.nv.vi.cmd_base import ViOperatorDef
@@ -13,6 +13,7 @@ __all__ = []  # type: list
 
 
 @register(seqs.CTRL_ALT_P, ACTION_MODES)
+@register_text(['StQuickSwitchProject'],seqs.CTRL_ALT_P, ACTION_MODES)
 class StQuickSwitchProject(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -21,6 +22,7 @@ class StQuickSwitchProject(ViOperatorDef):
 
 
 @register(seqs.SEQ['⎈0'], ACTION_MODES)
+@register_text(['StFocusSideBar'], ACTION_MODES)
 class StFocusSideBar(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -36,6 +38,7 @@ class StFocusSideBar(ViOperatorDef):
 @register(seqs.SEQ['⎈7'], ACTION_MODES, group=6)
 @register(seqs.SEQ['⎈8'], ACTION_MODES, group=7)
 @register(seqs.SEQ['⎈9'], ACTION_MODES, group=8)
+@register_text(['StFocusGroup'], ACTION_MODES, group=8)
 class StFocusGroup(ViOperatorDef):
     def __init__(self, *args, group=None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -51,6 +54,7 @@ class StFocusGroup(ViOperatorDef):
 
 
 @register(seqs.CTRL_K_CTRL_B, ACTION_MODES)
+@register_text(['StToggleSideBar'],seqs.CTRL_K_CTRL_B, ACTION_MODES)
 class StToggleSideBar(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -60,6 +64,7 @@ class StToggleSideBar(ViOperatorDef):
 
 @register(seqs.COMMAND_P, ACTION_MODES)
 @register(seqs.SEQ['⎈p'], ACTION_MODES)
+@register_text(['StGotoAnything'], ACTION_MODES)
 class StGotoAnything(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -73,6 +78,7 @@ class StGotoAnything(ViOperatorDef):
 
 @register(seqs.COMMAND_BIG_B, ACTION_MODES)
 @register(seqs.CTRL_BIG_B, ACTION_MODES)
+@register_text(['StBuildWith'],seqs.CTRL_BIG_B, ACTION_MODES)
 class StBuildWith(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -85,6 +91,7 @@ class StBuildWith(ViOperatorDef):
 
 @register(seqs.COMMAND_BIG_F, ACTION_MODES)
 @register(seqs.CTRL_BIG_F, ACTION_MODES)
+@register_text(['StFindInFiles'],seqs.CTRL_BIG_F, ACTION_MODES)
 class StFindInFiles(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -97,6 +104,7 @@ class StFindInFiles(ViOperatorDef):
 
 @register(seqs.COMMAND_BIG_P, ACTION_MODES + (INSERT,))
 @register(seqs.CTRL_BIG_P, ACTION_MODES + (INSERT,))
+@register_text(['StCommandPalette'],seqs.CTRL_BIG_P, ACTION_MODES + (INSERT,))
 class StCommandPalette(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -111,6 +119,7 @@ class StCommandPalette(ViOperatorDef):
 
 
 @register(seqs.SEQ['F2'], ACTION_MODES)
+@register_text(['StNextBookmark'], ACTION_MODES)
 class StNextBookmark(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -119,6 +128,7 @@ class StNextBookmark(ViOperatorDef):
 
 
 @register(seqs.SEQ['F3'], ACTION_MODES)
+@register_text(['StFindNext'], ACTION_MODES)
 class StFindNext(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -127,6 +137,7 @@ class StFindNext(ViOperatorDef):
 
 
 @register(seqs.SEQ['F4'], ACTION_MODES)
+@register_text(['StNextResult'], ACTION_MODES)
 class StNextResult(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -135,6 +146,7 @@ class StNextResult(ViOperatorDef):
 
 
 @register(seqs.SEQ['F6'], ACTION_MODES)
+@register_text(['StToggleSpellCheck'], ACTION_MODES)
 class StToggleSpellCheck(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -145,6 +157,7 @@ class StToggleSpellCheck(ViOperatorDef):
 
 
 @register(seqs.SEQ['F7'], ACTION_MODES)
+@register_text(['StBuild'], ACTION_MODES)
 class StBuild(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -153,6 +166,7 @@ class StBuild(ViOperatorDef):
 
 
 @register(seqs.SEQ['F9'], ACTION_MODES)
+@register_text(['StSortLines'], ACTION_MODES)
 class StSortLines(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -163,6 +177,7 @@ class StSortLines(ViOperatorDef):
 
 
 @register(seqs.SEQ['F11'], ACTION_MODES)
+@register_text(['StToggleFullScreen'], ACTION_MODES)
 class StToggleFullScreen(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -171,6 +186,7 @@ class StToggleFullScreen(ViOperatorDef):
 
 
 @register(seqs.SEQ['F12'], ACTION_MODES)
+@register_text(['StGotoDefinition'], ACTION_MODES)
 class StGotoDefinition(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -179,6 +195,7 @@ class StGotoDefinition(ViOperatorDef):
 
 
 @register(seqs.SEQ['⎈F2'], ACTION_MODES)
+@register_text(['StToggleBookmark'], ACTION_MODES)
 class StToggleBookmark(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -187,6 +204,7 @@ class StToggleBookmark(ViOperatorDef):
 
 
 @register(seqs.SEQ['⎈F12'], ACTION_MODES)
+@register_text(['StGotoSymbol'], ACTION_MODES)
 class StGotoSymbol(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -199,6 +217,7 @@ class StGotoSymbol(ViOperatorDef):
 
 
 @register(seqs.SEQ['⇧F2'], ACTION_MODES)
+@register_text(['StPrevBookmark'], ACTION_MODES)
 class StPrevBookmark(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -207,6 +226,7 @@ class StPrevBookmark(ViOperatorDef):
 
 
 @register(seqs.SEQ['⇧F4'], ACTION_MODES)
+@register_text(['StPrevResult'], ACTION_MODES)
 class StPrevResult(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -215,6 +235,7 @@ class StPrevResult(ViOperatorDef):
 
 
 @register(seqs.SEQ['⇧F11'], ACTION_MODES)
+@register_text(['StToggleDistractionFree'], ACTION_MODES)
 class StToggleDistractionFree(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -223,6 +244,7 @@ class StToggleDistractionFree(ViOperatorDef):
 
 
 @register(seqs.SEQ['⇧⎈F2'], ACTION_MODES)
+@register_text(['StClearBookmarks'], ACTION_MODES)
 class StClearBookmarks(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -231,6 +253,7 @@ class StClearBookmarks(ViOperatorDef):
 
 
 @register(seqs.SEQ['⇧⎈F12'], ACTION_MODES)
+@register_text(['StGotoSymbolInProject'], ACTION_MODES)
 class StGotoSymbolInProject(ViOperatorDef):
     def init(self):
         self.updates_xpos = True

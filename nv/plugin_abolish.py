@@ -4,7 +4,7 @@ import re
 
 from sublime_plugin import TextCommand
 
-from NeoVintageous.nv.plugin import register
+from NeoVintageous.nv.plugin import register, register_text
 from NeoVintageous.nv.polyfill import set_selection
 from NeoVintageous.nv.vi import seqs
 from NeoVintageous.nv.vi.cmd_base import RequireOneCharMixin
@@ -86,6 +86,7 @@ _ALIASES = {
 
 
 @register(seqs.SEQ['cr'], (NORMAL,))
+@register_text(['AbolishCoercions'], (NORMAL,))
 class AbolishCoercions(RequireOneCharMixin, ViOperatorDef):
     def init(self):
         self.scroll_into_view = True

@@ -251,11 +251,13 @@ class NvOldCfgKeymapKdl(ApplicationCommand):
     self.dest  	= f"$packages/{PACKAGE_NAME}/{self.keymap}" # ($platform)
 
   def run(self, **kwargs):
-    from NeoVintageous.nv.vi.keys  import  mappings as kbDef # [mode][<C-x>]=cls<ViDecrement>
-    from NeoVintageous.nv.mappings import _mappings as kbUsr # [m][w]    =f
-    #                                                          [m][<C-J>]=:SwapLineDown<CR>
-    # with filetype                                             = {'':cmd_all, 'go':cmd}
-    from NeoVintageous.nv.vi.keys import map_cmd2textcmd, map_textcmd2cmd
+    from NeoVintageous.nv.vi.keys  import  mappings as kbDef  # [mode][<C-x>]=cls<ViDecrement>
+    from NeoVintageous.nv.plugin   import  mappings as kbDefP # [mode][<C-n>]=<MultipleCursorsStart>
+    from NeoVintageous.nv.mappings import _mappings as kbUsr  # [m][w]    =f
+    #                                                           [m][<C-J>]=:SwapLineDown<CR>
+    # with filetype                                              = {'':cmd_all, 'go':cmd}
+    from NeoVintageous.nv.vi.keys import map_cmd2textcmd                    , map_textcmd2cmd
+    from NeoVintageous.nv.plugin  import map_cmd2textcmd as map_cmd2textcmdP, map_textcmd2cmd as map_textcmd2cmdP
     # map_textcmd2cmd[cmd] = cls(*args,**kwargs)
     # map_cmd2textcmd[cls internal command Name] = [textual,command,name(s)] from ↑ (preserves CaSe)
 
@@ -315,12 +317,18 @@ class NvOldCfgKeymapKdl(ApplicationCommand):
                 cmd_txt = map_cmd2textcmd[T][0] # ViMoveByWordsBackward → MoveByWordsBackward
                 props['def'] = cmd_s # save ‘b’ default vim key to props ‘def’
                 break
+              elif (cmd_cls := kbDefP[mode_name].get(cmd_s)): # ‘gh’ → <...MultipleCursorsStart>
+                T = type(cmd_cls)
+                cmd_txt = map_cmd2textcmdP[T][0] # MultipleCursorsStart → MultipleCursorsStart
+                props['def'] = cmd_s # save ‘gh’ default vim key to props ‘def’
+                break
           if '"' in cmd_txt: # create a raw string to avoid escaping quotes
             arg = kdl.RawString(tag=None,value=cmd_txt)
           else:
             arg = kdl.   String(tag=None,value=cmd_txt)
           node_key = kdl.Node(tag=mode_s, name=keybind, args=[arg], props=props)
           # (Ⓝ)d "MoveByWordsBackward" def="b"
+          # (Ⓝ)<D-d> "MultipleCursorsStart" def="gh"
 
           keymap_kdl.nodes.append(node_key)
 

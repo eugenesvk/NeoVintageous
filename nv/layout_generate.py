@@ -300,8 +300,7 @@ class NvOldCfgKeymapKdl(ApplicationCommand):
           def_cmd = None
           for  mode in M_ANY: # TODO: m_enum iteration fails in py3.8
             if mode & modes:
-              if not (textcmd_d := key2textcmd(keybind, mode)): # empty modes or _ fillers
-                continue
+              textcmd_d = key2textcmd(keybind, mode)
               if (_cmd_txt := textcmd_d['main'  ]): # ‘b’ → <...ViMoveByWordsBackward>
                 def_cmd = _cmd_txt
                 break

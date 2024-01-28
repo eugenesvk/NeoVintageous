@@ -180,8 +180,6 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
             cmd_s      = rhs[len(parsed.group(0)):]
             if NeoVintageous.nv.cfg_parse._dump_to_kdl:
                 cmd_txt = cmd_s
-                cmd_cls = None         # find the first matching default key in the same mode
-                _cmd2textcmd = None    # store either keys or plugin dict depending on which one matched
                 cmd_txt_d = dict(main=None,plugin=None)
                 if isinstance(mode, str):
                     mode_enum     = mode_names_rev[mode]
@@ -230,8 +228,6 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
     if NeoVintageous.nv.cfg_parse._dump_to_kdl:
         cmd_s   = rhs
         cmd_txt = cmd_s
-        cmd_cls = None         # find the first matching default key in the same mode
-        _cmd2textcmd = None    # store either keys or plugin dict depending on which one matched
         cmd_txt_d = dict(main=None,plugin=None)
         if isinstance(mode, str):
             mode_enum     = mode_names_rev[mode]

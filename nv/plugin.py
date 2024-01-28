@@ -34,17 +34,11 @@ classes = {}  # type: dict
 
 
 def register(seq: list, modes: tuple, *args, **kwargs):
-    """
-    Register a 'key sequence' to 'command' mapping with NeoVintageous.
-
-    The registered key sequence must be known to NeoVintageous. The
-    registered command must be a ViMotionDef or ViOperatorDef.
-
-    The decorated class is instantiated with `*args` and `**kwargs`.
-
-    @keys
-      A list of (`mode`, `sequence`) pairs to map the decorated
-      class to.
+    """Register a 'key sequence' to 'command' mapping with NeoVintageous
+      'key sequence' must be known to NeoVintageous
+      'command'      must be a ViMotionDef or ViOperatorDef
+    Decorated class is instantiated with `*args` and `**kwargs`
+    @keys: A list of (`mode:tuple`, `sequence:list`) pairs to map the decorated class to
     """
     def inner(cls):
         for mode in modes:
@@ -57,8 +51,7 @@ def register(seq: list, modes: tuple, *args, **kwargs):
     return inner
 
 def register_text(commands: list, modes: tuple, *args, **kwargs):
-    """
-    Register a 'text command' to 'command' mapping with NeoVintageous
+    """Register a 'text command' to 'command' mapping with NeoVintageous
       'text command' must be known to NeoVintageous (converted to lower case)
       'command'      must be a ViMotionDef or ViOperatorDef
     Decorated class is instantiated with `*args` and `**kwargs`.

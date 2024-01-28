@@ -157,12 +157,31 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
             cmd_s      = rhs[len(parsed.group(0)):]
             if NeoVintageous.nv.cfg_parse._dump_to_kdl:
                 cmd_txt = cmd_s
-                for mode in modes: # find the first matching default key #todo: might be wrong if diff modes have diff defaults for the same command?
-                    if (cmd_cls := keys.mappings[mode].get(cmd_s)): # ‘b’ → <...ViMoveByWordsBackward>
-                        T = type(cmd_cls)
-                        cmd_txt = map_cmd2textcmd[T][0] # ViMoveByWordsBackward → MoveByWordsBackward
-                        props['defk'] = cmd_s # save ‘b’ default vim key to props ‘defk’
-                        break
+                cmd_cls = None         # find the first matching default key in the same mode
+                _cmd2textcmd = None    # store either keys or plugin dict depending on which one matched
+                if isinstance(mode, str):
+                    if (cmd_cls_key  := keys  .mappings[mode].get(cmd_s)): # ‘b’  → <...ViMoveByWordsBackward>
+                        cmd_cls = cmd_cls_key
+                        _cmd2textcmd = map_cmd2textcmd
+                    if not _cmd2textcmd and\
+                       (cmd_cls_plug := plugin.mappings[mode].get(cmd_s)): # ‘gh’ → <...MultipleCursorsStart>
+                        cmd_cls = cmd_cls_plug
+                        _cmd2textcmd = map_cmd2textcmdP
+                else:
+                    for mode in modes: # find the first matching default key
+                        if (cmd_cls_key  := keys  .mappings[mode].get(cmd_s)):
+                            cmd_cls = cmd_cls_key
+                            _cmd2textcmd = map_cmd2textcmd
+                            break
+                        if not _cmd2textcmd and\
+                           (cmd_cls_plug := plugin.mappings[mode].get(cmd_s)):
+                            cmd_cls = cmd_cls_plug
+                            _cmd2textcmd = map_cmd2textcmdP
+                            break
+                if cmd_cls: # found a match
+                    T = type(cmd_cls)
+                    cmd_txt = _cmd2textcmd[T][0] # ViMoveByWordsBackward → MoveByWordsBackward
+                    props['defk'] = cmd_s # save ‘b’ default vim key to props ‘defk’
                 if '"' in cmd_txt: # create a raw string to avoid escaping quotes
                     arg = kdl.RawString(tag=None,value=cmd_txt)
                 else:
@@ -183,20 +202,23 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
         cmd_s   = rhs
         cmd_txt = cmd_s
         cmd_cls = None         # find the first matching default key in the same mode
-        _cmd2textcmd = None # store either keys or plugin dict depending on which one matched
-        if (cmd_cls_key  := keys  .mappings[mode].get(cmd_s)): # ‘b’  → <...ViMoveByWordsBackward>
-            cmd_cls = cmd_cls_key
-            _cmd2textcmd = map_cmd2textcmd
-        if (cmd_cls_plug := plugin.mappings[mode].get(cmd_s)): # ‘gh’ → <...MultipleCursorsStart>
-            cmd_cls = cmd_cls_plug
-            _cmd2textcmd = map_cmd2textcmdP
-        if not cmd_cls:
+        _cmd2textcmd = None    # store either keys or plugin dict depending on which one matched
+        if isinstance(mode, str):
+            if (cmd_cls_key  := keys  .mappings[mode].get(cmd_s)): # ‘b’  → <...ViMoveByWordsBackward>
+                cmd_cls = cmd_cls_key
+                _cmd2textcmd = map_cmd2textcmd
+            if not _cmd2textcmd and\
+               (cmd_cls_plug := plugin.mappings[mode].get(cmd_s)): # ‘gh’ → <...MultipleCursorsStart>
+                cmd_cls = cmd_cls_plug
+                _cmd2textcmd = map_cmd2textcmdP
+        else:
             for mode in modes: # find the first matching default key
                 if (cmd_cls_key  := keys  .mappings[mode].get(cmd_s)):
                     cmd_cls = cmd_cls_key
                     _cmd2textcmd = map_cmd2textcmd
                     break
-                if (cmd_cls_plug := plugin.mappings[mode].get(cmd_s)):
+                if not _cmd2textcmd and\
+                   (cmd_cls_plug := plugin.mappings[mode].get(cmd_s)):
                     cmd_cls = cmd_cls_plug
                     _cmd2textcmd = map_cmd2textcmdP
                     break

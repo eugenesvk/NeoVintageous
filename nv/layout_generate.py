@@ -244,6 +244,32 @@ class NvDefaultKeymapKdl(ApplicationCommand):
     except FileNotFoundError as e:
       sublime.error_message(f"{PACKAGE_NAME}:\nTried and failed to save generated keybinds to\n{dest}")
 
+def key2textcmd(key:str,mode:M) -> dict:
+  from NeoVintageous.nv.vi.keys  import  mappings as kbDef  # [mode][<C-x>]=cls<ViDecrement>
+  from NeoVintageous.nv.plugin   import  mappings as kbDefP # [mode][<C-n>]=<MultipleCursorsStart>
+  from NeoVintageous.nv.mappings import _mappings as kbUsr  # [m][w]    =f
+  #                                                           [m][<C-J>]=:SwapLineDown<CR>
+  # with filetype                                              = {'':cmd_all, 'go':cmd}
+  from NeoVintageous.nv.vi.keys import map_cmd2textcmd                    , map_textcmd2cmd
+  from NeoVintageous.nv.plugin  import map_cmd2textcmd as map_cmd2textcmdP, map_textcmd2cmd as map_textcmd2cmdP
+  # map_textcmd2cmd[cmd] = cls(*args,**kwargs)
+  # map_cmd2textcmd[cls internal command Name] = [textual,command,name(s)] from ↑ (preserves CaSe)
+
+  mode_name = MODE_NAMES_OLD[mode]
+  cmd_txt_d = dict(main=None,plugin=None)
+  if mode_name not in kbDef: # empty modes or _ fillers
+    return None
+  if (cmd_cls := kbDef[mode_name].get(key)): # ‘b’ → <...ViMoveByWordsBackward>
+    T = type(cmd_cls)
+    cmd_txt = map_cmd2textcmd[T][0] # ViMoveByWordsBackward → MoveByWordsBackward
+    cmd_txt_d['main']   = cmd_txt
+    # print(f"found cmd in def ¦{cmd_txt}¦ for T=¦{T}¦")
+  if (cmd_cls := kbDefP[mode_name].get(key)): # ‘gh’ → <...MultipleCursorsStart>
+    T = type(cmd_cls)
+    cmd_txt = map_cmd2textcmdP[T][0] # MultipleCursorsStart → MultipleCursorsStart
+    cmd_txt_d['plugin'] = cmd_txt
+    # print(f"found cmd in plug ¦{cmd_txt}¦ for T=¦{T}¦")
+  return cmd_txt_d
 
 class NvOldCfgKeymapKdl(ApplicationCommand):
   def __init__(self):

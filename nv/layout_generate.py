@@ -288,9 +288,9 @@ class NvOldCfgKeymapKdl(ApplicationCommand):
           print(f"error parsing keybind=‘{keybind}’ , cmd_or_file=‘{cmd_or_file}’")
     # print('key2cmd_ft_m', key2cmd_ft_m)
 
-    keymap_kdl = parse_kdl_doc('')
-    for     keybind,keybind_d in key2cmd_ft_m.items():  # generate keymap_kdl from User keybinds
-      for   cmd_s  ,fileT_d   in    keybind_d.items():
+    keymap_kdl = parse_kdl_doc('') # generate keymap_kdl from User keybinds
+    for     keybind,keybind_d in key2cmd_ft_m.items(): # l : {h : {'':Mode.S|N}}}
+      for   cmd_s  ,fileT_d   in    keybind_d.items(): #      h   {'':Mode.S|N}}}
         fileT_d_rev_comb = dict() # store a list of filetypes per unique mode combo to avoid 1 line per each file
         for fileT  ,modes     in      fileT_d.items(): # combine file types if modes are the same
           if modes in fileT_d_rev_comb:
@@ -307,30 +307,44 @@ class NvOldCfgKeymapKdl(ApplicationCommand):
           if fileT_noblank:
             props['file'] = " ".join(fileT_noblank)
 
+          cmd_txt_d = dict()
+          # keys/plugins can have different commands/mode for the same key
+            # nnoremap l k   MoveUpByLines
+            # snoremap l k   MultipleCursorsRemove
+          # while they will be grouped into one: key2cmd_ft_m {'l':{'k':{'':<Mode.Select|Normal>}}}, so split unique by mode(s)
+          # cmd_txt_d {MoveUpByLines         : M.N
+          #            MultipleCursorsRemove : M.S }
           for  mode in M_ANY: # TODO: m_enum iteration fails in py3.8
             if mode & modes:
               mode_name = MODE_NAMES_OLD[mode]
               if mode_name not in kbDef: # empty modes or _ fillers
                 continue
-              elif (cmd_cls := kbDef[mode_name].get(cmd_s)): # ‘b’ → <...ViMoveByWordsBackward>
+              if (cmd_cls := kbDef[mode_name].get(cmd_s)): # ‘b’ → <...ViMoveByWordsBackward>
                 T = type(cmd_cls)
                 cmd_txt = map_cmd2textcmd[T][0] # ViMoveByWordsBackward → MoveByWordsBackward
-                props['def'] = cmd_s # save ‘b’ default vim key to props ‘def’
-                break
-              elif (cmd_cls := kbDefP[mode_name].get(cmd_s)): # ‘gh’ → <...MultipleCursorsStart>
+                if cmd_txt not in cmd_txt_d:
+                  cmd_txt_d[cmd_txt]  = M(0)
+                cmd_txt_d  [cmd_txt] |= mode
+                # print(f"found cmd in def ¦{cmd_txt}¦ for T=¦{T}¦")
+              if (cmd_cls := kbDefP[mode_name].get(cmd_s)): # ‘gh’ → <...MultipleCursorsStart>
                 T = type(cmd_cls)
                 cmd_txt = map_cmd2textcmdP[T][0] # MultipleCursorsStart → MultipleCursorsStart
-                props['def'] = cmd_s # save ‘gh’ default vim key to props ‘def’
-                break
-          if '"' in cmd_txt: # create a raw string to avoid escaping quotes
-            arg = kdl.RawString(tag=None,value=cmd_txt)
-          else:
-            arg = kdl.   String(tag=None,value=cmd_txt)
-          node_key = kdl.Node(tag=mode_s, name=keybind, args=[arg], props=props)
-          # (Ⓝ)d "MoveByWordsBackward" def="b"
-          # (Ⓝ)<D-d> "MultipleCursorsStart" def="gh"
+                if cmd_txt not in cmd_txt_d:
+                  cmd_txt_d[cmd_txt]  = M(0)
+                cmd_txt_d  [cmd_txt] |= mode
+                # print(f"found cmd in plug ¦{cmd_txt}¦ for T=¦{T}¦")
+          # print(f"found unique key/plugin commands ¦{cmd_txt_d}¦")
+          for cmd_txt,mode_enum in cmd_txt_d.items():
+            props['def'] = cmd_s # save ‘b’ default vim key to props ‘def’
+            if '"' in cmd_txt: # create a raw string to avoid escaping quotes
+              arg = kdl.RawString(tag=None,value=cmd_txt)
+            else:
+              arg = kdl.   String(tag=None,value=cmd_txt)
+            node_key = kdl.Node(tag=f"{mode_enum:®}", name=keybind, args=[arg], props=props)
+            # (Ⓝ)d     "MoveByWordsBackward"  def="b"
+            # (Ⓝ)<D-d> "MultipleCursorsStart" def="gh"
 
-          keymap_kdl.nodes.append(node_key)
+            keymap_kdl.nodes.append(node_key)
 
     dest = expand(kwargs.get('file',self.dest)) # expand Sublime variables
     data_name = 'keybinds in KDL'

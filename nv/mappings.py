@@ -155,6 +155,9 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
     _log.map(" @mappings_add mode=%s lhs=%s rhs=%s"
         ,                      mode,    lhs,   rhs)
     modes = [mode] if isinstance(mode, str) else mode
+    modes_enum = M(0)
+    for m in modes:
+        modes_enum |= mode_names_rev[m]
     key = _normalise_lhs(lhs)
     # tag = None
     if NeoVintageous.nv.cfg_parse._dump_to_kdl:
@@ -190,10 +193,24 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
                         if cmd_txt_d['main'  ] or \
                            cmd_txt_d['plugin']:
                             break
+
+                def_cmd = None # find the first command that matches FROM key
+                for    mode in M_ANY: # TODO: m_enum iteration fails in py3.8
+                    if mode & modes_enum:
+                        textcmd_d = key2textcmd(key, mode)
+                        if (_cmd_txt := textcmd_d['main'  ]): # ‘b’ → <...ViMoveByWordsBackward>
+                            def_cmd = _cmd_txt
+                            break
+                        if (_cmd_txt := textcmd_d['plugin']): # ‘gh’ → <...MultipleCursorsStart>
+                            def_cmd = _cmd_txt
+                            break
+
                 if _cmd_txt := (cmd_txt_d.get('main'  ) or\
                                 cmd_txt_d.get('plugin')): # found a match
                     cmd_txt = _cmd_txt # MoveByWordsBackward
                     props['defk'] = cmd_s # save ‘b’ default vim key to props ‘defk’
+                if def_cmd:
+                    props['defc'] = def_cmd # save ‘MultipleCursorsSkip’ default command for ‘l’ key to props ‘defc’
                 if '"' in cmd_txt: # create a raw string to avoid escaping quotes
                     arg = kdl.RawString(tag=None,value=cmd_txt)
                 else:
@@ -226,10 +243,24 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
                 if cmd_txt_d['main'  ] or \
                    cmd_txt_d['plugin']:
                     break
+
+        def_cmd = None # find the first command that matches FROM key
+        for    mode in M_ANY: # TODO: m_enum iteration fails in py3.8
+            if mode & modes_enum:
+                textcmd_d = key2textcmd(key, mode)
+                if (_cmd_txt := textcmd_d['main'  ]): # ‘b’ → <...ViMoveByWordsBackward>
+                    def_cmd = _cmd_txt
+                    break
+                if (_cmd_txt := textcmd_d['plugin']): # ‘gh’ → <...MultipleCursorsStart>
+                    def_cmd = _cmd_txt
+                    break
+
         if _cmd_txt := (cmd_txt_d.get('main'  ) or\
                         cmd_txt_d.get('plugin')): # found a match
             cmd_txt = _cmd_txt # MoveByWordsBackward
             props['defk'] = cmd_s # save ‘b’ default vim key to props ‘defk’
+        if def_cmd:
+            props['defc'] = def_cmd # save ‘MultipleCursorsSkip’ default command for ‘l’ key to props ‘defc’
         if '"' in cmd_txt: # create a raw string to avoid escaping quotes
             arg = kdl.RawString(tag=None,value=cmd_txt)
         else:

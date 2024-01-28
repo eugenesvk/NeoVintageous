@@ -328,6 +328,18 @@ class NvOldCfgKeymapKdl(ApplicationCommand):
           (mode_l_sort,m_enum) = mode_group_sort(modes)
           mode_s = "".join(mode_l_sort) # Ⓝⓘ
           cmd_txt = cmd_s
+
+          def_cmd = None
+          for  mode in M_ANY: # TODO: m_enum iteration fails in py3.8
+            if mode & modes:
+              if not (textcmd_d := key2textcmd(keybind, mode)): # empty modes or _ fillers
+                continue
+              if (_cmd_txt := textcmd_d['main'  ]): # ‘b’ → <...ViMoveByWordsBackward>
+                def_cmd = _cmd_txt
+                break
+              if (_cmd_txt := textcmd_d['plugin']): # ‘gh’ → <...MultipleCursorsStart>
+                def_cmd = _cmd_txt
+                break
           props = {}
           fileT_noblank = [f for f in fileT if not f == ''] # ignore '' file types that mean any
           if fileT_noblank:
@@ -356,7 +368,10 @@ class NvOldCfgKeymapKdl(ApplicationCommand):
                 # print(f"found cmd in plug ¦{cmd_txt}¦ for T=¦{T}¦")
           # print(f"found unique key/plugin commands ¦{cmd_txt_d}¦")
           for cmd_txt,mode_enum in cmd_txt_d.items():
-            props['defk'] = cmd_s # save ‘b’ default vim key to props ‘def’
+            if cmd_s:
+              props['defk'] = cmd_s # save ‘b’ default vim key to props ‘defk’
+            if def_cmd:
+              props['defc'] = def_cmd # save ‘MultipleCursorsSkip’ default command for ‘l’ key to props ‘defc’
             if '"' in cmd_txt: # create a raw string to avoid escaping quotes
               arg = kdl.RawString(tag=None,value=cmd_txt)
             else:

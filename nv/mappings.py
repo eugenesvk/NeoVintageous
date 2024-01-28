@@ -12,12 +12,11 @@ from NeoVintageous.nv.settings import is_plugin_enabled
 from NeoVintageous.nv.utils import get_file_type
 from NeoVintageous.nv.variables import expand_keys
 from NeoVintageous.nv.vi import keys
+from NeoVintageous.nv.vi.keys import to_bare_command_name, tokenize_keys
 from NeoVintageous.nv.vi.cmd_base import CommandNotFound
-from NeoVintageous.nv.vi.keys import to_bare_command_name
-from NeoVintageous.nv.vi.keys import tokenize_keys, map_cmd2textcmd, map_textcmd2cmd
-from NeoVintageous.nv.plugin  import map_cmd2textcmd as map_cmd2textcmdP, map_textcmd2cmd as map_textcmd2cmdP
-from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
-from NeoVintageous.nv.modes import mode_names, mode_names_rev, mode_full_to_abbrev, mode_group_sort
+from NeoVintageous.nv.modes import Mode as M, M_ANY, INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
+from NeoVintageous.nv.modes import mode_names, mode_names_rev, mode_full_to_abbrev, mode_group_sort, MODE_NAMES_OLD, MODE_HELP
+
 from NeoVintageous.nv.log import addLoggingLevel, stream_handler
 
 _log = logging.getLogger(__name__)
@@ -128,6 +127,27 @@ def _normalise_lhs(lhs: str) -> str:
         return lhs
 
 
+def key2textcmd(key:str,mode:M) -> dict:
+  # keys.map_textcmd2cmd[cmd] = cls(*args,**kwargs)
+  # keys.map_cmd2textcmd[cls internal command Name] = [textual,command,name(s)] from ↑ (preserves CaSe)
+
+  mode_name = MODE_NAMES_OLD[mode]
+  cmd_txt_d = dict(main=None,plugin=None)
+  if mode_name not in keys.mappings: # empty modes or _ fillers
+    return None
+  if (cmd_cls :=   keys.mappings[mode_name].get(key)): # ‘b’ → <...ViMoveByWordsBackward>
+    T = type(cmd_cls)
+    cmd_txt =   keys.map_cmd2textcmd[T][0] # ViMoveByWordsBackward → MoveByWordsBackward
+    cmd_txt_d['main']   = cmd_txt
+    # print(f"found cmd in def ¦{cmd_txt}¦ for T=¦{T}¦")
+  if (cmd_cls := plugin.mappings[mode_name].get(key)): # ‘gh’ → <...MultipleCursorsStart>
+    T = type(cmd_cls)
+    cmd_txt = plugin.map_cmd2textcmd[T][0] # MultipleCursorsStart → MultipleCursorsStart
+    cmd_txt_d['plugin'] = cmd_txt
+    # print(f"found cmd in plug ¦{cmd_txt}¦ for T=¦{T}¦")
+  return cmd_txt_d
+
+
 import NeoVintageous.dep.kdl as kdl
 import NeoVintageous.nv.cfg_parse
 def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
@@ -159,28 +179,20 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
                 cmd_txt = cmd_s
                 cmd_cls = None         # find the first matching default key in the same mode
                 _cmd2textcmd = None    # store either keys or plugin dict depending on which one matched
+                cmd_txt_d = dict(main=None,plugin=None)
                 if isinstance(mode, str):
-                    if (cmd_cls_key  := keys  .mappings[mode].get(cmd_s)): # ‘b’  → <...ViMoveByWordsBackward>
-                        cmd_cls = cmd_cls_key
-                        _cmd2textcmd = map_cmd2textcmd
-                    if not _cmd2textcmd and\
-                       (cmd_cls_plug := plugin.mappings[mode].get(cmd_s)): # ‘gh’ → <...MultipleCursorsStart>
-                        cmd_cls = cmd_cls_plug
-                        _cmd2textcmd = map_cmd2textcmdP
+                    mode_enum     = mode_names_rev[mode]
+                    cmd_txt_d     = key2textcmd(cmd_s, mode_enum)
                 else:
                     for mode in modes: # find the first matching default key
-                        if (cmd_cls_key  := keys  .mappings[mode].get(cmd_s)):
-                            cmd_cls = cmd_cls_key
-                            _cmd2textcmd = map_cmd2textcmd
+                        mode_enum = mode_names_rev[mode]
+                        cmd_txt_d = key2textcmd(cmd_s, mode_enum)
+                        if cmd_txt_d['main'  ] or \
+                           cmd_txt_d['plugin']:
                             break
-                        if not _cmd2textcmd and\
-                           (cmd_cls_plug := plugin.mappings[mode].get(cmd_s)):
-                            cmd_cls = cmd_cls_plug
-                            _cmd2textcmd = map_cmd2textcmdP
-                            break
-                if cmd_cls: # found a match
-                    T = type(cmd_cls)
-                    cmd_txt = _cmd2textcmd[T][0] # ViMoveByWordsBackward → MoveByWordsBackward
+                if _cmd_txt := (cmd_txt_d.get('main'  ) or\
+                                cmd_txt_d.get('plugin')): # found a match
+                    cmd_txt = _cmd_txt # MoveByWordsBackward
                     props['defk'] = cmd_s # save ‘b’ default vim key to props ‘defk’
                 if '"' in cmd_txt: # create a raw string to avoid escaping quotes
                     arg = kdl.RawString(tag=None,value=cmd_txt)
@@ -203,28 +215,20 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
         cmd_txt = cmd_s
         cmd_cls = None         # find the first matching default key in the same mode
         _cmd2textcmd = None    # store either keys or plugin dict depending on which one matched
+        cmd_txt_d = dict(main=None,plugin=None)
         if isinstance(mode, str):
-            if (cmd_cls_key  := keys  .mappings[mode].get(cmd_s)): # ‘b’  → <...ViMoveByWordsBackward>
-                cmd_cls = cmd_cls_key
-                _cmd2textcmd = map_cmd2textcmd
-            if not _cmd2textcmd and\
-               (cmd_cls_plug := plugin.mappings[mode].get(cmd_s)): # ‘gh’ → <...MultipleCursorsStart>
-                cmd_cls = cmd_cls_plug
-                _cmd2textcmd = map_cmd2textcmdP
+            mode_enum     = mode_names_rev[mode]
+            cmd_txt_d     = key2textcmd(cmd_s, mode_enum)
         else:
             for mode in modes: # find the first matching default key
-                if (cmd_cls_key  := keys  .mappings[mode].get(cmd_s)):
-                    cmd_cls = cmd_cls_key
-                    _cmd2textcmd = map_cmd2textcmd
+                mode_enum = mode_names_rev[mode]
+                cmd_txt_d = key2textcmd(cmd_s, mode_enum)
+                if cmd_txt_d['main'  ] or \
+                   cmd_txt_d['plugin']:
                     break
-                if not _cmd2textcmd and\
-                   (cmd_cls_plug := plugin.mappings[mode].get(cmd_s)):
-                    cmd_cls = cmd_cls_plug
-                    _cmd2textcmd = map_cmd2textcmdP
-                    break
-        if cmd_cls: # found a match
-            T = type(cmd_cls)
-            cmd_txt = _cmd2textcmd[T][0] # ViMoveByWordsBackward → MoveByWordsBackward
+        if _cmd_txt := (cmd_txt_d.get('main'  ) or\
+                        cmd_txt_d.get('plugin')): # found a match
+            cmd_txt = _cmd_txt # MoveByWordsBackward
             props['defk'] = cmd_s # save ‘b’ default vim key to props ‘defk’
         if '"' in cmd_txt: # create a raw string to avoid escaping quotes
             arg = kdl.RawString(tag=None,value=cmd_txt)

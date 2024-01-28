@@ -163,7 +163,8 @@ _keybind_prop = {
     'desc':['d','des','desc','description','inf','info'],
     'icon':['i','icn','icon','img','image'],
     'file':['ft','file','filetype'],
-    'def':['def','default','≝'],
+    'defk':['defk','default_key','≝k'],
+    'defc':['defc','default_cmd','≝c'],
     }
 
 def _parse_set_kdl(node:kdl.Node,cfg='') -> None:

@@ -161,7 +161,7 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
                     if (cmd_cls := keys.mappings[mode].get(cmd_s)): # ‘b’ → <...ViMoveByWordsBackward>
                         T = type(cmd_cls)
                         cmd_txt = map_cmd2textcmd[T][0] # ViMoveByWordsBackward → MoveByWordsBackward
-                        props['def'] = cmd_s # save ‘b’ default vim key to props ‘def’
+                        props['defk'] = cmd_s # save ‘b’ default vim key to props ‘defk’
                         break
                 if '"' in cmd_txt: # create a raw string to avoid escaping quotes
                     arg = kdl.RawString(tag=None,value=cmd_txt)
@@ -203,7 +203,7 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
         if cmd_cls: # found a match
             T = type(cmd_cls)
             cmd_txt = _cmd2textcmd[T][0] # ViMoveByWordsBackward → MoveByWordsBackward
-            props['def'] = cmd_s # save ‘b’ default vim key to props ‘def’
+            props['defk'] = cmd_s # save ‘b’ default vim key to props ‘defk’
         if '"' in cmd_txt: # create a raw string to avoid escaping quotes
             arg = kdl.RawString(tag=None,value=cmd_txt)
         else:

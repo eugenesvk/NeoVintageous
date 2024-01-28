@@ -335,7 +335,7 @@ class NvOldCfgKeymapKdl(ApplicationCommand):
                 # print(f"found cmd in plug ¦{cmd_txt}¦ for T=¦{T}¦")
           # print(f"found unique key/plugin commands ¦{cmd_txt_d}¦")
           for cmd_txt,mode_enum in cmd_txt_d.items():
-            props['def'] = cmd_s # save ‘b’ default vim key to props ‘def’
+            props['defk'] = cmd_s # save ‘b’ default vim key to props ‘def’
             if '"' in cmd_txt: # create a raw string to avoid escaping quotes
               arg = kdl.RawString(tag=None,value=cmd_txt)
             else:

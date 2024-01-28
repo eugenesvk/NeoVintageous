@@ -155,6 +155,7 @@ class NvDefaultKeymapKdl(ApplicationCommand):
     self.dest  	= f"$packages/{PACKAGE_NAME}/{self.keymap}" # ($platform)
 
   def run(self, **kwargs):
+    # Regular keybinds
     from NeoVintageous.nv.vi.keys import mappings # [mode_normal][<C-x>]=<ViDecrement>
     from NeoVintageous.nv.vi.keys import map_cmd2textcmd
     map_key2cmd_modes = {} # {<C-w>:{'ViDelete':[mode_insert,mode_normal]}}
@@ -170,7 +171,7 @@ class NvDefaultKeymapKdl(ApplicationCommand):
           else:
             map_key2cmd_modes[    keybind][T]  = [mode]  # add an extra command/mode
         else:
-          map_key2cmd_modes[        keybind] =  {T:[mode]} # add a new keybind/command
+          map_key2cmd_modes  [    keybind]={T  : [mode]} # add a new keybind/command
         # [<C-x>] = { <...ViDecrement'>    : mode_insert...
         #             <...ViOpenNameSpace'>: mode_insert}
 

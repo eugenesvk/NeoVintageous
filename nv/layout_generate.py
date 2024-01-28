@@ -342,19 +342,14 @@ class NvOldCfgKeymapKdl(ApplicationCommand):
           #            MultipleCursorsRemove : M.S }
           for  mode in M_ANY: # TODO: m_enum iteration fails in py3.8
             if mode & modes:
-              mode_name = MODE_NAMES_OLD[mode]
-              if mode_name not in kbDef: # empty modes or _ fillers
+              if not (textcmd_d := key2textcmd(cmd_s, mode)): # empty modes or _ fillers
                 continue
-              if (cmd_cls := kbDef[mode_name].get(cmd_s)): # ‘b’ → <...ViMoveByWordsBackward>
-                T = type(cmd_cls)
-                cmd_txt = map_cmd2textcmd[T][0] # ViMoveByWordsBackward → MoveByWordsBackward
+              if (cmd_txt := textcmd_d['main'  ]): # ‘b’ → <...ViMoveByWordsBackward>
                 if cmd_txt not in cmd_txt_d:
                   cmd_txt_d[cmd_txt]  = M(0)
                 cmd_txt_d  [cmd_txt] |= mode
                 # print(f"found cmd in def ¦{cmd_txt}¦ for T=¦{T}¦")
-              if (cmd_cls := kbDefP[mode_name].get(cmd_s)): # ‘gh’ → <...MultipleCursorsStart>
-                T = type(cmd_cls)
-                cmd_txt = map_cmd2textcmdP[T][0] # MultipleCursorsStart → MultipleCursorsStart
+              if (cmd_txt := textcmd_d['plugin']): # ‘gh’ → <...MultipleCursorsStart>
                 if cmd_txt not in cmd_txt_d:
                   cmd_txt_d[cmd_txt]  = M(0)
                 cmd_txt_d  [cmd_txt] |= mode

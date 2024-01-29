@@ -22,7 +22,7 @@ _log.setLevel(DEFAULT_LOG_LEVEL)
 _log.setLevel('SET')
 if _log.hasHandlers(): # clear existing handlers, including sublime's
     logging.getLogger(__name__).handlers.clear()
-    _log.addHandler(stream_handler)
+    # _log.addHandler(stream_handler)
 
 def get_config(path:str, default=None):
     cfgU.load_kdl()

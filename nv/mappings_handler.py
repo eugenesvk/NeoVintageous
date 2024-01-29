@@ -116,7 +116,7 @@ def _handle_rhs_text(view, rhs: Union[str, list]) -> None: # find a key that is 
             _log.debug(" redirect text command with ‘:’ command to _handle_rhs=%s",text_command)
             _handle_rhs(win,     text_command)
         else:
-            command_txt = mappings_resolve_text(view, text_commands=text_command, mode=mode, check_user_mappings=False)
+            command_txt = mappings_resolve_text(view, text_command=text_command, mode=mode, check_user_mappings=False)
             if isinstance(command_txt, CommandNotFound):
                 _log.debug("  text_command ‘%s’not resolved",text_command)
                 continue

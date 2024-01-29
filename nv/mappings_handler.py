@@ -54,52 +54,33 @@ def evaluate_mapping_text(view, mapping: Mapping) -> None:
     _handle_rhs_text(view, rhs)
 
 
-def _handle_rhs(window, rhs: str) -> None:
-    if ':' in rhs:
-        # This hacky piece of code (needs refactoring), is to
-        # support mappings in the format of {seq}:{ex-cmd}<CR>{seq},
-        # where leading and trailing sequences are optional.
-        #
-        # Examples:
-        #
-        #   :
-        #   :w
-        #   :sort<CR>
+def _handle_rhs(win, rhs: str) -> None:
+    if ':' in rhs: # hacky piece of code (needs refactoring) is to support mappings in the format of {seq}:{ex-cmd}<CR>{seq}, where leading and trailing sequences are optional, eg:
+        #      :
+        #      :w
+        #      :sort  <CR>
         #   vi]:sort u<CR>
         #   vi]:sort u<CR>vi]y<Esc>
 
         colon_pos = rhs.find(':')
-        leading = rhs[:colon_pos]
-        rhs = rhs[colon_pos:]
+        leading   = rhs[:colon_pos ]
+        rhs       = rhs[ colon_pos:]
 
         cr_pos = rhs.lower().find('<cr>')
         if cr_pos >= 0:
-            command = rhs[:cr_pos + 4]
-            trailing = rhs[cr_pos + 4:]
-        else:
-            # Example :reg
-            command = rhs
+            command  = rhs[:cr_pos + 4 ]
+            trailing = rhs[ cr_pos + 4:]
+        else: # Example :reg
+            command  = rhs
             trailing = ''
 
         if leading:
-            window.run_command('nv_process_notation', {
-                'keys': leading,
-                'check_user_mappings': False,
-            })
-
-        do_ex_user_cmdline(window, command)
-
+            win.run_command('nv_process_notation',{'keys':leading ,'check_user_mappings':False,})
+        do_ex_user_cmdline(win, command)
         if trailing:
-            window.run_command('nv_process_notation', {
-                'keys': trailing,
-                'check_user_mappings': False,
-            })
-
+            win.run_command('nv_process_notation',{'keys':trailing,'check_user_mappings':False,})
     else:
-        window.run_command('nv_process_notation', {
-            'keys': rhs,
-            'check_user_mappings': False,
-        })
+        win    .run_command('nv_process_notation',{'keys':rhs     ,'check_user_mappings':False,})
 
 from NeoVintageous.nv            	import plugin
 from NeoVintageous.nv.vi         	import keys

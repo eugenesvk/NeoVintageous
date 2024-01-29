@@ -133,6 +133,7 @@ def update_status_line(view) -> None:
 
     seq_txt = get_sequence(view)
     view.set_status(vim.CFG['idseq'], seq_txt)
+    _log.key("set ‘idseq’ status to ‘%s’",seq_txt)
 
     if CFG['enable'] and (match := re_cmd_count.findall(seq_txt)): # show popup
         count_s = ''.join(match)

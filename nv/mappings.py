@@ -76,7 +76,8 @@ def _has_partial_matches(view, mode: str, lhs: str) -> bool:
 
 def _has_partial_matches_text(view, mode: str, lhs: str) -> bool:
     for map_lhs, map_rhs in _mappings_text[mode].items():
-        if isinstance(map_rhs, str):
+        if isinstance(map_rhs, str ) or\
+           isinstance(map_rhs, list): #bb ['movetoeol']
             if map_lhs.startswith(lhs):
                 return True
         else:

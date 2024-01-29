@@ -402,7 +402,8 @@ def mappings_resolve(view, sequence: str = None, mode: str = None, check_user_ma
     if not command:
         command = _seq_to_command(view, to_bare_command_name(seq), mode or get_mode(view))
         _log.map(" inSEQ _seq_to_command¦%s¦",command)
-    _log.map(' @mapRes usr‘%s’ → lhs‘%s’ rhs‘%s’ m‘%s’ seq=‘%s’ cmd‘%s’'
+    _log.map(' @mapRes cmd‘%s’ (usr‘%s’ → lhs‘%s’ rhs‘%s’ m‘%s’ seq=‘%s’ cmd_cls‘%s’)'
+        ,command
         ,check_user_mappings
         ,command.lhs if hasattr(command, 'lhs') else ''
         ,command.rhs if hasattr(command, 'rhs') else ''
@@ -418,11 +419,11 @@ def mappings_resolve_text(view, text_command:str = None, mode: str = None, check
     """
     text_cmd_part = get_partial_text(view) # We usually need to look at the partial sequence, but some commands do weird things, like ys, which isn't a namespace but behaves as such
     text_cmd = text_command or text_cmd_part
-    _log.map("  inTXT¦%s¦ part_txt¦%s¦",text_command,text_cmd_part)
+    _log.map("  inTXT ¦%s¦full ¦%s¦part",text_command,text_cmd_part)
     command = None
     if check_user_mappings:
         command = _text_cmd_to_mapping(view, text_cmd)
-        _log.map("  inTXT user_map _txt2mapcmd¦‘%s’¦",command)
+        _log.map("  inTXT ¦%s¦cmd←usermap",command)
         if     not      command:
             if not text_command:
                 if _has_partial_matches_text(view, get_mode(view), text_cmd):
@@ -430,8 +431,9 @@ def mappings_resolve_text(view, text_command:str = None, mode: str = None, check
                     return IncompleteMapping()
     if not command:
         command = _text_to_command(view, text_cmd)
-        _log.map("  inTXT _text_to_command¦%s¦",command)
-    _log.map(' @mapResText usr‘%s’ → lhs‘%s’ rhs‘%s’ m‘%s’ text_cmd‘%s’ cmd‘%s’'
+        _log.map("  inTXT ¦%s¦cmd←txt",command)
+    _log.map(' @mapResT cmd‘%s’ (usr‘%s’ → lhs‘%s’ rhs‘%s’ m‘%s’ text_cmd‘%s’ cmd_cls‘%s’)'
+        ,command
         ,check_user_mappings
         ,command.lhs if hasattr(command,'lhs') else ''
         ,command.rhs if hasattr(command,'rhs') else ''

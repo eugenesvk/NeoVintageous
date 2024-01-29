@@ -420,7 +420,7 @@ def mappings_resolve_text(view, text_command:str = None, mode: str = None, check
         command = _text_cmd_to_mapping(view, text_cmd)
         _log.map("  inTXT user_map _txt2mapcmd¦‘%s’¦",command)
         if     not      command:
-            if not text_cmd:
+            if not text_command:
                 if _has_partial_matches_text(view, get_mode(view), text_cmd):
                     return IncompleteMapping()
     if not command:

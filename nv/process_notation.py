@@ -57,6 +57,7 @@ class ProcessNotationHandler():
         # undo history, but store the full sequence for '.' to use.
         leading_motions = ''
         for key in tokenize_keys(keys):
+            _log.key(f"nv_feed_key(FeedKeyHandler) with eval=False @ ProcessNotationHandler for {key}")
             self.window.run_command('nv_feed_key', {
                 'key': key,
                 'do_eval': False,

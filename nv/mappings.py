@@ -406,29 +406,27 @@ def mappings_resolve(view, sequence: str = None, mode: str = None, check_user_ma
         ,                                mode, sequence, command.__class__.__mro__)
     return command
 
-def mappings_resolve_text(view, text_commands: list = None, mode: str = None, check_user_mappings: bool = True):
-    # Check current global state and return the command mapped to the available list of text_commands
-    # ←
-      # sequence           	list	sequence of text_commands
-      # mode               	str 	if passed, use instead of the global state's
-      # check_user_mappings	bool	.
-    # → Mapping |  CommandNotFound
-
-    # We usually need to look at the partial sequence, but some commands do weird things, like ys, which isn't a namespace but behaves as such.
-    _log.map("  inTXT text_commands = ‘%s’  get_partial_text = ‘%s’", text_commands,get_partial_text(view))
-    text_cmd = text_commands or get_partial_text(view)
+def mappings_resolve_text(view, text_command:str = None, mode: str = None, check_user_mappings: bool = True):
+    """Check current global state and return the command mapped to the available text_command
+    text_command       	str 	Text command sequence. If passed, use instead of the global state's (some commands aren't name spaces but act as them like ‘ys’ from plugin surround)
+    mode               	str 	if passed, use instead of the global state's
+    check_user_mappings	bool	.
+    → Mapping |  CommandNotFound
+    """
+    text_cmd = text_command or get_partial_text(view) # We usually need to look at the partial sequence, but some commands do weird things, like ys, which isn't a namespace but behaves as such.
+    _log.map("  inTXT¦%s¦ part_txt¦%s¦",text_command,get_partial_text(view))
     command = None
     if check_user_mappings:
         command = _text_cmd_to_mapping(view, text_cmd)
-        _log.map("  inTXT user_map _text_cmd_to_mapping¦‘%s’",command)
-        if not command:
+        _log.map("  inTXT user_map _txt2mapcmd¦‘%s’¦",command)
+        if     not      command:
             if not text_cmd:
                 if _has_partial_matches_text(view, get_mode(view), text_cmd):
                     return IncompleteMapping()
     if not command:
         command = _text_to_command(view, text_cmd)
-        _log.map("  inTXT _text_to_command¦‘%s’",command)
-    _log.map(' @MapResText usr‘%s’ → lhs‘%s’ rhs‘%s’ m‘%s’ text_cmd‘%s’ cmd‘%s’'
+        _log.map("  inTXT _text_to_command¦%s¦",command)
+    _log.map(' @mapResText usr‘%s’ → lhs‘%s’ rhs‘%s’ m‘%s’ text_cmd‘%s’ cmd‘%s’'
         ,check_user_mappings
         ,command.lhs if hasattr(command,'lhs') else ''
         ,command.rhs if hasattr(command,'rhs') else ''

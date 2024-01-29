@@ -380,9 +380,9 @@ def _seq_to_command(view, seq: str, mode: str):
 
 def mappings_resolve(view, sequence: str = None, mode: str = None, check_user_mappings: bool = True):
     """Look at the current global state and return the command mapped to the available sequence.
-    sequence               	str 	Command sequence. If passed, use instead of the global state's. This is necessary for some commands that aren't name spaces but act as them (for example, ys from the surround plugin).
-    mode                   	str 	If passed, use instead of the global state's. This is necessary when we are in operator pending mode and we receive a new action. By combining the existing action's name with name of the action just received we could find a new action.
-    check_user_mappings    	bool	.
+    sequence           	str 	Command sequence. If passed, use instead of the global state's. This is necessary for some commands that aren't name spaces but act as them (for example, ys from the surround plugin).
+    mode               	str 	If passed, use instead of the global state's. This is necessary when we are in operator pending mode and we receive a new action. By combining the existing action's name with name of the action just received we could find a new action.
+    check_user_mappings	bool	.
     → Mapping | IncompleteMapping | CommandNotFound
     """
     seq = sequence or get_partial_sequence(view) # We usually need to look at the partial sequence, but some commands do weird things, like ys, which isn't a namespace but behaves as such.
@@ -391,15 +391,16 @@ def mappings_resolve(view, sequence: str = None, mode: str = None, check_user_ma
     if check_user_mappings: # Resolve the full sequence rather than the "bare" sequence, because the user may have defined some mappings that start with numbers (counts), or " (register character), which are stripped from the bare sequences. See https://github.com/NeoVintageous/NeoVintageous/issues/434.
         # XXX The reason these does not pass the mode, and instead uses the get_mode(), is because implementation of commands like dd are a bit hacky. For example, the dd definition does is not assigned to operator pending mode, the second d is instead caught by the feed key command and resolved by specifying NORMAL mode explicitly, which resolves the delete line command definition. Commands like this can probably be fixed by allowing the definitions to handle the OPERATOR PENDING and let the definition handle any special-cases itself instead of passing off the responsibility to the feed key command.
         command = _seq_to_mapping(view, seq)
-        _log.map("   inSEQ user_map _seq2mapcmd¦‘%s’¦",command)
+        _log.map("  inSEQ user_map _seq2mapcmd¦‘%s’¦",command)
         if     not command :
             if not sequence:
                 if _has_partial_matches(view, get_mode(view), seq):
                     return IncompleteMapping()
     if not command:
         command = _seq_to_command(view, to_bare_command_name(seq), mode or get_mode(view))
-        _log.map(" inSEQ _seq_to_command¦‘%s’",command)
-    _log.map(' @mapRes → lhs‘%s’ rhs‘%s’ m‘%s’ seq=‘%s’ ‘%s’'
+        _log.map(" inSEQ _seq_to_command¦%s¦",command)
+    _log.map(' @mapRes usr‘%s’ → lhs‘%s’ rhs‘%s’ m‘%s’ seq=‘%s’ cmd‘%s’'
+        ,check_user_mappings
         ,command.lhs if hasattr(command, 'lhs') else ''
         ,command.rhs if hasattr(command, 'rhs') else ''
         ,                                mode, sequence, command.__class__.__mro__)

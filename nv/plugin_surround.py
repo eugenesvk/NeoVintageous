@@ -77,7 +77,7 @@ class Surroundys(ViOperatorDef):
 
 
 @register(seqs.YSS, (NORMAL,))
-@register_text(['Surroundyss'],seqs.YSS, (NORMAL,))
+@register_text(['SurroundAddLine','Surroundyss'],seqs.YSS, (NORMAL,))
 class Surroundyss(Surroundys):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -101,7 +101,7 @@ class Surroundyss(Surroundys):
 
 
 @register(seqs.SEQ['⇧s'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
-@register_text(['SurroundS'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
+@register_text(['SurroundAdd','SurroundS'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
 class SurroundS(Surroundys):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -110,7 +110,7 @@ class SurroundS(Surroundys):
 
 
 @register(seqs.SEQ['ds'], (NORMAL, OPERATOR_PENDING))
-@register_text(['Surroundds'], (NORMAL, OPERATOR_PENDING))
+@register_text(['SurroundDel','Surroundds'], (NORMAL, OPERATOR_PENDING))
 class Surroundds(ViOperatorDef):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -140,7 +140,7 @@ class Surroundds(ViOperatorDef):
 
 
 @register(seqs.SEQ['cs'], (NORMAL, OPERATOR_PENDING))
-@register_text(['Surroundcs'], (NORMAL, OPERATOR_PENDING))
+@register_text(['SurroundRepl','Surroundcs'], (NORMAL, OPERATOR_PENDING))
 class Surroundcs(ViOperatorDef):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

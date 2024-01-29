@@ -152,13 +152,13 @@ import NeoVintageous.dep.kdl as kdl
 import NeoVintageous.nv.cfg_parse
 def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
     # nnoremap FileType go gd :LspSymbolDefinition<CR>
-    _log.map(" @mappings_add mode=%s lhs=%s rhs=%s"
-        ,                      mode,    lhs,   rhs)
     modes = [mode] if isinstance(mode, str) else mode
     modes_enum = M(0)
     for m in modes:
         modes_enum |= mode_names_rev[m]
     key = _normalise_lhs(lhs)
+    _log.map(" @map+ %s lhs¦key=%s ¦ %s rhs=%s"
+        ,    modes_enum,lhs,key,        rhs)
     # tag = None
     if NeoVintageous.nv.cfg_parse._dump_to_kdl:
         props = dict()

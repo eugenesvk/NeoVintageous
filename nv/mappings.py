@@ -395,6 +395,7 @@ def mappings_resolve(view, sequence: str = None, mode: str = None, check_user_ma
         if     not command :
             if not sequence:
                 if _has_partial_matches(view, get_mode(view), seq):
+                    _log.debug("→IncompleteMapping no cmd/seq, but partial match ¦%s¦",_has_partial_matches(view,get_mode(view),seq))
                     return IncompleteMapping()
     if not command:
         command = _seq_to_command(view, to_bare_command_name(seq), mode or get_mode(view))
@@ -422,6 +423,7 @@ def mappings_resolve_text(view, text_command:str = None, mode: str = None, check
         if     not      command:
             if not text_command:
                 if _has_partial_matches_text(view, get_mode(view), text_cmd):
+                    _log.debug("→IncompleteMapping no cmd/text_cmd, but partial match ¦%s¦",_has_partial_matches_text(view,get_mode(view),text_cmd))
                     return IncompleteMapping()
     if not command:
         command = _text_to_command(view, text_cmd)

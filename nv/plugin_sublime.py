@@ -38,7 +38,14 @@ class StFocusSideBar(ViOperatorDef):
 @register(seqs.SEQ['⎈7'], ACTION_MODES, group=6)
 @register(seqs.SEQ['⎈8'], ACTION_MODES, group=7)
 @register(seqs.SEQ['⎈9'], ACTION_MODES, group=8)
-@register_text(['StFocusGroup'], ACTION_MODES, group=8)
+@register_text(['StFocusGroup0'], ACTION_MODES, group=0)
+@register_text(['StFocusGroup1'], ACTION_MODES, group=1)
+@register_text(['StFocusGroup2'], ACTION_MODES, group=2)
+@register_text(['StFocusGroup3'], ACTION_MODES, group=3)
+@register_text(['StFocusGroup4'], ACTION_MODES, group=4)
+@register_text(['StFocusGroup6'], ACTION_MODES, group=6)
+@register_text(['StFocusGroup7'], ACTION_MODES, group=7)
+@register_text(['StFocusGroup8'], ACTION_MODES, group=8)
 class StFocusGroup(ViOperatorDef):
     def __init__(self, *args, group=None, **kwargs):
         super().__init__(*args, **kwargs)

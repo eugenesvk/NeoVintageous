@@ -37,7 +37,7 @@ from NeoVintageous.nv.vi.cmd_base import ViOperatorDef
 from NeoVintageous.nv.vi.cmd_defs import ViToggleMacroRecorder
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.modes import Mode as M, mode_names, mode_names_rev, text_to_modes, text_to_mode_alone
-from NeoVintageous.nv.vim import CFG as VCFG, CFGM as VCFGM # config values, defaults + user
+from NeoVintageous.nv     import vim # for always fresh config values, defaults + user
 from NeoVintageous.nv.vim import clean_view
 from NeoVintageous.nv.vim import enter_insert_mode
 from NeoVintageous.nv.vim import enter_normal_mode
@@ -124,15 +124,15 @@ re_cmd_count   = re.compile(re_cmd_count_p, flags=re_flags)
 def update_status_line(view) -> None:
     mode_txt  = get_mode(view) # mode_insert
     mode_enum = mode_names_rev.get(mode_txt,None) # Mode.Insert
-    if mode_enum in VCFGM and VCFGM[mode_enum] is not None:
-        mode_name = VCFGM[mode_enum]
+    if mode_enum in vim.CFGM and vim.CFGM[mode_enum] is not None:
+        mode_name = vim.CFGM[mode_enum]
     else:
         mode_name = mode_to_name(mode_txt)
     if mode_name:
-        view.set_status(VCFG['idmode'], f"{VCFG['prefix']}{mode_name}{VCFG['suffix']}")
+        view.set_status(vim.CFG['idmode'], f"{vim.CFG['prefix']}{mode_name}{vim.CFG['suffix']}")
 
     seq_txt = get_sequence(view)
-    view.set_status(VCFG['idseq'], seq_txt)
+    view.set_status(vim.CFG['idseq'], seq_txt)
 
     if CFG['enable'] and (match := re_cmd_count.findall(seq_txt)): # show popup
         count_s = ''.join(match)

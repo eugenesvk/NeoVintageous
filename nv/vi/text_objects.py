@@ -1,105 +1,99 @@
 import re
+import logging
+import time
+from datetime import datetime
 
-from sublime import CLASS_EMPTY_LINE
-from sublime import CLASS_LINE_END
-from sublime import CLASS_LINE_START
-from sublime import CLASS_PUNCTUATION_END
-from sublime import CLASS_PUNCTUATION_START
-from sublime import CLASS_WORD_END
-from sublime import CLASS_WORD_START
-from sublime import IGNORECASE
+from sublime import CLASS_EMPTY_LINE, CLASS_LINE_END, CLASS_LINE_START, CLASS_PUNCTUATION_END, CLASS_PUNCTUATION_START, CLASS_WORD_END, CLASS_WORD_START, IGNORECASE
 from sublime import Region
 
-from NeoVintageous.nv.polyfill import re_escape
-from NeoVintageous.nv.polyfill import view_find
-from NeoVintageous.nv.polyfill import view_find_in_range
-from NeoVintageous.nv.polyfill import view_indentation_level
-from NeoVintageous.nv.polyfill import view_indented_region
-from NeoVintageous.nv.polyfill import view_rfind_all
-from NeoVintageous.nv.settings import get_setting
-from NeoVintageous.nv.utils import get_insertion_point_at_b
-from NeoVintageous.nv.utils import next_non_blank
-from NeoVintageous.nv.utils import next_non_ws
-from NeoVintageous.nv.utils import prev_non_blank
-from NeoVintageous.nv.utils import prev_non_ws
-from NeoVintageous.nv.vi.search import find_in_range
-from NeoVintageous.nv.vi.search import reverse_search_by_pt
-from NeoVintageous.nv.vi.units import word_starts
+from NeoVintageous.nv.log       import DEFAULT_LOG_LEVEL
+from NeoVintageous.nv.polyfill  import re_escape, view_find, view_find_in_range, view_indentation_level, view_indented_region, view_rfind_all
+from NeoVintageous.nv.settings  import get_setting
+from NeoVintageous.nv.utils     import get_insertion_point_at_b, next_non_blank, next_non_ws, prev_non_blank, prev_non_ws
+from NeoVintageous.nv.vi.search import find_in_range, reverse_search_by_pt
+from NeoVintageous.nv.vi.units  import word_starts
+
+_log = logging.getLogger(__name__)
+_log.setLevel(DEFAULT_LOG_LEVEL)
+if _log.hasHandlers(): # clear existing handlers, including sublime's
+    logging.getLogger(__name__).handlers.clear()
+    # _log.addHandler(stream_handler)
+_L = True if _log.isEnabledFor(logging.KEY) else False
+
+TFMT = '{t.minute:2}:{t.second:2}.{t.microsecond}'
 
 
-RX_ANY_TAG = r'</?([0-9A-Za-z-]+).*?>'
-RX_ANY_TAG_NAMED_TPL = r'</?({0}) *?.*?>'
-RXC_ANY_TAG = re.compile(r'</?([0-9A-Za-z]+).*?>')
-# According to the HTML 5 editor's draft, only 0-9A-Za-z characters can be
-# used in tag names. TODO: This won't be enough in Dart Polymer projects,
-# for example.
-RX_ANY_START_TAG = r'<([0-9A-Za-z]+)(.*?)>'
-RX_ANY_END_TAG = r'</([0-9A-Za-z-]+).*?>'
+RX_ANY_TAG          	= r'</?([0-9A-Za-z-]+).*?>'
+RX_ANY_TAG_NAMED_TPL	= r'</?({0}) *?.*?>'
+RXC_ANY_TAG         	= re.compile(r'</?([0-9A-Za-z]+).*?>')
+RX_ANY_START_TAG    	= r'<([0-9A-Za-z]+)(.*?)>' # According to the HTML 5 editor's draft, only 0-9A-Za-z characters can be used in tag names. TODO: This won't be enough in Dart Polymer projects, for example.
+RX_ANY_END_TAG      	= r'</([0-9A-Za-z-]+).*?>'
 
 
-ANCHOR_NEXT_WORD_BOUNDARY = CLASS_WORD_START | CLASS_PUNCTUATION_START | CLASS_LINE_END
-ANCHOR_PREVIOUS_WORD_BOUNDARY = CLASS_WORD_END | CLASS_PUNCTUATION_END | CLASS_LINE_START
+ANCHOR_NEXT_WORD_BOUNDARY    	= CLASS_WORD_START | CLASS_PUNCTUATION_START | CLASS_LINE_END
+ANCHOR_PREVIOUS_WORD_BOUNDARY	= CLASS_WORD_END   | CLASS_PUNCTUATION_END   | CLASS_LINE_START
+WORD_REVERSE_STOPS           	= CLASS_WORD_START | CLASS_EMPTY_LINE        | CLASS_PUNCTUATION_START
+WORD_END_REVERSE_STOPS       	= CLASS_WORD_END   | CLASS_EMPTY_LINE        | CLASS_PUNCTUATION_END
 
-WORD_REVERSE_STOPS = CLASS_WORD_START | CLASS_EMPTY_LINE | CLASS_PUNCTUATION_START
-WORD_END_REVERSE_STOPS = CLASS_WORD_END | CLASS_EMPTY_LINE | CLASS_PUNCTUATION_END
-
-
-BRACKET = 1
-QUOTE = 2
-SENTENCE = 3
-TAG = 4
-WORD = 5
-BIG_WORD = 6
-PARAGRAPH = 7
-INDENT = 8
-BIG_INDENT = 9
-LINE = 10
+from enum import auto, Flag, IntFlag
+class TxtObj(Flag):
+  #↓ unique modes             ↓ abbreviations
+    Bracket   	= auto(); B 	= Bracket
+    Quote     	= auto(); Q 	= Quote
+    Sentence  	= auto(); S 	= Sentence
+    Tag       	= auto(); T 	= Tag
+    Word      	= auto(); W 	= Word
+    Big_Word  	= auto(); BW	= Big_Word
+    Paragraph 	= auto(); P 	= Paragraph
+    Indent    	= auto(); I 	= Indent
+    Big_Indent	= auto(); BI	= Big_Indent
+    Line      	= auto(); L 	= Line
+TO = TxtObj
 
 
 PAIRS = {
-    '"': (('"', '"'), QUOTE),
-    "'": (("'", "'"), QUOTE),
-    '`': (('`', '`'), QUOTE),
-    '#': (('#', '#'), QUOTE),  # {plugin https://github.com/wellle/targets.vim}
-    '$': (('$', '$'), QUOTE),  # {plugin https://github.com/wellle/targets.vim}
-    '&': (('&', '&'), QUOTE),  # {plugin https://github.com/wellle/targets.vim}
-    '*': (('*', '*'), QUOTE),  # {plugin https://github.com/wellle/targets.vim}
-    '+': (('+', '+'), QUOTE),  # {plugin https://github.com/wellle/targets.vim}
-    ',': ((',', ','), QUOTE),  # {plugin https://github.com/wellle/targets.vim}
-    '-': (('-', '-'), QUOTE),  # {plugin https://github.com/wellle/targets.vim}
-    '.': (('.', '.'), QUOTE),  # {plugin https://github.com/wellle/targets.vim}
-    '/': (('/', '/'), QUOTE),  # {plugin https://github.com/wellle/targets.vim}
-    ':': ((':', ':'), QUOTE),  # {plugin https://github.com/wellle/targets.vim}
-    ';': ((';', ';'), QUOTE),  # {plugin https://github.com/wellle/targets.vim}
-    '=': (('=', '='), QUOTE),  # {plugin https://github.com/wellle/targets.vim}
-    '_': (('_', '_'), QUOTE),  # {plugin https://github.com/wellle/targets.vim}
-    '|': (('|', '|'), QUOTE),  # {plugin https://github.com/wellle/targets.vim}
-    '~': (('~', '~'), QUOTE),  # {plugin https://github.com/wellle/targets.vim}
-    '\\': (('\\', '\\'), QUOTE),  # {plugin https://github.com/wellle/targets.vim}
-    '(': (('\\(', '\\)'), BRACKET),
-    ')': (('\\(', '\\)'), BRACKET),
-    '[': (('\\[', '\\]'), BRACKET),
-    ']': (('\\[', '\\]'), BRACKET),
-    '{': (('\\{', '\\}'), BRACKET),
-    '}': (('\\{', '\\}'), BRACKET),
-    '<': (('<', '>'), BRACKET),
-    '>': (('<', '>'), BRACKET),
-    'b': (('\\(', '\\)'), BRACKET),
-    'B': (('\\{', '\\}'), BRACKET),
-    'p': (None, PARAGRAPH),
-    's': (None, SENTENCE),
-    't': (None, TAG),
-    'W': (None, BIG_WORD),
-    'w': (None, WORD),
-    'I': (None, BIG_INDENT),  # {not in Vim}
-    'i': (None, INDENT),  # {not in Vim}
-    'l': (None, LINE),
+    '"' 	: ((  '"',   '"')	, TO.Quote     ),
+    "'" 	: ((  "'",   "'")	, TO.Quote     ),
+    '`' 	: ((  '`',   '`')	, TO.Quote     ),
+    '#' 	: ((  '#',   '#')	, TO.Quote     ), # {plugin https://github.com/wellle/targets.vim}
+    '$' 	: ((  '$',   '$')	, TO.Quote     ), # {plugin https://github.com/wellle/targets.vim}
+    '&' 	: ((  '&',   '&')	, TO.Quote     ), # {plugin https://github.com/wellle/targets.vim}
+    '*' 	: ((  '*',   '*')	, TO.Quote     ), # {plugin https://github.com/wellle/targets.vim}
+    '+' 	: ((  '+',   '+')	, TO.Quote     ), # {plugin https://github.com/wellle/targets.vim}
+    ',' 	: ((  ',',   ',')	, TO.Quote     ), # {plugin https://github.com/wellle/targets.vim}
+    '-' 	: ((  '-',   '-')	, TO.Quote     ), # {plugin https://github.com/wellle/targets.vim}
+    '.' 	: ((  '.',   '.')	, TO.Quote     ), # {plugin https://github.com/wellle/targets.vim}
+    '/' 	: ((  '/',   '/')	, TO.Quote     ), # {plugin https://github.com/wellle/targets.vim}
+    ':' 	: ((  ':',   ':')	, TO.Quote     ), # {plugin https://github.com/wellle/targets.vim}
+    ';' 	: ((  ';',   ';')	, TO.Quote     ), # {plugin https://github.com/wellle/targets.vim}
+    '=' 	: ((  '=',   '=')	, TO.Quote     ), # {plugin https://github.com/wellle/targets.vim}
+    '_' 	: ((  '_',   '_')	, TO.Quote     ), # {plugin https://github.com/wellle/targets.vim}
+    '|' 	: ((  '|',   '|')	, TO.Quote     ), # {plugin https://github.com/wellle/targets.vim}
+    '~' 	: ((  '~',   '~')	, TO.Quote     ), # {plugin https://github.com/wellle/targets.vim}
+    '\\'	: (( '\\',  '\\')	, TO.Quote     ), # {plugin https://github.com/wellle/targets.vim}
+    '(' 	: (('\\(', '\\)')	, TO.Bracket   ),
+    ')' 	: (('\\(', '\\)')	, TO.Bracket   ),
+    '[' 	: (('\\[', '\\]')	, TO.Bracket   ),
+    ']' 	: (('\\[', '\\]')	, TO.Bracket   ),
+    '{' 	: (('\\{', '\\}')	, TO.Bracket   ),
+    '}' 	: (('\\{', '\\}')	, TO.Bracket   ),
+    '<' 	: ((  '<',   '>')	, TO.Bracket   ),
+    '>' 	: ((  '<',   '>')	, TO.Bracket   ),
+    'b' 	: (('\\(', '\\)')	, TO.Bracket   ),
+    'B' 	: (('\\{', '\\}')	, TO.Bracket   ),
+    'p' 	: (None          	, TO.Paragraph ),
+    's' 	: (None          	, TO.Sentence  ),
+    't' 	: (None          	, TO.Tag       ),
+    'W' 	: (None          	, TO.Big_Word  ),
+    'w' 	: (None          	, TO.Word      ),
+    'I' 	: (None          	, TO.Big_Indent), # {not in Vim}
+    'i' 	: (None          	, TO.Indent    ), # {not in Vim}
+    'l' 	: (None          	, TO.Line      ),
 }  # type: dict
 
 
 def is_at_punctuation(view, pt: int) -> bool:
-    char = view.substr(pt)
-    # FIXME Wrong if pt is at '\t'
+    char = view.substr(pt) # FIXME Wrong if pt is at '\t'
     return (not (is_at_word(view, pt) or char.isspace() or char == '\n') and char.isprintable())
 
 
@@ -409,27 +403,25 @@ def get_text_object_region(view, s: Region, text_object: str, inclusive: bool = 
     except KeyError:
         return s
 
-    if type_ == TAG:
-        return _get_text_object_tag(view, s, inclusive, count)
-    elif type_ == PARAGRAPH:
+    if   type_ == TO.Tag:
+        return _get_text_object_tag      (view, s, inclusive, count)
+    elif type_ == TO.Paragraph:
         return _get_text_object_paragraph(view, s, inclusive, count)
-    elif type_ == BRACKET:
-        return _get_text_object_bracket(view, s, inclusive, count, delims, seek_forward)
-    elif type_ == QUOTE:
-        return _get_text_object_quote(view, s, inclusive, count, delims)
-    elif type_ == WORD:
-        return _get_text_object_word(view, s, inclusive, count)
-    elif type_ == BIG_WORD:
-        return _get_text_object_big_word(view, s, inclusive, count)
-    elif type_ == SENTENCE:
-        return _get_text_object_sentence(view, s, inclusive, count)
-    elif type_ == LINE:
-        return _get_text_object_line(view, s, inclusive, count)
-    elif type_ in (INDENT, BIG_INDENT):
-        # A port of https://github.com/michaeljsmith/vim-indent-object. {not in Vim}
-        # Only inclusive indent-objects are countable, e.g., vai, vaI
+    elif type_ == TO.Bracket:
+        return _get_text_object_bracket  (view, s, inclusive, count, delims, seek_forward)
+    elif type_ == TO.Quote:
+        return _get_text_object_quote    (view, s, inclusive, count, delims)
+    elif type_ == TO.Word:
+        return _get_text_object_word     (view, s, inclusive, count)
+    elif type_ == TO.Big_Word:
+        return _get_text_object_big_word (view, s, inclusive, count)
+    elif type_ == TO.Sentence:
+        return _get_text_object_sentence (view, s, inclusive, count)
+    elif type_ == TO.Line:
+        return _get_text_object_line     (view, s, inclusive, count)
+    elif type_ in (TO.Indent, TO.Big_Indent): # A port of https://github.com/michaeljsmith/vim-indent-object. {not in Vim} Only inclusive indent-objects are countable, e.g., vai, vaI
         for _ in range(count if inclusive else 1):
-            resolve_indent_text_object(view, s, inclusive, big=(type_ == BIG_INDENT))
+            resolve_indent_text_object(view, s, inclusive, big=(type_ == TO.Big_Indent))
 
     return s
 

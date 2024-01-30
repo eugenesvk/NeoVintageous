@@ -354,28 +354,22 @@ def _text_to_command(view, text: str):
 
 
 def _seq_to_command(view, seq: str, mode: str):
-    # Return the command definition mapped for seq and mode.
-    #
-    # Args:
-    #   view (View):
-    #   seq (str): The command sequence.
-    #   mode (str): Forces the use of this mode instead of the global state's.
-    #
-    # Returns:
-    #   ViCommandDefBase
-    #   CommandNotFound
+    """Return the command definition mapped for seq and mode
+    view  View:
+    seq   str : Command sequence
+    mode  str : Forces the use of this mode instead of the global state's.
+    → ViCommandDefBase | CommandNotFound
+    """
     if mode in plugin.mappings:
-        plugin_command = plugin.mappings[mode].get(seq)
-        if plugin_command:
+        if (plugin_command := plugin.mappings[mode].get(seq)):
             if is_plugin_enabled(view, plugin_command):
+                _log.map("  ‘%s’cmd_plug ←‘%s’seq",command,seq)
                 return plugin_command
-
     if mode in keys.mappings:
         command = keys.mappings[mode].get(seq)
-        _log.map(" keys_cmd=%s from seq=%s",command,seq)
         if command:
+            _log.map("  ‘%s’cmd_keys ←‘%s’seq",command,seq)
             return command
-
     return CommandNotFound()
 
 

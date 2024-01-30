@@ -176,7 +176,7 @@ class FeedKeyHandler():
         if not can_resolve_txt and not can_resolve_seq:
             if self._handle_count():
                 if _L:
-                    self._dbg_txt += f" ↩ _hCount"; _log.key(self._dbg_txt); _log.key(self._dbg_seq)
+                    self._dbg_txt += f" ↩ _hCount"
                 return
 
         _part_txt = get_partial_text    (self.view)
@@ -184,21 +184,23 @@ class FeedKeyHandler():
         set_partial_text                (self.view, _part_txt + self.key)
         set_partial_sequence            (self.view, _part_seq + self.key)
 
-        command_txt = mappings_resolve_text(self.view, check_user_mappings=self.check_user_mappings)
-        command_seq = mappings_resolve     (self.view, check_user_mappings=self.check_user_mappings)
+        cmdT = mappings_resolve_text(self.view, check_user_mappings=self.check_user_mappings)
+        cmdS = mappings_resolve     (self.view, check_user_mappings=self.check_user_mappings)
         if _L:
-            self._dbg_seq += f" part¦{_part_seq}¦"
-            self._dbg_txt += f" part¦{_part_txt}¦"
-        self.command_seq = command_seq
-        self.command_txt = command_txt
+            self._dbg_txt += f" ¦{_part_txt}¦partT"
+            self._dbg_seq += f" ¦{_part_seq}¦partS"
+        self.cmdT = cmdT
+        self.cmdS = cmdS
         #m# cmd_seq¦<ViSetMark>¦  cmd_txt¦<NeoVintageous.nv.mappings.Mapping object at 0x10a2468b0>¦
 
 
-        self.command = command_txt
+        self.cmd = cmdT
         if (isTextHandled := self._handle_text()):
+            _log.key('%s\n%s',self._dbg_txt,self._dbg_seq)
             return
         else:
             self._handle_seq()
+            _log.key('%s\n%s',self._dbg_txt,self._dbg_seq)
 
     def _handle_seq(self) -> None:
         cmdS = self.cmdS

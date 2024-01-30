@@ -287,7 +287,7 @@ class FeedKeyHandler():
             self._dbg_txt += f", (disabled)TXT _handle_command" # ToDo
         # self._handle_command(cmd, self.do_eval) # todo handle text command
         if _L:
-            self._dbg_txt += f" ↩− ¦{cmdT}¦cmdT=Neither"
+            self._dbg_txt += f" ↩− ¦{cmd}¦cmd=Neither"
         return False # pass to handle sequence
 
     def _handle_mapping(self, mapping: Mapping) -> None:

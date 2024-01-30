@@ -409,27 +409,15 @@ class nv_feed_key(WindowCommand):
     # TODO Deprecate and remove {key} argument
     def run(self, key=None, repeat_count=None, do_eval=True, check_user_mappings=True, character=None):
         start_time = time.time()
-
-        # Support for "<character>" key binding which allows receiving input
-        # from Sublime for all characters. This is a temporary backwards
-        # compatibility bridge towards removing the {key} argument.
-        if character is not None:
+        if character is not None: # "<character>" in sublime-keymap receives ST input for all chars (temp backwards compatibility bridge towards removing the {key} argument)
             key = character
-
         try:
-            FeedKeyHandler(
-                self.window.active_view(),
-                key,
-                repeat_count,
-                do_eval,
-                check_user_mappings).handle()
+            FeedKeyHandler(self.window.active_view(),key,repeat_count,do_eval,check_user_mappings).handle()
         except Exception as e:
             print('NeoVintageous: An error occurred:')
             _log.exception(e)
             clean_views()
-
-        _log.info('key evt finished in %s ms', '{:.2f}'
-                  .format((time.time() - start_time) * 1000))
+        _log.info('key evt finished in %s ms','{:.2f}'.format((time.time() - start_time)*1000))
 
 
 class nv_process_notation(WindowCommand):

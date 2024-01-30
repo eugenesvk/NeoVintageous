@@ -427,6 +427,7 @@ class nv_process_notation(WindowCommand):
 
     # TODO refactor: rename repeat_count -> count
     def run(self, keys, repeat_count=None, check_user_mappings=True, cont=False):
+        _log.key('@cmd nv_process_notation ⌨️‘%s’ #%s usrMap=%s', keys, repeat_count, check_user_mappings)
         ProcessNotationHandler(
             self.window.active_view(),
             keys,

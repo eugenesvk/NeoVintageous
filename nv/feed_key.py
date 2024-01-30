@@ -262,33 +262,34 @@ class FeedKeyHandler():
         self._handle_command(command, self.do_eval)
 
     def _handle_text(self) -> bool:
-        cmdT    = self.command_txt
-        cmd = cmdT
+        cmdS = self.cmdS
+        cmdT = self.cmdT
+        cmd  = cmdT
         if isinstance(cmd, IncompleteMapping):
             if _L:
-                self._dbg_txt += f" ↩+ ¦{cmdT}¦cmdT=IncompleteMapping"
+                self._dbg_txt += f" ↩+ ¦{cmd}¦cmd=IncompleteMapping"
             return True
         if isinstance(cmd, ViOpenNameSpace  ): # ToDo
             if _L:
-                self._dbg_txt += f" ↩+ ¦{cmdT}¦cmdT=OpenNameSpace"
+                self._dbg_txt += f" ↩+ ¦{cmd}¦cmd=OpenNameSpace"
             return True
         if isinstance(cmd, ViOpenRegister   ): # ToDo
             if _L:
-                self._dbg_txt += f" ↩+ ¦{cmdT}¦cmdT=OpenRegister→set"
+                self._dbg_txt += f" ↩+ ¦{cmd}¦cmd=OpenRegister→set"
             set_capture_register(self.view, True)
             return True
         if isinstance(cmd, Mapping):
             if _L:
-                self._dbg_txt += f" ↩+ ¦{cmdT}¦cmdT=Map→_h ‹‘{cmd.lhs}’ ‘{cmd.rhs}’›"
+                self._dbg_txt += f" ↩+ ¦{cmd}¦cmd=Map→_h ‹‘{cmd.lhs}’ ‘{cmd.rhs}’›"
             self._handle_mapping_text(cmd)
             return True
         if isinstance(cmd, CommandNotFound): # ToDo
             if _L:
-                self._dbg_txt += f" ↩− ¦{cmdT}¦cmdT=NotFound"
+                self._dbg_txt += f" ↩− ¦{cmd}¦cmd=NotFound"
             return False # pass to handle sequence
         if (isinstance(cmd, ViOperatorDef) and get_mode(self.view) == OPERATOR_PENDING):
             if _L:
-                self._dbg_txt += f" ↩− ¦{cmdT}¦cmdT=ⓄOperatorDef"
+                self._dbg_txt += f" ↩− ¦{cmd}¦cmd=ⓄOperatorDef"
             return False # pass to handle sequence
         if _L:
             self._dbg_txt += f", (disabled)TXT _handle_command" # ToDo

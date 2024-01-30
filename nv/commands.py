@@ -426,12 +426,13 @@ class nv_feed_key(WindowCommand):
 class nv_process_notation(WindowCommand):
 
     # TODO refactor: rename repeat_count -> count
-    def run(self, keys, repeat_count=None, check_user_mappings=True):
+    def run(self, keys, repeat_count=None, check_user_mappings=True, cont=False):
         ProcessNotationHandler(
             self.window.active_view(),
             keys,
             repeat_count,
-            check_user_mappings).handle()
+            check_user_mappings,
+            cont).handle()
 
 
 class nv_ex_cmd_edit_wrap(TextCommand):

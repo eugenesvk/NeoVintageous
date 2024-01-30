@@ -201,65 +201,57 @@ class FeedKeyHandler():
             self._handle_seq()
 
     def _handle_seq(self) -> None:
-        command_seq = self.command_seq
-        command_txt = self.command_txt
-        command     = command_seq
-        if isinstance(command, IncompleteMapping):
-            self._dbg_seq += f", ↩ IncompleteMapping"; _log.key(self._dbg_seq)
+        cmdS = self.cmdS
+        cmdT = self.cmdT
+        cmd  = cmdS
+        if isinstance(cmd, IncompleteMapping):
+            if _L:
+                self._dbg_seq += f" ↩ ¦{cmd}¦cmd=IncompleteMapping"
             return
-
-        if isinstance(command, ViOpenNameSpace):
-            self._dbg_seq += f", ↩ ViOpenNameSpace"; _log.key(self._dbg_seq)
+        if isinstance(cmd, ViOpenNameSpace):
+            if _L:
+                self._dbg_seq += f" ↩ ¦{cmd}¦cmd=OpenNameSpace"
             return
-
-        if isinstance(command, ViOpenRegister):
-            self._dbg_seq += f", ViOpenRegister"; _log.key(self._dbg_seq)
+        if isinstance(cmd, ViOpenRegister):
+            if _L:
+                self._dbg_seq += f" ↩ ¦{cmd}¦cmd=OpenRegister→set"
             set_capture_register(self.view, True)
             return
-
-        if isinstance(command, Mapping):
-            self._dbg_seq += f"↩map lhs¦{command.lhs}¦ rhs¦{command.rhs}¦"; _log.key(self._dbg_seq)
-            self._handle_mapping     (command)
+        if isinstance(cmd, Mapping):
+            if _L:
+                self._dbg_seq += f" ↩ ¦{cmd}¦cmd=Map→_h ‹‘{cmd.lhs}’ ‘{cmd.rhs}’›"
+            self._handle_mapping     (cmd)
             return
-
-        if isinstance(command, CommandNotFound):
-
-            # TODO We shouldn't need to try resolve the command again. The
-            # resolver should handle commands correctly the first time. The
-            # reason this logic is still needed is because we might be looking
-            # at a command like 'dd', which currently doesn't resolve properly.
-            # The first 'd' is mapped for NORMAL mode, but 'dd' is not mapped in
-            # OPERATOR PENDING mode, so we get a missing command, and here we
-            # try to fix that (user mappings are excluded, since they've already
-            # been given a chance to evaluate).
-
+        if isinstance(cmd, CommandNotFound): # TODO We shouldn't need to try resolve the command again. The resolver should handle commands correctly the first time. The reason this logic is still needed is because we might be looking at a command like 'dd', which currently doesn't resolve properly. The first 'd' is mapped for NORMAL mode, but 'dd' is not mapped in OPERATOR PENDING mode, so we get a missing command, and here we try to fix that (user mappings are excluded, since they've already been given a chance to evaluate).
+            if _L:
+                self._dbg_seq += f" ↩ ¦{cmd}¦cmd=NotFound"
             if get_mode(self.view) == OPERATOR_PENDING:
-                command = mappings_resolve(self.view, sequence=to_bare_command_name(get_sequence(self.view)),
-                                           mode=NORMAL, check_user_mappings=False)
+                cmd = mappings_resolve(self.view, sequence=to_bare_command_name(get_sequence(self.view)),mode=NORMAL, check_user_mappings=False)
             else:
-                command = mappings_resolve(self.view, sequence=to_bare_command_name(get_sequence(self.view)))
-
-            if self._handle_command_not_found(command):
+                cmd = mappings_resolve(self.view, sequence=to_bare_command_name(get_sequence(self.view)))
+            if self._handle_command_not_found(cmd):
+                if _L:
+                    self._dbg_seq += f" ↩ cmd=NotFound"
                 return
-
-        if (isinstance(command, ViOperatorDef) and get_mode(self.view) == OPERATOR_PENDING):
-
-            # TODO This should be unreachable code. The mapping resolver should
-            # handle anything that can still reach this point (the first time).
-            # We're expecting a motion, but we could still get an action. For
-            # example, dd, g~g~ or g~~ remove counts. It looks like it might
-            # only be the '>>' command that needs this code.
-
-            command = mappings_resolve(self.view, sequence=to_bare_command_name(get_sequence(self.view)), mode=NORMAL)
-            if self._handle_command_not_found(command):
+            else:
+                if _L:
+                    self._dbg_seq += f" ¦{cmd}¦cmd=wasNotFound"
+        if (isinstance(cmd, ViOperatorDef) and get_mode(self.view) == OPERATOR_PENDING): # TODO This should be unreachable code. The mapping resolver should handle anything that can still reach this point (the first time). We're expecting a motion, but we could still get an action. For example, dd, g~g~ or g~~ remove counts. It looks like it might only be the '>>' command that needs this code.
+            if _L:
+                self._dbg_seq += f" ¦{cmd}¦cmd=ⓄOperatorDef"
+            cmd = mappings_resolve(self.view, sequence=to_bare_command_name(get_sequence(self.view)), mode=NORMAL)
+            if self._handle_command_not_found(cmd):
+                if _L:
+                    self._dbg_seq += f" ↩ cmd=NotFound"
                 return
-
-            if not command.motion_required:
+            else:
+                if _L:
+                    self._dbg_seq += f" ↩ ¦{cmd}¦=resolved"
+            if not cmd.motion_required:
                 set_mode(self.view, NORMAL)
-
-        self._dbg_seq += f" _handle cmd¦{command_seq}¦" # ToDo
+        self._dbg_seq += f" ¦{cmd}¦cmd→_h" # ToDo
         _log.key(self._dbg_seq)
-        self._handle_command(command, self.do_eval)
+        self._handle_command(cmd, self.do_eval)
 
     def _handle_text(self) -> bool:
         cmdS = self.cmdS

@@ -386,29 +386,25 @@ def mappings_resolve(view, sequence: str = None, mode: str = None, check_user_ma
     check_user_mappings	bool	.
     → Mapping | IncompleteMapping | CommandNotFound
     """
-    seq_part = get_partial_sequence(view) # We usually need to look at the partial sequence, but some commands do weird things, like ys, which isn't a namespace but behaves as such.
-    seq = sequence or seq_part
-    _log.map("  inSEQ¦%s¦ part_seq¦%s¦",sequence,seq_part)
-    command = None
+    cmd,cmdU,cmdS = '','',''
+    seqIn = sequence if sequence else ''
+    cmdSpart = get_partial_sequence(view) # We usually need to look at the partial sequence, but some commands do weird things, like ys, which isn't a namespace but behaves as such.
+    seq = seqIn or cmdSpart
     if check_user_mappings: # Resolve the full sequence rather than the "bare" sequence, because the user may have defined some mappings that start with numbers (counts), or " (register character), which are stripped from the bare sequences. See https://github.com/NeoVintageous/NeoVintageous/issues/434.
         # XXX The reason these does not pass the mode, and instead uses the get_mode(), is because implementation of commands like dd are a bit hacky. For example, the dd definition does is not assigned to operator pending mode, the second d is instead caught by the feed key command and resolved by specifying NORMAL mode explicitly, which resolves the delete line command definition. Commands like this can probably be fixed by allowing the definitions to handle the OPERATOR PENDING and let the definition handle any special-cases itself instead of passing off the responsibility to the feed key command.
-        command = _seq_to_mapping(view, seq)
-        _log.map("  inSEQ user_map _seq2mapcmd¦‘%s’¦",command)
-        if     not command :
-            if not sequence:
+        cmdU = _seq_to_mapping(view, seq)
+        if     not cmdU :
+            if not seqIn:
                 if _has_partial_matches(view, get_mode(view), seq):
-                    _log.debug("→IncompleteMapping no cmd/seq, but partial match")
+                    _log.debug("→IncompleteMapping no cmdU/seqIn, but partial match")
                     return IncompleteMapping()
-    if not command:
-        command = _seq_to_command(view, to_bare_command_name(seq), mode or get_mode(view))
-        _log.map(" inSEQ _seq_to_command¦%s¦",command)
-    _log.map(' @mapRes cmd‘%s’ (usr‘%s’ → lhs‘%s’ rhs‘%s’ m‘%s’ seq=‘%s’ cmd_cls‘%s’)'
-        ,command
-        ,check_user_mappings
-        ,command.lhs if hasattr(command, 'lhs') else ''
-        ,command.rhs if hasattr(command, 'rhs') else ''
-        ,                                mode, sequence, command.__class__.__mro__)
-    return command
+    cmd = cmdU if cmdU else (cmdS:=_seq_to_command(view, to_bare_command_name(seq), mode or get_mode(view)))
+    _log.map(' @mapResS ‹‘%s’=‘%s’› (%s usr%s cmd: ‘%s’in ‘%s’usr ‘%s’S¦‘%s’Spart ‘%s’cmd ‘%s’cmd_cls)'
+        ,cmd.lhs if hasattr(cmd,'lhs') else ''
+        ,cmd.rhs if hasattr(cmd,'rhs') else ''
+        ,mode if mode else 'm0','1' if check_user_mappings else '0'
+        ,seqIn,'✓map' if cmdU else '✗map',cmdS,cmdSpart, cmd, cmd.__class__.__mro__)
+    return cmd
 
 def mappings_resolve_text(view, text_command:str = None, mode: str = None, check_user_mappings: bool = True):
     """Check current global state and return the command mapped to the available text_command
@@ -417,25 +413,22 @@ def mappings_resolve_text(view, text_command:str = None, mode: str = None, check
     check_user_mappings	bool	.
     → Mapping |  CommandNotFound
     """
-    text_cmd_part = get_partial_text(view) # We usually need to look at the partial sequence, but some commands do weird things, like ys, which isn't a namespace but behaves as such
-    text_cmd = text_command or text_cmd_part
-    _log.map("  inTXT ¦%s¦full ¦%s¦part",text_command,text_cmd_part)
-    command = None
+    cmd,cmdU,cmdT = '','',''
+    cmdIn = text_command if text_command else ''
+    cmdTpart = get_partial_text(view) # We usually need to look at the partial sequence, but some commands do weird things, like ys, which isn't a namespace but behaves as such
+    cmdTxt = cmdIn or cmdTpart
+    _log.map("  TXT ¦%s¦in ¦%s¦part",cmdIn,cmdTpart)
     if check_user_mappings:
-        command = _text_cmd_to_mapping(view, text_cmd)
-        _log.map("  inTXT ¦%s¦cmd←usermap",command)
-        if     not      command:
-            if not text_command:
-                if _has_partial_matches_text(view, get_mode(view), text_cmd):
-                    _log.debug("→IncompleteMapping no cmd/text_cmd, but partial match")
+        cmdU = _text_cmd_to_mapping(view, cmdTxt)
+        if     not cmdU:
+            if not cmdIn:
+                if _has_partial_matches_text(view, get_mode(view), cmdTxt):
+                    _log.debug("→IncompleteMapping no cmdU/cmdTxt, but partial match for ‘%s’cmdin",cmdIn)
                     return IncompleteMapping()
-    if not command:
-        command = _text_to_command(view, text_cmd)
-        _log.map("  inTXT ¦%s¦cmd←txt",command)
-    _log.map(' @mapResT cmd‘%s’ (usr‘%s’ → lhs‘%s’ rhs‘%s’ m‘%s’ text_cmd‘%s’ cmd_cls‘%s’)'
-        ,command
-        ,check_user_mappings
-        ,command.lhs if hasattr(command,'lhs') else ''
-        ,command.rhs if hasattr(command,'rhs') else ''
-        ,                                mode, text_cmd, command.__class__.__mro__)
-    return command
+    cmd = cmdU if cmdU else (cmdT:=_text_to_command(view, cmdTxt))
+    _log.map(' @mapResT ‹‘%s’=‘%s’› (%s usr%s cmd: ‘%s’in ‘%s’usr ‘%s’T¦‘%s’Tpart ‘%s’cmd ‘%s’cmd_cls)'
+        ,cmd.lhs if hasattr(cmd,'lhs') else ''
+        ,cmd.rhs if hasattr(cmd,'rhs') else ''
+        ,mode if mode else 'm0','1' if check_user_mappings else '0'
+        ,cmdIn,'✓map' if cmdU else '✗map',cmdT,cmdTpart, cmd, cmd.__class__.__mro__)
+    return cmd

@@ -59,13 +59,13 @@ TFMT = '{t.minute:2}:{t.second:2}.{t.microsecond}'
 class FeedKeyHandler():
 
     def __init__(self, view, key: str, repeat_count: int, do_eval: bool, check_user_mappings: bool):
-        self.view = view
-        self.window = self.view.window()
-        self.key = key
-        self.repeat_count = repeat_count
-        self.do_eval = do_eval
+        self.view                = view
+        self.window              = self.view.window()
+        self.key                 = key
+        self.repeat_count        = repeat_count
+        self.do_eval             = do_eval
         self.check_user_mappings = check_user_mappings
-        self.mode = get_mode(self.view)
+        self.mode                = get_mode(self.view)
         if _L:
             _log.key('—————⌨️%s %s #%s doEval=%s checkUsrMap=%s ⏰%s'
             ,key,self.mode,repeat_count, do_eval,check_user_mappings,TFMT.format(t=datetime.now()))
@@ -262,40 +262,39 @@ class FeedKeyHandler():
         self._handle_command(command, self.do_eval)
 
     def _handle_text(self) -> bool:
-        command_seq = self.command_seq
-        command_txt = self.command_txt
-        command     = command_txt
-
-        if isinstance(command, IncompleteMapping):
+        cmdT    = self.command_txt
+        cmd = cmdT
+        if isinstance(cmd, IncompleteMapping):
             if _L:
-                self._dbg_txt += f" cmd¦{command_seq}¦ ↩ IncompleteMapping"; _log.key(self._dbg_txt);_log.key(self._dbg_seq);
+                self._dbg_txt += f" ↩+ ¦{cmdT}¦cmdT=IncompleteMapping"
             return True
-        if isinstance(command, ViOpenNameSpace): # ToDo
+        if isinstance(cmd, ViOpenNameSpace  ): # ToDo
             if _L:
-                self._dbg_txt += f" cmd¦{command_seq}¦ ↩ ViOpenNameSpace"; _log.key(self._dbg_txt);_log.key(self._dbg_seq);
+                self._dbg_txt += f" ↩+ ¦{cmdT}¦cmdT=OpenNameSpace"
             return True
-        if isinstance(command, ViOpenRegister): # ToDo
+        if isinstance(cmd, ViOpenRegister   ): # ToDo
             if _L:
-                self._dbg_txt += f" cmd¦{command_seq}¦ ↩set ViOpenRegister"; _log.key(self._dbg_txt);_log.key(self._dbg_seq);
+                self._dbg_txt += f" ↩+ ¦{cmdT}¦cmdT=OpenRegister→set"
             set_capture_register(self.view, True)
             return True
-        if isinstance(command, Mapping):
-            self._dbg_txt += f"↩map lhs¦{command.lhs}¦ rhs¦{command.rhs}¦"; _log.key(self._dbg_txt);_log.key(self._dbg_seq);
-            self._handle_mapping_text(command)
+        if isinstance(cmd, Mapping):
+            if _L:
+                self._dbg_txt += f" ↩+ ¦{cmdT}¦cmdT=Map→_h ‹‘{cmd.lhs}’ ‘{cmd.rhs}’›"
+            self._handle_mapping_text(cmd)
             return True
-        if isinstance(command, CommandNotFound): # ToDo
+        if isinstance(cmd, CommandNotFound): # ToDo
             if _L:
-                self._dbg_txt += f" cmd¦{command_seq}¦ skip"
+                self._dbg_txt += f" ↩− ¦{cmdT}¦cmdT=NotFound"
             return False # pass to handle sequence
-        if (isinstance(command, ViOperatorDef) and get_mode(self.view) == OPERATOR_PENDING):
+        if (isinstance(cmd, ViOperatorDef) and get_mode(self.view) == OPERATOR_PENDING):
             if _L:
-                self._dbg_txt += f" skip ViOperatorDef and OPERATOR_PENDING" # ToDo handle
+                self._dbg_txt += f" ↩− ¦{cmdT}¦cmdT=ⓄOperatorDef"
             return False # pass to handle sequence
         if _L:
             self._dbg_txt += f", (disabled)TXT _handle_command" # ToDo
-        # self._handle_command(command, self.do_eval) # todo handle text command
+        # self._handle_command(cmd, self.do_eval) # todo handle text command
         if _L:
-            _log.key(self._dbg_txt)
+            self._dbg_txt += f" ↩− ¦{cmdT}¦cmdT=Neither"
         return False # pass to handle sequence
 
     def _handle_mapping(self, mapping: Mapping) -> None:

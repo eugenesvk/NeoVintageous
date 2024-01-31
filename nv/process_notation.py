@@ -23,6 +23,10 @@ from NeoVintageous.nv.vim import run_motion
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
+if _log.hasHandlers(): # clear existing handlers, including sublime's
+    logging.getLogger(__name__).handlers.clear()
+    # _log.addHandler(stream_handler)
+_L = True if _log.isEnabledFor(logging.KEY) else False
 
 
 class ProcessNotationHandler():
@@ -48,32 +52,33 @@ class ProcessNotationHandler():
 
         # First, run any motions coming before the first action. We don't keep these in the undo stack, but they will still be repeated via '.'. This ensures that undoing will leave the caret where the  first editing action started. For example, 'lldl' would skip 'll' in the undo history, but store the full sequence for '.' to use.
         leading_motions = ''
-        for key in tokenize_keys(keys):
-            _log.key(f"nv_feed_key(FeedKeyHandler) with eval=False @ ProcessNotationHandler for {key}")
-            self.window.run_command('nv_feed_key', {
-                'key': key,
-                'do_eval': False,
-                'repeat_count': repeat_count,
-                'check_user_mappings': check_user_mappings
-            })
+        if _L: # preiterate to know the full count of keys for logging 1/5, 2/5, ...
+            keys_iter = []
+            for key in tokenize_keys(keys):
+                keys_iter.append(key)
+            key_count = len(keys_iter)
+        else: # or just use a generator when we don't care about logs
+            keys_iter = tokenize_keys(keys)
+            key_count = '_'
+        for i,key in enumerate(keys_iter):
+            _log.key("  —%s¦%s—‘%s’¦‘%s’ lead‘%s’ nv_feed_key(HFeedKey) doEval→False @ HProcessNotation",i+1,key_count,key,keys,leading_motions)
+            self.window.run_command('nv_feed_key',{'key':key,'do_eval':False,
+                'repeat_count':repeat_count,'check_user_mappings':check_user_mappings})
 
-            if get_action(self.view):
-                # The last key press has caused an action to be primed. That
-                # means there are no more leading motions. Break out of here.
+            if get_action(self.view): # The last key press has caused an action to be primed. That means there are no more leading motions. Break out of here
                 reset_command_data(self.view)
-                if get_mode(self.view) == OPERATOR_PENDING:
+                if  get_mode(self.view) == OPERATOR_PENDING:
                     set_mode(self.view, NORMAL)
-
+                _log.key("    break, get_action exists")
                 break
-
-            elif is_runnable(self.view):
-                # Run any primed motion.
+            elif is_runnable(self.view): # Run any primed motion
                 leading_motions += get_sequence(self.view)
-                evaluate_state(self.view)
+                _log.key("    running primed motion ‘%s’",leading_motions)
+                evaluate_state    (self.view)
                 reset_command_data(self.view)
-
             else:
-                evaluate_state(self.view)
+                _log.key("    evaluate_state")
+                evaluate_state    (self.view)
 
         if must_collect_input(self.view, get_motion(self.view), get_action(self.view)):
             # State is requesting more input, so this is the last command  in

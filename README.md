@@ -45,7 +45,7 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
     `nnoremap d b` why do you need to remember that `b` moves by words backwards if you never use it?
     `vnoremap d b "b=MoveByWordsBackward` oh, and you can't even add a comment on the same line to clarify it
     And the whole `noremap` doesn't need to be repeated on every single line
-    + command repeat count in keybinds: `(Ⓝ)d (#4)"MoveByBigWordsBackward"` (or `№` `#` `⌗` `c` `n` prefix) will move by 4 Words
+    + command repeat count in keybinds: `(Ⓝ)d (#4)"MoveByBigWordsBackward"` (or `№` `#` `⌗` `c` `n` `×` `⋅` prefix) will move by 4 Words
     + list of commands is executed as a single chain without the need to specify `chain` command (`(Ⓝ)q "MoveByBigWords" "MoveByBigWords"`)
     + `chain` argument to add node children as a sequence of commands for the same keybind (in case they need to set their own properties)
       ```kdl

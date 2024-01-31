@@ -153,11 +153,13 @@ class FeedKeyHandler():
 
         self.cmd = cmdT
         if (isTextHandled := self._handle_text()):
-            _log.key('%s\n%s',self._dbg_txt,self._dbg_seq)
+            if _L:
+                _log.key('%s\n%s',self._dbg_txt,self._dbg_seq)
             return
         else:
             self._handle_seq()
-            _log.key('%s\n%s',self._dbg_txt,self._dbg_seq)
+            if _L:
+                _log.key('%s\n%s',self._dbg_txt,self._dbg_seq)
 
     def _handle_seq(self) -> None:
         cmdS = self.cmdS
@@ -214,7 +216,8 @@ class FeedKeyHandler():
         else:
             if _L:
                 self._dbg_seq += f" ¦{cmd}¦cmd→_h" # ToDo
-        _log.key(self._dbg_seq)
+        if _L:
+            _log.key(self._dbg_seq)
         self._handle_command(cmd, self.do_eval)
 
     def _handle_text(self) -> bool:

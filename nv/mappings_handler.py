@@ -43,9 +43,10 @@ def evaluate_mapping_text(view, mapping: Mapping) -> None:
             rhs    = get_sequence(view)[:-len(get_partial_sequence(view))] + mapping.rhs
         elif isinstance(rhs, list):
             rhs[0] = get_sequence(view)[:-len(get_partial_sequence(view))] + mapping.rhs[0]
-    _log.key(' evalMapT ‹‘%s’=‘%s’←‘%s’› m%s'
+    _log.key(' evalMapT ‹‘%s’=%s‘%s’←‘%s’› m%s'
         ,mapping.lhs
-        ,('Ⓞ'        if m_txt == OPERATOR_PENDING else '') + rhs
+        ,('Ⓞ'        if m_txt == OPERATOR_PENDING else '')
+        ,rhs
         ,mapping.rhs if m_txt == OPERATOR_PENDING else '_'
         ,m_txt)
 

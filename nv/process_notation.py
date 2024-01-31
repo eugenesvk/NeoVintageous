@@ -21,14 +21,8 @@ if _log.hasHandlers(): # clear existing handlers, including sublime's
 _L = True if _log.isEnabledFor(logging.KEY) else False
 
 
-_cmd_exclude = []
-for cmd in [ViRedo,ViUndo,ViRepeat]:
-    for txt in map_cmd2textcmd[cmd]: #['Redo','RedoAlias']
-        _cmd_exclude.append(txt.lower()) # ['Redo','RedoAlias','Undo','Repeat']
-_log.debug('_cmd_exclude ‘%s’', _cmd_exclude)
-
-from typing  import Union
 class ProcessNotationHandler():
+
     def __init__(self, view, keys: str, repeat_count: int, check_user_mappings: bool, cont:bool=False):
         self.view                = view
         self.window              = self.view.window()
@@ -42,7 +36,8 @@ class ProcessNotationHandler():
         repeat_count = self.repeat_count
         check_user_mappings = self.check_user_mappings
         initial_mode = get_mode(self.view)
-        _log.key('processing notation ‘%s’ #%s usrMap=%s act=‘%s’',
+
+        _log.info('processing notation ‘%s’ #%s usrMap=%s act=‘%s’',
             keys,repeat_count,check_user_mappings,get_action(self.view))
 
         set_interactive(self.view, False) # Disable interactive prompts. For example, supress interactive input collecting for the command-line and search: :ls<CR> and /foo<CR>.
@@ -57,29 +52,19 @@ class ProcessNotationHandler():
         else: # or just use a generator when we don't care about logs
             keys_iter = tokenize_keys(keys)
             key_count = '_'
-        key_cont = None
-        key_reg = {} # store i,key that set the register so that we can skip it in iter² (!but index should be adjusted for leading_motions that modifies keys)
         for i,key in enumerate(keys_iter):
-            _log.key("  ¹—%s¦%s—‘%s’¦‘%s’ lead‘%s’ mot‘%s’ act‘%s’ reg‘%s’%s nv_feed_key(HFeedKey) doEval→False @SEQ",i+1,key_count,key,keys,leading_motions,get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view))
+            _log.key("  —%s¦%s—‘%s’¦‘%s’ lead‘%s’ nv_feed_key(HFeedKey) doEval→False @ HProcessNotation",i+1,key_count,key,keys,leading_motions)
             if self.cont and get_action(self.view): # check if we need to break early on continuation sequence before processing the "1st" key that's not really the 1st
-                _log.keyy("    break early, get_action exists ‘%s’",get_action(self.view))
-                key_cont = key
+                _log.key("    break early, get_action exists")
                 break
-            _reg_pre = get_capture_register(self.view)
             self.window.run_command('nv_feed_key',{'key':key,'do_eval':False,
                 'repeat_count':repeat_count,'check_user_mappings':check_user_mappings})
-            if not _reg_pre == get_capture_register(self.view):
-                _log.key("    ‘%s’ #%s set the register, remember to skip it!",key,i)
-                key_reg[i] = key
 
             if get_action(self.view): # The last key press has caused an action to be primed. That means there are no more leading motions. Break out of here
-                setReg = True
-                if not get_register(self.view) == '"': # don't clean reg/seq if register non-standard? #todo: test workaround for register cleared up when it shouldn't in nnoremap X dd
-                    setReg = False
-                _log.key("    break, get_action exists mot‘%s’ act‘%s’ reg‘%s’%s, reset state, reg_%s",get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view),setReg)
-                reset_command_data(self.view,setReg=setReg,setACount=False)
+                reset_command_data(self.view)
                 if  get_mode(self.view) == OPERATOR_PENDING:
                     set_mode(self.view, NORMAL)
+                _log.key("    break, get_action exists")
                 break
             elif is_runnable(self.view): # Run any primed motion
                 leading_motions += get_sequence(self.view)
@@ -92,29 +77,24 @@ class ProcessNotationHandler():
 
         if must_collect_input(self.view, get_motion(self.view), get_action(self.view)): # State is requesting more input, so this is the last command in the sequence and it needs more input
             if self.cont:
-                _log.key("  ↩− _collect→feed_key ‘%s’¦‘%s’ lead‘%s’ mot‘%s’ act‘%s’ nv_feed_key(HFeedKey) doEval→True @SEQ",key_cont,keys,leading_motions,get_motion(self.view), get_action(self.view))
-                self.window.run_command('nv_feed_key',{'key':key_cont,'do_eval':True,
-                'repeat_count':repeat_count,'check_user_mappings':check_user_mappings})
+                _log.key("  ↩− _collect_input_alt")
+                inf = self._collect_input_feed_key(key=key,do_eval=True)
+                _log.key("  res=%s",inf)
+                ### Todo !!! replace with window.run_command('nv_feed_key instead???
             else:
                 _log.key("  ↩− _collect_input")
                 self._collect_input()
             return
 
-        reg_i_offset = 0
         if leading_motions:# Strip the already run commands
-            leading_motions_len = len(leading_motions)
-            keys_len            = len(keys)
-            if ((leading_motions_len == keys_len) and\
-                (not must_collect_input(self.view,get_motion(self.view),get_action(self.view)))):  # noqa: E501
+            if ((len(leading_motions) == len(keys)) and (not must_collect_input(self.view, get_motion(self.view), get_action(self.view)))):  # noqa: E501
                 set_interactive(self.view, True)
-                _log.key("  ↩ leading_motions ‘%s’, not collect",leading_motions)
+                _log.key("  ↩ leading_motions, not collect")
                 return
             leading_motions_len =     len(list(tokenize_keys(leading_motions)))
             keys                = ''.join(list(tokenize_keys(keys))[leading_motions_len:])
-            reg_i_offset = leading_motions_len
 
-        if not (get_motion(self.view) and
-           not  get_action(self.view)):
+        if not (get_motion(self.view) and not get_action(self.view)):
             with gluing_undo_groups(self.view):
                 try:
                     if _L: # preiterate to know the full count of keys for logging 1/5, 2/5
@@ -126,29 +106,23 @@ class ProcessNotationHandler():
                         keys_iter = tokenize_keys(keys)
                         key_count = '_'
                     for i,key in enumerate(keys_iter):
-                        if key.lower() in ESC:
+                        if key.lower() == '<esc>':
                             _log.key("⎋")
                             enter_normal_mode(self.window) # XXX: We should pass a mode here?
                             continue
                         elif get_mode(self.view) not in (INSERT, REPLACE):
-                            _log.key("  ²—%s¦%s—‘%s’¦‘%s’ lead‘%s’ mot‘%s’ act‘%s’ reg‘%s’%s nv_feed_key(HFeedKey) doEval→None @SEQ",i+1,key_count,key,keys,leading_motions,get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view))
-                            if (i+reg_i_offset) in key_reg:
-                                if key_reg[i+reg_i_offset] == key:
-                                    _log.key("    ‘%s’ #%s (%s) set the register, skip it!",key,i+reg_i_offset,i)
-                                    continue
-                                else:
-                                    _log.warn("    #%s (%s) set the register, but keys don't match ‘%s’≠‘%s’"
-                                        ,i+reg_i_offset,i,                     key_reg[i+reg_i_offset],key)
+                            _log.key("  —%s¦%s—‘%s’¦‘%s’ nv_feed_key(HFeedKey) doEval→None @ HProcessNotation",i+1,key_count,key,keys)
                             self.window.run_command('nv_feed_key',{'key':key,
                                 'repeat_count':repeat_count,'check_user_mappings':check_user_mappings})
                         else:
-                            _log.key("  ²—%s¦%s—‘%s’¦‘%s’ insert chars @SEQ",i+1,key_count,key,keys)
+                            _log.key("  —%s¦%s—‘%s’¦‘%s’ insert chars @ HProcessNotation",i+1,key_count,key,keys)
                             self.window.run_command('insert',{'characters':translate_char(key)})
                     if not must_collect_input(self.view, get_motion(self.view), get_action(self.view)):
                         return
                 finally:
                     set_interactive(self.view, True)
-                    if (leading_motions + keys) not in ('.', 'u', '<C-r>'): # Ensure we set the full command for "." to use, but don't store "." alone.
+                    # Ensure we set the full command for "." to use, but don't store "." alone.
+                    if (leading_motions + keys) not in ('.', 'u', '<C-r>'):
                         set_repeat_data(self.view, ('vi', (leading_motions + keys), initial_mode, None))
 
         # We'll reach this point if we have a command that requests input whose input parser isn't satistied. For example, `/foo`. Note that `/foo<CR>`, on the contrary, would have satisfied the parser.
@@ -166,6 +140,22 @@ class ProcessNotationHandler():
             return
 
         self._collect_input()
+
+    def _collect_input_feed_key(self,key=None, do_eval=False) -> bool: # ???todo this is missing in self-invocation of I in text commands? or maybe just pass it to feed_key instead??
+        motion = get_motion(self.view)
+        action = get_action(self.view)
+        if must_collect_input(self.view, motion, action):
+            if motion and motion.accept_input:
+                motion.accept(key)
+                set_motion(self.view, motion)  # Processed motion: reserialise and store
+            else:
+                action.accept(key)
+                set_action(self.view, action)  # Processed action: reserialise and store
+            if do_eval and is_runnable(self.view):
+                evaluate_state(self.view)
+                reset_command_data(self.view)
+            return True
+        return False
 
     def _collect_input(self) -> None:
         try:

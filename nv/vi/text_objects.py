@@ -43,10 +43,10 @@ class TxtObj(Flag):
     Sentence  	= auto(); S 	= Sentence
     Tag       	= auto(); T 	= Tag
     Word      	= auto(); W 	= Word
-    Big_Word  	= auto(); BW	= Big_Word
+    BigWord  	= auto(); BW	= BigWord
     Paragraph 	= auto(); P 	= Paragraph
     Indent    	= auto(); I 	= Indent
-    Big_Indent	= auto(); BI	= Big_Indent
+    BigIndent	= auto(); BI	= BigIndent
     Line      	= auto(); L 	= Line
 TO = TxtObj
 
@@ -84,9 +84,9 @@ PAIRS = {
     'p' 	: (None          	, TO.Paragraph ),
     's' 	: (None          	, TO.Sentence  ),
     't' 	: (None          	, TO.Tag       ),
-    'W' 	: (None          	, TO.Big_Word  ),
+    'W' 	: (None          	, TO.BigWord   ),
     'w' 	: (None          	, TO.Word      ),
-    'I' 	: (None          	, TO.Big_Indent), # {not in Vim}
+    'I' 	: (None          	, TO.BigIndent ), # {not in Vim}
     'i' 	: (None          	, TO.Indent    ), # {not in Vim}
     'l' 	: (None          	, TO.Line      ),
 }  # type: dict
@@ -413,15 +413,15 @@ def get_text_object_region(view, s: Region, text_object: str, inclusive: bool = 
         return _get_text_object_quote    (view, s, inclusive, count, delims)
     elif type_ == TO.Word:
         return _get_text_object_word     (view, s, inclusive, count)
-    elif type_ == TO.Big_Word:
+    elif type_ == TO.BigWord:
         return _get_text_object_big_word (view, s, inclusive, count)
     elif type_ == TO.Sentence:
         return _get_text_object_sentence (view, s, inclusive, count)
     elif type_ == TO.Line:
         return _get_text_object_line     (view, s, inclusive, count)
-    elif type_ in (TO.Indent, TO.Big_Indent): # A port of https://github.com/michaeljsmith/vim-indent-object. {not in Vim} Only inclusive indent-objects are countable, e.g., vai, vaI
+    elif type_ in (TO.Indent, TO.BigIndent): # A port of https://github.com/michaeljsmith/vim-indent-object. {not in Vim} Only inclusive indent-objects are countable, e.g., vai, vaI
         for _ in range(count if inclusive else 1):
-            resolve_indent_text_object(view, s, inclusive, big=(type_ == TO.Big_Indent))
+            resolve_indent_text_object(view, s, inclusive, big=(type_ == TO.BigIndent))
 
     return s
 

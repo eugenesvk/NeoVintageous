@@ -367,7 +367,7 @@ def _get_text_object_paragraph(view, s: Region, inclusive: bool, count: int) -> 
     return find_paragraph_text_object(view, s, inclusive, count)
 
 
-def _get_text_object_bracket(view, s: Region, inclusive: bool, count: int, delims: tuple, seek_forward=True) -> Region:
+def _get_text_object_bracket(view, s: Region, inclusive: bool, count: int, delims: tuple, seek_forward:bool=False) -> Region:
     start = get_insertion_point_at_b(s)
     opening = find_prev_lone_bracket(view, start, delims)
 

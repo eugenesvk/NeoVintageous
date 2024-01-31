@@ -105,11 +105,15 @@ PAIRS = {
 # for q in quote_sym:
     # PAIRS[q] = ((q,q),TO.Quote)
 DEF = {'pairs':PAIRS
-    ,'seekforward' : False, # when looking for brackets, if the current text is NOT enclosed, but Targets plugin is enabled, seek the next pair of brackets
+    ,'seekforward' : False # when looking for brackets, if the current text is NOT enclosed, but Targets plugin is enabled, seek the next pair of brackets
       # ⎀a(B)  with lowercase within ( will result in:
       # ⎀a(b)     True  SEEK_FORWARD
       # ⎀a(B)     False SEEK_FORWARD
+    ,'steadycursor' : dict() # don't 'move' ⎀cursor to the changed punctuation
 }
+for iTO in TxtObj:
+    DEF['steadycursor'][iTO] = True
+
 re_flags = 0
 re_flags |= re.MULTILINE | re.IGNORECASE
 re_sp = re.compile(r"\s", flags=re_flags)
@@ -148,6 +152,32 @@ def reload_with_user_data_kdl() -> None:
                 if len(args) > 1:
                     _log.warn("node ‘%s’ has extra arguments, only the 1st was used ‘%s’"
                         ,          cfg_key,                               ', '.join(args))
+                continue
+            if cfg_key == 'steadycursor': # don't 'move' ⎀cursor to the changed punctuation
+                for arg in node.args:     # Parse arguments, toggle all
+                    tag = arg.tag   if hasattr(arg,'tag'  ) else ''
+                    val = arg.value if hasattr(arg,'value') else arg
+                    # if tag:
+                        # _log.debug("node ‘%s’ has unrecognized tag in argument %s",node.name,arg)
+                    if val == True:
+                        for iTO in TxtObj:
+                            CFG['steadycursor'][iTO] = True
+                        continue
+                    if val == False:
+                        for iTO in TxtObj:
+                            CFG['steadycursor'][iTO] = False
+                        continue
+                for pkey,tag_val in node.props.items(): # Parse properties, toggle per group ‘quote=true’
+                    tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
+                    val = tag_val.value if hasattr(tag_val,'value') else tag_val
+                    # if tag:
+                        # _log.debug("node ‘%s’ has unrecognized value tag in property %s",cfg_key,pkey)
+                    if not isinstance(val, bool):
+                        _log.warn("node ‘%s’ has unrecognized value tag in property %s, expected ‘true’ or ‘false’",cfg_key,pkey)
+                        continue
+                    if (text_obj := to_names_rev.get(clean_name(pkey),None)):
+                        CFG['steadycursor'][text_obj] = val
+                        # _log.debug('CFG set to arg %s %s %s %s',cfg_key,pkey,text_obj,val)
                 continue
 
             text_obj = to_names_rev[val]

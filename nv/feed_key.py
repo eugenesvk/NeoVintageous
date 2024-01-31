@@ -34,8 +34,8 @@ class FeedKeyHandler():
         self.check_user_mappings = check_user_mappings
         self.mode                = get_mode(self.view)
         if _L:
-            _log.key('—————⌨️%s %s #%s doEval=%s checkUsrMap=%s ⏰%s'
-            ,key,self.mode,repeat_count, do_eval,check_user_mappings,TFMT.format(t=datetime.now()))
+            _log.key('—————⌨️%s %s #%s Eval=%s usrMap=%s'
+            ,key,self.mode,repeat_count,do_eval,check_user_mappings) # ⏰%s,TFMT.format(t=datetime.now()))
 
     def handle(self) -> None:
         self   ._handle_bad_selection()

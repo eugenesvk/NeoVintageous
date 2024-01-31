@@ -102,52 +102,45 @@ class ProcessNotationHandler():
         if not (get_motion(self.view) and not get_action(self.view)):
             with gluing_undo_groups(self.view):
                 try:
-                    for key in tokenize_keys(keys):
+                    if _L: # preiterate to know the full count of keys for logging 1/5, 2/5
+                        keys_iter = []
+                        for key in tokenize_keys(keys):
+                            keys_iter.append(key)
+                        key_count = len(keys_iter)
+                    else: # or just use a generator when we don't care about logs
+                        keys_iter = tokenize_keys(keys)
+                        key_count = '_'
+                    for i,key in enumerate(keys_iter):
                         if key.lower() == '<esc>':
-                            # XXX: We should pass a mode here?
-                            enter_normal_mode(self.window)
+                            _log.key("⎋")
+                            enter_normal_mode(self.window) # XXX: We should pass a mode here?
                             continue
-
                         elif get_mode(self.view) not in (INSERT, REPLACE):
-                            self.window.run_command('nv_feed_key', {
-                                'key': key,
-                                'repeat_count': repeat_count,
-                                'check_user_mappings': check_user_mappings
-                            })
+                            _log.key("  —%s¦%s—‘%s’¦‘%s’ nv_feed_key(HFeedKey) doEval→None @ HProcessNotation",i+1,key_count,key,keys)
+                            self.window.run_command('nv_feed_key',{'key':key,
+                                'repeat_count':repeat_count,'check_user_mappings':check_user_mappings})
                         else:
-                            self.window.run_command('insert', {
-                                'characters': translate_char(key)
-                            })
-
+                            _log.key("  —%s¦%s—‘%s’¦‘%s’ insert chars @ HProcessNotation",i+1,key_count,key,keys)
+                            self.window.run_command('insert',{'characters':translate_char(key)})
                     if not must_collect_input(self.view, get_motion(self.view), get_action(self.view)):
                         return
-
                 finally:
                     set_interactive(self.view, True)
-                    # Ensure we set the full command for "." to use, but don't
-                    # store "." alone.
+                    # Ensure we set the full command for "." to use, but don't store "." alone.
                     if (leading_motions + keys) not in ('.', 'u', '<C-r>'):
                         set_repeat_data(self.view, ('vi', (leading_motions + keys), initial_mode, None))
 
-        # We'll reach this point if we have a command that requests input whose
-        # input parser isn't satistied. For example, `/foo`. Note that
-        # `/foo<CR>`, on the contrary, would have satisfied the parser.
-
+        # We'll reach this point if we have a command that requests input whose input parser isn't satistied. For example, `/foo`. Note that `/foo<CR>`, on the contrary, would have satisfied the parser.
         action = get_action(self.view)
         motion = get_motion(self.view)
-
         _log.debug('unsatisfied parser action = %s, motion=%s', action, motion)
 
-        if (action and motion):
-            # We have a parser an a motion that can collect data. Collect data
-            # interactively.
+        if (action and motion): # We have a parser an a motion that can collect data. Collect data interactively.
             motion_data = motion.translate(self.view) or None
-
             if motion_data is None:
                 reset_command_data(self.view)
                 ui_bell()
                 return
-
             run_motion(self.window, motion_data)
             return
 

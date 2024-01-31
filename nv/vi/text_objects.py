@@ -12,6 +12,9 @@ from NeoVintageous.nv.settings  import get_setting
 from NeoVintageous.nv.utils     import get_insertion_point_at_b, next_non_blank, next_non_ws, prev_non_blank, prev_non_ws
 from NeoVintageous.nv.vi.search import find_in_range, reverse_search_by_pt
 from NeoVintageous.nv.vi.units  import word_starts
+from NeoVintageous.nv.cfg_parse import clean_name
+
+from NeoVintageous.nv.rc import cfgU
 
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
@@ -101,7 +104,59 @@ PAIRS = {
 }  # type: dict
 # for q in quote_sym:
     # PAIRS[q] = ((q,q),TO.Quote)
+DEF = {'pairs':PAIRS}
+re_flags = 0
+re_flags |= re.MULTILINE | re.IGNORECASE
+re_sp = re.compile(r"\s", flags=re_flags)
 
+import copy
+CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
+
+def reload_with_user_data_kdl() -> None:
+    global CFG
+    if hasattr(cfgU,'kdl') and (cfg := cfgU.kdl.get('textobject',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
+        _log.debug("@text_objects: Parsing config")
+        for node in cfg.nodes: # bracket "b" "B" d="()" ...
+            tag_val = node.name
+            tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
+            val = tag_val.value if hasattr(tag_val,'value') else tag_val
+            if tag:
+                _log.warn("node ‘%s’ has unrecognized tag, skipping",node.name)
+                return
+            if val not in to_names_rev:
+                _log.warn("node ‘%s’ has unrecognized name, skipping",node.name)
+                return
+            else:
+                text_obj = to_names_rev[val]
+
+            for arg in node.args:          # Parse arguments, −OLD pairs "b"
+                tag = arg.tag   if hasattr(arg,'tag'  ) else ''
+                val = arg.value if hasattr(arg,'value') else arg
+                # if tag:
+                    # _log.debug("node ‘%s’ has unrecognized tag in argument %s",node.name,arg)
+                CFG['pairs'].pop(val,None)
+
+            for pkey,tag_val in node.props.items(): # Parse properties, +NEW pairs d="()"
+                tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
+                val = tag_val.value if hasattr(tag_val,'value') else tag_val
+                # if tag:
+                    # _log.debug("node ‘%s’ has unrecognized value tag in property %s",node.name,pkey)
+                pair = None
+                if   len(val) == 0:
+                    pass
+                elif len(val) == 1:
+                    pair = (val[0],val[0]) # dupe symmetric pair like ''
+                elif len(val) == 2:
+                    pair = (val[0],val[1]) # ( )
+                elif (_sp := re_sp.split(val)) and\
+                    len(_sp) == 2:
+                    pair = (_sp[0],_sp[1]) # ="  "
+                else:
+                    _log.error("node ‘%s’ has unparseable property value %s=%s\n  expecting a paired symbol or a space separated string",node.name,pkey,tag_val)
+                    continue
+                CFG['pairs'][pkey] = (pair,text_obj) #
+    else:
+        CFG = copy.deepcopy(CFG) # copy defaults to be able to reset values on config reload
 
 def is_at_punctuation(view, pt: int) -> bool:
     char = view.substr(pt) # FIXME Wrong if pt is at '\t'
@@ -410,7 +465,7 @@ def _get_text_object_line(view, s: Region, inclusive: bool, count: int) -> Regio
 
 def get_text_object_region(view, s: Region, text_object: str, inclusive: bool = False, count: int = 1, seek_forward=True) -> Region:
     try:
-        delims, type_ = PAIRS[text_object]
+        delims, type_ = CFG['pairs'][text_object]
     except KeyError:
         return s
 

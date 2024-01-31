@@ -8,45 +8,17 @@ from NeoVintageous.nv import macros
 from NeoVintageous.nv import plugin
 from NeoVintageous.nv.macros import add_macro_step
 from NeoVintageous.nv.polyfill import run_window_command
-from NeoVintageous.nv.session import get_session_view_value
-from NeoVintageous.nv.session import set_session_view_value
-from NeoVintageous.nv.settings import get_glue_until_normal_mode
-from NeoVintageous.nv.settings import get_mode
-from NeoVintageous.nv.settings import get_reset_during_init
-from NeoVintageous.nv.settings import get_sequence
-from NeoVintageous.nv.settings import get_setting
-from NeoVintageous.nv.settings import is_interactive
-from NeoVintageous.nv.settings import is_processing_notation
-from NeoVintageous.nv.settings import set_action_count
-from NeoVintageous.nv.settings import set_capture_register
-from NeoVintageous.nv.settings import set_mode
-from NeoVintageous.nv.settings import set_motion_count
-from NeoVintageous.nv.settings import set_partial_sequence, set_partial_text
-from NeoVintageous.nv.settings import set_register
-from NeoVintageous.nv.settings import set_repeat_data
-from NeoVintageous.nv.settings import set_reset_during_init
-from NeoVintageous.nv.settings import set_sequence
+from NeoVintageous.nv.session import get_session_view_value, set_session_view_value
+from NeoVintageous.nv.settings import get_glue_until_normal_mode, get_mode, get_reset_during_init, get_sequence, get_setting, is_interactive, is_processing_notation, set_action_count, set_capture_register, set_mode, set_motion_count, set_partial_sequence, set_partial_text, set_register, set_repeat_data, set_reset_during_init, set_sequence
 from NeoVintageous.nv.utils import get_visual_block_sel_b
-from NeoVintageous.nv.utils import get_visual_repeat_data
-from NeoVintageous.nv.utils import is_view
-from NeoVintageous.nv.utils import save_previous_selection
-from NeoVintageous.nv.utils import update_xpos
+from NeoVintageous.nv.utils import get_visual_repeat_data, is_view, save_previous_selection, update_xpos
 from NeoVintageous.nv.vi import cmd_defs
-from NeoVintageous.nv.vi.cmd_base import ViMotionDef
-from NeoVintageous.nv.vi.cmd_base import ViOperatorDef
+from NeoVintageous.nv.vi.cmd_base import ViMotionDef, ViOperatorDef
 from NeoVintageous.nv.vi.cmd_defs import ViToggleMacroRecorder
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.modes import Mode as M, mode_names, mode_names_rev, text_to_modes, text_to_mode_alone
 from NeoVintageous.nv     import vim # for always fresh config values, defaults + user
-from NeoVintageous.nv.vim import clean_view
-from NeoVintageous.nv.vim import enter_insert_mode
-from NeoVintageous.nv.vim import enter_normal_mode
-from NeoVintageous.nv.vim import enter_visual_mode
-from NeoVintageous.nv.vim import is_visual_mode
-from NeoVintageous.nv.vim import mode_to_name
-from NeoVintageous.nv.vim import reset_status_line
-from NeoVintageous.nv.vim import run_action
-from NeoVintageous.nv.vim import run_motion
+from NeoVintageous.nv.vim import clean_view, enter_insert_mode, enter_normal_mode, enter_visual_mode, is_visual_mode, mode_to_name, reset_status_line, run_action, run_motion
 
 from NeoVintageous.nv.rc import cfgU
 

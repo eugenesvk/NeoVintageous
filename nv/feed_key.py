@@ -2,50 +2,17 @@ import logging
 import time
 from datetime import datetime
 
-from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
-from NeoVintageous.nv.mappings import IncompleteMapping
-from NeoVintageous.nv.mappings import Mapping
-from NeoVintageous.nv.mappings import mappings_can_resolve, mappings_can_resolve_text
-from NeoVintageous.nv.mappings import mappings_resolve, mappings_resolve_text
+from NeoVintageous.nv.mappings import IncompleteMapping, Mapping, mappings_can_resolve, mappings_can_resolve_text, mappings_resolve, mappings_resolve_text
 from NeoVintageous.nv.mappings_handler import evaluate_mapping, evaluate_mapping_text
-from NeoVintageous.nv.settings import append_sequence
-from NeoVintageous.nv.settings import get_action_count
-from NeoVintageous.nv.settings import get_capture_register
-from NeoVintageous.nv.settings import get_mode
-from NeoVintageous.nv.settings import get_motion_count
-from NeoVintageous.nv.settings import get_partial_sequence, get_partial_text
-from NeoVintageous.nv.settings import get_sequence
-from NeoVintageous.nv.settings import get_setting
-from NeoVintageous.nv.settings import is_interactive
-from NeoVintageous.nv.settings import set_action_count
-from NeoVintageous.nv.settings import set_capture_register
-from NeoVintageous.nv.settings import set_mode
-from NeoVintageous.nv.settings import set_motion_count
-from NeoVintageous.nv.settings import set_partial_sequence, set_partial_text
-from NeoVintageous.nv.settings import set_register
-from NeoVintageous.nv.state import evaluate_state
-from NeoVintageous.nv.state import get_action
-from NeoVintageous.nv.state import get_motion
-from NeoVintageous.nv.state import init_view
-from NeoVintageous.nv.state import is_runnable
-from NeoVintageous.nv.state import must_collect_input
-from NeoVintageous.nv.state import reset_command_data
-from NeoVintageous.nv.state import set_action
-from NeoVintageous.nv.state import set_motion
-from NeoVintageous.nv.state import update_status_line
+from NeoVintageous.nv.settings import append_sequence, get_action_count, get_capture_register, get_mode, get_motion_count, get_partial_sequence, get_partial_text, get_sequence, get_setting, is_interactive, set_action_count, set_capture_register, set_mode, set_motion_count, set_partial_sequence, set_partial_text, set_register
+from NeoVintageous.nv.state import evaluate_state, get_action, get_motion, init_view, is_runnable, must_collect_input, reset_command_data, set_action, set_motion, update_status_line
 from NeoVintageous.nv.ui import ui_bell
-from NeoVintageous.nv.vi.cmd_base import CommandNotFound
-from NeoVintageous.nv.vi.cmd_base import ViCommandDefBase
-from NeoVintageous.nv.vi.cmd_base import ViMotionDef
-from NeoVintageous.nv.vi.cmd_base import ViOperatorDef
-from NeoVintageous.nv.vi.cmd_defs import ViOpenNameSpace
-from NeoVintageous.nv.vi.cmd_defs import ViOpenRegister
-from NeoVintageous.nv.vi.keys import resolve_keypad_count
-from NeoVintageous.nv.vi.keys import to_bare_command_name
+from NeoVintageous.nv.vi.cmd_base import CommandNotFound, ViCommandDefBase, ViMotionDef, ViOperatorDef
+from NeoVintageous.nv.vi.cmd_defs import ViOpenNameSpace, ViOpenRegister
+from NeoVintageous.nv.vi.keys import resolve_keypad_count, to_bare_command_name
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
-from NeoVintageous.nv.vim import enter_normal_mode
-from NeoVintageous.nv.vim import is_visual_mode
-from NeoVintageous.nv.log import addLoggingLevel, stream_handler
+from NeoVintageous.nv.vim import enter_normal_mode, is_visual_mode
+from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL, addLoggingLevel, stream_handler
 
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
@@ -71,20 +38,15 @@ class FeedKeyHandler():
             ,key,self.mode,repeat_count, do_eval,check_user_mappings,TFMT.format(t=datetime.now()))
 
     def handle(self) -> None:
-        self._handle_bad_selection()
-
+        self   ._handle_bad_selection()
         if self._handle_escape():
             return
-
-        self._append_sequence()
-
+        self   ._append_sequence() # status bar vim-seq sequence
         if self._handle_register():
             return
-
         if self._collect_input():
             return
-
-        self._handle()
+        self   ._handle()
 
     def _handle_bad_selection(self) -> None:
         if _is_selection_malformed(self.view, self.mode):
@@ -293,40 +255,29 @@ class FeedKeyHandler():
         return False # pass to handle sequence
 
     def _handle_mapping(self, mapping: Mapping) -> None:
-        # TODO Review What happens if Mapping + do_eval=False
-        if self.do_eval:
+        if self.do_eval: # TODO Review What happens if Mapping + do_eval=False
             evaluate_mapping(self.view, mapping)
 
     def _handle_mapping_text(self, mapping: Mapping) -> None:
-        # TODO Review What happens if Mapping + do_eval=False
-        if self.do_eval:
+        if self.do_eval: # TODO Review What happens if Mapping + do_eval=False
             evaluate_mapping_text(self.view, mapping)
 
     def _handle_command(self, command: ViCommandDefBase, do_eval: bool) -> None:
-        # Raises:
-        #   ValueError: If too many motions.
-        #   ValueError: If too many actions.
-        #   ValueError: Unexpected command type.
+        """ Raises ValueError if too many motions|actions, or unexpected command type"""
         _is_runnable = is_runnable(self.view)
 
-        if isinstance(command, ViMotionDef):
+        if   isinstance(command, ViMotionDef):
             if _is_runnable:
                 raise ValueError('too many motions')
-
-            set_motion(self.view, command)
-
-            if get_mode(self.view) == OPERATOR_PENDING:
+            set_motion  (self.view, command)
+            if  get_mode(self.view) == OPERATOR_PENDING:
                 set_mode(self.view, NORMAL)
-
         elif isinstance(command, ViOperatorDef):
             if _is_runnable:
                 raise ValueError('too many actions')
-
-            set_action(self.view, command)
-
+            set_action  (self.view, command)
             if command.motion_required and not is_visual_mode(get_mode(self.view)):
                 set_mode(self.view, OPERATOR_PENDING)
-
         else:
             raise ValueError('unexpected command type')
 
@@ -336,10 +287,9 @@ class FeedKeyHandler():
 
         if get_mode(self.view) == OPERATOR_PENDING:
             set_partial_sequence(self.view, '')
-            set_partial_text(self.view, '')
-
+            set_partial_text    (self.view, '')
         if do_eval:
-            evaluate_state(self.view)
+            evaluate_state      (self.view)
 
     def _handle_command_not_found(self, command) -> bool:
         if isinstance(command, CommandNotFound):
@@ -359,19 +309,10 @@ def _is_selection_malformed(view, mode) -> bool:
 
 
 def _fix_malformed_selection(view, mode: str) -> str:
-    # If a selection was made via the mouse or a built-in ST command the
-    # selection may be in an inconsistent state e.g. incorrect mode.
-    # https://github.com/NeoVintageous/NeoVintageous/issues/742
-    if mode == NORMAL and len(view.sel()) > 1:
+    if mode == NORMAL and len(view.sel()) > 1: # If a selection was made via the mouse or a built-in ST command the selection may be in an inconsistent state e.g. incorrect mode. https://github.com/NeoVintageous/NeoVintageous/issues/742
         mode = VISUAL
         set_mode(view, mode)
-    elif mode != VISUAL and view.has_non_empty_selection_region():
-        # Try to fixup a malformed visual state. For example, apparently this
-        # can happen when a search is performed via a search panel and "Find
-        # All" is pressed. In that case, multiple selections may need fixing.
+    elif mode != VISUAL and view.has_non_empty_selection_region(): # Try to fixup a malformed visual state. For example, apparently this can happen when a search is performed via a search panel and "Find All" is pressed. In that case, multiple selections may need fixing.
         view.window().run_command('nv_enter_visual_mode', {'mode': mode})
-
-    # TODO Extract fix malformed selections specific logic from init_view()
-    init_view(view)
-
+    init_view(view) # TODO Extract fix malformed selections specific logic from init_view()
     return mode

@@ -91,8 +91,9 @@ from NeoVintageous.nv.vi.cmd_base	import CommandNotFound
 from NeoVintageous.nv.mappings   	import mappings_resolve_text
 def _handle_rhs_text(view, rhs: Union[str, list]) -> None: # find a key that is mapped to the same internal function as from text_command, and pass that key for later processing. Removes the need to repeat internal functions to handle text_commands
     win = view.window()
-    mode = get_mode(view)
-    for text_command in (text_commands := [rhs] if isinstance(rhs, str) else rhs):
+    text_commands = [rhs] if isinstance(rhs, str) else rhs; _c = len(text_commands)
+    for i,text_cmd in enumerate(text_commands):
+        mode = get_mode(view)
         if text_command.startswith('"command"'):
             _log.debug(" redirect Sublime's text ‘\"command\"’ to _handle_rhs=%s",text_command)
             _handle_rhs(win, ':'+text_command)

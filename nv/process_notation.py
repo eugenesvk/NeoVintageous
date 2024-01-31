@@ -83,10 +83,14 @@ class ProcessNotationHandler():
                 _log.key("    evaluate_state")
                 evaluate_state    (self.view)
 
-        if must_collect_input(self.view, get_motion(self.view), get_action(self.view)):
-            # State is requesting more input, so this is the last command  in
-            # the sequence and it needs more input.
-            self._collect_input()
+        if must_collect_input(self.view, get_motion(self.view), get_action(self.view)): # State is requesting more input, so this is the last command in the sequence and it needs more input
+            if self.cont:
+                _log.key("  ↩− _collect→feed_key ‘%s’¦‘%s’ lead‘%s’ nv_feed_key(HFeedKey) doEval→True @ HProcessNotation",key,keys,leading_motions)
+                self.window.run_command('nv_feed_key',{'key':key,'do_eval':True,
+                'repeat_count':repeat_count,'check_user_mappings':check_user_mappings})
+            else:
+                _log.key("  ↩− _collect_input")
+                self._collect_input()
             return
 
         if leading_motions:# Strip the already run commands

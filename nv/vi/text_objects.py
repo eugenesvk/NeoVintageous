@@ -412,27 +412,36 @@ def _get_text_object_bracket(view, s: Region, inclusive: bool, count: int, delim
     return Region(a, b)
 
 
-def _get_text_object_quote(view, s: Region, inclusive: bool, count: int, delims: tuple) -> Region:
+def _get_text_object_quote(view, s: Region, inclusive: bool, count: int, delims: tuple, seek_forward:bool=False) -> Region:
     line = view.line(s)
 
     delim_open = delims[0]
     delim_open = re_escape(delim_open)
 
     # FIXME: Escape sequences like \" are probably syntax-dependant.
-    prev_quote = reverse_search_by_pt(view, r'(?<!\\\\)' + delim_open, start=line.a, end=s.b)
-    next_quote = find_in_range(view, r'(?<!\\\\)' + delim_open, start=s.b, end=line.b)
+    prev_quote = reverse_search_by_pt(view, r'(?<!\\\\)' + delim_open, start=line.a, end=   s.b)
+    next_quote = find_in_range       (view, r'(?<!\\\\)' + delim_open, start=   s.b, end=line.b)
 
     if next_quote and not prev_quote:
         prev_quote = next_quote
-        next_quote = find_in_range(view, r'(?<!\\\\)' + delim_open, start=prev_quote.b, end=line.b)
+        next_quote = find_in_range   (view, r'(?<!\\\\)' + delim_open, start=prev_quote.b, end=line.b)
 
     if not (prev_quote and next_quote):
         return s
 
     if inclusive:
-        return Region(prev_quote.a, next_quote.b)
+        retReg = Region(prev_quote.a    , next_quote.b    )
+    else:
+        retReg = Region(prev_quote.a + 1, next_quote.b - 1)
 
-    return Region(prev_quote.a + 1, next_quote.b - 1)
+    contains_any_cursor = False
+    for sel in view.sel():
+        if retReg.contains(sel):
+            contains_any_cursor = True
+    if not seek_forward and not contains_any_cursor: # if quotes don't cover cursor, do nothing unless seek forward is enabled
+        return s
+
+    return retReg
 
 
 def _get_text_object_word(view, s: Region, inclusive: bool, count: int) -> Region:
@@ -501,7 +510,7 @@ def get_text_object_region(view, s: Region, text_object: str, inclusive: bool = 
     elif type_ == TO.Bracket:
         return _get_text_object_bracket  (view, s, inclusive, count, delims, seek_forward)
     elif type_ == TO.Quote:
-        return _get_text_object_quote    (view, s, inclusive, count, delims)
+        return _get_text_object_quote    (view, s, inclusive, count, delims, seek_forward)
     elif type_ == TO.Word:
         return _get_text_object_word     (view, s, inclusive, count)
     elif type_ == TO.BigWord:

@@ -51,6 +51,8 @@ class TxtObj(Flag):
 TO = TxtObj
 
 
+# quote_sym = ['"',"'",'`','#','$','&','*','+',',','-','.','/',':',';','=','_','|','~','\\']
+#                         ↑→ plugin github.com/wellle/targets.vim
 PAIRS = {
     '"' 	: ((  '"',   '"')	, TO.Quote     ),
     "'" 	: ((  "'",   "'")	, TO.Quote     ),
@@ -90,6 +92,8 @@ PAIRS = {
     'i' 	: (None          	, TO.Indent    ), # {not in Vim}
     'l' 	: (None          	, TO.Line      ),
 }  # type: dict
+# for q in quote_sym:
+    # PAIRS[q] = ((q,q),TO.Quote)
 
 
 def is_at_punctuation(view, pt: int) -> bool:

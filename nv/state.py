@@ -113,6 +113,10 @@ def update_status_line(view) -> None:
 
 
 def must_collect_input(view, motion: ViMotionDef, action: ViOperatorDef) -> bool:
+    _log.key("must_collect_input? mtn‘%s’⎀?%s‘%s’ act‘%s’⎀?%s‘%s’"
+        ,motion,motion.accept_input if motion else '_',motion.inp if motion else '_'
+        ,action,action.accept_input if action else '_',action.inp if action else '_'
+        )
     if motion and action:
         if motion.accept_input:
             return True

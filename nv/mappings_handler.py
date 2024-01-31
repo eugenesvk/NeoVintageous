@@ -37,19 +37,22 @@ def evaluate_mapping(view, mapping: Mapping) -> None:
     # _log.key(" evalMap m%s end", get_mode(view))
 
 def evaluate_mapping_text(view, mapping: Mapping) -> None:
-    # TODO Review Why does rhs of mapping need to be resequenced in OPERATOR PENDING mode?
     rhs = mapping.rhs
-    # if get_mode(view) == OPERATOR_PENDING:
-    #     rhs = get_sequence(view)[:-len(get_partial_text(view))] + mapping.rhs
+    if (m_txt := get_mode(view) == OPERATOR_PENDING):
+        rhs = get_sequence(view)[:-len(get_partial_sequence(view))] + mapping.rhs
+    _log.key(' evalMapT ‹‘%s’=‘%s’←‘%s’› m%s'
+        ,mapping.lhs
+        ,('Ⓞ'        if m_txt == OPERATOR_PENDING else '') + rhs
+        ,mapping.rhs if m_txt == OPERATOR_PENDING else '_'
+        ,m_txt)
 
-    # TODO Review Why does state need to be reset before running user mapping?
-    reg = get_register(view)
+    reg    = get_register    (view)
     acount = get_action_count(view)
     mcount = get_motion_count(view)
-    reset_command_data(view)
-    set_register(view, reg)
-    set_motion_count(view, mcount)
-    set_action_count(view, acount)
+    reset_command_data       (view) # Resets temp data to build a (partial)command
+    set_register             (view, reg   )
+    set_motion_count         (view, mcount)
+    set_action_count         (view, acount)
 
     _handle_rhs_text(view, rhs)
 

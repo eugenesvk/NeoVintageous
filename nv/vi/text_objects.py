@@ -49,6 +49,13 @@ class TxtObj(Flag):
     BigIndent	= auto(); BI	= BigIndent
     Line     	= auto(); L 	= Line
 TO = TxtObj
+to_names_rev = dict() # reverse TO dict for easier mapping of user strings to text objects
+for iTO in TxtObj:
+    if   (to_text := clean_name(f"{iTO}".replace('TxtObj.',''))) in to_names_rev:
+        _log.error(" ‘%s’ is not unique, check ‘TxtObj’ enum",to_text)
+    else:
+        to_names_rev[to_text] = iTO
+# to_names_rev {'bigword':<TxtObj.BigWord: 32>,} # print('to_names_rev',to_names_rev)
 
 
 # quote_sym = ['"',"'",'`','#','$','&','*','+',',','-','.','/',':',';','=','_','|','~','\\']

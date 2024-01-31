@@ -94,6 +94,8 @@ def _handle_rhs_text(view, rhs: Union[str, list]) -> None: # find a key that is 
     text_commands = [rhs] if isinstance(rhs, str) else rhs; _c = len(text_commands)
     for i,text_cmd in enumerate(text_commands):
         mode = get_mode(view)
+        cont = (i > 0) # pass to Hprocess notation as a continuation (like in a key sequence)
+        _log.key(" —%s¦%s— ‘%s’cmd_t @ _hRHS_text m%s",i+1,_c,text_cmd,mode)
         if text_command.startswith('"command"'):
             _log.debug(" redirect Sublime's text ‘\"command\"’ to _handle_rhs=%s",text_command)
             _handle_rhs(win, ':'+text_command)

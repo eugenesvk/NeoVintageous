@@ -72,17 +72,15 @@ class FeedKeyHandler():
         return False
 
     def _append_sequence(self) -> None:
-        append_sequence(self.view, self.key)
-        update_status_line(self.view)
+        append_sequence         (self.view, self.key)
+        update_status_line      (self.view)
 
     def _handle_register(self) -> bool:
-        if get_capture_register(self.view):
-            set_register(self.view, self.key)
+        if get_capture_register (self.view):
+            set_register        (self.view, self.key)
             set_partial_sequence(self.view, '')
-            set_partial_text(self.view, '')
-
+            set_partial_text    (self.view, '')
             return True
-
         return False
 
     def _collect_input(self) -> bool:
@@ -110,10 +108,7 @@ class FeedKeyHandler():
             set_action_count(self.view, self.repeat_count)
         else:
             key = resolve_keypad_count(self.key)
-            if key.isdigit():
-                # NOTE motion/action counts need to be cast to strings because they need
-                # to be "joined" to the previous key press, not added. For example when
-                # you press the digit 1 followed by 2, it's a count of 12, not 3.
+            if key.isdigit(): # NOTE motion/action counts need to be cast to strings because they need to be "joined" to the previous key press, not added. For example when you press the digit 1 followed by 2, it's a count of 12, not 3
                 if not get_action(self.view):
                     if key != '0' or get_action_count(self.view):
                         set_action_count(self.view, get_action_count(self.view) + key)
@@ -128,7 +123,7 @@ class FeedKeyHandler():
     def _handle(self) -> None:
         if _L:
           self._dbg_seq, self._dbg_txt = '',''
-          _log.key("  @_h ⌨️%s %s #%s doEval=%s usrMap=%s ⏰%s",self.key,self.mode,self.repeat_count,self.do_eval,self.check_user_mappings,TFMT.format(t=datetime.now()))
+          # _log.key("  @_h ⌨️%s %s #%s Eval=%s usrMap=%s",self.key,self.mode,self.repeat_count,self.do_eval,self.check_user_mappings) # ⏰%s,TFMT.format(t=datetime.now()))
         # If the user has defined a mapping that starts with a number i.e. count then the count handler has to be skipped otherwise it won't resolve. See https://github.com/NeoVintageous/NeoVintageous/issues/434
         can_resolve_txt = mappings_can_resolve_text(self.view, self.key)
         can_resolve_seq = mappings_can_resolve     (self.view, self.key)
@@ -183,19 +178,19 @@ class FeedKeyHandler():
             return
         if isinstance(cmd, Mapping):
             if _L:
-                self._dbg_seq += f" ↩ ¦{cmd}¦cmd=Map→_h ‹‘{cmd.lhs}’ ‘{cmd.rhs}’›"
+                self._dbg_seq += f" ↩ ‹‘{cmd.lhs}’=‘{cmd.rhs}’› Map→_h¦{cmd}¦"
             self._handle_mapping     (cmd)
             return
         if isinstance(cmd, CommandNotFound): # TODO We shouldn't need to try resolve the command again. The resolver should handle commands correctly the first time. The reason this logic is still needed is because we might be looking at a command like 'dd', which currently doesn't resolve properly. The first 'd' is mapped for NORMAL mode, but 'dd' is not mapped in OPERATOR PENDING mode, so we get a missing command, and here we try to fix that (user mappings are excluded, since they've already been given a chance to evaluate).
             if _L:
-                self._dbg_seq += f" ↩ ¦{cmd}¦cmd=NotFound"
+                self._dbg_seq += f" ↩ ¦¦cmd=NotFound"
             if get_mode(self.view) == OPERATOR_PENDING:
                 cmd = mappings_resolve(self.view, sequence=to_bare_command_name(get_sequence(self.view)),mode=NORMAL, check_user_mappings=False)
             else:
                 cmd = mappings_resolve(self.view, sequence=to_bare_command_name(get_sequence(self.view)))
             if self._handle_command_not_found(cmd):
                 if _L:
-                    self._dbg_seq += f" ↩ cmd=NotFound"
+                    self._dbg_seq += f" ↩ cmd=NotFound×2"
                 return
             else:
                 if _L:
@@ -213,7 +208,12 @@ class FeedKeyHandler():
                     self._dbg_seq += f" ↩ ¦{cmd}¦=resolved"
             if not cmd.motion_required:
                 set_mode(self.view, NORMAL)
-        self._dbg_seq += f" ¦{cmd}¦cmd→_h" # ToDo
+        elif (isinstance(cmd, ViOperatorDef)):
+            if _L:
+                self._dbg_seq += f" ¦{cmd}¦cmd→_h= OperatorDef"
+        else:
+            if _L:
+                self._dbg_seq += f" ¦{cmd}¦cmd→_h" # ToDo
         _log.key(self._dbg_seq)
         self._handle_command(cmd, self.do_eval)
 
@@ -225,34 +225,34 @@ class FeedKeyHandler():
             if _L:
                 self._dbg_txt += f" ↩+ ¦{cmd}¦cmd=IncompleteMapping"
             return True
-        if isinstance(cmd, ViOpenNameSpace  ): # ToDo
+        if isinstance(cmd, ViOpenNameSpace  ):
             if _L:
                 self._dbg_txt += f" ↩+ ¦{cmd}¦cmd=OpenNameSpace"
             return True
-        if isinstance(cmd, ViOpenRegister   ): # ToDo
+        if isinstance(cmd, ViOpenRegister   ):
             if _L:
                 self._dbg_txt += f" ↩+ ¦{cmd}¦cmd=OpenRegister→set"
             set_capture_register(self.view, True)
             return True
         if isinstance(cmd, Mapping):
             if _L:
-                self._dbg_txt += f" ↩+ ¦{cmd}¦cmd=Map→_h ‹‘{cmd.lhs}’ ‘{cmd.rhs}’›"
+                self._dbg_txt += f" ↩+ ‹‘{cmd.lhs}’=‘{cmd.rhs}’› ¦{cmd}¦cmd=Map→_h "
             self._handle_mapping_text(cmd)
             return True
-        if isinstance(cmd, CommandNotFound): # ToDo
+        if isinstance(cmd, CommandNotFound):
             if _L:
-                self._dbg_txt += f" ↩− ¦{cmd}¦cmd=NotFound"
+                self._dbg_txt += f" ↩− ¦¦cmd=NotFound"
             return False # pass to handle sequence
         if (isinstance(cmd, ViOperatorDef) and get_mode(self.view) == OPERATOR_PENDING):
             if _L:
                 self._dbg_txt += f" ↩− ¦{cmd}¦cmd=ⓄOperatorDef"
             return False # pass to handle sequence
         if _L:
-            self._dbg_txt += f", (disabled)TXT _handle_command" # ToDo
-        # self._handle_command(cmd, self.do_eval) # todo handle text command
+            self._dbg_txt += f", _hCmd"
+        self._handle_command(cmd, self.do_eval) # ToDo
         if _L:
-            self._dbg_txt += f" ↩− ¦{cmd}¦cmd=Neither"
-        return False # pass to handle sequence
+            self._dbg_txt += f" ↩+ ¦{cmd}¦cmd=n/a"
+        return True # False to handle sequence next
 
     def _handle_mapping(self, mapping: Mapping) -> None:
         if self.do_eval: # TODO Review What happens if Mapping + do_eval=False

@@ -115,7 +115,7 @@ def _handle_rhs_text(view, rhs: Union[str, list]) -> None: # find a key that is 
                     if (seq := dict_cls_to_cmd.get(cmdT,None)):
                         _log.key("  ‘%s’seq←‘%s’cmd_txt from plugin_dict's class ‘¦%s¦’"
                             ,       seq,    cmd_txt,                              cmdT)
-                        win.run_command('nv_process_notation',{'keys':seq, 'check_user_mappings':False,})
+                        win.run_command('nv_process_notation',{'keys':seq, 'check_user_mappings':False,'cont':cont})
                         continue
                 if mode in (mappings := keys.mappings_reverse):
                     dict_cls_to_cmd = mappings[mode] # <...cmd_defs.ViUndo'>:'u'
@@ -123,5 +123,5 @@ def _handle_rhs_text(view, rhs: Union[str, list]) -> None: # find a key that is 
                     if (seq := dict_cls_to_cmd.get(cmdT,None)):
                         _log.key("  ‘%s’seq←‘%s’cmd_txt from keys_dict's class ‘¦%s¦’"
                             ,       seq,    cmd_txt,                            cmdT)
-                        win.run_command('nv_process_notation',{'keys':seq, 'check_user_mappings':False,})
+                        win.run_command('nv_process_notation',{'keys':seq, 'check_user_mappings':False,'cont':cont})
                         continue

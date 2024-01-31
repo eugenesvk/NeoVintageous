@@ -10,6 +10,10 @@ import logging
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
+if _log.hasHandlers(): # clear existing handlers, including sublime's
+    logging.getLogger(__name__).handlers.clear()
+    # _log.addHandler(stream_handler)
+_L = True if _log.isEnabledFor(logging.KEY) else False
 
 def evaluate_mapping(view, mapping: Mapping) -> None:
     # TODO Review Why does rhs of mapping need to be resequenced in OPERATOR PENDING mode?

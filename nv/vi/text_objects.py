@@ -126,6 +126,7 @@ def reload_with_user_data_kdl() -> None:
             tag_val = node.name
             tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
             val = tag_val.value if hasattr(tag_val,'value') else tag_val
+            cfg_key = val
             if tag:
                 _log.warn("node ‘%s’ has unrecognized tag, skipping",node.name)
                 return
@@ -134,7 +135,7 @@ def reload_with_user_data_kdl() -> None:
                 _log.warn("node ‘%s’ has unrecognized name, skipping",node.name)
                 return
 
-            if (cfg_key:=val) == 'seekforward': # ⎀a(B) don't sub ⎀a(b) if false
+            if cfg_key == 'seekforward': # ⎀a(B) don't sub ⎀a(b) if false
                 if (args := node.args):
                     if not isinstance(args[0],bool):
                         _log.error("node ‘%s’ argument should be ‘true’ or ‘false’, not ‘%s’"

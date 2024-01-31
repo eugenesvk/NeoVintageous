@@ -27,12 +27,13 @@ _log.setLevel(DEFAULT_LOG_LEVEL)
 
 class ProcessNotationHandler():
 
-    def __init__(self, view, keys: str, repeat_count: int, check_user_mappings: bool):
-        self.view = view
-        self.window = self.view.window()
-        self.keys = keys
-        self.repeat_count = repeat_count
+    def __init__(self, view, keys: str, repeat_count: int, check_user_mappings: bool, cont:bool=False):
+        self.view                = view
+        self.window              = self.view.window()
+        self.keys                = keys
+        self.repeat_count        = repeat_count
         self.check_user_mappings = check_user_mappings
+        self.cont                = cont # force continuation for sequences that come after text commands, not after sequences, so they aren't processed in one batch, thus state set within HProcNotation isn't checked before processing the first key
 
     def handle(self) -> None:
         keys = self.keys
@@ -40,21 +41,12 @@ class ProcessNotationHandler():
         check_user_mappings = self.check_user_mappings
         initial_mode = get_mode(self.view)
 
-        _log.info(
-            'processing notation %s count=%s mappings=%s',
-            keys,
-            repeat_count,
-            check_user_mappings)
+        _log.info('processing notation ‘%s’ #%s usrMap=%s act=‘%s’',
+            keys,repeat_count,check_user_mappings,get_action(self.view))
 
-        # Disable interactive prompts. For example, supress interactive input
-        # collecting for the command-line and search: :ls<CR> and /foo<CR>.
-        set_interactive(self.view, False)
+        set_interactive(self.view, False) # Disable interactive prompts. For example, supress interactive input collecting for the command-line and search: :ls<CR> and /foo<CR>.
 
-        # First, run any motions coming before the first action. We don't keep
-        # these in the undo stack, but they will still be repeated via '.'.
-        # This ensures that undoing will leave the caret where the  first
-        # editing action started. For example, 'lldl' would skip 'll' in the
-        # undo history, but store the full sequence for '.' to use.
+        # First, run any motions coming before the first action. We don't keep these in the undo stack, but they will still be repeated via '.'. This ensures that undoing will leave the caret where the  first editing action started. For example, 'lldl' would skip 'll' in the undo history, but store the full sequence for '.' to use.
         leading_motions = ''
         for key in tokenize_keys(keys):
             _log.key(f"nv_feed_key(FeedKeyHandler) with eval=False @ ProcessNotationHandler for {key}")

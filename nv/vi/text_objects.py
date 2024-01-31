@@ -121,6 +121,7 @@ def reload_with_user_data_kdl() -> None:
     global CFG
     if hasattr(cfgU,'kdl') and (cfg := cfgU.kdl.get('textobject',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
         _log.debug("@text_objects: Parsing config")
+        replaced = [] # keep track of added values with the same label so as not to remove tha label as instructed by a later config
         for node in cfg.nodes: # bracket "b" "B" d="()" ...
             tag_val = node.name
             tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
@@ -154,7 +155,8 @@ def reload_with_user_data_kdl() -> None:
                 val = arg.value if hasattr(arg,'value') else arg
                 # if tag:
                     # _log.debug("node ‘%s’ has unrecognized tag in argument %s",node.name,arg)
-                CFG['pairs'].pop(val,None)
+                if val not in replaced:
+                    CFG['pairs'].pop(val,None)
 
             for pkey,tag_val in node.props.items(): # Parse properties, +NEW pairs d="()"
                 tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
@@ -175,6 +177,7 @@ def reload_with_user_data_kdl() -> None:
                     _log.error("node ‘%s’ has unparseable property value %s=%s\n  expecting a paired symbol or a space separated string",node.name,pkey,tag_val)
                     continue
                 CFG['pairs'][pkey] = (pair,text_obj) #
+                replaced.append(pkey)
     else:
         CFG = copy.deepcopy(CFG) # copy defaults to be able to reset values on config reload
 

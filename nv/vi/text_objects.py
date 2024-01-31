@@ -104,7 +104,12 @@ PAIRS = {
 }  # type: dict
 # for q in quote_sym:
     # PAIRS[q] = ((q,q),TO.Quote)
-DEF = {'pairs':PAIRS}
+DEF = {'pairs':PAIRS
+    ,'seekforward' : False, # when looking for brackets, if the current text is NOT enclosed, but Targets plugin is enabled, seek the next pair of brackets
+      # ⎀a(B)  with lowercase within ( will result in:
+      # ⎀a(b)     True  SEEK_FORWARD
+      # ⎀a(B)     False SEEK_FORWARD
+}
 re_flags = 0
 re_flags |= re.MULTILINE | re.IGNORECASE
 re_sp = re.compile(r"\s", flags=re_flags)
@@ -123,12 +128,27 @@ def reload_with_user_data_kdl() -> None:
             if tag:
                 _log.warn("node ‘%s’ has unrecognized tag, skipping",node.name)
                 return
-            if val not in to_names_rev:
+            if      val not in to_names_rev\
+                and val not in DEF:
                 _log.warn("node ‘%s’ has unrecognized name, skipping",node.name)
                 return
-            else:
-                text_obj = to_names_rev[val]
 
+            if (cfg_key:=val) == 'seekforward': # ⎀a(B) don't sub ⎀a(b) if false
+                if (args := node.args):
+                    if not isinstance(args[0],bool):
+                        _log.error("node ‘%s’ argument should be ‘true’ or ‘false’, not ‘%s’"
+                            ,           node.name,                                   args[0])
+                    else:
+                        CFG[cfg_key] = args[0]
+                if not args:
+                    _log.warn("node ‘%s’ is missing arguments"
+                        ,          cfg_key)
+                if len(args) > 1:
+                    _log.warn("node ‘%s’ has extra arguments, only the 1st was used ‘%s’"
+                        ,          cfg_key,                               ', '.join(args))
+                continue
+
+            text_obj = to_names_rev[val]
             for arg in node.args:          # Parse arguments, −OLD pairs "b"
                 tag = arg.tag   if hasattr(arg,'tag'  ) else ''
                 val = arg.value if hasattr(arg,'value') else arg
@@ -463,7 +483,9 @@ def _get_text_object_line(view, s: Region, inclusive: bool, count: int) -> Regio
     return Region(start, end)
 
 
-def get_text_object_region(view, s: Region, text_object: str, inclusive: bool = False, count: int = 1, seek_forward=True) -> Region:
+def get_text_object_region(view, s: Region, text_object: str, inclusive: bool = False, count: int = 1, seek_forward=None) -> Region:
+    if  seek_forward is None:
+        seek_forward = CFG['seekforward']
     try:
         delims, type_ = CFG['pairs'][text_object]
     except KeyError:

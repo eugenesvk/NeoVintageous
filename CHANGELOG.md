@@ -24,6 +24,10 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
    <!-- vulnerabilities -->
   - __Added__
    + support setting general plugin values currently set in `Preferences.sublime-settings` in the new KDL config format (but without the needless `neovintageous_` prefix)
+   + :sparkles: support setting `text object` options in the new KDL config
+   + :sparkles: `seek_forward` support for `text object` option — to not seek the next set brackets if current text isn't enclosed in one — `⎀a(B)` with lowercase within parentheses will result in:
+     - `⎀a(B)` if `seek_forward` is `false` (default)
+     - `⎀a(b)` if `seek_forward` is `true`
   - __Fixed__
    + :beetle: key sequences with text commands (`(Ⓝ)bb "MoveToEol"`) not being resolved as a sequence
   - __Changed__

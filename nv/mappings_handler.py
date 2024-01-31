@@ -2,15 +2,7 @@ from typing import Union
 
 from NeoVintageous.nv.ex_cmds import do_ex_user_cmdline
 from NeoVintageous.nv.mappings import Mapping
-from NeoVintageous.nv.settings import get_action_count
-from NeoVintageous.nv.settings import get_mode
-from NeoVintageous.nv.settings import get_motion_count
-from NeoVintageous.nv.settings import get_partial_sequence, get_partial_text
-from NeoVintageous.nv.settings import get_register
-from NeoVintageous.nv.settings import get_sequence
-from NeoVintageous.nv.settings import set_action_count
-from NeoVintageous.nv.settings import set_motion_count
-from NeoVintageous.nv.settings import set_register
+from NeoVintageous.nv.settings import get_action_count, get_mode, get_motion_count, get_partial_sequence, get_partial_text, get_register, get_sequence, set_action_count, set_motion_count, set_register
 from NeoVintageous.nv.state import reset_command_data
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 

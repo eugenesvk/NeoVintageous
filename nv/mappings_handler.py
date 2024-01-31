@@ -96,31 +96,32 @@ def _handle_rhs_text(view, rhs: Union[str, list]) -> None: # find a key that is 
         mode = get_mode(view)
         cont = (i > 0) # pass to Hprocess notation as a continuation (like in a key sequence)
         _log.key(" —%s¦%s— ‘%s’cmd_t @ _hRHS_text m%s",i+1,_c,text_cmd,mode)
-        if text_command.startswith('"command"'):
-            _log.debug(" redirect Sublime's text ‘\"command\"’ to _handle_rhs=%s",text_command)
-            _handle_rhs(win, ':'+text_command)
-        elif ':' in text_command:
-            _log.debug(" redirect text command with ‘:’ command to _handle_rhs=%s",text_command)
-            _handle_rhs(win,     text_command)
+        if text_cmd.startswith('"command"'):
+            _log.debug(" redirect Sublime's text ‘\"command\"’ to _hRHS as ‘:%s’",text_cmd)
+            _handle_rhs(win, ':'+text_cmd)
+        elif ':' in text_cmd:
+            _log.debug(" redirect text command with ‘:’ command to _hRHS as ‘%s’",text_cmd)
+            _handle_rhs(win,     text_cmd)
         else:
-            command_txt = mappings_resolve_text(view, text_command=text_command, mode=mode, check_user_mappings=False)
-            if isinstance(command_txt, CommandNotFound):
-                _log.debug("  text_command ‘%s’not resolved",text_command)
+            cmd_txt = mappings_resolve_text(view, text_command=text_cmd, mode=mode, check_user_mappings=False)
+            if isinstance(cmd_txt, CommandNotFound):
+                _log.warn("  ‘%s’text_cmd NotFound, skipping m‘%s’",text_cmd,mode)
                 continue
             else:
+                _log.key("  ‘%s’cmd_txt m‘%s’",cmd_txt,mode)
                 if mode in (mappings := plugin.mappings_reverse):
                     dict_cls_to_cmd = mappings[mode] # <...plugin_commentary.CommentaryMotion'>:'gc'
-                    cmdT = type(command_txt)
+                    cmdT = type(cmd_txt)
                     if (seq := dict_cls_to_cmd.get(cmdT,None)):
-                        _log.debug("command_txt matched to key ‘¦%s¦’ from plugin_dict's class ‘¦%s¦’"
-                            ,                                    seq,                         cmdT)
+                        _log.key("  ‘%s’seq←‘%s’cmd_txt from plugin_dict's class ‘¦%s¦’"
+                            ,       seq,    cmd_txt,                              cmdT)
                         win.run_command('nv_process_notation',{'keys':seq, 'check_user_mappings':False,})
                         continue
                 if mode in (mappings := keys.mappings_reverse):
                     dict_cls_to_cmd = mappings[mode] # <...cmd_defs.ViUndo'>:'u'
-                    cmdT = type(command_txt)
+                    cmdT = type(cmd_txt)
                     if (seq := dict_cls_to_cmd.get(cmdT,None)):
-                        _log.debug("command_txt matched to key ‘¦%s¦’ from keys_dict's class ‘¦%s¦’"
-                            ,                                    seq,                         cmdT)
+                        _log.key("  ‘%s’seq←‘%s’cmd_txt from keys_dict's class ‘¦%s¦’"
+                            ,       seq,    cmd_txt,                            cmdT)
                         win.run_command('nv_process_notation',{'keys':seq, 'check_user_mappings':False,})
                         continue

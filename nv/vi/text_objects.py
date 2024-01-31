@@ -156,6 +156,15 @@ def reload_with_user_data_kdl() -> None:
                 val = arg.value if hasattr(arg,'value') else arg
                 # if tag:
                     # _log.debug("node ‘%s’ has unrecognized tag in argument %s",node.name,arg)
+                if val == 'clear':
+                    lbl_remove = []
+                    for lbl,(sep,txt_obj) in CFG['pairs'].items():
+                        if lbl not in replaced and txt_obj == text_obj:
+                            lbl_remove.append(lbl)
+                    for lbl in lbl_remove:
+                        _log.debug(f"clearing CFG ‘{cfg_key}’ pair: {CFG['pairs'].get(lbl,None)}")
+                        CFG['pairs'].pop(lbl,None)
+                    continue
                 if val not in replaced:
                     CFG['pairs'].pop(val,None)
 

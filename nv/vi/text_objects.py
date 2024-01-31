@@ -38,16 +38,16 @@ WORD_END_REVERSE_STOPS       	= CLASS_WORD_END   | CLASS_EMPTY_LINE        | CLA
 from enum import auto, Flag, IntFlag
 class TxtObj(Flag):
   #↓ unique modes             ↓ abbreviations
-    Bracket   	= auto(); B 	= Bracket
-    Quote     	= auto(); Q 	= Quote
-    Sentence  	= auto(); S 	= Sentence
-    Tag       	= auto(); T 	= Tag
-    Word      	= auto(); W 	= Word
+    Bracket  	= auto(); B 	= Bracket
+    Quote    	= auto(); Q 	= Quote
+    Sentence 	= auto(); S 	= Sentence
+    Tag      	= auto(); T 	= Tag
+    Word     	= auto(); W 	= Word
     BigWord  	= auto(); BW	= BigWord
-    Paragraph 	= auto(); P 	= Paragraph
-    Indent    	= auto(); I 	= Indent
+    Paragraph	= auto(); P 	= Paragraph
+    Indent   	= auto(); I 	= Indent
     BigIndent	= auto(); BI	= BigIndent
-    Line      	= auto(); L 	= Line
+    Line     	= auto(); L 	= Line
 TO = TxtObj
 
 

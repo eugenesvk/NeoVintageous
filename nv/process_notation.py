@@ -93,6 +93,7 @@ class ProcessNotationHandler():
         if leading_motions:
             if ((len(leading_motions) == len(keys)) and (not must_collect_input(self.view, get_motion(self.view), get_action(self.view)))):  # noqa: E501
                 set_interactive(self.view, True)
+                _log.key("  return if leading_motions and not collect")
                 return
 
             leading_motions_len = len(list(tokenize_keys(leading_motions)))
@@ -167,7 +168,12 @@ class ProcessNotationHandler():
             else:
                 command = action or motion
 
+            _log.key("_collect_input mot‘%s’⎀?%s‘%s’ act‘%s’⎀?%s‘%s’  inParse=%s  isInter=%s"
+                ,motion,motion.accept_input if motion else '_',motion.inp if motion else '_'
+                ,action,action.accept_input if action else '_',action.inp if action else '_'
+                ,command.input_parser, command.input_parser.is_interactive())
             if command.input_parser and command.input_parser.is_interactive():
+                _log.key("_collect_input interactive ‘%s’",command.inp)
                 command.input_parser.run_interactive_command(self.window, command.inp)
 
         except IndexError:

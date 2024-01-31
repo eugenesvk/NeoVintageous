@@ -145,12 +145,12 @@ def reload_with_user_data_kdl() -> None:
                 if   len(val) == 0:
                     pass
                 elif len(val) == 1:
-                    pair = (val[0],val[0]) # dupe symmetric pair like ''
+                    pair = (re.escape(val[0]),re.escape(val[0])) # dupe symmetric pair like ''
                 elif len(val) == 2:
-                    pair = (val[0],val[1]) # ( )
+                    pair = (re.escape(val[0]),re.escape(val[1])) # \( \)
                 elif (_sp := re_sp.split(val)) and\
                     len(_sp) == 2:
-                    pair = (_sp[0],_sp[1]) # ="  "
+                    pair = (re.escape(_sp[0]),re.escape(_sp[1])) # ="  "
                 else:
                     _log.error("node ‘%s’ has unparseable property value %s=%s\n  expecting a paired symbol or a space separated string",node.name,pkey,tag_val)
                     continue

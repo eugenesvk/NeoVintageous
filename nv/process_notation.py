@@ -62,6 +62,9 @@ class ProcessNotationHandler():
             key_count = '_'
         for i,key in enumerate(keys_iter):
             _log.key("  —%s¦%s—‘%s’¦‘%s’ lead‘%s’ nv_feed_key(HFeedKey) doEval→False @ HProcessNotation",i+1,key_count,key,keys,leading_motions)
+            if self.cont and get_action(self.view): # check if we need to break early on continuation sequence before processing the "1st" key that's not really the 1st
+                _log.key("    break early, get_action exists")
+                break
             self.window.run_command('nv_feed_key',{'key':key,'do_eval':False,
                 'repeat_count':repeat_count,'check_user_mappings':check_user_mappings})
 

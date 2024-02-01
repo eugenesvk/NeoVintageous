@@ -201,6 +201,31 @@ indicator { // Set various indicator format
     template  	r#"<body id="nv_motion_count"><span>{prefix}{count}</span></body>"# //|<body id="nv_motion_count"><span>{prefix}{count}</span></body>| Full HTML popup template replacement that will receive two variables: prefix and count
   }; /-count prefix="⌗" // prop=val format is also allowed
 }
+text_object { // Set various text object options
+  steady_cursor true/*←apply to all functions*/ /*override for a function→*/caselowerchar=true caselowerline=true
+    // Don't move ⎀cursor to the text object borders when a given command acts on it, e.g., "lower case within a word" command in ‘LOWER⎀case’ will result in:
+    // ⎀lowercase  if true
+    //  lower⎀case if false
+    // only 2 commands are currently supported
+  seek_forward false // search for text objects outside of current selection, e.g., "lower case within (parentheses)" command in ‘⎀a(B)’ results in:
+    // ‘a(B)’ if false (default)
+    // ‘a(b)’ if true
+  // Use custom text object list/labels (only within existing categories), format:
+  //↓GroupName  label="Add pair" "Remove label" "clear" //clear all group defaults (NO tag)
+  Quote    	‘’="‘’" g="‘’" y="`' '" \                                       	// def '"`#$&*+-./:;=_|~\
+    /**/   	y="`' '" /*separate a pair by space ↓ if it's > 2 symbols*/     	//
+  Bracket  	"clear"/*clear all Bracket defaults*/  \                        	// def b() [] B{} <>
+    /**/   	d="()" f="[]" j="{}" n="【】"                                     	// ...any symbol↑ is a label
+  Sentence 	x="" /*← new label */ "s"                                       	// |s|
+  Tag      	c="" /*← empty "" value since there are not Tag delimiters*/ "t"	// |t|
+  Word     	s="" "w" /*← Remove the default label for Word */               	// |w|
+  BigWord  	e="" "W"                                                        	// |W|
+  Paragraph	b="" "p"                                                        	// |p|
+  Indent   	w="" "i"                                                        	// |i|
+  BigIndent	q="" "I"                                                        	// |I|
+  Line     	a="" "l"                                                        	// |l|
+}
+
 plugin {
   surround { // Use custom brackets in Surround plugin
     punctuation_marks\/* add to default (){}[]<>*/

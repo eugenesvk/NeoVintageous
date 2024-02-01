@@ -217,7 +217,7 @@ def reload_with_user_data_kdl() -> None:
                 CFG['pairs'][pkey] = (pair,text_obj) #
                 replaced.append(pkey)
     else:
-        CFG = copy.deepcopy(CFG) # copy defaults to be able to reset values on config reload
+        CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
 
 def is_at_punctuation(view, pt: int) -> bool:
     char = view.substr(pt) # FIXME Wrong if pt is at '\t'

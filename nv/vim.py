@@ -128,7 +128,7 @@ def reload_with_user_data_kdl() -> None:
                 _log.error("node ‘%s’ has unrecognized property ‘%s=%s’"
                     ,       node.name,                          key,tag_val)
     else:
-        CFG = copy.deepcopy(CFG) # copy defaults to be able to reset values on config reload
+        CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
 
 
 def mode_to_name(mode: str) -> str:

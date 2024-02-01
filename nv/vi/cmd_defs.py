@@ -271,21 +271,21 @@ class ViIndentLine(ViOperatorDef):
 @assign_text(['ChangeToLowerCaseByLines'], ACTION_MODES)
 class ViChangeToLowerCaseByLines(ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.repeatable = True
-        self.command = 'nv_vi_guu'
+        self.repeatable       = True
+        self.command          = 'nv_vi_case_lower_line'
 
 
 @assign(seqs.SEQ['gu'], ACTION_MODES)
 @assign_text(['ChangeToLowerCaseByChars'], ACTION_MODES)
 class ViChangeToLowerCaseByChars(ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.motion_required = True
-        self.repeatable = True
-        self.command = 'nv_vi_gu'
+        self.motion_required  = True
+        self.repeatable       = True
+        self.command          = 'nv_vi_case_lower_char'
 
 
 @assign(seqs.EQUAL_EQUAL, ACTION_MODES)

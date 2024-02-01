@@ -125,8 +125,8 @@ __all__ = [
     'nv_vi_greater_than',
     'nv_vi_greater_than_greater_than',
     'nv_vi_gt',
-    'nv_vi_gu',
-    'nv_vi_guu',
+    'nv_vi_case_lower_char',
+    'nv_vi_case_lower_line',
     'nv_vi_gv',
     'nv_vi_gx',
     'nv_vi_h',
@@ -411,23 +411,24 @@ class nv_vi_g_big_u(TextCommand):
         enter_normal_mode(self.view, mode)
 
 
-class nv_vi_gu(TextCommand):
-
+class nv_vi_case_lower_char(TextCommand):
     def run(self, edit, mode=None, count=1, register=None, motion=None):
         def f(view, s):
             view.replace(edit, s, view.substr(s).lower())
-            # Reverse region so that entering NORMAL mode collapses selection.
-            return Region(s.b, s.a)
+            return Region(s.b, s.a) # Reverse region so that entering NORMAL mode collapses selection
+        old = []
+        if (steady_cursor := True):
+            for sel in self.view.sel():
+                old.append(sel)
 
         if mode == INTERNAL_NORMAL:
             requires_motion(motion)
             with sel_observer(self.view) as observer:
-                run_motion(self.view, motion)
+                run_motion   (self.view, motion)
                 if observer.has_sel_changed():
-                    regions_transformer(self.view, f)
+                    regions_transformer(self.view, f, sel_old=old)
         else:
-            regions_transformer(self.view, f)
-
+            regions_transformer(        self.view, f, sel_old=old)
         enter_normal_mode(self.view, mode)
 
 
@@ -2264,21 +2265,21 @@ class nv_vi_g_big_u_big_u(TextCommand):
         enter_normal_mode(self.view, mode)
 
 
-class nv_vi_guu(TextCommand):
-
+class nv_vi_case_lower_line(TextCommand):
     def run(self, edit, mode=None, count=1, register=None):
-        def select(view, s):
+        def select  (view, s):
             line = view.line(s.b)
-
             return Region(line.end(), line.begin())
-
         def to_lower(view, s):
             view.replace(edit, s, view.substr(s).lower())
             return s
-
-        regions_transformer(self.view, select)
-        regions_transformer(self.view, to_lower)
-        enter_normal_mode(self.view, mode)
+        old = []
+        if (steady_cursor := True):
+            for sel in self.view.sel():
+                old.append(sel)
+        regions_transformer(self.view, select               )
+        regions_transformer(self.view, to_lower, sel_old=old)
+        enter_normal_mode  (self.view, mode                 )
 
 
 # Non-standard command. Select all search occurrences and enter multiple cursor

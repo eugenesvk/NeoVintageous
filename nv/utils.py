@@ -48,17 +48,24 @@ def save_view(view) -> None:
         view.run_command('save', {'async': get_setting(view, 'save_async')})
 
 
-def _regions_transformer(sels, view, f, with_idx) -> None:
+def _regions_transformer(sels, view, f, with_idx, sel_old=None, sel_restore=False) -> None:
     new = []
+    if   sel_old:
+        _log.debug("got old regions to restore %s", sel_old)
+    elif sel_restore:
+        sel_old = []
+        for sel in view.sel():
+            sel_old.append(sel)
+        _log.debug("stored old regions to restore %s", sel_old)
     for idx, sel in enumerate(sels):
         if with_idx:
             regions = f(view, sel, idx)
         else:
-            regions = f(view, sel)
+            regions = f(view, sel     )
 
-        if isinstance(regions, Region):
-            new.append(regions)
-        elif isinstance(regions, list):
+        if isinstance  (  regions, Region):
+            new.append (  regions)
+        elif isinstance(  regions, list):
             for region in regions:
                 if not isinstance(region, Region):
                     raise TypeError('region or array of region required')
@@ -66,19 +73,23 @@ def _regions_transformer(sels, view, f, with_idx) -> None:
         else:
             raise TypeError('region or array of region required')
 
-    set_selection(view, new)
+    if   sel_old:
+        _log.debug("sel restored to %s", sel_old)
+        set_selection(view, sel_old)
+    elif sel_restore:
+        _log.warn("sel restore failed due to no selections")
+        set_selection(view, new)
+    else:
+        _log.debug("no sel restore/old %s",new)
+        set_selection(view, new)
 
 
-def regions_transformer(view, f) -> None:
-    _regions_transformer(list(view.sel()), view, f, False)
-
-
-def regions_transformer_indexed(view, f) -> None:
-    _regions_transformer(list(view.sel()), view, f, True)
-
-
-def regions_transformer_reversed(view, f) -> None:
-    _regions_transformer(reversed(list(view.sel())), view, f, False)
+def regions_transformer         (                    view, f,        sel_old=None    , sel_restore=False      ) -> None:
+    _regions_transformer(         list(view.sel()) , view, f, False, sel_old=sel_old , sel_restore=sel_restore)
+def regions_transformer_indexed (                    view, f,        sel_old=None    , sel_restore=False      ) -> None:
+    _regions_transformer(         list(view.sel()) , view, f, True , sel_old=sel_old , sel_restore=sel_restore)
+def regions_transformer_reversed(                    view, f,        sel_old=None    , sel_restore=False      ) -> None:
+    _regions_transformer(reversed(list(view.sel())), view, f, False, sel_old=sel_old , sel_restore=sel_restore)
 
 
 def _transform_first_non_blank(view, s) -> Region:

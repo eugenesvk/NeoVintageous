@@ -233,14 +233,16 @@ def reload_with_user_data_kdl() -> None:
                         _warn = ''
                         if     (_len := len(val)    ) == 2:
                             CFG[    cfg_key][key] = (val[0]    ,val[1]    ) # ‘    ’
-                            _log.debug('CFG set to arg',cfg_key,key,val[0],val[1])
+                            _log.debug('CFG set to arg @%s %s=(%s %s)'
+                                ,                  cfg_key,key,val[0],val[1])
                         else:
                             _warn     = f"node ‘{node.name}’ ‘{key}’ should have an argument of length 2, not ‘{_len}’"
                             v_split = resp.split(val)
                             if (_len := len(v_split)) == 2:
                                 _warn = ''
                                 CFG[cfg_key][key] = (v_split[0],v_split[1]) # `'   '
-                                _log.debug('CFG set to arg v_split',cfg_key,key,v_split[0],v_split[1])
+                                _log.debug('CFG set to arg v_split @%s %s=(%s %s)'
+                                    ,                       cfg_key,key,v_split[0],v_split[1])
                             else:
                                 _warn = f"node ‘{node.name}’ ‘{key}’ should have an argument of 2 space-separated substrings, not ‘{_len}’"
                         if _warn:
@@ -263,14 +265,16 @@ def reload_with_user_data_kdl() -> None:
                     _warn = ''
                     if     (_len := len(val)    ) == 2:
                         CFG[    cfg_key][key] = (val[0]    ,val[1]    ) # ‘    ’
-                        _log.debug('CFG set to prop',cfg_key,key,val[0],val[1])
+                        _log.debug('CFG set to prop @%s %s=(%s %s)'
+                            ,                   cfg_key,key,val[0],val[1])
                     else:
                         _warn     = f"node ‘{node.name}’ ‘{key}’ should have a value of length 2, not ‘{_len}’"
                         v_split = resp.split(val)
                         if (_len := len(v_split)) == 2:
                             _warn = ''
                             CFG[cfg_key][key] = (v_split[0],v_split[1]) # `'   '
-                            _log.debug('CFG set to prop v_split',cfg_key,key,v_split[0],v_split[1])
+                            _log.debug('CFG set to prop v_split @%s %s=(%s %s)'
+                                ,                   cfg_key,key,v_split[0],v_split[1])
                         else:
                             _warn = f"node ‘{node.name}’ ‘{key}’ should have a value of 2 space-separated substrings, not ‘{_len}’"
                     if _warn:
@@ -296,7 +300,7 @@ def reload_with_user_data_kdl() -> None:
                         else:
                             val = tag_val
                         CFG[cfg_key][key] = val
-                        _log.debug('CFG set to arg',cfg_key,key,val)
+                        _log.debug('CFG set to arg @%s %s=%s',cfg_key,key,val)
                     elif not args:
                         _log.warn("node ‘%s’ is missing arguments in its child ‘%s’"
                             ,         cfg_key ,                                 node.name)
@@ -313,7 +317,8 @@ def reload_with_user_data_kdl() -> None:
                         val = tag_val
                     # val = tag_val.value if hasattr(tag_val,'value') else tag_val
                     CFG[cfg_key][key] = val
-                    _log.debug('CFG set to prop',cfg_key,key,val)
+                    _log.debug('CFG set to prop @%s %s=%s'
+                        ,                   cfg_key,key,val)
                 # if not node.props:
                     # _log.warn(f"node ‘{cfg_key}’ is missing key=value properties")
 
@@ -332,7 +337,7 @@ def reload_with_user_data_kdl() -> None:
                             val = tag_val
                         if key in _STEADY_CURSOR_KEY:
                             CFG[cfg_key][key] = val
-                            _log.debug('CFG set to arg',cfg_key,key,val)
+                            _log.debug('CFG set to arg @%s %s=%s',cfg_key,key,val)
                         else:
                             _log.warn("node ‘%s’ has unrecognized property ‘%s=%s’"
                                 ,       cfg_key,                          key, val)
@@ -353,7 +358,7 @@ def reload_with_user_data_kdl() -> None:
                     # val = tag_val.value if hasattr(tag_val,'value') else tag_val
                     if key in _STEADY_CURSOR_KEY:
                         CFG[cfg_key][key] = val
-                        _log.debug('CFG set to prop',cfg_key,key,val)
+                        _log.debug('CFG set to prop @%s %s=%s',cfg_key,key,val)
                     else:
                         _log.warn("node ‘%s’ has unrecognized property ‘%s=%s’"
                             ,       node.name,                         key,val)

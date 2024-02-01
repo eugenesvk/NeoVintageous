@@ -102,7 +102,8 @@ def reload_with_user_data_kdl() -> None:
                             val = tag_val
                         if val in CFG['coercion']:
                             CFG[    cfg_key][key] = val # mixedcase
-                            _log.debug('CFG set to arg',cfg_key,key,val)
+                            _log.debug('CFG set to arg @%s %s=%s'
+                                ,                   cfg_key,key,val)
                         else:
                             _log.warn("node ‘%s’ has unrecognized value in argument ‘%s’, especting one of: %s"
                                 ,       node.name,                              tag_val,' '.join(CFG['coercion'].keys()))
@@ -123,7 +124,8 @@ def reload_with_user_data_kdl() -> None:
                     # val = tag_val.value if hasattr(tag_val,'value') else tag_val
                     if val in CFG['coercion']:
                         CFG[    cfg_key][key] = val # mixedcase
-                        _log.debug('CFG set to prop',cfg_key,key,val)
+                        _log.debug('CFG set to prop @%s %s=%s'
+                            ,                   cfg_key,key,val)
                     else:
                         _log.warn("node ‘%s’ has unrecognized value in property ‘%s=%s’, especting one of: %s"
                             ,       node.name,                                  key,tag_val,' '.join(CFG['coercion'].keys()))

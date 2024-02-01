@@ -1,13 +1,24 @@
 # A port of https://github.com/tpope/vim-abolish.
 import re
+import logging
 
 from sublime_plugin import TextCommand
 
+from NeoVintageous.nv.log         import DEFAULT_LOG_LEVEL, TFMT
 from NeoVintageous.nv.plugin      import register, register_text
 from NeoVintageous.nv.polyfill    import set_selection
 from NeoVintageous.nv.vi          import seqs
 from NeoVintageous.nv.vi.cmd_base import RequireOneCharMixin, ViOperatorDef, translate_action
-from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
+from NeoVintageous.nv.modes       import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
+
+from NeoVintageous.nv.rc import cfgU
+
+_log = logging.getLogger(__name__)
+_log.setLevel(DEFAULT_LOG_LEVEL)
+if _log.hasHandlers(): # clear existing handlers, including sublime's
+    logging.getLogger(__name__).handlers.clear()
+    # _log.addHandler(stream_handler)
+_L = True if _log.isEnabledFor(logging.KEY) else False
 
 __all__ = ['nv_abolish_command']
 

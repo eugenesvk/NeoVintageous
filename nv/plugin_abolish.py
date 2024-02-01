@@ -77,7 +77,8 @@ DEF = {
         'dotcase'  : _coerce_to_dotcase  ,
         'titlecase': _coerce_to_titlecase
 
-    }
+    },
+    'steadycursor' : True,
 }
 import copy
 CFG =  copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
@@ -91,6 +92,24 @@ def reload_with_user_data_kdl() -> None:
             # 0. Parse node       args: clear
             # 1. Parse node child args: {m mixedcase;}
             # 2. Parse node properties:  m=mixedcase
+            if (cfg_key:=node_parent.name) == 'steadycursor':
+                # _log.debug(f"@plugin abolish: Parsing config {cfg_key}")
+                if (args := node_parent.args): # 0. true
+                    tag_val = args[0] #(t)‘’ if (t) exists (though shouldn't)
+                    (tag,val) = get_tag_val_warn(tag_val=tag_val,logger=_log,node_name=cfg_key)
+                    if not isinstance(val,bool):
+                        _log.warn("node ‘%s’ has unrecognized value in argument ‘%s’, expecting one of: %s"
+                            ,       cfg_key,                              tag_val,'clear')
+                    else:
+                        CFG[cfg_key] = dict()
+                        _log.debug('CFG set to arg @%s ‘%s’=‘%s’'
+                                ,             cfg.name,cfg_key,val)
+                elif not args:
+                    _log.warn("node ‘%s’ is missing arguments",cfg_key)
+                if len(args) > 1:
+                    _log.warn("node ‘%s’ has extra arguments, only the 1st was used ‘%s’"
+                        ,        cfg_key,                                {', '.join(args)})
+
             if (cfg_key:=node_parent.name) == 'alias':
                 # _log.debug(f"@plugin abolish: Parsing config {cfg_key}")
                 if (args := node_parent.args): # 0. clear

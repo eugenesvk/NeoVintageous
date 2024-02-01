@@ -616,58 +616,30 @@ def find_next_lone_bracket(view, start: int, items, unbalanced: int = 0):
         return next_closing_bracket
 
 
-def find_prev_lone_bracket(view, start: int, tags, unbalanced: int = 0):
-    # TODO: Extract common functionality from here and the % motion instead of
-    # duplicating code.
-
-    # XXX: refactor this
+def find_prev_lone_bracket(view, start: int, tags, unbalanced: int = 0): # TODO: Extract common functionality from here and the % motion instead of duplicating code.
     if view.substr(start) == (tags[0][1] if len(tags[0]) > 1 else tags[0]):
         if not unbalanced and view.substr(start - 1) != '\\':
             return Region(start, start + 1)
-
     new_start = start
     for i in range(unbalanced or 1):
-        prev_opening_bracket = reverse_search_by_pt(view, tags[0],
-                                                    start=0,
-                                                    end=new_start,
-                                                    flags=IGNORECASE)
-
-        if prev_opening_bracket is None:
-            # Unbalanced tags; nothing we can do.
+        prev_opening_bracket     = reverse_search_by_pt(view,tags[0],start=0,end=new_start,flags=IGNORECASE)
+        if prev_opening_bracket is None: # Unbalanced tags; nothing we can do
             return
-
         while view.substr(prev_opening_bracket.begin() - 1) == '\\':
-            prev_opening_bracket = reverse_search_by_pt(
-                view,
-                tags[0],
-                start=0,
-                end=prev_opening_bracket.begin(),
-                flags=IGNORECASE
-            )
-
+            prev_opening_bracket = reverse_search_by_pt(view,tags[0],start=0,end=prev_opening_bracket.begin(),
+                flags=IGNORECASE)
             if prev_opening_bracket is None:
                 return
-
         new_start = prev_opening_bracket.begin()
-
     nested = 0
     while True:
-        next_closing_bracket = reverse_search_by_pt(view,
-                                                    tags[1],
-                                                    start=prev_opening_bracket.a,
-                                                    end=start,
-                                                    flags=IGNORECASE)
+        next_closing_bracket = reverse_search_by_pt(view,tags[1],start=prev_opening_bracket.a,end=start,flags=IGNORECASE)
         if not next_closing_bracket:
             break
-
         nested += 1
         start = next_closing_bracket.begin()
-
     if nested > 0:
-        return find_prev_lone_bracket(view,
-                                      prev_opening_bracket.begin(),
-                                      tags,
-                                      nested)
+        return find_prev_lone_bracket(view, prev_opening_bracket.begin(), tags, nested)
     else:
         return prev_opening_bracket
 

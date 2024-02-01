@@ -10,6 +10,7 @@ from NeoVintageous.nv.polyfill    import set_selection
 from NeoVintageous.nv.vi          import seqs
 from NeoVintageous.nv.vi.cmd_base import RequireOneCharMixin, ViOperatorDef, translate_action
 from NeoVintageous.nv.modes       import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
+from NeoVintageous.nv.cfg_parse   import clean_name
 
 from NeoVintageous.nv.rc import cfgU
 
@@ -102,10 +103,10 @@ def reload_with_user_data_kdl() -> None:
                             val = tag_val
                         if val in CFG['coercion']:
                             CFG[    cfg_key][key] = val # mixedcase
-                            _log.debug('CFG set to arg @%s %s=%s'
+                            _log.debug('CFG set to arg @%s ‘%s’=‘%s’'
                                 ,                   cfg_key,key,val)
                         else:
-                            _log.warn("node ‘%s’ has unrecognized value in argument ‘%s’, especting one of: %s"
+                            _log.warn("node ‘%s’ has unrecognized value in argument ‘%s’, expecting one of: %s"
                                 ,       node.name,                              tag_val,' '.join(CFG['coercion'].keys()))
                     elif not args:
                         _log.warn("node ‘%s’ is missing arguments in its child ‘%s’"
@@ -116,23 +117,23 @@ def reload_with_user_data_kdl() -> None:
                 node = node_parent
                 for (key,tag_val) in node.props.items(): # 2. m=mixedcase key=value pairs
                     if hasattr(tag_val,'value'): #‘=(t)‘’ if (t) exists (though shouldn't)
-                        val = tag_val.value # ignore tag
+                        val = clean_name(tag_val.value) # ignore tag
                         _log.warn("node ‘%s’ has unrecognized tag  property ‘%s=%s’"
                             ,       node.name,                              key,tag_val)
                     else:
-                        val = tag_val
+                        val = clean_name(tag_val)
                     # val = tag_val.value if hasattr(tag_val,'value') else tag_val
-                    if val in CFG['coercion']:
+                    if  val in CFG['coercion']:
                         CFG[    cfg_key][key] = val # mixedcase
                         _log.debug('CFG set to prop @%s %s=%s'
                             ,                   cfg_key,key,val)
                     else:
-                        _log.warn("node ‘%s’ has unrecognized value in property ‘%s=%s’, especting one of: %s"
+                        _log.warn("node ‘%s’ has unrecognized value in property ‘%s=%s’, expecting one of: %s"
                             ,       node.name,                                  key,tag_val,' '.join(CFG['coercion'].keys()))
                 # elif not node.props:
                     # _log.warn("node ‘%s’ is missing missing key=value properties",cfg_key)
     else:
-        CFG = copy.deepcopy(CFG) # copy defaults to be able to reset values on config reload
+        CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
 
 
 @register(seqs.SEQ['cr'], (NORMAL,))

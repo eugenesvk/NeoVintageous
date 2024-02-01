@@ -65,6 +65,62 @@ DEF = {
 
     }
 }
+import copy
+CFG =  copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
+
+def reload_with_user_data_kdl() -> None:
+    if hasattr(cfgU,'kdl') and (nest := cfgU.kdl.get('plugin'  ,None))\
+        and                    (cfg  :=     nest.get('abolish',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
+        global CFG
+        _log.debug("@plugin abolish: Parsing config")
+        for node_parent in cfg.nodes: # 'alias'
+            # 1. Parse node child args: {m mixedcase;}
+            # 2. Parse node properties:  m=mixedcase
+            if (cfg_key:=node_parent.name) == 'alias':
+                # _log.debug(f"@plugin abolish: Parsing config {cfg_key}")
+                for node in node_parent.nodes: # 1. m mixedcase key_node value_arg pairs
+                    key = node.name
+                    if (args := node.args):
+                        tag_val = args[0] #(t)‘’ if (t) exists (though shouldn't)
+                        # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
+                        if hasattr(tag_val,'value'):
+                            val = tag_val.value # ignore tag
+                            _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
+                                ,      node.name,                               tag_val)
+                        else:
+                            val = tag_val
+                        if val in CFG['coercion']:
+                            CFG[    cfg_key][key] = val # mixedcase
+                            _log.debug('CFG set to arg',cfg_key,key,val)
+                        else:
+                            _log.warn("node ‘%s’ has unrecognized value in argument ‘%s’, especting one of: %s"
+                                ,       node.name,                              tag_val,' '.join(CFG['coercion'].keys()))
+                    elif not args:
+                        _log.warn("node ‘%s’ is missing arguments in its child ‘%s’"
+                            ,           cfg_key ,                          node.name)
+                    if len(args) > 1:
+                        _log.warn("node ‘%s’ has extra arguments in its child ‘%s’, only the 1st was used ‘%s’"
+                            ,           cfg_key ,                         node.name   ,       {', '.join(args)})
+                node = node_parent
+                for (key,tag_val) in node.props.items(): # 2. m=mixedcase key=value pairs
+                    if hasattr(tag_val,'value'): #‘=(t)‘’ if (t) exists (though shouldn't)
+                        val = tag_val.value # ignore tag
+                        _log.warn("node ‘%s’ has unrecognized tag  property ‘%s=%s’"
+                            ,       node.name,                              key,tag_val)
+                    else:
+                        val = tag_val
+                    # val = tag_val.value if hasattr(tag_val,'value') else tag_val
+                    if val in CFG['coercion']:
+                        CFG[    cfg_key][key] = val # mixedcase
+                        _log.debug('CFG set to prop',cfg_key,key,val)
+                    else:
+                        _log.warn("node ‘%s’ has unrecognized value in property ‘%s=%s’, especting one of: %s"
+                            ,       node.name,                                  key,tag_val,' '.join(CFG['coercion'].keys()))
+                # elif not node.props:
+                    # _log.warn("node ‘%s’ is missing missing key=value properties",cfg_key)
+    else:
+        CFG = copy.deepcopy(CFG) # copy defaults to be able to reset values on config reload
+
 
 @register(seqs.SEQ['cr'], (NORMAL,))
 @register_text(['AbolishCoercions'], (NORMAL,))

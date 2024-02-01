@@ -363,7 +363,7 @@ def _seq_to_command(view, seq: str, mode: str):
     if mode in plugin.mappings:
         if (plugin_command := plugin.mappings[mode].get(seq)):
             if is_plugin_enabled(view, plugin_command):
-                _log.map("  ‘%s’cmd_plug ←‘%s’seq",command,seq)
+                _log.map("  ‘%s’cmd_plug ←‘%s’seq",plugin_command,seq)
                 return plugin_command
     if mode in keys.mappings:
         command = keys.mappings[mode].get(seq)

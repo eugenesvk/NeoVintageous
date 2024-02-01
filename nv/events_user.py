@@ -52,9 +52,10 @@ def reload_with_user_data_kdl() -> None:
     for node in cfg.nodes: # (ⓘ)in {(mac)"~/bin" "--var" r#"{"v":1}"#;}
       mode = mode_names_rev.get(clean_name(node.tag ),None) # ‘Mode.Insert’ for ‘ⓘ’
       evt  = EVENTrev      .get(clean_name(node.name),None) # ‘enter’       for ‘in’
-      if not mode in M.Event:
-        _log.error("node ‘%s’ has unrecognized mode in tag ‘(%s)%s’, skipping"
-          ,            cfg.name,                       node.tag,node.name)
+      if not mode or\
+         not mode in M.Event:
+        _log.error("node ‘%s’ has no/unrecognized mode in tag ‘(%s)%s’, skipping"
+          ,            cfg.name,                          node.tag,node.name)
         continue
       if not evt  in EVENT:
         _log.error("node ‘%s’ has unrecognized event in name ‘(%s)%s’, skipping"

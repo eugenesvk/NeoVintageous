@@ -1,17 +1,10 @@
-from NeoVintageous.nv.settings import get_count
-from NeoVintageous.nv.settings import get_last_char_search_character
-from NeoVintageous.nv.settings import get_last_char_search_command
-from NeoVintageous.nv.settings import get_partial_sequence
-from NeoVintageous.nv.utils import InputParser
-from NeoVintageous.nv.vi import seqs
-from NeoVintageous.nv.vi.cmd_base import RequireOneCharMixin
-from NeoVintageous.nv.vi.cmd_base import ViMotionDef
-from NeoVintageous.nv.vi.cmd_base import ViOperatorDef
-from NeoVintageous.nv.vi.cmd_base import translate_action
-from NeoVintageous.nv.vi.cmd_base import translate_motion
-from NeoVintageous.nv.vi.keys import assign, assign_text
-from NeoVintageous.nv.vim import ACTION_MODES, MOTION_MODES
-from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
+from NeoVintageous.nv.settings    import get_count, get_last_char_search_character, get_last_char_search_command, get_partial_sequence
+from NeoVintageous.nv.utils       import InputParser
+from NeoVintageous.nv.vi          import seqs
+from NeoVintageous.nv.vi.cmd_base import RequireOneCharMixin, ViMotionDef, ViOperatorDef, translate_action, translate_motion
+from NeoVintageous.nv.vi.keys     import assign, assign_text
+from NeoVintageous.nv.vim         import ACTION_MODES, MOTION_MODES
+from NeoVintageous.nv.modes       import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 
 
 @assign(seqs.SEQ['d'], ACTION_MODES)

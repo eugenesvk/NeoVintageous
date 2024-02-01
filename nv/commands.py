@@ -3774,12 +3774,8 @@ class nv_vi_select_text_object(TextCommand):
     def run(self, edit, text_object=None, mode=None, count=1, extend=False, inclusive=False):
         def f(view, s):
             if mode in (INTERNAL_NORMAL, VISUAL, VISUAL_LINE, VISUAL_BLOCK):
-                return get_text_object_region(view, s, text_object,
-                                              inclusive=inclusive,
-                                              count=count)
-
+                return get_text_object_region(view, s, text_object, inclusive=inclusive, count=count)
             return s
-
         regions_transformer(self.view, f)
 
 

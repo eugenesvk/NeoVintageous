@@ -1,34 +1,18 @@
 from collections import Counter
-from contextlib import contextmanager
-from functools import wraps
+from contextlib  import contextmanager
+from functools   import wraps
 import os
 import re
 
-from sublime import FORCE_GROUP
-from sublime import Region
-from sublime import View
-from sublime import Window
+from sublime import FORCE_GROUP, Region, View, Window, CLASS_WORD_END, CLASS_WORD_START
 
-from NeoVintageous.nv.options import get_option
-from NeoVintageous.nv.polyfill import make_all_groups_same_size
-from NeoVintageous.nv.polyfill import set_selection
-from NeoVintageous.nv.polyfill import spell_add
-from NeoVintageous.nv.polyfill import spell_undo
-from NeoVintageous.nv.settings import get_cmdline_cwd
-from NeoVintageous.nv.settings import get_mode
-from NeoVintageous.nv.settings import get_setting
-from NeoVintageous.nv.settings import get_visual_block_direction
-from NeoVintageous.nv.settings import set_mode
-from NeoVintageous.nv.settings import set_processing_notation
-from NeoVintageous.nv.settings import set_visual_block_direction
-from NeoVintageous.nv.settings import set_xpos
-from NeoVintageous.nv.vim import DIRECTION_DOWN
-from NeoVintageous.nv.vim import DIRECTION_UP
-from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
-from NeoVintageous.nv.vim import is_visual_mode
-from NeoVintageous.nv.vim import status_message
-from sublime import CLASS_WORD_END
-from sublime import CLASS_WORD_START
+from NeoVintageous.nv.options  import get_option
+from NeoVintageous.nv.polyfill import make_all_groups_same_size, set_selection, spell_add, spell_undo
+from NeoVintageous.nv.settings import get_cmdline_cwd, get_mode, get_setting, get_visual_block_direction, set_mode, set_processing_notation, set_visual_block_direction, set_xpos
+from NeoVintageous.nv.vim      import DIRECTION_DOWN, DIRECTION_UP
+from NeoVintageous.nv.modes    import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
+from NeoVintageous.nv.vim      import is_visual_mode, status_message
+
 
 
 def is_view(view) -> bool:

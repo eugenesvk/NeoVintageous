@@ -14,6 +14,7 @@ from NeoVintageous.nv.modes    import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_
 from NeoVintageous.nv.vim      import is_visual_mode, status_message
 
 import logging
+from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
 if _log.hasHandlers(): # clear existing handlers, including sublime's

@@ -111,8 +111,8 @@ DEF = {'pairs':PAIRS
       # ⎀a(B)     False SEEK_FORWARD
     ,'steadycursor' : dict() # don't 'move' ⎀cursor to the changed punctuation
 }
-for iTO in TxtObj:
-    DEF['steadycursor'][iTO] = True
+for key in (_STEADY_CURSOR_KEY := ['caselowerline','caselowerchar']):
+    DEF['steadycursor'][key] = True
 
 re_flags = 0
 re_flags |= re.MULTILINE | re.IGNORECASE
@@ -160,12 +160,12 @@ def reload_with_user_data_kdl() -> None:
                     # if tag:
                         # _log.debug("node ‘%s’ has unrecognized tag in argument %s",node.name,arg)
                     if val == True:
-                        for iTO in TxtObj:
-                            CFG['steadycursor'][iTO] = True
+                        for key in _STEADY_CURSOR_KEY:
+                            CFG['steadycursor'][key] = True
                         continue
                     if val == False:
-                        for iTO in TxtObj:
-                            CFG['steadycursor'][iTO] = False
+                        for key in _STEADY_CURSOR_KEY:
+                            CFG['steadycursor'][key] = False
                         continue
                 for pkey,tag_val in node.props.items(): # Parse properties, toggle per group ‘quote=true’
                     tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
@@ -175,8 +175,8 @@ def reload_with_user_data_kdl() -> None:
                     if not isinstance(val, bool):
                         _log.warn("node ‘%s’ has unrecognized value tag in property %s, expected ‘true’ or ‘false’",cfg_key,pkey)
                         continue
-                    if (text_obj := to_names_rev.get(clean_name(pkey),None)):
-                        CFG['steadycursor'][text_obj] = val
+                    if (key := clean_name(pkey)) in _STEADY_CURSOR_KEY:
+                        CFG['steadycursor'][key] = val
                         # _log.debug('CFG set to arg %s %s %s %s',cfg_key,pkey,text_obj,val)
                 continue
 

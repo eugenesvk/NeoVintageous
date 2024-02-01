@@ -13,6 +13,13 @@ from NeoVintageous.nv.vim      import DIRECTION_DOWN, DIRECTION_UP
 from NeoVintageous.nv.modes    import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.vim      import is_visual_mode, status_message
 
+import logging
+_log = logging.getLogger(__name__)
+_log.setLevel(DEFAULT_LOG_LEVEL)
+if _log.hasHandlers(): # clear existing handlers, including sublime's
+    logging.getLogger(__name__).handlers.clear()
+    # _log.addHandler(stream_handler)
+# _L = True if _log.isEnabledFor(logging.KEY) else False
 
 
 def is_view(view) -> bool:

@@ -34,6 +34,7 @@ from NeoVintageous.nv.state            import update_status_line
 from NeoVintageous.nv.ui               import ui_bell, ui_highlight_yank, ui_highlight_yank_clear
 from NeoVintageous.nv.utils            import VisualBlockSelection, adjust_selection_if_first_non_blank, calculate_xpos, extract_file_name, extract_url, find_next_num, find_symbol, fix_eol_cursor, fixup_eof, fold, fold_all, folded_rows, get_indentation, get_insertion_point_at_a, get_insertion_point_at_b, get_option_scroll, get_previous_selection, get_scroll_down_target_pt, get_scroll_up_target_pt, get_string_under_cursor, hide_panel, highest_visible_pt, highlow_visible_rows, is_help_view, is_insert_mode, is_linewise_operation, is_not_insert_mode, is_view, lowest_visible_pt, new_inclusive_region, next_blank, next_non_blank, next_non_folded_pt, prev_blank, prev_non_blank, prev_non_ws, previous_non_folded_pt, regions_transform_extend_to_line_count, regions_transform_to_first_non_blank, regions_transformer, regions_transformer_indexed, regions_transformer_reversed, replace_line, requires_motion, resolve_internal_normal_target, resolve_normal_target, resolve_visual_block_begin, resolve_visual_block_reverse, resolve_visual_block_target, resolve_visual_line_target, resolve_visual_target, restore_visual_repeat_data, row_at, save_previous_selection, scroll_horizontally, scroll_viewport_position, sel_observer, sel_to_lines, should_motion_apply_op_transformer, show_ascii, show_if_not_visible, spell_file_add_word, spell_file_remove_word, translate_char, unfold, unfold_all, update_xpos
 from NeoVintageous.nv.vi.search        import find_in_range, find_wrapping, reverse_find_wrapping, reverse_search
+from NeoVintageous.nv.vi               import text_objects
 from NeoVintageous.nv.vi.text_objects  import big_word_end_reverse, big_word_reverse, find_next_item_match_pt, find_sentences_backward, find_sentences_forward, get_text_object_region, word_end_reverse, word_reverse
 from NeoVintageous.nv.vi.units         import big_word_ends, big_word_starts, inner_lines, lines, next_paragraph_start, prev_paragraph_start, word_ends, word_starts
 from NeoVintageous.nv.vim              import EOF
@@ -417,7 +418,7 @@ class nv_vi_case_lower_char(TextCommand):
             view.replace(edit, s, view.substr(s).lower())
             return Region(s.b, s.a) # Reverse region so that entering NORMAL mode collapses selection
         old = []
-        if (steady_cursor := True):
+        if text_objects.CFG['steadycursor'].get('caselowerchar',None):
             for sel in self.view.sel():
                 old.append(sel)
 
@@ -2274,7 +2275,7 @@ class nv_vi_case_lower_line(TextCommand):
             view.replace(edit, s, view.substr(s).lower())
             return s
         old = []
-        if (steady_cursor := True):
+        if text_objects.CFG['steadycursor'].get('caselowerline',None):
             for sel in self.view.sel():
                 old.append(sel)
         regions_transformer(self.view, select               )

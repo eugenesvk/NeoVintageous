@@ -215,7 +215,7 @@ def reload_with_user_data_kdl() -> None:
         and                    (cfg  :=     nest.get('surround',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
         global CFG, VALID_TARGETS
         for node_parent in cfg.nodes: # 'punctuation_marks'
-            # 1. Parse node child args: {‘ ‘’; “=“”;}
+            # 1. Parse node child args: {‘ ‘’; “ “”;}
             # 2. Parse node properties:  ‘=‘’  “=“”
             if (cfg_key:=node_parent.name) == 'punctuationmarks':
                 # _log.debug(f"@plugin surround: Parsing config {cfg_key}")
@@ -226,8 +226,8 @@ def reload_with_user_data_kdl() -> None:
                         # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
                         if hasattr(tag_val,'value'):
                             val = tag_val.value # ignore tag
-                            _log.warn("node ‘%s’ has unrecognized tag in ‘%s’ argument ‘%s’"
-                                ,      node.name,                        key,       tag_val)
+                            _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
+                                ,      node.name,                               tag_val)
                         else:
                             val = tag_val
                         _warn = ''

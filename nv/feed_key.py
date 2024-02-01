@@ -12,7 +12,7 @@ from NeoVintageous.nv.vi.cmd_defs import ViOpenNameSpace, ViOpenRegister
 from NeoVintageous.nv.vi.keys import resolve_keypad_count, to_bare_command_name
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.vim import enter_normal_mode, is_visual_mode
-from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL, addLoggingLevel, stream_handler
+from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL, TFMT, addLoggingLevel, stream_handler
 
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
@@ -21,7 +21,6 @@ if _log.hasHandlers(): # clear existing handlers, including sublime's
     # _log.addHandler(stream_handler)
 _L = True if _log.isEnabledFor(logging.KEY) else False
 
-TFMT = '{t.minute:2}:{t.second:2}.{t.microsecond}'
 
 class FeedKeyHandler():
 

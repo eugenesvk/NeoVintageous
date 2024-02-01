@@ -6,7 +6,7 @@ from datetime import datetime
 from sublime import CLASS_EMPTY_LINE, CLASS_LINE_END, CLASS_LINE_START, CLASS_PUNCTUATION_END, CLASS_PUNCTUATION_START, CLASS_WORD_END, CLASS_WORD_START, IGNORECASE
 from sublime import Region
 
-from NeoVintageous.nv.log       import DEFAULT_LOG_LEVEL
+from NeoVintageous.nv.log       import DEFAULT_LOG_LEVEL, TFMT
 from NeoVintageous.nv.polyfill  import re_escape, view_find, view_find_in_range, view_indentation_level, view_indented_region, view_rfind_all
 from NeoVintageous.nv.settings  import get_setting
 from NeoVintageous.nv.utils     import get_insertion_point_at_b, next_non_blank, next_non_ws, prev_non_blank, prev_non_ws
@@ -22,8 +22,6 @@ if _log.hasHandlers(): # clear existing handlers, including sublime's
     logging.getLogger(__name__).handlers.clear()
     # _log.addHandler(stream_handler)
 _L = True if _log.isEnabledFor(logging.KEY) else False
-
-TFMT = '{t.minute:2}:{t.second:2}.{t.microsecond}'
 
 
 RX_ANY_TAG          	= r'</?([0-9A-Za-z-]+).*?>'

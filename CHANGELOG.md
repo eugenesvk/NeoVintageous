@@ -28,6 +28,7 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
    + :sparkles: `seek_forward` support for `text object` option — to not seek the next set of brackets/quotes if the current text@cursor position isn't enclosed in one — `⎀a(B)` with a `lowercase within ()` comand will result in:
      - `⎀a(B)` if `seek_forward` is `false` (default)
      - `⎀a(b)` if `seek_forward` is `true`
+   + :sparkles: abolish: allow users to configure case coercion aliases
   - __Fixed__
    + :beetle: key sequences with text commands (`(Ⓝ)bb "MoveToEol"`) not being resolved as a sequence
   - __Changed__

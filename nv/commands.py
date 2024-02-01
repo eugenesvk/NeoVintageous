@@ -5,184 +5,41 @@ import time
 import webbrowser
 from datetime import datetime
 
-from sublime import CLASS_EMPTY_LINE
-from sublime import CLASS_WORD_START
-from sublime import ENCODED_POSITION
-from sublime import LITERAL
-from sublime import MONOSPACE_FONT
-from sublime import Region
-from sublime_plugin import TextCommand
-from sublime_plugin import WindowCommand
+from sublime import CLASS_EMPTY_LINE, CLASS_WORD_START, ENCODED_POSITION, LITERAL, MONOSPACE_FONT, Region
+from sublime_plugin import TextCommand, WindowCommand
 
-from NeoVintageous.nv import listener
-from NeoVintageous.nv import macros
-from NeoVintageous.nv.cmdline import Cmdline
-from NeoVintageous.nv.cmdline_search import CmdlineSearch
-from NeoVintageous.nv.ex.completions import insert_best_cmdline_completion
-from NeoVintageous.nv.ex.completions import on_change_cmdline_completion_prefix
-from NeoVintageous.nv.ex.completions import reset_cmdline_completion_state
-from NeoVintageous.nv.ex_cmds import do_ex_cmd_edit_wrap
-from NeoVintageous.nv.ex_cmds import do_ex_cmdline
-from NeoVintageous.nv.ex_cmds import do_ex_command
-from NeoVintageous.nv.feed_key import FeedKeyHandler
-from NeoVintageous.nv.goto import GotoView
-from NeoVintageous.nv.goto import get_linewise_non_blank_target
-from NeoVintageous.nv.goto import jump_to_mark
-from NeoVintageous.nv.history import history_update
-from NeoVintageous.nv.history import next_cmdline_history
-from NeoVintageous.nv.history import reset_cmdline_history
-from NeoVintageous.nv.jumplist import jumplist_updater
-from NeoVintageous.nv.macros import add_macro_step
-from NeoVintageous.nv.marks import set_mark
-from NeoVintageous.nv.paste import pad_visual_block_paste_contents
-from NeoVintageous.nv.paste import resolve_paste_items_with_view_sel
-from NeoVintageous.nv.polyfill import reveal_side_bar
-from NeoVintageous.nv.polyfill import set_selection
-from NeoVintageous.nv.polyfill import spell_select
-from NeoVintageous.nv.polyfill import split_by_newlines
-from NeoVintageous.nv.polyfill import toggle_side_bar
+from NeoVintageous.nv                  import listener
+from NeoVintageous.nv                  import macros
+from NeoVintageous.nv.cmdline          import Cmdline
+from NeoVintageous.nv.cmdline_search   import CmdlineSearch
+from NeoVintageous.nv.ex.completions   import insert_best_cmdline_completion, on_change_cmdline_completion_prefix, reset_cmdline_completion_state
+from NeoVintageous.nv.ex_cmds          import do_ex_cmd_edit_wrap, do_ex_cmdline, do_ex_command
+from NeoVintageous.nv.feed_key         import FeedKeyHandler
+from NeoVintageous.nv.goto             import GotoView, get_linewise_non_blank_target, jump_to_mark
+from NeoVintageous.nv.history          import history_update
+from NeoVintageous.nv.history          import next_cmdline_history
+from NeoVintageous.nv.history          import reset_cmdline_history
+from NeoVintageous.nv.jumplist         import jumplist_updater
+from NeoVintageous.nv.macros           import add_macro_step
+from NeoVintageous.nv.marks            import set_mark
+from NeoVintageous.nv.paste            import pad_visual_block_paste_contents, resolve_paste_items_with_view_sel
+from NeoVintageous.nv.polyfill         import reveal_side_bar, set_selection, spell_select, split_by_newlines, toggle_side_bar
 from NeoVintageous.nv.process_notation import ProcessNotationHandler
-from NeoVintageous.nv.rc import open_rc, open_config_file_kdl, reload_rc
-from NeoVintageous.nv.registers import get_alternate_file_register
-from NeoVintageous.nv.registers import registers_get_for_paste
-from NeoVintageous.nv.registers import registers_op_change
-from NeoVintageous.nv.registers import registers_op_delete
-from NeoVintageous.nv.registers import registers_op_yank
-from NeoVintageous.nv.search import add_search_highlighting
-from NeoVintageous.nv.search import clear_search_highlighting
-from NeoVintageous.nv.search import find_search_occurrences
-from NeoVintageous.nv.search import find_word_search_occurrences
-from NeoVintageous.nv.search import get_search_occurrences
-from NeoVintageous.nv.search import process_search_pattern
-from NeoVintageous.nv.search import process_word_search_pattern
-from NeoVintageous.nv.settings import get_glue_until_normal_mode
-from NeoVintageous.nv.settings import get_last_search_pattern
-from NeoVintageous.nv.settings import get_last_search_pattern_command
-from NeoVintageous.nv.settings import get_mode
-from NeoVintageous.nv.settings import get_normal_insert_count
-from NeoVintageous.nv.settings import get_repeat_data
-from NeoVintageous.nv.settings import get_sequence
-from NeoVintageous.nv.settings import get_setting
-from NeoVintageous.nv.settings import get_xpos
-from NeoVintageous.nv.settings import is_processing_notation
-from NeoVintageous.nv.settings import set_glue_until_normal_mode
-from NeoVintageous.nv.settings import set_last_char_search
-from NeoVintageous.nv.settings import set_last_search_pattern
-from NeoVintageous.nv.settings import set_mode
-from NeoVintageous.nv.settings import set_normal_insert_count
-from NeoVintageous.nv.settings import set_repeat_data
-from NeoVintageous.nv.settings import set_reset_during_init
-from NeoVintageous.nv.settings import set_xpos
-from NeoVintageous.nv.settings import toggle_ctrl_keys
-from NeoVintageous.nv.settings import toggle_super_keys
-from NeoVintageous.nv.settings import get_config
-from NeoVintageous.nv.state import reset_command_data
-from NeoVintageous.nv.state import update_status_line
-from NeoVintageous.nv.ui import ui_bell
-from NeoVintageous.nv.ui import ui_highlight_yank
-from NeoVintageous.nv.ui import ui_highlight_yank_clear
-from NeoVintageous.nv.utils import VisualBlockSelection
-from NeoVintageous.nv.utils import adjust_selection_if_first_non_blank
-from NeoVintageous.nv.utils import calculate_xpos
-from NeoVintageous.nv.utils import extract_file_name
-from NeoVintageous.nv.utils import extract_url
-from NeoVintageous.nv.utils import find_next_num
-from NeoVintageous.nv.utils import find_symbol
-from NeoVintageous.nv.utils import fix_eol_cursor
-from NeoVintageous.nv.utils import fixup_eof
-from NeoVintageous.nv.utils import fold
-from NeoVintageous.nv.utils import fold_all
-from NeoVintageous.nv.utils import folded_rows
-from NeoVintageous.nv.utils import get_indentation
-from NeoVintageous.nv.utils import get_insertion_point_at_a
-from NeoVintageous.nv.utils import get_insertion_point_at_b
-from NeoVintageous.nv.utils import get_option_scroll
-from NeoVintageous.nv.utils import get_previous_selection
-from NeoVintageous.nv.utils import get_scroll_down_target_pt
-from NeoVintageous.nv.utils import get_scroll_up_target_pt
-from NeoVintageous.nv.utils import get_string_under_cursor
-from NeoVintageous.nv.utils import hide_panel
-from NeoVintageous.nv.utils import highest_visible_pt
-from NeoVintageous.nv.utils import highlow_visible_rows
-from NeoVintageous.nv.utils import is_help_view
-from NeoVintageous.nv.utils import is_insert_mode
-from NeoVintageous.nv.utils import is_linewise_operation
-from NeoVintageous.nv.utils import is_not_insert_mode
-from NeoVintageous.nv.utils import is_view
-from NeoVintageous.nv.utils import lowest_visible_pt
-from NeoVintageous.nv.utils import new_inclusive_region
-from NeoVintageous.nv.utils import next_blank
-from NeoVintageous.nv.utils import next_non_blank
-from NeoVintageous.nv.utils import next_non_folded_pt
-from NeoVintageous.nv.utils import prev_blank
-from NeoVintageous.nv.utils import prev_non_blank
-from NeoVintageous.nv.utils import prev_non_ws
-from NeoVintageous.nv.utils import previous_non_folded_pt
-from NeoVintageous.nv.utils import regions_transform_extend_to_line_count
-from NeoVintageous.nv.utils import regions_transform_to_first_non_blank
-from NeoVintageous.nv.utils import regions_transformer
-from NeoVintageous.nv.utils import regions_transformer_indexed
-from NeoVintageous.nv.utils import regions_transformer_reversed
-from NeoVintageous.nv.utils import replace_line
-from NeoVintageous.nv.utils import requires_motion
-from NeoVintageous.nv.utils import resolve_internal_normal_target
-from NeoVintageous.nv.utils import resolve_normal_target
-from NeoVintageous.nv.utils import resolve_visual_block_begin
-from NeoVintageous.nv.utils import resolve_visual_block_reverse
-from NeoVintageous.nv.utils import resolve_visual_block_target
-from NeoVintageous.nv.utils import resolve_visual_line_target
-from NeoVintageous.nv.utils import resolve_visual_target
-from NeoVintageous.nv.utils import restore_visual_repeat_data
-from NeoVintageous.nv.utils import row_at
-from NeoVintageous.nv.utils import save_previous_selection
-from NeoVintageous.nv.utils import scroll_horizontally
-from NeoVintageous.nv.utils import scroll_viewport_position
-from NeoVintageous.nv.utils import sel_observer
-from NeoVintageous.nv.utils import sel_to_lines
-from NeoVintageous.nv.utils import should_motion_apply_op_transformer
-from NeoVintageous.nv.utils import show_ascii
-from NeoVintageous.nv.utils import show_if_not_visible
-from NeoVintageous.nv.utils import spell_file_add_word
-from NeoVintageous.nv.utils import spell_file_remove_word
-from NeoVintageous.nv.utils import translate_char
-from NeoVintageous.nv.utils import unfold
-from NeoVintageous.nv.utils import unfold_all
-from NeoVintageous.nv.utils import update_xpos
-from NeoVintageous.nv.vi.search import find_in_range
-from NeoVintageous.nv.vi.search import find_wrapping
-from NeoVintageous.nv.vi.search import reverse_find_wrapping
-from NeoVintageous.nv.vi.search import reverse_search
-from NeoVintageous.nv.vi.text_objects import big_word_end_reverse
-from NeoVintageous.nv.vi.text_objects import big_word_reverse
-from NeoVintageous.nv.vi.text_objects import find_next_item_match_pt
-from NeoVintageous.nv.vi.text_objects import find_sentences_backward
-from NeoVintageous.nv.vi.text_objects import find_sentences_forward
-from NeoVintageous.nv.vi.text_objects import get_text_object_region
-from NeoVintageous.nv.vi.text_objects import word_end_reverse
-from NeoVintageous.nv.vi.text_objects import word_reverse
-from NeoVintageous.nv.vi.units import big_word_ends
-from NeoVintageous.nv.vi.units import big_word_starts
-from NeoVintageous.nv.vi.units import inner_lines
-from NeoVintageous.nv.vi.units import lines
-from NeoVintageous.nv.vi.units import next_paragraph_start
-from NeoVintageous.nv.vi.units import prev_paragraph_start
-from NeoVintageous.nv.vi.units import word_ends
-from NeoVintageous.nv.vi.units import word_starts
-from NeoVintageous.nv.vim import EOF
-from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
-from NeoVintageous.nv.vim import clean_views
-from NeoVintageous.nv.vim import enter_insert_mode
-from NeoVintageous.nv.vim import enter_normal_mode
-from NeoVintageous.nv.vim import enter_visual_block_mode
-from NeoVintageous.nv.vim import enter_visual_line_mode
-from NeoVintageous.nv.vim import enter_visual_mode
-from NeoVintageous.nv.vim import is_visual_mode
-from NeoVintageous.nv.vim import reset_status_line
-from NeoVintageous.nv.vim import run_motion
-from NeoVintageous.nv.vim import status_message
-from NeoVintageous.nv.window import window_control
-from NeoVintageous.nv.window import window_open_file
-from NeoVintageous.nv.window import window_tab_control
+from NeoVintageous.nv.rc               import open_rc, open_config_file_kdl, reload_rc
+from NeoVintageous.nv.registers        import get_alternate_file_register, registers_get_for_paste, registers_op_change, registers_op_delete, registers_op_yank
+from NeoVintageous.nv.search           import add_search_highlighting, clear_search_highlighting, find_search_occurrences, find_word_search_occurrences, get_search_occurrences, process_search_pattern, process_word_search_pattern
+from NeoVintageous.nv.settings         import get_glue_until_normal_mode, get_last_search_pattern, get_last_search_pattern_command, get_mode, get_normal_insert_count, get_repeat_data, get_sequence, get_setting, get_xpos, is_processing_notation, set_glue_until_normal_mode, set_last_char_search, set_last_search_pattern, set_mode, set_normal_insert_count, set_repeat_data, set_reset_during_init, set_xpos, toggle_ctrl_keys, toggle_super_keys, get_config
+from NeoVintageous.nv.state            import reset_command_data
+from NeoVintageous.nv.state            import update_status_line
+from NeoVintageous.nv.ui               import ui_bell, ui_highlight_yank, ui_highlight_yank_clear
+from NeoVintageous.nv.utils            import VisualBlockSelection, adjust_selection_if_first_non_blank, calculate_xpos, extract_file_name, extract_url, find_next_num, find_symbol, fix_eol_cursor, fixup_eof, fold, fold_all, folded_rows, get_indentation, get_insertion_point_at_a, get_insertion_point_at_b, get_option_scroll, get_previous_selection, get_scroll_down_target_pt, get_scroll_up_target_pt, get_string_under_cursor, hide_panel, highest_visible_pt, highlow_visible_rows, is_help_view, is_insert_mode, is_linewise_operation, is_not_insert_mode, is_view, lowest_visible_pt, new_inclusive_region, next_blank, next_non_blank, next_non_folded_pt, prev_blank, prev_non_blank, prev_non_ws, previous_non_folded_pt, regions_transform_extend_to_line_count, regions_transform_to_first_non_blank, regions_transformer, regions_transformer_indexed, regions_transformer_reversed, replace_line, requires_motion, resolve_internal_normal_target, resolve_normal_target, resolve_visual_block_begin, resolve_visual_block_reverse, resolve_visual_block_target, resolve_visual_line_target, resolve_visual_target, restore_visual_repeat_data, row_at, save_previous_selection, scroll_horizontally, scroll_viewport_position, sel_observer, sel_to_lines, should_motion_apply_op_transformer, show_ascii, show_if_not_visible, spell_file_add_word, spell_file_remove_word, translate_char, unfold, unfold_all, update_xpos
+from NeoVintageous.nv.vi.search        import find_in_range, find_wrapping, reverse_find_wrapping, reverse_search
+from NeoVintageous.nv.vi.text_objects  import big_word_end_reverse, big_word_reverse, find_next_item_match_pt, find_sentences_backward, find_sentences_forward, get_text_object_region, word_end_reverse, word_reverse
+from NeoVintageous.nv.vi.units         import big_word_ends, big_word_starts, inner_lines, lines, next_paragraph_start, prev_paragraph_start, word_ends, word_starts
+from NeoVintageous.nv.vim              import EOF
+from NeoVintageous.nv.modes            import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
+from NeoVintageous.nv.vim              import clean_views, enter_insert_mode, enter_normal_mode, enter_visual_block_mode, enter_visual_line_mode, enter_visual_mode, is_visual_mode, reset_status_line, run_motion, status_message
+from NeoVintageous.nv.window           import window_control, window_open_file, window_tab_control
 
 from NeoVintageous.nv.rc import cfgU
 

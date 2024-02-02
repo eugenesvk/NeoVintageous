@@ -101,7 +101,7 @@ def reload_with_user_data_kdl() -> None:
                         _log.warn("node ‘%s’ has unrecognized value in argument ‘%s’, expecting one of: %s"
                             ,       cfg_key,                              tag_val,'clear')
                     else:
-                        CFG[cfg_key] = dict()
+                        CFG[cfg_key] = val
                         _log.debug('CFG set to arg @%s ‘%s’=‘%s’'
                                 ,             cfg.name,cfg_key,val)
                 elif not args:

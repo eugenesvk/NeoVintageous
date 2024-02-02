@@ -263,7 +263,7 @@ def diff_same_pos(selA_old:Selection,selA_new:list, strA:str,strB:str) -> None:
 class nv_abolish_command(TextCommand):
     def run(self, edit, mode=None, count=None, register=None, to=None):
         try:
-            to = CFG['alias'][to]
+            to          = CFG['alias'   ][to]
         except KeyError:
             pass
         try:
@@ -272,10 +272,21 @@ class nv_abolish_command(TextCommand):
             return
 
         new_sels = []
-        for sel in self.view.sel():
-            sel =  self.view.word(sel)
-            new_sels.append(sel.begin())
-            self.view.replace(edit, sel, coerce_func(self.view.substr(sel)))
+        cur_sels = self.view.sel()
+        selA_new = [[i.begin(),i.end()] for i in cur_sels] # ranges for each current selection
 
-        if new_sels:
+        for sel in cur_sels:                  # ⎀titleCase (0, 0)=‘’
+            sel_w   = self.view.word  (sel  ) #            (0, 9)=‘titleCase’
+            sel_w_s = self.view.substr(sel_w) #            (0, 9)=‘titleCase’
+            repl    = coerce_func(sel_w_s)    #                   ‘Title Case’
+            if CFG['steadycursor']:
+                diff_same_pos(selA_old=cur_sels,selA_new=selA_new, strA=sel_w_s,strB=repl)
+            else:
+                new_sels.append(sel_w.begin())
+            self.view.replace(edit, sel_w, repl)
+
+        if CFG['steadycursor']:
+            new_sels_ = [Region(max(0,selA_new[i][0]),max(0,selA_new[i][1])) for i in range(len(cur_sels))]
+            set_selection(self.view, new_sels_)
+        elif new_sels:
             set_selection(self.view, new_sels)

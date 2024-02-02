@@ -98,7 +98,7 @@ def reload_with_user_data_kdl() -> None:
                     (tag,val) = get_tag_val_warn(tag_val=tag_val,logger=_log,node_name=cfg_key)
                     if val == 'clear':
                         CFG[cfg_key] = dict() # clear all existing aliases
-                        _log.warn('CFG arg cleared @%s ‘%s’={}',cfg.name,cfg_key)
+                        _log.debug('CFG arg cleared @%s ‘%s’={}',cfg.name,cfg_key)
                     else:
                         _log.warn("node ‘%s’ has unrecognized value in argument ‘%s’, expecting one of: %s"
                             ,       node.name,                              tag_val,'clear')
@@ -114,11 +114,11 @@ def reload_with_user_data_kdl() -> None:
                         tag_val = args[0] #(t)‘’ if (t) exists (though shouldn't)
                         # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
                         if hasattr(tag_val,'value'):
-                            val = tag_val.value # ignore tag
+                            val = clean_name(tag_val.value) # ignore tag
                             _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
                                 ,      node.name,                               tag_val)
                         else:
-                            val = tag_val
+                            val = clean_name(tag_val)
                         if val in CFG['coercion']:
                             CFG[    cfg_key][key] = val # mixedcase
                             _log.debug('CFG set to arg @%s ‘%s’=‘%s’'

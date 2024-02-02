@@ -37,6 +37,21 @@ def clean_cmd (name:str): # convert command name to lowercase (don't remove _ si
 def clean_path(name:str): # clean path segment by removing separators ␠⭾-_ but NOT . and converting to lowercase
   return re.sub(path_separator,'',name.casefold())
 
+import logging
+def get_tag_val_warn(tag_val:kdl.Value,logger:logging.Logger=None,node_name:str=''):
+  """split KDL value into tag and value, and warn if tag exists"""
+  # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
+  if hasattr(tag_val,'value'):
+    tag = tag_val.tag
+    val = tag_val.value
+    if logger:
+      logger.warn("node ‘%s’ has unrecognized tag in value ‘%s’"
+        ,        node_name,                           tag_val)
+  else:
+    tag = None
+    val = tag_val
+  return (tag,val)
+
 def parse_kdl_doc(s,v_untag:bool=False,v_tag:bool=False):
   parseConfig = kdl.ParseConfig(
     nativeUntaggedValues    = v_untag  #|True| produce native Py objects (str int float bool None) untagged values (no (foo)prefix), or kdl-Py objects (kdl.String kdl.Decimal...)

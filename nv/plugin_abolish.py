@@ -70,7 +70,9 @@ DEF = {
         'camelcase': _coerce_to_camelcase,
         'snakecase': _coerce_to_snakecase,
         'uppercase': _coerce_to_uppercase,
+        'snakeuppercase': _coerce_to_uppercase,
         'dashcase' : _coerce_to_dashcase ,
+        'kebabcase': _coerce_to_dashcase ,
         'spacecase': _coerce_to_spacecase,
         'dotcase'  : _coerce_to_dotcase  ,
         'titlecase': _coerce_to_titlecase

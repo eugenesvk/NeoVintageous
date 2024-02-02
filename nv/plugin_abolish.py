@@ -2,6 +2,7 @@
 import re
 import logging
 
+from sublime import Selection, Region
 from sublime_plugin import TextCommand
 
 from NeoVintageous.nv.log         import DEFAULT_LOG_LEVEL, TFMT
@@ -182,6 +183,82 @@ class AbolishCoercions(RequireOneCharMixin, ViOperatorDef):
     def translate(self, view):
         return translate_action(view, 'nv_abolish', {'to':self.inp})
 
+
+import difflib
+from difflib import SequenceMatcher, Differ
+def diff_add(i,sel:Region,old,i1,i2,j1,j2) -> list:
+    if   i1 >  old[i].end  (): # ignore ranges past end of selection
+        _log.debug("  +ignore %s > %s",i1,old[i].end())
+        return
+    elif i1 <= old[i].begin(): # move beginning and end
+        a = b = j2-j1 # length of added text from the diff at strB
+        _log.debug("  +moved a,b by %s from %s,%s to %s,%s"
+                ,                    j2-j1,sel.begin(),sel.end()
+                ,                    j2-j1+sel.begin(),sel.end()+j2-j1)
+        return [a,b]
+    elif i1 <= old[i].  end(): # move               end
+        b = j2-j1
+        _log.debug("+moved   b by %s",j2-j1)
+        return [0,b]
+def diff_rem(i,sel:Region,old,i1,i2,j1,j2) -> list:
+    if   i1 >  old[i].  end(): # ignore ranges past end of selection
+        _log.debug("  −ignore %s > %s",i1,old[i].end())
+        return
+    elif i1 <= old[i].begin(): # move beginning and end
+        a = -min(i2-i1, sel.begin()-i1) # on overlap, move to the left excluding the overlap
+        b = -min(i2-i1, sel.end  ()-i1)
+        _log.debug("  −moved a,b by %s,%s from %s,%s to %s,%s"
+                ,                      a,b, sel.begin(),sel.end()
+                ,                      a +  sel.begin(),sel.end()+b)
+        return [a,b]
+    elif i1 <= old[i].  end(): # move               end
+        b = -min(i2-i1, sel.end  ()-i1)
+        _log.debug("-moved   b by %s",b)
+        return [a,b]
+
+def diff_same_pos(selA_old:Selection,selA_new:list, strA:str,strB:str) -> None:
+    """Maintains the selection positions in strA given the diff to strB using SequenceMatcher from difflib"""
+    _log.debug("selA_old = %s\nselA_new = %s\nstrA = %s\nstrB= %s",selA_old,selA_new,strA,strB)
+    s = SequenceMatcher(None, strA.lower(), strB.lower()) #  compares two sequences and identifies common and differing subsequences
+    for tag, i1,i2, j1,j2 in s.get_opcodes(): # generates instructions (opcodes) for transforming one string into another
+        _log.debug("%s i%s–%s=‘%s’ j%s–%s=‘%s’"
+            ,     tag, i1,i2,strA[i1:i2], j1,j2,strB[j1:j2])
+        if   tag == "equal":
+            pass
+        elif tag == "insert": #additions in  string 2
+            for i,sel in enumerate(selA_old):
+                if (new := diff_add(i,sel,selA_old,i1,i2,j1,j2)):
+                    _log.debug("insert new=%s",new)
+                    selA_new[i][0] += new[0]
+                    selA_new[i][1] += new[1]
+        elif tag == "delete": #removals from string 1
+            for i,sel in enumerate(selA_old):
+                if (new := diff_rem(i,sel,selA_old,i1,i2,j1,j2)):
+                    _log.debug("delete new=%s",new)
+                    selA_new[i][0] += new[0]
+                    selA_new[i][1] += new[1]
+        elif tag == "replace": #additions in  string 2
+            len_s1 = (i2-i1)
+            len_s2 = (j2-j1)
+            len_diff = len_s2 - len_s1
+            if   len_diff == 0: # 0 net changes
+                _log.debug("replace pass")
+                pass
+            elif len_diff  > 0: # + net change
+                for i,sel in enumerate(selA_old):
+                    if new := diff_add(i,sel,selA_old,i1,i2,j1 + len_diff+1,j2):
+                        _log.debug(f'replace +new={new}')
+                        selA_new[i][0] += new[0]
+                        selA_new[i][1] += new[1]
+            elif len_diff  < 0: # − net change
+                for i,sel in enumerate(selA_old):
+                    if new := diff_rem(i,sel,selA_old,i1 - len_diff+1,i2,j1,j2):
+                        _log.debug("replace -new=%s",new)
+                        selA_new[i][0] += new[0]
+                        selA_new[i][1] += new[1]
+        else:
+            _log.error(f"unknown diff tag in diff_same_pos",tag, i1, i2, j1, j2)
+    _log.debug(f"selA_new = {selA_new}")
 
 class nv_abolish_command(TextCommand):
     def run(self, edit, mode=None, count=None, register=None, to=None):

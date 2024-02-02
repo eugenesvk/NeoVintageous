@@ -34,16 +34,16 @@ def _coerce_to_uppercase       (string:str) -> str:
     return _coerce_to_snakecase(string).upper()
 def _coerce_to_dashcase        (string:str) -> str:
     return _coerce_to_snakecase(string).replace('_','-')
-def _coerce_to_spacecase       (string:str) -> str:
-    return _coerce_to_snakecase(string).replace('_',' ')
 def _coerce_to_dotcase         (string:str) -> str:
     return _coerce_to_snakecase(string).replace('_','.')
-def _coerce_to_mixedcase       (string:str) -> str:
-    return _coerce_to_spacecase(string).title().replace(' ','')
+def _coerce_to_spacecase       (string:str) -> str:
+    return _coerce_to_snakecase(string).replace('_',' ')
 def _coerce_to_titlecase       (string:str) -> str:
     return _coerce_to_spacecase(string).title()
+def _coerce_to_mixedcase       (string:str) -> str:
+    return _coerce_to_titlecase(string).replace(' ','')
 def _coerce_to_camelcase       (string:str) -> str:
-    string=_coerce_to_spacecase(string).title().replace(' ','')
+    string=_coerce_to_titlecase(string).replace(' ','')
     if len(string) > 1:
         return string[0].lower() + string[1:]
     else:

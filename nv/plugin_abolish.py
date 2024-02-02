@@ -10,7 +10,7 @@ from NeoVintageous.nv.polyfill    import set_selection
 from NeoVintageous.nv.vi          import seqs
 from NeoVintageous.nv.vi.cmd_base import RequireOneCharMixin, ViOperatorDef, translate_action
 from NeoVintageous.nv.modes       import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
-from NeoVintageous.nv.cfg_parse   import clean_name
+from NeoVintageous.nv.cfg_parse   import clean_name, get_tag_val_warn
 
 from NeoVintageous.nv.rc import cfgU
 
@@ -86,10 +86,26 @@ def reload_with_user_data_kdl() -> None:
         global CFG
         _log.debug("@plugin abolish: Parsing config")
         for node_parent in cfg.nodes: # 'alias'
+            # 0. Parse node       args: clear
             # 1. Parse node child args: {m mixedcase;}
             # 2. Parse node properties:  m=mixedcase
             if (cfg_key:=node_parent.name) == 'alias':
                 # _log.debug(f"@plugin abolish: Parsing config {cfg_key}")
+                if (args := node_parent.args): # 0. clear
+                    tag_val = args[0] #(t)‘’ if (t) exists (though shouldn't)
+                    (tag,val) = get_tag_val_warn(tag_val=tag_val,logger=_log,node_name=cfg_key)
+                    if val == 'clear':
+                        CFG[cfg_key] = dict() # clear all existing aliases
+                        _log.warn('CFG arg cleared @%s ‘%s’={}',cfg.name,cfg_key)
+                    else:
+                        _log.warn("node ‘%s’ has unrecognized value in argument ‘%s’, expecting one of: %s"
+                            ,       node.name,                              tag_val,'clear')
+                # elif not args:
+                    # _log.warn("node ‘%s’ is missing arguments in its child ‘%s’"
+                        # ,           cfg_key,                          node.name)
+                if len(args) > 1:
+                    _log.warn("node ‘%s’ has extra arguments, only the 1st was used ‘%s’"
+                        ,        cfg_key,                                {', '.join(args)})
                 for node in node_parent.nodes: # 1. m mixedcase key_node value_arg pairs
                     key = node.name
                     if (args := node.args):

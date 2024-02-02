@@ -23,8 +23,13 @@ _L = True if _log.isEnabledFor(logging.KEY) else False
 
 __all__ = ['nv_abolish_command']
 
-def _coerce_to_mixedcase       (string:str) -> str:
-    return _coerce_to_spacecase(string).title().replace(' ','')
+re_sn1 = re.compile(r"([A-Z]       +)([A-Z][a-z])", flags=re.X) # extended ignores whitespace
+re_sn2 = re.compile(r"(     [a-z\d] )([A-Z]     )", flags=re.X)
+def _coerce_to_snakecase       (string:str) -> str: # stackoverflow.com/a/1176023 github.com/jpvanhal/inflection
+    string = re_sn1.sub(r'\1_\2',string)
+    string = re_sn2.sub(r'\1_\2',string)
+    string = string.replace("-","_")
+    return string.lower()
 def _coerce_to_uppercase       (string:str) -> str:
     return _coerce_to_snakecase(string).upper()
 def _coerce_to_dashcase        (string:str) -> str:
@@ -33,6 +38,8 @@ def _coerce_to_spacecase       (string:str) -> str:
     return _coerce_to_snakecase(string).replace('_',' ')
 def _coerce_to_dotcase         (string:str) -> str:
     return _coerce_to_snakecase(string).replace('_','.')
+def _coerce_to_mixedcase       (string:str) -> str:
+    return _coerce_to_spacecase(string).title().replace(' ','')
 def _coerce_to_titlecase       (string:str) -> str:
     return _coerce_to_spacecase(string).title()
 def _coerce_to_camelcase       (string:str) -> str:
@@ -41,13 +48,6 @@ def _coerce_to_camelcase       (string:str) -> str:
         return string[0].lower() + string[1:]
     else:
         return string   .lower()
-re_sn1 = re.compile(r"([A-Z]       +)([A-Z][a-z])", flags=re.X) # extended ignores whitespace
-re_sn2 = re.compile(r"(     [a-z\d] )([A-Z]     )", flags=re.X)
-def _coerce_to_snakecase       (string:str) -> str: # stackoverflow.com/a/1176023 github.com/jpvanhal/inflection
-    string = re_sn1.sub(r'\1_\2',string)
-    string = re_sn2.sub(r'\1_\2',string)
-    string = string.replace("-","_")
-    return string.lower()
 
 DEF = {
     'alias' : {

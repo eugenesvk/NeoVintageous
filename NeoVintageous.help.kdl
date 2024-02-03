@@ -227,6 +227,19 @@ text_object { // Set various text object options
 }
 
 plugin {
+  abolish { // Use custom aliases in Abolish plugin
+    steady_cursor true // don't 'move' ⎀cursor to the word's beginning on case changes
+    alias "clear"/*clear all default aliases*/ { // ._-␠ and CaSe are ignored in alias names
+      m  	"MiXedCase" 	; p        	"MiXedCase"
+      c  	"camelCase" 	;          	//
+      _  	"snake_case"	; s        	"snake_case"
+      u  	"UPPER_CASE"	; U        	"SNAKE_UPPER_CASE" // same as uppercase
+      -  	"dash-case" 	; k        	"kebab-case"       // same as dash-case
+      " "	"space case"	; "<space>"	"space case"
+      .  	"dot.case"
+      t  	"Title Case"
+    }; /-alias m="mixedcase" // prop=val format is also allowed
+  }
   surround { // Use custom brackets in Surround plugin
     punctuation_marks\/* add to default (){}[]<>*/
       ‘="‘’" “="“”" ’="‘’" ”="“”" \

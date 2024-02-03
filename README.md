@@ -91,6 +91,7 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
       - `⎀a(b)` if `seek_forward` is `false` (default)
       - `⎀ab`   if `seek_forward` is `true`
     + :sparkles: surround: option to maintain cursor position on text edits, e.g., adding `'` to `my_⎀word` (⎀ denotes cursor position) will leave cursor at the same spot in the new `'my_⎀word'` while previously it moved it to the first inserted punctuation `⎀'my_word'`
+    + :sparkles: abolish: option to maintain cursor position on case changes, e.g., converting `se⎀View⎀Sel_⎀Reverse` to upper case (⎀ denotes cursor position) will leave cursor at the same spot in the new `SE_⎀VIEW_⎀SEL_⎀REVERSE` while previously it moved it to the beginning of the word `SE_VIEW_SEL_REVERSE`
   - and other changes:
     + :sparkles: show a popup with a count indicator<br/>before![before](./doc/img/count_popup_before.png) ![after](./doc/img/count_popup_after.png)after
     + :sparkles: nowrap alternative to tab switch Ex commands (`tabnextnowrap`/`tabpreviousnowrap`)

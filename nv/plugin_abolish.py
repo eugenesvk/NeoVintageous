@@ -188,77 +188,84 @@ import difflib
 from difflib import SequenceMatcher, Differ
 def diff_add(i,sel:Region,old,i1,i2,j1,j2) -> list:
     if   i1 >  old[i].end  (): # ignore ranges past end of selection
-        _log.debug("  +ignore %s > %s",i1,old[i].end())
+        _log.key("  +ignore %s > %s",i1,old[i].end())
         return
     elif i1 <= old[i].begin(): # move beginning and end
         a = b = j2-j1 # length of added text from the diff at strB
-        _log.debug("  +moved a,b by %s from %s,%s to %s,%s"
+        _log.key("  +moved a,b by %s from %s,%s to %s,%s (ind%s i=%s,%s j=%s,%s sel=%s)"
                 ,                    j2-j1,sel.begin(),sel.end()
-                ,                    j2-j1+sel.begin(),sel.end()+j2-j1)
+                ,                    j2-j1+sel.begin(),sel.end()+j2-j1, i,i1,i2,j1,j2,sel)
         return [a,b]
     elif i1 <= old[i].  end(): # move               end
         b = j2-j1
-        _log.debug("+moved   b by %s",j2-j1)
+        _log.key("+moved   b by %s",j2-j1)
         return [0,b]
-def diff_rem(i,sel:Region,old,i1,i2,j1,j2) -> list:
+def diff_rem(i,sel:Region,old,i1,i2) -> list:
     if   i1 >  old[i].  end(): # ignore ranges past end of selection
-        _log.debug("  −ignore %s > %s",i1,old[i].end())
+        _log.key("  −ignore %s > %s",i1,old[i].end())
         return
     elif i1 <= old[i].begin(): # move beginning and end
         a = -min(i2-i1, sel.begin()-i1) # on overlap, move to the left excluding the overlap
         b = -min(i2-i1, sel.end  ()-i1)
-        _log.debug("  −moved a,b by %s,%s from %s,%s to %s,%s"
+        _log.key("  −moved a,b by %s,%s from %s,%s to %s,%s (ind%s i=%s,%s sel=%s)"
                 ,                      a,b, sel.begin(),sel.end()
-                ,                      a +  sel.begin(),sel.end()+b)
+                ,                      a +  sel.begin(),sel.end()+b, i,i1,i2,sel)
         return [a,b]
     elif i1 <= old[i].  end(): # move               end
         b = -min(i2-i1, sel.end  ()-i1)
-        _log.debug("-moved   b by %s",b)
+        _log.key("-moved   b by %s",b)
         return [a,b]
 
-def diff_same_pos(selA_old:Selection,selA_new:list, strA:str,strB:str) -> None:
-    """Maintains the selection positions in strA given the diff to strB using SequenceMatcher from difflib"""
-    _log.debug("selA_old = %s\nselA_new = %s\nstrA = %s\nstrB= %s",selA_old,selA_new,strA,strB)
+from typing import List
+def diff_same_pos(sels_inA:List[Region], selA:Selection,strA:str,strB:str) -> None:
+    """Maintains the selection positions in strA given the diff to strB using SequenceMatcher from difflib
+    selA has word range relative to other selections, needed to translate indices within a word to i within doc"""
+
+    _log.key("sels_inA = %s¦%s\nselA = %s\nstrA = %s\nstrB = %s",type(sels_inA),sels_inA, selA,strA,strB)
+    sels_inA_new = [[i.begin(),i.end()] for i in sels_inA] # copy same ranges in case there are no changes
+    a = selA.begin()
+    b = selA.end  ()
     s = SequenceMatcher(None, strA.lower(), strB.lower()) #  compares two sequences and identifies common and differing subsequences
     for tag, i1,i2, j1,j2 in s.get_opcodes(): # generates instructions (opcodes) for transforming one string into another
-        _log.debug("%s i%s–%s=‘%s’ j%s–%s=‘%s’"
+        _log.key("%s i%s–%s=‘%s’ j%s–%s=‘%s’"
             ,     tag, i1,i2,strA[i1:i2], j1,j2,strB[j1:j2])
         if   tag == "equal":
             pass
         elif tag == "insert": #additions in  string 2
-            for i,sel in enumerate(selA_old):
-                if (new := diff_add(i,sel,selA_old,i1,i2,j1,j2)):
-                    _log.debug("insert new=%s",new)
-                    selA_new[i][0] += new[0]
-                    selA_new[i][1] += new[1]
+            for i,sel in enumerate(sels_inA):
+                if (new := diff_add(i,sel,sels_inA,a+i1,a+i2,j1,j2)):
+                    _log.key("insert sel=%s new=%s",sel,new)
+                    sels_inA_new[i][0] += new[0]
+                    sels_inA_new[i][1] += new[1]
         elif tag == "delete": #removals from string 1
-            for i,sel in enumerate(selA_old):
-                if (new := diff_rem(i,sel,selA_old,i1,i2,j1,j2)):
-                    _log.debug("delete new=%s",new)
-                    selA_new[i][0] += new[0]
-                    selA_new[i][1] += new[1]
+            for i,sel in enumerate(sels_inA):
+                if (new := diff_rem(i,sel,sels_inA,a+i1,a+i2      )):
+                    _log.key("delete sel=%s new=%s",sel,new)
+                    sels_inA_new[i][0] += new[0]
+                    sels_inA_new[i][1] += new[1]
         elif tag == "replace": #additions in  string 2
             len_s1 = (i2-i1)
             len_s2 = (j2-j1)
             len_diff = len_s2 - len_s1
             if   len_diff == 0: # 0 net changes
-                _log.debug("replace pass")
+                _log.key("replace pass")
                 pass
             elif len_diff  > 0: # + net change
-                for i,sel in enumerate(selA_old):
-                    if new := diff_add(i,sel,selA_old,i1,i2,j1 + len_diff+1,j2):
-                        _log.debug(f'replace +new={new}')
-                        selA_new[i][0] += new[0]
-                        selA_new[i][1] += new[1]
+                for i,sel in enumerate(sels_inA):
+                    if new := diff_add(i,sel,sels_inA,a+i1             ,b+i2,j1 + len_diff+1,j2):
+                        _log.key(f'replace +new={new}')
+                        sels_inA_new[i][0] += new[0]
+                        sels_inA_new[i][1] += new[1]
             elif len_diff  < 0: # − net change
-                for i,sel in enumerate(selA_old):
-                    if new := diff_rem(i,sel,selA_old,i1 - len_diff+1,i2,j1,j2):
-                        _log.debug("replace -new=%s",new)
-                        selA_new[i][0] += new[0]
-                        selA_new[i][1] += new[1]
+                for i,sel in enumerate(sels_inA):
+                    if new := diff_rem(i,sel,sels_inA,a+i1 - len_diff+1,b+i2,j1             ,j2):
+                        _log.key("replace -new=%s",new)
+                        sels_inA_new[i][0] += new[0]
+                        sels_inA_new[i][1] += new[1]
         else:
-            _log.error(f"unknown diff tag in diff_same_pos",tag, i1, i2, j1, j2)
-    _log.debug(f"selA_new = {selA_new}")
+            _log.error(f"unknown diff tag in diff_same_pos",tag, a+i1, b+i2, j1, j2)
+    _log.key(f"sels_inA_new = {sels_inA_new}")
+    return sels_inA_new
 
 class nv_abolish_command(TextCommand):
     def run(self, edit, mode=None, count=None, register=None, to=None):

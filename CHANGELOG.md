@@ -29,6 +29,7 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
      - `⎀a(B)` if `seek_forward` is `false` (default)
      - `⎀a(b)` if `seek_forward` is `true`
    + :sparkles: abolish: allow users to configure case coercion aliases
+   + :sparkles: abolish: option to maintain cursor position on case changes, e.g., converting `se⎀View⎀Sel_⎀Reverse` to upper case (⎀ denotes cursor position) will leave cursor at the same spot in the new `SE_⎀VIEW_⎀SEL_⎀REVERSE` while previously it moved it to the beginning of the word `SE_VIEW_SEL_REVERSE`
   - __Fixed__
    + :beetle: key sequences with text commands (`(Ⓝ)bb "MoveToEol"`) not being resolved as a sequence
   - __Changed__

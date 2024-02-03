@@ -278,22 +278,46 @@ class nv_abolish_command(TextCommand):
         except KeyError:
             return
 
+        view_sel = self.view.sel()
         new_sels = []
-        cur_sels = self.view.sel()
-        selA_new = [[i.begin(),i.end()] for i in cur_sels] # ranges for each current selection
+        cur_sels = list(view_sel); cur_sels.reverse() # end→beg not to adjust for ∑inserts
+        # sels_inA_new = [[i.begin(),i.end()] for i in cur_sels] # ranges for each current selection
 
-        for sel in cur_sels:                  # ⎀titleCase (0, 0)=‘’
-            sel_w   = self.view.word  (sel  ) #            (0, 9)=‘titleCase’
-            sel_w_s = self.view.substr(sel_w) #            (0, 9)=‘titleCase’
-            repl    = coerce_func(sel_w_s)    #                   ‘Title Case’
+        skip_sels_i = []  # don't touch selections in the same word twice
+        for i,sel in enumerate(cur_sels):      # ⎀titleCase (0, 0)=‘’
+            if i in skip_sels_i:
+                continue
+            sel_w   = self.view.word  (sel  ) #(0, 9)   (expand to word's ends)
+            sel_w_s = self.view.substr(sel_w) #      =‘titleCase’
+            repl    = coerce_func(sel_w_s)    #       ‘Title Case’
+            aw      = sel_w.begin() # word's borders
+            bw      = sel_w.end  ()
+
             if CFG['steadycursor']:
-                diff_same_pos(selA_old=cur_sels,selA_new=selA_new, strA=sel_w_s,strB=repl)
+                sels_inA = [] # find all sels that this word contains not to lose them on edits
+                for i,sel in enumerate(cur_sels):
+                    if       sel.end  () <  aw: # selections are rev-sorted, so if they end before word begins, all subsequent ones will also be before
+                        break
+                    if aw <= sel.begin() <= bw or \
+                       aw <= sel.end  () <= bw:
+                        skip_sels_i.append(i)
+                        sels_inA.append (sel)
+                        view_sel.subtract(sel)
+                        _log.key("− sel%s",sel)
+                self.view.replace(edit, sel_w, repl)
+                if sels_inA:
+                    sels_inA_new = diff_same_pos(sels_inA=sels_inA, selA=sel_w,strA=sel_w_s,strB=repl)
+                    _log.key("old %s\nnew %s",sels_inA,sels_inA_new)
+                    for sel_inw in sels_inA_new:
+                        view_sel.add     (Region(max(0,sel_inw[0]), max(0,sel_inw[1])))
+                        _log.key("+ sel%s",sel_inw)
             else:
                 new_sels.append(sel_w.begin())
-            self.view.replace(edit, sel_w, repl)
+                self.view.replace(edit, sel_w, repl)
 
         if CFG['steadycursor']:
-            new_sels_ = [Region(max(0,selA_new[i][0]),max(0,selA_new[i][1])) for i in range(len(cur_sels))]
-            set_selection(self.view, new_sels_)
+            pass
+            # new_sels_ = [Region(max(0,sels_inA_new[i][0]),max(0,sels_inA_new[i][1])) for i in range(len(cur_sels))]
+            # set_selection(self.view, new_sels_)
         elif new_sels:
             set_selection(self.view, new_sels)

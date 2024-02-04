@@ -1,13 +1,22 @@
+import re
+import logging
+from typing  import Union
 from pathlib import Path
-from typing import Union
 
 import sublime
 import sublime_plugin
 
 import NeoVintageous.dep.kdl as kdl
+from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL, TFMT
 from NeoVintageous.plugin import PACKAGE_NAME
 
-import re
+_log = logging.getLogger(__name__)
+_log.setLevel(DEFAULT_LOG_LEVEL)
+if _log.hasHandlers(): # clear existing handlers, including sublime's
+    logging.getLogger(__name__).handlers.clear()
+    # _log.addHandler(stream_handler)
+_L = True if _log.isEnabledFor(logging.KEY) else False
+
 re_flags = 0
 re_flags |= re.MULTILINE | re.IGNORECASE
 node_separator_p = r"\s|-|−|–|—|⁃|_|\."
@@ -79,7 +88,7 @@ def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d
     # .error(str) takes a custom error message and returns a kdl.ParseError with the ParseFragment's location already built in, ready for you to raise. This should be used if your conversion fails for any reason, so your errors look the same as native parse errors
     return kdl_py_obj
   def fn_import(kdl_py_obj, parse_fragment, kdl_docs=kdl_docs):
-    # print(f"kdl_py_obj = |{kdl_py_obj}|") # #import "NV.key.kdl" tvar=(var)"a"
+    # print(f"kdl_py_obj = |{kdl_py_obj}|") # #import (keybind)"NV.key.kdl" tvar=(var)"a"
     # print(f"tag=|{kdl_py_obj.tag}| name=|{kdl_py_obj.name}|") #tag=None val=#import
     # print(f"parse_fragment.fragment=|{parse_fragment.fragment}|") # "#import" raw text of the value after the tag
     import_var = {}
@@ -99,12 +108,13 @@ def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d
         var_set[pkey] = val
     var_d['set'] = var_set
 
-    for arg in kdl_py_obj.args:
+    for arg in kdl_py_obj.args: # import (keybind)"./NV/mykeys.kdl"
       tag = arg.tag   if hasattr(arg,'tag'  ) else enclose_in # todo: or enclose twice?
       val = arg.value if hasattr(arg,'value') else arg
-      enclose_pre = (tag + ' {\n') if tag else ''
+      enclose_pre = (tag + ' {\n') if tag else '' # keybind
       enclose_pos =          '\n}' if tag else ''
-      # print(arg, f"tag={tag}", f"val={val}")
+      _log.debug("arg=‘%s’ tag=‘%s’ cfg_p.parent=‘%s’ val=‘%s’\n(cfg_p=‘%s’)"
+        ,         arg, tag,        cfg_p.parent,     val,      cfg_p)
       if (cfg_import_f := Path(cfg_p.parent,val).expanduser()).exists():
         try:
           with open(cfg_import_f, 'r', encoding='utf-8', errors='replace') as f:

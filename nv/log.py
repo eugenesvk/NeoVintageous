@@ -3,12 +3,13 @@ import logging
 DEFAULT_LOG_LEVEL = logging.WARNING
 TFMT = '{t.minute:2}:{t.second:2}.{t.microsecond}'
 
-filter_levelname_dict = {'ERROR':'❗','WARNING':'⚠️','INFO':"ⓘ",'KEY':'⌨️'}
+filter_levelname_dict = {'ERROR':'❗','WARNING':'⚠️','INFO':"ⓘ",'KEY':'⌨️','CFG':'Ⓒ'}
 
 def add_module_logger_levels():
   addLoggingLevel('KEY', DEFAULT_LOG_LEVEL - 20)
   addLoggingLevel('MAP', DEFAULT_LOG_LEVEL - 20)
   addLoggingLevel('SET', DEFAULT_LOG_LEVEL - 20)
+  addLoggingLevel('CFG', DEFAULT_LOG_LEVEL - 20)
 
 stream_handler = logging.StreamHandler()
 formatter = logging.Formatter('NV%(levelname)-1s_%(filename)10s:%(lineno)-3d %(message)s')

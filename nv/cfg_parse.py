@@ -15,7 +15,7 @@ _log.setLevel(DEFAULT_LOG_LEVEL)
 if _log.hasHandlers(): # clear existing handlers, including sublime's
     logging.getLogger(__name__).handlers.clear()
     # _log.addHandler(stream_handler)
-_L = True if _log.isEnabledFor(logging.KEY) else False
+_L = True if _log.isEnabledFor(logging.CFG) else False
 
 re_flags = 0
 re_flags |= re.MULTILINE | re.IGNORECASE
@@ -78,7 +78,7 @@ def parse_kdl_doc(s,v_untag:bool=False,v_tag:bool=False):
   return kdl.Parser(parseConfig, printConfig).parse(s)
 
 def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d:dict={}):
-  # print(f"  parse_kdl_config = {cfg_p}")
+  _log.cfg("  parse_kdl_config = %s",cfg_p)
 
   def fn_i(kdl_py_obj, parse_fragment):
     # print(f"kdl_py_obj = |{kdl_py_obj}|") # (i)"Ctrl"
@@ -98,7 +98,7 @@ def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d
       if hasattr(val,'tag'): # print(f"  tag={val.tag}")
         import_var[key] = val
 
-    # print(import_var)
+    _log.cfg("%s",import_var)
     var_set = dict()
     var_d   = dict()
     for pkey,tag_val in kdl_py_obj.props.items(): # Parse properties for var_name=(var)"val" pairs

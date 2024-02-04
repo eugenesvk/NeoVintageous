@@ -19,7 +19,7 @@
 */
 #v 0.1 // config format version to hopefully allow updates without breaking existing configs (‘#’ is optional)
 #import (keybind)"NeoVintageous.key.kdl"
-  /* import file name ↑ relative to this main config file (‘#’ is optional)
+  /*↑import file name ↑ relative to this main config file (‘#’ is optional) or an absolute '/'-prefixed path since this calls pathlib's 'Path(main_config_folder, import_value)' docs.python.org/3/library/pathlib.html
     group  ↑ values in ‘keybind{}’, so the file itself can include only top-level ‘key command’ lines
   */
 keybind { // or add keybinds in the main config file

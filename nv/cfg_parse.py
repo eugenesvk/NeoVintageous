@@ -111,11 +111,13 @@ def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d
     for arg in kdl_py_obj.args: # import (keybind)"./NV/mykeys.kdl"
       tag = arg.tag   if hasattr(arg,'tag'  ) else enclose_in # todo: or enclose twice?
       val = arg.value if hasattr(arg,'value') else arg
+      ext = '' if val.lower().endswith('.kdl') else '.kdl'
+      fname = val + ext
       enclose_pre = (tag + ' {\n') if tag else '' # keybind
       enclose_pos =          '\n}' if tag else ''
-      _log.debug("arg=‘%s’ tag=‘%s’ cfg_p.parent=‘%s’ val=‘%s’\n(cfg_p=‘%s’)"
-        ,         arg, tag,        cfg_p.parent,     val,      cfg_p)
-      if (cfg_import_f := Path(cfg_p.parent,val).expanduser()).exists():
+      _log.debug("arg=‘%s’ tag=‘%s’ cfg_p.parent=‘%s’ val=‘%s’%s\n(cfg_p=‘%s’)"
+        ,         arg,     tag,     cfg_p.parent,     val,   ext,  cfg_p)
+      if (cfg_import_f := Path(cfg_p.parent,fname).expanduser()).exists():
         try:
           with open(cfg_import_f, 'r', encoding='utf-8', errors='replace') as f:
             cfg_import = enclose_pre + f.read() + enclose_pos

@@ -645,13 +645,13 @@ class cfgU(metaclass=Singleton):
     @staticmethod
     def unload_kdl():
         global CFG
-        if cfgU.kdl: # reset config
+        if hasattr(cfgU,'kdl'): # reset config
             cfgU.kdl = dict()
             _log.debug('@cfgU.unload_kdl: erased current cfgU.kdl')
-        if cfgU.flat: # reset flat config
+        if hasattr(cfgU,'flat'): # reset flat config
             cfgU.flat = dict()
             _log.debug('@cfgU.unload_kdl: erased current cfgU.flat')
-        if cfgU.text_commands: # reset text_commands config
+        if hasattr(cfgU,'text_commands'): # reset text_commands config
             text_commands = dict()
             for _m in M_CMDTXT:
                 text_commands[_m] = dict()

@@ -35,7 +35,7 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
   + :sparkles: support for importing other config files
     ```
     #import (keybind)"NeoVintageous.key.kdl"
-    /*↑ or ‘import’ to import ↑ file name relative to this main config file
+    /*↑import file name ↑ relative to this main config file (‘#’ is optional) or an absolute '/'-prefixed path since this calls pathlib's 'Path(main_config_folder, import_value)' docs.python.org/3/library/pathlib.html
     group values↑ in ‘keybind{}’, so the file itself can include only top-level ‘key command’ lines
     */
     ```

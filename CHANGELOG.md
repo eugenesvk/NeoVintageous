@@ -150,14 +150,14 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
    + :beetle: keypad numbers not working as count prefix
    + :beetle: 1-symbol keys like `⇟` in named key aliases not recognized
 
-## 1.34.2 - Unreleased
+## 1.34.2 - 2024-02-05
 
 ### Fixed
 
 - status indicators show a visible file as hidden when multiple tabs are visible [#998](https://github.com/NeoVintageous/NeoVintageous/issues/998)
 - f9/f12 keys do not work in normal mode [#1002](https://github.com/NeoVintageous/NeoVintageous/issues/1002)
 
-## 1.34.1 - 2024-12-08
+## 1.34.1 - 2023-12-08
 
 ### Fixed
 

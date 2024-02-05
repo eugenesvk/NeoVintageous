@@ -271,7 +271,7 @@ def _set_general_def() -> None:
             val_def 	= opt_d['v']
             if val_def:
                 st_pref.set(f"{name_def}", val_def)
-                # print(f"set default {name_def}={val_def}")
+                # _log.warn("set default %s=%s",name_def,val_def)
 
 def _parse_rc_g_kdl(rc_g:kdl.Node):
     win = sublime.active_window()
@@ -355,7 +355,8 @@ def _parse_general_cfg_kdl(general_cfg:kdl.Node,st_pref=None) -> None:
                         ,                             opt_name,                                   type_def)
             elif st_pref:
                 st_pref.set(f"{name_def}", node.props)
-                # print(f"set user dict ‘{name_def}’=‘{node.props}’  ({type(node.props)})")
+                _log.cfg("set user dict ‘%s’=‘%s’ (%s)"
+                    ,               name_def, node.props, type(node.props))
             return None
         else:
             for arg in node.args:

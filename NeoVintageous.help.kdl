@@ -58,6 +58,7 @@ keybind { // or add keybinds in the main config file
     // Content of NeoVintageous.keyB.kdl:                                 (‘m’)"‘ipre’[‘ipos’" ":set invrnu<CR>"
     #import "NeoVintageous.keyB.kdl" m=(var)"Ⓝ" ipre=(var)""    ipos=(var)""  //  (Ⓝ)[
     #import "NeoVintageous.keyB.kdl" m=(var)"ⓘ" ipre=(var)"<C-" ipos=(var)">" //  (ⓘ)<C-[>
+    #import "NeoVintageous.keyB.kdl" m=(varpass)"" // or use the mode variable passed to this config through to the next one
 }
 
 rc { // Literal Ex commands

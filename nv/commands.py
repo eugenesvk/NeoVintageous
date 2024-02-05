@@ -1713,15 +1713,13 @@ class nv_vi_ctrl_right_square_bracket(WindowCommand):
 
 class nv_vi_delete_word(WindowCommand):
     def run(self, mode=None, **kwargs):
-        if mode == INSERT:
-            self.window.run_command('delete_word', {'forward': False})
+        self.window.run_command('delete_word', {'forward': False})
 
 
 class nv_vi_window_control(WindowCommand):
 
     def run(self, mode=None, **kwargs):
-        if not mode == INSERT:
-            window_control(self.window, mode=mode, **kwargs)
+        window_control(self.window, mode=mode, **kwargs)
 
 
 class nv_vi_z_enter(TextCommand):

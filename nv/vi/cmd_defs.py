@@ -872,9 +872,9 @@ class ViMoveCursorToTopLeftWindow(ViOperatorDef):
         }
 
 
-@assign(seqs.CTRL_W_W, ACTION_MODES)
-@assign(seqs.CTRL_W_CTRL_W, ACTION_MODES)
-@assign_text(['MoveCursorToNeighbour'], ACTION_MODES)
+@assign(seqs.CTRL_W_W, (INSERT,)+ACTION_MODES)
+@assign(seqs.CTRL_W_CTRL_W, (INSERT,)+ACTION_MODES)
+@assign_text(['MoveCursorToNeighbour'], (INSERT,)+ACTION_MODES)
 class ViMoveCursorToNeighbour(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True

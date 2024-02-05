@@ -78,7 +78,7 @@ def parse_kdl_doc(s,v_untag:bool=False,v_tag:bool=False):
   return kdl.Parser(parseConfig, printConfig).parse(s)
 
 def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d:dict={}):
-  _log.cfg("  parse_kdl_config = %s",cfg_p)
+  _log.cfg("  parse_kdl_config @ %s with vars %s",cfg_p,var_d)
 
   def fn_i(kdl_py_obj, parse_fragment):
     # print(f"kdl_py_obj = |{kdl_py_obj}|") # (i)"Ctrl"
@@ -99,14 +99,22 @@ def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d
         import_var[key] = val
 
     _log.cfg("%s",import_var)
-    var_set = dict()
-    var_d   = dict()
+    var_set   = dict()
+    var_d_new = dict()
     for pkey,tag_val in kdl_py_obj.props.items(): # Parse properties for var_name=(var)"val" pairs
       tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''      #(var)
       val = tag_val.value if hasattr(tag_val,'value') else tag_val #"val"
       if tag == 'var':
         var_set[pkey] = val
-    var_d['set'] = var_set
+      if tag == 'varpass':
+        if pkey in var_d['set']:
+          var_set[pkey] = var_d['set'][pkey]
+          _log.cfg("  passing %s=%s",pkey,var_d['set'][pkey])
+        else:
+          _log.warn("  ‘%s’ variable is supposed to be passed from the variables available to this config, but it can't be found in %s (parsing ‘%s’)", pkey, list(var_d['set'].keys()), kdl_py_obj)
+        if val:
+          _log.warn("  ‘varpass’ variable ‘%s’ should have an empty value, not ‘%s’", pkey,val)
+    var_d_new['set'] = var_set
 
     for arg in kdl_py_obj.args: # import (keybind)"./NV/mykeys.kdl"
       tag = arg.tag   if hasattr(arg,'tag'  ) else enclose_in # todo: or enclose twice?
@@ -127,7 +135,7 @@ def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d
       else:
         sublime.error_message(f"{PACKAGE_NAME}:\nCouldn't find config\n{cfg_import_f}\nimported in\n{cfg_p}")
         break
-      parse_kdl_config(cfg_import, cfg_import_f, kdl_docs, enclose_in=tag, var_d=var_d)
+      parse_kdl_config(cfg_import, cfg_import_f, kdl_docs, enclose_in=tag, var_d=var_d_new)
     return None # consume imports, successfull will be stored as separate docs, so drop kdl_py_obj
 
   parseConfig = kdl.ParseConfig(

@@ -40,11 +40,11 @@ def clean_node_name(node:kdl.Node,rec:bool=True,parent:Union[str,None]=None): # 
       for node in node.nodes:
         clean_node_name(node, rec=rec)
 def clean_name(name:str): # clean name by removing separators ␠⭾-_. and converting to lowercase
-  return re.sub(node_separator,'',name.casefold())
+  return re.sub(node_separator,'',name.casefold()) if name else name
 def clean_cmd (name:str): # convert command name to lowercase (don't remove _ since sublime uses those as seps)
-  return name.casefold()
+  return name.casefold()                           if name else name
 def clean_path(name:str): # clean path segment by removing separators ␠⭾-_ but NOT . and converting to lowercase
-  return re.sub(path_separator,'',name.casefold())
+  return re.sub(path_separator,'',name.casefold()) if name else name
 
 import logging
 def get_tag_val_warn(tag_val:kdl.Value,logger:logging.Logger=None,node_name:str=''):

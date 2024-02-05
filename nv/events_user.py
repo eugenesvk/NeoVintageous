@@ -54,8 +54,8 @@ def reload_with_user_data_kdl() -> None:
       evt  = EVENTrev            .get(clean_name(node.name),None) # ‘enter’       for ‘in’
       if not mode or\
          not mode in M.Event:
-        _log.error("node ‘%s’ has no/unrecognized mode in tag ‘(%s)%s’, skipping"
-          ,            cfg.name,                          node.tag,node.name)
+        _log.error("node ‘%s’ has no/unrecognized mode in tag ‘(%s)%s’, skipping (expecting one of %s)"
+          ,            cfg.name,                          node.tag,node.name, ' '.join(list(mode_clean_names_rev.keys())))
         continue
       if not evt  in EVENT:
         _log.error("node ‘%s’ has unrecognized event in name ‘(%s)%s’, skipping"

@@ -932,8 +932,8 @@ class ViSplitTheCurrentWindowInTwoVertically(ViOperatorDef):
 
 
 @assign(seqs.CTRL_W_BIG_W, ACTION_MODES)
-@assign_text(['CtrlW_W'], ACTION_MODES)
-class ViCtrlW_W(ViOperatorDef):
+@assign_text(['MoveCursorToPrevNeighbour'], ACTION_MODES)
+class ViMoveCursorToPrevNeighbour(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
 

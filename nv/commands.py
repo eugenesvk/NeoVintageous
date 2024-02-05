@@ -94,6 +94,7 @@ __all__ = [
     'nv_vi_ctrl_right_square_bracket',
     'nv_vi_ctrl_u',
     'nv_vi_window_control',
+    'nv_vi_delete_word',
     'nv_vi_ctrl_x_ctrl_l',
     'nv_vi_ctrl_y',
     'nv_vi_d',
@@ -1780,12 +1781,16 @@ class nv_vi_ctrl_right_square_bracket(WindowCommand):
             self.window.run_command('goto_definition')
 
 
-class nv_vi_window_control(WindowCommand):
-
+class nv_vi_delete_word(WindowCommand):
     def run(self, mode=None, **kwargs):
         if mode == INSERT:
             self.window.run_command('delete_word', {'forward': False})
-        else:
+
+
+class nv_vi_window_control(WindowCommand):
+
+    def run(self, mode=None, **kwargs):
+        if not mode == INSERT:
             window_control(self.window, mode=mode, **kwargs)
 
 

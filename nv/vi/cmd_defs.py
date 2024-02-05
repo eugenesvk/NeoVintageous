@@ -634,7 +634,7 @@ class ViActivatePreviousTab(ViOperatorDef):
 class ViDeleteUpToCursor(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_window_control'
+        self.command = 'nv_vi_delete_word'
 
 
 @assign(seqs.CTRL_W_B, ACTION_MODES)

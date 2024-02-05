@@ -4,7 +4,7 @@ from NeoVintageous.nv.plugin import register, register_text
 from NeoVintageous.nv.settings import set_reset_during_init
 from NeoVintageous.nv.vi import seqs
 from NeoVintageous.nv.vi.cmd_base import ViOperatorDef
-from NeoVintageous.nv.vi.cmd_base import translate_action
+from NeoVintageous.nv.vi.cmd_base import translate_builtin_action
 from NeoVintageous.nv.vim import ACTION_MODES
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 
@@ -18,6 +18,7 @@ class StQuickSwitchProject(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
+        self.builtin = True
         self.command = 'prompt_select_workspace'
 
 
@@ -27,6 +28,7 @@ class StFocusSideBar(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
+        self.builtin = True
         self.command = 'focus_side_bar'
 
 
@@ -53,9 +55,10 @@ class StFocusGroup(ViOperatorDef):
         self._group = group
         self.updates_xpos = True
         self.scroll_into_view = True
+        self.builtin = True
 
     def translate(self, view):
-        return translate_action(view, 'focus_group', {
+        return translate_builtin_action('focus_group', {
             'group': self._group
         })
 
@@ -67,6 +70,7 @@ class StToggleSideBar(ViOperatorDef):
         self.updates_xpos = True
         self.scroll_into_view = True
         self.command = 'toggle_side_bar'
+        self.builtin = True
 
 
 @register(seqs.COMMAND_P, ACTION_MODES)
@@ -76,6 +80,7 @@ class StGotoAnything(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
+        self.builtin = True
         self.command = 'show_overlay'
         self.command_args = {
             'overlay': 'goto',
@@ -90,6 +95,7 @@ class StBuildWith(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
+        self.builtin = True
         self.command = 'build'
         self.command_args = {
             'select': True
@@ -103,6 +109,7 @@ class StFindInFiles(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
+        self.builtin = True
         self.command = 'show_panel'
         self.command_args = {
             'panel': 'find_in_files'
@@ -116,11 +123,12 @@ class StCommandPalette(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
+        self.builtin = True
 
     def translate(self, view):
         set_reset_during_init(view, False)
 
-        return translate_action(view, 'show_overlay', {
+        return translate_builtin_action('show_overlay', {
             'overlay': 'command_palette'
         })
 
@@ -131,6 +139,7 @@ class StNextBookmark(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
+        self.builtin = True
         self.command = 'next_bookmark'
 
 
@@ -140,6 +149,7 @@ class StFindNext(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
+        self.builtin = True
         self.command = 'find_next'
 
 
@@ -149,6 +159,7 @@ class StNextResult(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
+        self.builtin = True
         self.command = 'next_result'
 
 
@@ -157,6 +168,7 @@ class StNextResult(ViOperatorDef):
 class StToggleSpellCheck(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
+        self.builtin = True
         self.command = 'toggle_setting'
         self.command_args = {
             'setting': 'spell_check'
@@ -169,6 +181,7 @@ class StBuild(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
+        self.builtin = True
         self.command = 'build'
 
 
@@ -178,6 +191,7 @@ class StSortLines(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
         self.command = 'sort_lines'
+        self.builtin = True
         self.command_args = {
             'case_sensitive': False
         }
@@ -189,6 +203,7 @@ class StToggleFullScreen(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
+        self.builtin = True
         self.command = 'toggle_full_screen'
 
 
@@ -198,6 +213,7 @@ class StGotoDefinition(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
+        self.builtin = True
         self.command = 'goto_definition'
 
 
@@ -207,6 +223,7 @@ class StToggleBookmark(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
+        self.builtin = True
         self.command = 'toggle_bookmark'
 
 
@@ -216,6 +233,7 @@ class StGotoSymbol(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
+        self.builtin = True
         self.command = 'show_overlay'
         self.command_args = {
             'overlay': 'goto',
@@ -229,6 +247,7 @@ class StPrevBookmark(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
+        self.builtin = True
         self.command = 'prev_bookmark'
 
 
@@ -238,6 +257,7 @@ class StPrevResult(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
+        self.builtin = True
         self.command = 'prev_result'
 
 
@@ -247,6 +267,7 @@ class StToggleDistractionFree(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
+        self.builtin = True
         self.command = 'toggle_distraction_free'
 
 
@@ -256,6 +277,7 @@ class StClearBookmarks(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
+        self.builtin = True
         self.command = 'clear_bookmarks'
 
 
@@ -265,4 +287,5 @@ class StGotoSymbolInProject(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
+        self.builtin = True
         self.command = 'goto_symbol_in_project'

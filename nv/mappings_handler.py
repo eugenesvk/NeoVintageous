@@ -97,6 +97,8 @@ def _handle_rhs_text(view, rhs: Union[str, list]) -> None: # find a key that is 
     win = view.window()
     text_commands = [rhs] if isinstance(rhs, str) else rhs; _c = len(text_commands)
     for i,text_cmd in enumerate(text_commands):
+        if not text_cmd: # skip empty commands
+            continue
         mode = get_mode(view)
         cont = (i > 0) # pass to Hprocess notation as a continuation (like in a key sequence)
         _log.key(" —%s¦%s— ‘%s’cmd_t @ _hRHS_text m%s",i+1,_c,text_cmd,mode)

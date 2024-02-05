@@ -93,7 +93,7 @@ __all__ = [
     'nv_vi_ctrl_r',
     'nv_vi_ctrl_right_square_bracket',
     'nv_vi_ctrl_u',
-    'nv_vi_ctrl_w',
+    'nv_vi_window_control',
     'nv_vi_ctrl_x_ctrl_l',
     'nv_vi_ctrl_y',
     'nv_vi_d',
@@ -1780,7 +1780,7 @@ class nv_vi_ctrl_right_square_bracket(WindowCommand):
             self.window.run_command('goto_definition')
 
 
-class nv_vi_ctrl_w(WindowCommand):
+class nv_vi_window_control(WindowCommand):
 
     def run(self, mode=None, **kwargs):
         if mode == INSERT:

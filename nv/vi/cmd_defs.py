@@ -634,7 +634,7 @@ class ViActivatePreviousTab(ViOperatorDef):
 class ViDeleteUpToCursor(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
 
 
 @assign(seqs.CTRL_W_B, ACTION_MODES)
@@ -643,7 +643,7 @@ class ViDeleteUpToCursor(ViOperatorDef):
 class ViMoveCursorToBottomRightWindow(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': 'b'
         }
@@ -654,7 +654,7 @@ class ViMoveCursorToBottomRightWindow(ViOperatorDef):
 class ViMoveCurrentWindowToFarLeft(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': 'H'
         }
@@ -665,7 +665,7 @@ class ViMoveCurrentWindowToFarLeft(ViOperatorDef):
 class ViMoveCurrentWindowToVeryTop(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': 'J'
         }
@@ -676,7 +676,7 @@ class ViMoveCurrentWindowToVeryTop(ViOperatorDef):
 class ViMoveCurrentWindowToVeryBottom(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': 'K'
         }
@@ -696,7 +696,7 @@ class ViGotoAlternateFile(ViOperatorDef):
 class ViMoveCurrentWindowToFarRight(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': 'L'
         }
@@ -707,7 +707,7 @@ class ViMoveCurrentWindowToFarRight(ViOperatorDef):
 class ViCloseTheCurrentWindow(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': 'c'
         }
@@ -718,7 +718,7 @@ class ViCloseTheCurrentWindow(ViOperatorDef):
 class ViMakeAllWindowsAlmostEquallyHighAndWide(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': '='
         }
@@ -729,7 +729,7 @@ class ViMakeAllWindowsAlmostEquallyHighAndWide(ViOperatorDef):
 class ViIncreaseCurrentWindowWidthByN(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': '>',
         }
@@ -743,7 +743,7 @@ class ViIncreaseCurrentWindowWidthByN(ViOperatorDef):
 class ViMoveCursorToNthWindowLeftOfCurrentOne(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': 'h',
         }
@@ -756,7 +756,7 @@ class ViMoveCursorToNthWindowLeftOfCurrentOne(ViOperatorDef):
 class ViMoveCursorToNthWindowBelowOfCurrentOne(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': 'j',
         }
@@ -769,7 +769,7 @@ class ViMoveCursorToNthWindowBelowOfCurrentOne(ViOperatorDef):
 class ViMoveCursorToNthWindowAboveCurrentOne(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': 'k',
         }
@@ -782,7 +782,7 @@ class ViMoveCursorToNthWindowAboveCurrentOne(ViOperatorDef):
 class ViMoveCursorToNthWindowRightOfCurrentOne(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': 'l',
         }
@@ -793,7 +793,7 @@ class ViMoveCursorToNthWindowRightOfCurrentOne(ViOperatorDef):
 class ViDecreaseCurrentWindowWidthByN(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': '<',
         }
@@ -804,7 +804,7 @@ class ViDecreaseCurrentWindowWidthByN(ViOperatorDef):
 class ViDecreaseCurrentWindowHeightByN(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': '-',
         }
@@ -816,7 +816,7 @@ class ViDecreaseCurrentWindowHeightByN(ViOperatorDef):
 class ViCreateNewWindowAndStartEditingAnEmptyFileInIt(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': 'n',
         }
@@ -828,7 +828,7 @@ class ViCreateNewWindowAndStartEditingAnEmptyFileInIt(ViOperatorDef):
 class ViMakeTheCurrentWindowTheOnlyOneOnTheScreen(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': 'o'
         }
@@ -839,7 +839,7 @@ class ViMakeTheCurrentWindowTheOnlyOneOnTheScreen(ViOperatorDef):
 class ViSetCurrentWindowWidthToNOrWidestPossible(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': '|',
         }
@@ -850,7 +850,7 @@ class ViSetCurrentWindowWidthToNOrWidestPossible(ViOperatorDef):
 class ViIncreaseCurrentWindowHeightByN(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': '+',
         }
@@ -862,7 +862,7 @@ class ViIncreaseCurrentWindowHeightByN(ViOperatorDef):
 class ViQuitTheCurrentWindow(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': 'q'
         }
@@ -875,7 +875,7 @@ class ViQuitTheCurrentWindow(ViOperatorDef):
 class ViSplitTheCurrentWindowInTwo(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': 's',
         }
@@ -887,7 +887,7 @@ class ViSplitTheCurrentWindowInTwo(ViOperatorDef):
 class ViMoveCursorToTopLeftWindow(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': 't'
         }
@@ -901,7 +901,7 @@ class ViMoveCursorToNeighbour(ViOperatorDef):
         self.scroll_into_view = True
 
     def translate(self, view):
-        return translate_action(view, 'nv_vi_ctrl_w', {
+        return translate_action(view, 'nv_vi_window_control', {
             'action': 'w',
             'count': get_count(view, default=0)
         })
@@ -913,7 +913,7 @@ class ViMoveCursorToNeighbour(ViOperatorDef):
 class ViSetCurrentGroupHeightOrHighestPossible(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': '_',
         }
@@ -925,7 +925,7 @@ class ViSetCurrentGroupHeightOrHighestPossible(ViOperatorDef):
 class ViSplitTheCurrentWindowInTwoVertically(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': 'v',
         }
@@ -938,7 +938,7 @@ class ViCtrlW_W(ViOperatorDef):
         self.scroll_into_view = True
 
     def translate(self, view):
-        return translate_action(view, 'nv_vi_ctrl_w', {
+        return translate_action(view, 'nv_vi_window_control', {
             'action': 'W',
             'count': get_count(view, default=0)
         })
@@ -950,7 +950,7 @@ class ViCtrlW_W(ViOperatorDef):
 class ViExchangeCurrentWindowWithNextOrPreviousNthWindow(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': 'x',
         }
@@ -1131,7 +1131,7 @@ class ViJumpToDefinition(ViOperatorDef):
 @assign_text(['SplitAndJumpToDefinition'], ACTION_MODES)
 class ViSplitAndJumpToDefinition(ViOperatorDef):
     def init(self):
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': ']'
         }
@@ -1142,7 +1142,7 @@ class ViSplitAndJumpToDefinition(ViOperatorDef):
 @assign_text(['SplitAndEditAlternate'], ACTION_MODES)
 class ViSplitAndEditAlternate(ViOperatorDef):
     def init(self):
-        self.command = 'nv_vi_ctrl_w'
+        self.command = 'nv_vi_window_control'
         self.command_args = {
             'action': '^'
         }

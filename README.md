@@ -64,6 +64,11 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
       #import "NeoVintageous.keyB.kdl" m=(var)"Ⓝ" ipre=(var)""    ipos=(var)""  //  (Ⓝ)[
       #import "NeoVintageous.keyB.kdl" m=(var)"ⓘ" ipre=(var)"<C-" ipos=(var)">" //  (ⓘ)<C-[>
       ```
+      Can also passing variables through to subsequent imports via the `varpass` tag, e.g.:
+        - @`NeoVintageous.kdl`: `#import "cfgA.kd" m=(var)"Ⓝ"` defines variable `m` as a normal mode
+        - @`cfgA.kdl`: `#import "cfgB.kd" m=(varpass)""` passes the value of `m` further
+        - @`cfgB.kdl`: `(‘m’)a MoveToEol` will get `Ⓝ` as the value of `m`
+
     + group keybinds under a single mode without having to repeat mode's name in each keybind
       ```kdl
       (Ⓝ)my_normal_group {
@@ -91,6 +96,7 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
       - `⎀a(b)` if `seek_forward` is `false` (default)
       - `⎀ab`   if `seek_forward` is `true`
     + :sparkles: surround: option to maintain cursor position on text edits, e.g., adding `'` to `my_⎀word` (⎀ denotes cursor position) will leave cursor at the same spot in the new `'my_⎀word'` while previously it moved it to the first inserted punctuation `⎀'my_word'`
+    + :sparkles: abolish: allow users to configure case coercion aliases
     + :sparkles: abolish: option to maintain cursor position on case changes, e.g., converting `se⎀View⎀Sel_⎀Reverse` to upper case (⎀ denotes cursor position) will leave cursor at the same spot in the new `SE_⎀VIEW_⎀SEL_⎀REVERSE` while previously it moved it to the beginning of the word `SE_VIEW_SEL_REVERSE`
   - and other changes:
     + :sparkles: show a popup with a count indicator<br/>before![before](./doc/img/count_popup_before.png) ![after](./doc/img/count_popup_after.png)after

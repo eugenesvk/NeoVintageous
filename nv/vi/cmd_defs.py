@@ -1770,7 +1770,7 @@ class ViMoveToBol(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
         self.updates_xpos = True
-        self.command = 'nv_vi_hat'
+        self.command = 'nv_vi_move_to_bol'
 
 
 @assign(seqs.SEQ["_"], MOTION_MODES)
@@ -1779,7 +1779,7 @@ class ViMoveToSoftBol(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
         self.updates_xpos = True
-        self.command = 'nv_vi_underscore'
+        self.command = 'nv_vi_move_to_soft_bol'
 
 
 @assign(seqs.SEQ['🔢0'], MOTION_MODES)
@@ -1789,7 +1789,7 @@ class ViMoveToHardBol(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
         self.updates_xpos = True
-        self.command = 'nv_vi_zero'
+        self.command = 'nv_vi_move_to_hard_bol'
 
 
 @assign(seqs.SEQ['gn'], MOTION_MODES)

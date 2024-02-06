@@ -132,7 +132,7 @@ __all__ = [
     'nv_vi_gv',
     'nv_vi_gx',
     'nv_vi_h',
-    'nv_vi_hat',
+    'nv_vi_move_to_bol','nv_vi_move_to_soft_bol','nv_vi_move_to_hard_bol',
     'nv_vi_j',
     'nv_vi_jump_back',
     'nv_vi_jump_forward',
@@ -172,7 +172,6 @@ __all__ = [
     'nv_vi_star',
     'nv_vi_tilde',
     'nv_vi_u',
-    'nv_vi_underscore',
     'nv_vi_visual_big_u',
     'nv_vi_visual_o',
     'nv_vi_visual_u',
@@ -183,7 +182,6 @@ __all__ = [
     'nv_vi_z',
     'nv_vi_z_enter',
     'nv_vi_z_minus',
-    'nv_vi_zero',
     'nv_vi_zz',
     'nv_view'
 ]
@@ -2937,7 +2935,7 @@ class nv_vi_e(TextCommand):
         regions_transformer(self.view, f)
 
 
-class nv_vi_zero(TextCommand):
+class nv_vi_move_to_hard_bol(TextCommand):
     def run(self, edit, mode=None, count=1):
         def _get_target(view, start, count):
             return view.line(start).a
@@ -3244,7 +3242,7 @@ class nv_vi_big_b(TextCommand):
         regions_transformer(self.view, f)
 
 
-class nv_vi_underscore(TextCommand):
+class nv_vi_move_to_soft_bol(TextCommand):
     def run(self, edit, mode=None, count=1):
         def _get_target(view, start, count):
             current_row = view.rowcol(start)[0]
@@ -3276,7 +3274,7 @@ class nv_vi_underscore(TextCommand):
         regions_transformer(self.view, f)
 
 
-class nv_vi_hat(TextCommand):
+class nv_vi_move_to_bol(TextCommand):
     def run(self, edit, mode=None, count=None):
         def _get_target(view, start, count):
             return next_non_blank(view, view.line(start).a)

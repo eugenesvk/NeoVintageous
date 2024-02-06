@@ -140,3 +140,11 @@ def _handle_rhs_text(view, rhs: Union[str, list]) -> None: # find a key that is 
                             ,       seq,    cmd_txt,                            cmdT)
                         win.run_command('nv_process_notation',{'keys':seq, 'check_user_mappings':False,'cont':cont})
                         continue
+
+                if mode in (mappings := keys.mappings_reverse):
+                    # if (seq := dict_cls_to_cmd.get(cmdT,None)): # todo later add a mode check to text commands
+                    cmdT = type(cmd_txt)
+                    _log.key("  running ‘%s’cmd_txt directly w/o translating into a sequence"
+                        ,             cmd_txt)
+                    win.run_command('nv_process_cmd_text',{'cmd':cmd_txt, 'cont':cont})
+                    continue

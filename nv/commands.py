@@ -24,7 +24,7 @@ from NeoVintageous.nv.macros           import add_macro_step
 from NeoVintageous.nv.marks            import set_mark
 from NeoVintageous.nv.paste            import pad_visual_block_paste_contents, resolve_paste_items_with_view_sel
 from NeoVintageous.nv.polyfill         import reveal_side_bar, set_selection, spell_select, split_by_newlines, toggle_side_bar
-from NeoVintageous.nv.process_notation import ProcessNotationHandler
+from NeoVintageous.nv.process_notation import ProcessNotationHandler, ProcessCmdTextHandler
 from NeoVintageous.nv.rc               import open_rc, open_config_file_kdl, reload_rc
 from NeoVintageous.nv.registers        import get_alternate_file_register, registers_get_for_paste, registers_op_change, registers_op_delete, registers_op_yank
 from NeoVintageous.nv.search           import add_search_highlighting, clear_search_highlighting, find_search_occurrences, find_word_search_occurrences, get_search_occurrences, process_search_pattern, process_word_search_pattern
@@ -58,7 +58,7 @@ __all__ = [
     'nv_enter_visual_mode',
     'nv_ex_cmd_edit_wrap',
     'nv_feed_key',
-    'nv_process_notation',
+    'nv_process_notation','nv_process_cmd_text',
     'nv_run_cmds',
     'nv_vi_a',
     'nv_vi_at',
@@ -285,6 +285,11 @@ class nv_process_notation(WindowCommand):
             repeat_count,
             check_user_mappings,
             cont).handle()
+
+class nv_process_cmd_text(WindowCommand):
+    def run(self, text_cmd, count=None, cont=False):
+        _log.keyt('process_cmd_text ⌨️‘%s’ #%s cont%s' ,text_cmd,count,cont)
+        ProcessCmdTextHandler(self.window.active_view(),text_cmd,count,cont).handle()
 
 
 class nv_ex_cmd_edit_wrap(TextCommand):

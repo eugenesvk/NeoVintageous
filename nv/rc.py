@@ -403,6 +403,7 @@ def _parse_keybind_arg(node:kdl.Node, prop_subl={}):
             cmd      = f'"command":"{val}"{subl_arg}<CR>'
             # (Ⓝ)q (subl)"move" by="words" forward=true extend=true
             # →"command":"move","args":{"by": "words", "forward": true, "extend": true}<CR>
+            _log.cfg("parsed (subl) command val=¦%s¦ arg=¦%s¦ → ¦%s¦", val, subl_arg, prop_subl_clean)
         else:
             cmd = val
         if count_l := re_count.findall(tag): # find a count tag and add commands×count

@@ -355,14 +355,13 @@ def _parse_general_cfg_kdl(general_cfg:kdl.Node,st_pref=None) -> None:
                         ,                             opt_name,                                   type_def)
             elif st_pref:
                 st_pref.set(f"{name_def}", node.props)
-                _log.cfg("set user dict ‘%s’=‘%s’ (%s)"
-                    ,               name_def, node.props, type(node.props))
+                _log.warn("set user dict ‘%s’=‘%s’",name_def,node.props)
             return None
         else:
             for arg in node.args:
                 tag = arg.tag   if hasattr(arg,'tag'  ) else ''
                 val = arg.value if hasattr(arg,'value') else arg
-                # print(arg, f"tag={tag}", f"val={val}")
+                _log.debug(arg, f"tag={tag}", f"val={val}")
                 if not val:
                     return None
                 isSameType = False
@@ -379,7 +378,8 @@ def _parse_general_cfg_kdl(general_cfg:kdl.Node,st_pref=None) -> None:
                     return None
                 if st_pref:
                     st_pref.set(f"{name_def}", val)
-                    # print(f"set user ‘{name_def}={val}’  ({type(val)})")
+                    _log.cfg("set user ‘%s=%s’ (%s)"
+                        ,         name_def,val, type(val))
                 return None
     else:
         _log.error("Unrecognized option type within ‘general’ config group, expecting ‘let’/‘set’/‘-’, not ‘%s’",opt_name)

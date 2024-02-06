@@ -139,6 +139,7 @@ __all__ = [
     'nv_vi_l',
     'nv_vi_left_brace' ,'nv_vi_left_paren' ,'nv_vi_left_square_bracket',
     'nv_vi_right_brace','nv_vi_right_paren','nv_vi_right_square_bracket',
+    'nv_target_prev','nv_target_next',
     'nv_vi_less_than','nv_vi_less_than_less_than',
     'nv_vi_m',
     'nv_vi_minus',
@@ -3830,6 +3831,16 @@ class nv_vi_gm(TextCommand):
             return ui_bell()
 
         regions_transformer(self.view, f)
+
+
+class nv_target_prev(TextCommand):
+    def run(self, edit, target,    mode, count=1, **kwargs):
+        goto = GotoView(self.view, mode, count)
+        goto.prev_target(target)
+class nv_target_next(TextCommand):
+    def run(self, edit, target,    mode, count=1, **kwargs):
+        goto = GotoView(self.view, mode, count)
+        goto.next_target(target)
 
 
 class nv_vi_left_square_bracket(TextCommand):

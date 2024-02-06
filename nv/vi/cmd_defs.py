@@ -1561,11 +1561,8 @@ class ViGotoOpeningBrace(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
         self.updates_xpos = True
-        self.command = 'nv_vi_left_square_bracket'
-        self.command_args = {
-            'action': 'target',
-            'target': '{'
-        }
+        self.command = 'nv_target_prev'
+        self.command_args = {'target':'{'}
 
 
 @assign(seqs.SEQ['[⇧9'], MOTION_MODES)
@@ -1574,11 +1571,8 @@ class ViGotoOpeningParen(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
         self.updates_xpos = True
-        self.command = 'nv_vi_left_square_bracket'
-        self.command_args = {
-            'action': 'target',
-            'target': '('
-        }
+        self.command = 'nv_target_prev'
+        self.command_args = {'target':'('}
 
 
 @assign(seqs.SEQ['[c'], ACTION_MODES)
@@ -1635,11 +1629,8 @@ class ViGotoClosingBrace(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
         self.updates_xpos = True
-        self.command = 'nv_vi_right_square_bracket'
-        self.command_args = {
-            'action': 'target',
-            'target': '}'
-        }
+        self.command = 'nv_target_next'
+        self.command_args = {'target':'}'}
 
 
 @assign(seqs.SEQ[']⇧0'], MOTION_MODES)
@@ -1648,11 +1639,8 @@ class ViGotoClosingParen(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
         self.updates_xpos = True
-        self.command = 'nv_vi_right_square_bracket'
-        self.command_args = {
-            'action': 'target',
-            'target': ')'
-        }
+        self.command = 'nv_target_next'
+        self.command_args = {'target':')'}
 
 
 @assign(seqs.SEQ['%'], MOTION_MODES)

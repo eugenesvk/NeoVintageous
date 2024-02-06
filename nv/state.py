@@ -435,31 +435,13 @@ def init_view(view) -> None:
             if mode in (NORMAL, UNKNOWN):
                 enter_normal_mode(view, mode)
                 enter_visual_mode(view, mode)
-    elif mode in (VISUAL, VISUAL_LINE, VISUAL_BLOCK):
-        # Visual modes are not reset (to normal mode), because actions like
-        # pressing the super key or opening a command-palette/overlay will cause
-        # the active view to lose focus and when focus is received again it
-        # triggers the on_activated() event, this in turn initialises the view'
-        # state, which would reset the visual mode to normal mode, therefore,
-        # for example, any command run from the command palette that expects to
-        # operate on a visual selection wouldn't work because the visual
-        # selection is reset to normal mode before the command has time to run.
-        # See https://github.com/NeoVintageous/NeoVintageous/issues/547
+    elif mode in (VISUAL, VISUAL_LINE, VISUAL_BLOCK): # Visual modes are not reset (to normal mode), because actions like pressing the super key or opening a command-palette/overlay will cause the active view to lose focus and when focus is received again it triggers the on_activated() event, this in turn initialises the view' state, which would reset the visual mode to normal mode, therefore, for example, any command run from the command palette that expects to operate on a visual selection wouldn't work because the visual selection is reset to normal mode before the command has time to run. See https://github.com/NeoVintageous/NeoVintageous/issues/547
         pass
-    elif mode in (INSERT, REPLACE):
-        # NOTE that the mode is not passed as an argument because it causes the
-        # cursor to move back one point from it's current position, for example
-        # when pressing i<Esc>i<Esc>i<Esc> the cursor moves one point each time,
-        # which is expected, but not expected when initialising state. But not
-        # passing the mode may also be causing some other hidden bugs too.
+    elif mode in (INSERT, REPLACE): # NOTE that the mode is not passed as an argument because it causes the cursor to move back one point from it's current position, for example when pressing i<Esc>i<Esc>i<Esc> the cursor moves one point each time, which is expected, but not expected when initialising state. But not passing the mode may also be causing some other hidden bugs too.
         view.window().run_command('nv_enter_normal_mode', {'from_init': True})
-    elif mode != VISUAL and view.has_non_empty_selection_region():
-        # Try to fixup a malformed visual state. For example, apparently this
-        # can happen when a search is performed via a search panel and "Find
-        # All" is pressed. In that case, multiple selections may need fixing.
+    elif mode != VISUAL and view.has_non_empty_selection_region(): # Try to fixup a malformed visual state. For example, apparently this can happen when a search is performed via a search panel and "Find All" is pressed. In that case, multiple selections may need fixing.
         view.window().run_command('nv_enter_visual_mode', {'mode': mode})
-    else:
-        # This may be run when we're coming from cmdline mode.
+    else: # This may be run when we're coming from cmdline mode.
         mode = VISUAL if view.has_non_empty_selection_region() else mode
         view.window().run_command('nv_enter_normal_mode', {'mode': mode, 'from_init': True})
 

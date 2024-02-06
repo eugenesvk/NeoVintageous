@@ -426,7 +426,8 @@ def init_view(view) -> None:
 
     default_mode = get_setting(view, 'default_mode')
 
-    if default_mode:
+    if default_mode and\
+       default_mode != 'normal':
         if default_mode == 'insert':
             if mode in (NORMAL, UNKNOWN):
                 enter_insert_mode(view, mode)

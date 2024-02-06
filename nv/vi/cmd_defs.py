@@ -1623,6 +1623,22 @@ class ViNextMispelledWord(ViMotionDef):
         }
 
 
+@assign_text(['GotoTargetPrev'], MOTION_MODES)
+class ViGotoTargetPrev(RequireOneCharMixin, ViMotionDef):
+    def init(self):
+        self.scroll_into_view = True
+        self.updates_xpos     = True
+    def translate(self, view):
+        return translate_motion(view,'nv_target_prev',{'target':self.inp})
+@assign_text(['GotoTargetNext'], MOTION_MODES)
+class ViGotoTargetNext(RequireOneCharMixin, ViMotionDef):
+    def init(self):
+        self.scroll_into_view = True
+        self.updates_xpos     = True
+    def translate(self, view):
+        return translate_motion(view,'nv_target_next',{'target':self.inp})
+
+
 @assign(seqs.SEQ[']⇧]'], MOTION_MODES)
 @assign_text(['GotoClosingBrace'], MOTION_MODES)
 class ViGotoClosingBrace(ViMotionDef):

@@ -3834,13 +3834,13 @@ class nv_vi_gm(TextCommand):
 
 
 class nv_target_prev(TextCommand):
-    def run(self, edit, target,    mode, count=1, **kwargs):
+    def run(self, edit,            mode, count=1, **kwargs):
         goto = GotoView(self.view, mode, count)
-        goto.prev_target(target)
+        goto.prev_target(**kwargs)
 class nv_target_next(TextCommand):
-    def run(self, edit, target,    mode, count=1, **kwargs):
+    def run(self, edit,            mode, count=1, **kwargs):
         goto = GotoView(self.view, mode, count)
-        goto.next_target(target)
+        goto.next_target(**kwargs)
 
 
 class nv_vi_left_square_bracket(TextCommand):

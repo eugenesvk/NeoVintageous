@@ -2,7 +2,7 @@
 
 All notable changes are documented in this file using the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
-[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.8.1341...HEAD
+[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.9.1342...HEAD
 ## [Unreleased]
   <!-- - __Added__ -->
    <!-- + :sparkles: ??? -->
@@ -22,6 +22,9 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
   <!-- - __Security__ -->
    <!-- + :lock: ??? -->
    <!-- vulnerabilities -->
+
+[0.9.1342]: https://github.com/eugenesvk/NeoVintageous/releases/tag/0.9.1342
+## [0.9.1342]
   - __Added__
    + support setting general plugin values currently set in `Preferences.sublime-settings` in the new KDL config format (but without the needless `neovintageous_` prefix)
    + :sparkles: support setting `text object` options in the new KDL config

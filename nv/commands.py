@@ -134,15 +134,12 @@ __all__ = [
     'nv_vi_h',
     'nv_vi_move_to_bol','nv_vi_move_to_soft_bol','nv_vi_move_to_hard_bol',
     'nv_vi_j',
-    'nv_vi_jump_back',
-    'nv_vi_jump_forward',
+    'nv_vi_jump_back','nv_vi_jump_forward',
     'nv_vi_k',
     'nv_vi_l',
-    'nv_vi_left_brace',
-    'nv_vi_left_paren',
-    'nv_vi_left_square_bracket',
-    'nv_vi_less_than',
-    'nv_vi_less_than_less_than',
+    'nv_vi_left_brace' ,'nv_vi_left_paren' ,'nv_vi_left_square_bracket',
+    'nv_vi_right_brace','nv_vi_right_paren','nv_vi_right_square_bracket',
+    'nv_vi_less_than','nv_vi_less_than_less_than',
     'nv_vi_m',
     'nv_vi_minus',
     'nv_vi_modify_numbers',
@@ -151,15 +148,11 @@ __all__ = [
     'nv_vi_paste',
     'nv_vi_percent',
     'nv_vi_q',
-    'nv_vi_question_mark',
-    'nv_vi_question_mark_impl',
+    'nv_vi_question_mark','nv_vi_question_mark_impl',
     'nv_vi_quote',
     'nv_vi_r',
     'nv_vi_repeat_buffer_search',
     'nv_vi_reverse_find_in_line',
-    'nv_vi_right_brace',
-    'nv_vi_right_paren',
-    'nv_vi_right_square_bracket',
     'nv_vi_s',
     'nv_vi_search',
     'nv_vi_select_big_j',
@@ -2935,32 +2928,6 @@ class nv_vi_e(TextCommand):
         regions_transformer(self.view, f)
 
 
-class nv_vi_move_to_hard_bol(TextCommand):
-    def run(self, edit, mode=None, count=1):
-        def _get_target(view, start, count):
-            return view.line(start).a
-
-        if mode == VISUAL_BLOCK:
-            resolve_visual_block_target(self.view, _get_target, count)
-            return
-
-        def f(view, s):
-            target = _get_target(view, get_insertion_point_at_b(s), count)
-
-            if mode == NORMAL:
-                resolve_normal_target(s, target)
-            elif mode == VISUAL:
-                resolve_visual_target(s, target)
-            elif mode == VISUAL_LINE:
-                resolve_visual_line_target(view, s, target)
-            elif mode == INTERNAL_NORMAL:
-                s.b = target
-
-            return s
-
-        regions_transformer(self.view, f)
-
-
 class nv_vi_right_brace(TextCommand):
     def run(self, edit, mode=None, count=1):
         def f(view, s):
@@ -3234,6 +3201,32 @@ class nv_vi_big_b(TextCommand):
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
+            elif mode == INTERNAL_NORMAL:
+                s.b = target
+
+            return s
+
+        regions_transformer(self.view, f)
+
+
+class nv_vi_move_to_hard_bol(TextCommand):
+    def run(self, edit, mode=None, count=1):
+        def _get_target(view, start, count):
+            return view.line(start).a
+
+        if mode == VISUAL_BLOCK:
+            resolve_visual_block_target(self.view, _get_target, count)
+            return
+
+        def f(view, s):
+            target = _get_target(view, get_insertion_point_at_b(s), count)
+
+            if mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == VISUAL:
+                resolve_visual_target(s, target)
+            elif mode == VISUAL_LINE:
+                resolve_visual_line_target(view, s, target)
             elif mode == INTERNAL_NORMAL:
                 s.b = target
 

@@ -60,10 +60,12 @@ class ProcessNotationHandler():
         else: # or just use a generator when we don't care about logs
             keys_iter = tokenize_keys(keys)
             key_count = '_'
+        key_cont = None
         for i,key in enumerate(keys_iter):
             _log.key("  —%s¦%s—‘%s’¦‘%s’ lead‘%s’ nv_feed_key(HFeedKey) doEval→False @ HProcessNotation",i+1,key_count,key,keys,leading_motions)
             if self.cont and get_action(self.view): # check if we need to break early on continuation sequence before processing the "1st" key that's not really the 1st
                 _log.key("    break early, get_action exists")
+                key_cont = key
                 break
             self.window.run_command('nv_feed_key',{'key':key,'do_eval':False,
                 'repeat_count':repeat_count,'check_user_mappings':check_user_mappings})
@@ -85,8 +87,8 @@ class ProcessNotationHandler():
 
         if must_collect_input(self.view, get_motion(self.view), get_action(self.view)): # State is requesting more input, so this is the last command in the sequence and it needs more input
             if self.cont:
-                _log.key("  ↩− _collect→feed_key ‘%s’¦‘%s’ lead‘%s’ nv_feed_key(HFeedKey) doEval→True @ HProcessNotation",key,keys,leading_motions)
-                self.window.run_command('nv_feed_key',{'key':key,'do_eval':True,
+                _log.key("  ↩− _collect→feed_key ‘%s’¦‘%s’ lead‘%s’ nv_feed_key(HFeedKey) doEval→True @ HProcessNotation",key_cont,keys,leading_motions)
+                self.window.run_command('nv_feed_key',{'key':key_cont,'do_eval':True,
                 'repeat_count':repeat_count,'check_user_mappings':check_user_mappings})
             else:
                 _log.key("  ↩− _collect_input")

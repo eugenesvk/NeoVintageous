@@ -1555,26 +1555,6 @@ class ViMoveBySentenceDown(ViMotionDef):
         self.command = 'nv_vi_right_paren'
 
 
-@assign(seqs.SEQ['[⇧['], MOTION_MODES)
-@assign_text(['GotoOpeningBrace'], MOTION_MODES)
-class ViGotoOpeningBrace(ViMotionDef):
-    def init(self):
-        self.scroll_into_view = True
-        self.updates_xpos = True
-        self.command = 'nv_target_prev'
-        self.command_args = {'target':'{'}
-
-
-@assign(seqs.SEQ['[⇧9'], MOTION_MODES)
-@assign_text(['GotoOpeningParen'], MOTION_MODES)
-class ViGotoOpeningParen(ViMotionDef):
-    def init(self):
-        self.scroll_into_view = True
-        self.updates_xpos = True
-        self.command = 'nv_target_prev'
-        self.command_args = {'target':'('}
-
-
 @assign(seqs.SEQ['[c'], ACTION_MODES)
 @assign_text(['BackwardToStartOfChange'], ACTION_MODES)
 class ViBackwardToStartOfChange(ViMotionDef):
@@ -1638,7 +1618,14 @@ class ViGotoTargetNext(RequireOneCharMixin, ViMotionDef):
     def translate(self, view):
         return translate_motion(view,'nv_target_next',{'target':self.inp})
 
-
+@assign(seqs.SEQ['[⇧['], MOTION_MODES)
+@assign_text(['GotoOpeningBrace'], MOTION_MODES)
+class ViGotoOpeningBrace(ViMotionDef):
+    def init(self):
+        self.scroll_into_view = True
+        self.updates_xpos = True
+        self.command = 'nv_target_prev'
+        self.command_args = {'target':'{'}
 @assign(seqs.SEQ[']⇧]'], MOTION_MODES)
 @assign_text(['GotoClosingBrace'], MOTION_MODES)
 class ViGotoClosingBrace(ViMotionDef):
@@ -1647,8 +1634,14 @@ class ViGotoClosingBrace(ViMotionDef):
         self.updates_xpos = True
         self.command = 'nv_target_next'
         self.command_args = {'target':'}'}
-
-
+@assign(seqs.SEQ['[⇧9'], MOTION_MODES)
+@assign_text(['GotoOpeningParen'], MOTION_MODES)
+class ViGotoOpeningParen(ViMotionDef):
+    def init(self):
+        self.scroll_into_view = True
+        self.updates_xpos = True
+        self.command = 'nv_target_prev'
+        self.command_args = {'target':'('}
 @assign(seqs.SEQ[']⇧0'], MOTION_MODES)
 @assign_text(['GotoClosingParen'], MOTION_MODES)
 class ViGotoClosingParen(ViMotionDef):

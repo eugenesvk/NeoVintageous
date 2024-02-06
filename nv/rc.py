@@ -215,6 +215,7 @@ def _parse_let_kdl(node:kdl.Node,cfg='') -> None:
         variables.set(pkey,val)
 
 DEF = dict()
+DEF['res_tag'] = ['i','des','defk','defkey','≝k','defc','defcmd','≝c'] # internal command description tags, exclude these when parsing a sublime command so that it doesn't get arguments it can't understand
 DEF['var_def'] = ['‘','’']
 DEF['general'] = { # todo: replace float with int when kdl-py issue is fixed
     # clean name                    	: dict(type   default value	 old/internal key name
@@ -394,7 +395,11 @@ def _parse_keybind_arg(node:kdl.Node, prop_subl={}):
             isChain = True
             continue
         if re_subl_tag.search(tag): # Sublime command per tag, serialize into a json dump
-            subl_arg = f',"args":{json.dumps(prop_subl)}' if prop_subl else ''
+            prop_subl_clean = copy.deepcopy(prop_subl)
+            for key in prop_subl: # remove reserved flags so Sublime doesn't choke on them
+                if clean_name(key) in CFG['res_tag']:
+                    del prop_subl_clean[key]
+            subl_arg = f',"args":{json.dumps(prop_subl_clean)}' if prop_subl_clean else ''
             cmd      = f'"command":"{val}"{subl_arg}<CR>'
             # (Ⓝ)q (subl)"move" by="words" forward=true extend=true
             # →"command":"move","args":{"by": "words", "forward": true, "extend": true}<CR>

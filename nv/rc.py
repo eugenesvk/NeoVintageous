@@ -356,7 +356,7 @@ def _parse_general_cfg_kdl(general_cfg:kdl.Node,st_pref=None) -> None:
                         ,                             opt_name,                                   type_def)
             elif st_pref:
                 st_pref.set(f"{name_def}", node.props)
-                _log.warn("set user dict ‘%s’=‘%s’",name_def,node.props)
+                _log.cfg("set user dict ‘%s’=‘%s’",name_def,node.props)
             return None
         else:
             for arg in node.args:

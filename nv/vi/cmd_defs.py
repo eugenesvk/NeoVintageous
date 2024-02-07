@@ -1247,7 +1247,7 @@ class ViMoveRightByChars(ViMotionDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
-        self.command = 'nv_vi_l'
+        self.command = 'nv_vi_move_char_right'
 
 
 @assign(seqs.SEQ['⇧⏎'], MOTION_MODES)
@@ -1731,7 +1731,7 @@ class ViMoveLeftByChars(ViMotionDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
-        self.command = 'nv_vi_h'
+        self.command = 'nv_vi_move_char_left'
 
 
 @assign(seqs.SEQ['⇧▶'], MOTION_MODES)

@@ -131,12 +131,11 @@ __all__ = [
     'nv_vi_case_lower_line',
     'nv_vi_gv',
     'nv_vi_gx',
-    'nv_vi_h',
     'nv_vi_move_to_bol','nv_vi_move_to_soft_bol','nv_vi_move_to_hard_bol',
     'nv_vi_j',
     'nv_vi_jump_back','nv_vi_jump_forward',
     'nv_vi_k',
-    'nv_vi_l',
+    'nv_vi_move_char_right','nv_vi_move_char_left',
     'nv_vi_left_brace' ,'nv_vi_left_paren' ,'nv_vi_left_square_bracket',
     'nv_vi_right_brace','nv_vi_right_paren','nv_vi_right_square_bracket',
     'nv_target_prev','nv_target_next',
@@ -2522,7 +2521,7 @@ class nv_vi_slash_impl(TextCommand):
         add_search_highlighting(self.view, find_search_occurrences(self.view, pattern, flags))
 
 
-class nv_vi_l(TextCommand):
+class nv_vi_move_char_right(TextCommand):
     def run(self, edit, mode=None, count=1):
         def f(view, s):
             if mode == NORMAL:
@@ -2558,7 +2557,7 @@ class nv_vi_l(TextCommand):
         regions_transformer(self.view, f)
 
 
-class nv_vi_h(TextCommand):
+class nv_vi_move_char_left(TextCommand):
     def run(self, edit, mode=None, count=1):
         def f(view, s):
             if mode == INTERNAL_NORMAL:

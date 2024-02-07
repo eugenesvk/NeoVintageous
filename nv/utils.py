@@ -1182,9 +1182,8 @@ def should_motion_apply_op_transformer(motion) -> bool:
         'nv_vi_dollar',
         'nv_vi_find_in_line',
         'nv_vi_g__',
-        'nv_vi_h',
+        'nv_vi_move_char_left','nv_vi_move_char_right',
         'nv_vi_move_to_bol',
-        'nv_vi_l',
     )
 
     return motion and 'motion' in motion and motion['motion'] not in blacklist

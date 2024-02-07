@@ -211,20 +211,21 @@ text_object { // Set various text object options
   seek_forward false // search for text objects outside of current selection, e.g., "lower case within (parentheses)" command in ‘⎀a(B)’ results in:
     // ‘a(B)’ if false (default)
     // ‘a(b)’ if true
-  // Use custom text object list/labels (only within existing categories), format:
-  //↓GroupName  label="Add pair" "Remove label" "clear" //clear all group defaults (NO tag)
-  Quote    	‘’="‘’" g="‘’" y="`' '" \                                       	// def '"`#$&*+-./:;=_|~\
-    /**/   	y="`' '" /*separate a pair by space ↓ if it's > 2 symbols*/     	//
-  Bracket  	"clear"/*clear all Bracket defaults*/  \                        	// def b() [] B{} <>
-    /**/   	d="()" f="[]" j="{}" n="【】"                                     	// ...any symbol↑ is a label
-  Sentence 	x="" /*← new label */ "s"                                       	// |s|
-  Tag      	c="" /*← empty "" value since there are not Tag delimiters*/ "t"	// |t|
-  Word     	s="" "w" /*← Remove the default label for Word */               	// |w|
-  BigWord  	e="" "W"                                                        	// |W|
-  Paragraph	b="" "p"                                                        	// |p|
-  Indent   	w="" "i"                                                        	// |i|
-  BigIndent	q="" "I"                                                        	// |I|
-  Line     	a="" "l"                                                        	// |l|
+  // Use custom text object list/labels (only within existing groups listed below), format:
+  //↓GroupName  label="Add pair" "Add pair" label_remove=null or "" "clear" //clear all group defaults (NO tag)
+  Quote    	g="‘’" ‘="‘’" ’="‘’"  y="`' '" \                                  	// def '"`#$&*+-./:;=_|~\
+    /**/   	"‘’" /*←↑     ↑ are the same: unlabeled pairs parsed using self*/\	//
+    /**/   	y="`' '" /*separate a pair by space ↓ if it's > 2 symbols*/       	//
+  Bracket  	"clear"/*clear all Bracket defaults*/  \                          	// def b() [] B{} <>
+    /**/   	d="()" f="[]" j="{}" n="【】"                                       	// ...any symbol↑ is a label
+  Sentence 	"x" /*← new label */ "s"=null                                     	// |s|
+  Tag      	"c" /*← empty "" value since there are not Tag delimiters*/ "t"   	// |t|
+  Word     	"s" w="" /*← Remove the default label for Word */                 	// |w|
+  BigWord  	"e" W=""                                                          	// |W|
+  Paragraph	"b" p=""                                                          	// |p|
+  Indent   	"w" i=""                                                          	// |i|
+  BigIndent	"q" I=""                                                          	// |I|
+  Line     	"a" l=""                                                          	// |l|
 }
 
 plugin {

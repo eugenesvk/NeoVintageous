@@ -6,6 +6,7 @@ TFMT = '{t.minute:2}:{t.second:2}.{t.microsecond}'
 filter_levelname_dict = {'ERROR':'❗','WARNING':'⚠️','INFO':"ⓘ",'KEY':'⌨️','CFG':'Ⓒ'}
 
 def add_module_logger_levels():
+  addLoggingLevel('KEYT', DEFAULT_LOG_LEVEL - 20)
   addLoggingLevel('KEY', DEFAULT_LOG_LEVEL - 20)
   addLoggingLevel('MAP', DEFAULT_LOG_LEVEL - 20)
   addLoggingLevel('SET', DEFAULT_LOG_LEVEL - 20)

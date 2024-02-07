@@ -20,4 +20,5 @@
 └────────┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┘
 Normal Insert Command-line Visual Visual-Linewise Visual-Blockwise Select Operator-pending Terminal-Job Lang-Arg
 */
+(Ⓝ)"<C-q><C-q>" "MoveDownByLines" defk="j"
 

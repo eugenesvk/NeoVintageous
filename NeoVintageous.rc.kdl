@@ -22,1231 +22,1239 @@
 └────────┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┘
 Normal Insert Command-line Visual Visual-Linewise Visual-Blockwise Select Operator-pending Terminal-Job Lang-Arg
 */
-- r#"" " Option	      Opt	|Default|	Comment"#
-- r#"" :set winaltkeys=no"#
-- r#"" " :set autoindent"#
-- r#"" " :set belloff"#
-- r#"" " :set equalalways"#
-- r#"" " :set hlsearch"#
-- r#"" " :set ignorecase"#
-- r#"" " :set smartcase"#
-- r#"" " :set incsearch"#
-- r#"" " :set magic"#
-- r#"" " :set menu"#
-- r#"" " :set minimap"#
-- r#"" " :set modeline"#
-- r#"" " :set modelines"#
-- r#"" " :set shell"#
-- r#"" " :set sidebar"#
-- r#"" " :set statusbar"#
-- r#"" " :set wrapscan"#
-- r#"" " Sublime Settings			""#
-- r#"" :set relativenumber"#
-- r#"" " :set expandtab"#
-- r#"" " :set list"#
-- r#"" " :set number"#
-- r#"" " :set scrolloff"#
-- r#"" " :set spell"#
-- r#"" " :set tabstop"#
-- r#"" " :set textwidth"#
-- r#"" " :set wrap"#
-- r""
-- r""
-- r#"" " ⓘ Insert mode ——————————————————————————————————————————————————————————————————————"#
-- r#"" " Can't be remapped, use this temporarily"#
-- r#"" nnoremap <M-I>	:"command":"swap_line_down"<CR>"#
-- r#"" nnoremap <M-O>	:"command":"swap_line_up"<CR>"#
-- r""
-- r#"" "Ⓝ Test ——————————————————————————————————————————————————————————————————————"#
-- r#"" nnoremap а	 e"#
-- r#"" nnoremap в	 b"#
-- r#"" " noremap Д w"#
-- r#"" " noremap й     	 w"#
-- r#"" " noremap ц     	 w"#
-- r#"" " noremap у     	 w"#
-- r#"" " noremap к     	 w"#
-- r#"" " noremap е     	 w"#
-- r#"" " noremap н     	 w"#
-- r#"" " noremap ф     	 w"#
-- r#"" " noremap ы     	 w"#
-- r#"" " noremap в     	 w"#
-- r#"" " noremap а     	 w"#
-- r#"" " noremap п     	 w"#
-- r#"" " " noremap й   	 q"#
-- r#"" " noremap <f1>  	 w"#
-- r#"" " noremap <f2>  	 w"#
-- r#"" " noremap <f3>  	 b"#
-- r#"" " noremap <f4>  	 e"#
-- r#"" " noremap <f5>  	 e"#
-- r#"" " noremap <S-f6>	 b"#
-- r#"" " noremap <S-f7>	 w"#
-- r#"" " noremap <f6>  	 b"#
-- r#"" " noremap <f7>  	 w"#
-- r#"" " " noremap <⇟> b"#
-- r""
-- r#"" nnoremap <leader>d	:Neovintageous action=toggle_side_bar<CR>"#
-- r#"" " nnoremap gg     	:Neovintageous action=toggle_side_bar<CR>"#
-- r#"" " nnoremap t r    	2  replace N chars with {char}"#
-- r""
-- r#"" " nnoremap <C-q>	:quit!"#
-- r#"" " nnoremap G    	move_prev_word_end"#
-- r#"" " nnoremap 0    	univeral_arg"#
-- r#"" " 'C-j'         	= ['page_down','align_view_center']	# ⇟ Move      page down"#
-- r#"" " 'C-k'         	= ['page_up','align_view_center']  	# ⇞ Move      page up"#
-- r""
-- r#"" " 'C-K'	= "insert_char"	# ⇞ Move      page up"#
-- r""
-- r#"" "Ⓝ Free ——————————————————————————————————————————————————————————————————————"#
-- r#""   "nnoremap <C-u>	no_op"#
-- r#""   "nnoremap <A-C>	no_op"#
-- r#""   "nnoremap A-(  	no_op"#
-- r#""   "nnoremap A-)  	no_op"#
-- r#""   "nnoremap <A-K>	no_op"#
-- r#""   "nnoremap <C-i>	no_op"#
-- r#""   "nnoremap b    	no_op"#
-- r#"" "    '~'         	= "no_op"	#"#
-- r#"" "    'A-`'       	= "no_op"	#"#
-- r#"" " nnoremap X     	change_selection"#
-- r#"" "Ⓝ Major modes ——————————————————————————————————————————————————————————————————————"#
-- r#"" " nnoremap i	insert_mode"#
-- r#"" " nnoremap e	select_mode"#
-- r#"" "Ⓝ Minor modes / menu dialogs ———————————————————————————————————————————————————————"#
-- r#"" "p    	  	 ☰👁 View mode            	Ⓝ"#
-- r#"" "P    	  	 ☰👁ₛ 'sticky', persistent	Ⓝ"#
-- r#"" "Z    	  	 ☰👁ₛ 'sticky', persistent	Ⓝ"#
-- r#"" "g    	  	 ⓖ☰⮊ Goto mode           	  Ⓝ"#
-- r#"" "⎇d   	gh	 ☰Multicursor (@select)  	Ⓝ"#
-- r#"" "n    	  	 ☰🧩  Match mode          	Ⓝ ☰<i class='fa fa-puzzle-piece'></i>"#
-- r#"" "C-w  	  	 ☰🗔  Window mode         	  Ⓝ"#
-- r#"" "space	  	 ☰␠  Space mode          	  Ⓝ"#
-- r#"" "[    	  	 ☰⧛ Unimpaired           	  Ⓝ"#
-- r#"" "]    	  	 ☰⧚                      	  Ⓝ"#
-- r#"" "`    	  	 ☰𝔸𝕒 Case conversion     	  Ⓝ"#
-- r""
-- r#"" nnoremap :	:"#
-- r#"" nnoremap R	:"command":"show_overlay","args":{"overlay":"command_palette"}<CR>"#
-- r""
-- r#"" "nnoremap g	:"command":"show_overlay","args":{"overlay":"goto","text":"@"}<CR>"#
-- r""
-- r#""   "Ⓝ                  	Compat with non-modal editors"#
-- r#""   " nnoremap <C-o>    	file_picker"#
-- r#""   " nnoremap <C-O>    	file_picker_in_current_directory"#
-- r#""   " nnoremap <C-s>    	commit_undo_checkpoint :write	# 💾 save file"#
-- r#""   " nnoremap C-S-s    	Save As"#
-- r#""   " nnoremap <C-n>    	:new"#
-- r#""   " nnoremap C-S-t    	open-last-closed"#
-- r#""   " nnoremap C-+      	zoom-in"#
-- r#""   " nnoremap <C-minus>	zoom-out"#
-- r""
-- r#""   "Ⓝ           	Copy"#
-- r#"" nnoremap  c    	y"#
-- r#"" "nnoremap <C-c>	??"#
-- r#"" "nnoremap C    	??"#
-- r#"" "nnoremap <A-c>	??"#
-- r""
-- r#""   "Ⓝ Shell"#
-- r#"" " nnoremap |  	shell_pipe"#
-- r#"" "A-\\"        	= 'shell_pipe_to'"#
-- r#"" " nnoremap A-|	shell_pipe_to"#
-- r""
-- r#""   "Ⓝ Move ——————————————————————————————————————————————————————————————————————"#
-- r#"" " Cursor@H"#
-- r#"" nnoremap  	j    	gj"#
-- r#"" nnoremap  	k    	gk"#
-- r#"" nnoremap  	l    	h"#
-- r#"" nnoremap  	;    	l"#
-- r#"" nnoremap  	m    	<C-d>"#
-- r#"" nnoremap  	,    	<C-u>"#
-- r#"" nnoremap  	<C-j>	<C-f>"#
-- r#"" nnoremap  	<C-k>	<C-b>"#
-- r#"" " nnoremap	a    	0"#
-- r#"" " nnoremap	A    	$"#
-- r#"" nnoremap  	a    	:"command":"move_to","args":{"to":"bol","extend":false}<CR>"#
-- r#"" nnoremap  	A    	:"command":"move_to","args":{"to":"eol","extend":false}<CR>"#
-- r#"" " ⎈e      	     	scroll Up   N lines (Extra) bug https://github.com/NeoVintageous/NeoVintageous/issues/866"#
-- r""
-- r#"" "nnoremap g	:"command":"show_overlay","args":{"overlay":"goto","text":"@"}<CR>"#
-- r""
-- r#"" "Ⓝ                   	Compat with non-modal editors"#
-- r#"" nnoremap <C-home>    	gg"#
-- r#"" nnoremap <C-end>     	G"#
-- r#"" "nnoremap <D-Home>   	gg"#
-- r#"" "nnoremap <D-End>    	G"#
-- r#"" nnoremap <D-Up>      	gg"#
-- r#"" nnoremap <D-Down>    	G"#
-- r#"" nnoremap <D-1>       	gT"#
-- r#"" nnoremap <D-2>       	gt"#
-- r#"" nnoremap <C-S-tab>   	gT"#
-- r#"" nnoremap <C-tab>     	gt"#
-- r#"" nnoremap <C-pageup>  	gT"#
-- r#"" nnoremap <C-pagedown>	gt"#
-- r#"" nnoremap <A-pageup>  	<C-o>"#
-- r#"" nnoremap <A-pagedown>	<Tab>"#
-- r#"" nnoremap <C-j>       	<C-o>"#
-- r#"" nnoremap <C-;>       	<Tab>"#
-- r""
-- r#"" nnoremap 1      	gT"#
-- r#"" nnoremap <A-1>  	gT"#
-- r#"" nnoremap 2      	gt"#
-- r#"" nnoremap <A-2>  	gt"#
-- r#"" nnoremap 3      	<C-o>"#
-- r#"" nnoremap <A-3>  	<C-o>"#
-- r#"" nnoremap <S-Tab>	<C-o>"#
-- r#"" nnoremap 4      	<Tab>"#
-- r#"" nnoremap <A-4>  	<Tab>"#
-- r#"" "nnoremap <Tab> 	<Tab>"#
-- r""
-- r""
-- r#"" "Ⓝ word !!! sometimes prev≠next by a space"#
-- r#"" nnoremap f        	 e"#
-- r#"" nnoremap <A-f>    	 w"#
-- r#"" nnoremap <A-Right>	 w"#
-- r#"" nnoremap d        	 b"#
-- r#"" nnoremap <A-d>    	ge"#
-- r#"" nnoremap <A-Left> 	ge"#
-- r#"" nnoremap F        	 E"#
-- r#"" nnoremap <A-F>    	 W"#
-- r#"" nnoremap D        	 B"#
-- r#"" nnoremap <A-D>    	gE"#
-- r#"" nnoremap <C-f>    	 E"#
-- r#"" nnoremap <C-d>    	gE"#
-- r#"" nnoremap <C-Right>	 W"#
-- r#"" nnoremap <C-Left> 	 B"#
-- r#"" "nnoremap G       	gg"#
-- r""
-- r#"" "Ⓝ             	Line"#
-- r#"" nnoremap <Home>	0"#
-- r#"" nnoremap <End> 	$"#
-- r""
-- r#"" "Ⓝ        	Block"#
-- r#"" nnoremap >	{"#
-- r#"" nnoremap ?	}"#
-- r""
-- r#"" "Ⓝ             	Marked"#
-- r#"" "nnoremap <A-g>	jumplist_picker"#
-- r#"" nnoremap  <A-g>	`"#
-- r""
-- r#"" nnoremap r    	;"#
-- r#"" nnoremap <A-R>	,"#
-- r""
-- r#"" "Ⓝ            	Find"#
-- r#"" nnoremap <A-w>	t"#
-- r#"" nnoremap w    	f"#
-- r#"" nnoremap <A-W>	T"#
-- r#"" nnoremap W    	F"#
-- r#"" nnoremap S    	?"#
-- r#"" nnoremap s    	/"#
-- r#"" nnoremap .    	?<CR>"#
-- r#"" nnoremap /    	/<CR>"#
-- r#"" " nnoremap 8  	search_selection"#
-- r#"" " nnoremap *  	search_selection"#
-- r#"" nnoremap 8    	*"#
-- r#"" nnoremap *    	#"#
-- r""
-- r#""   "Ⓝ Select ——————————————————————————————————————————————————————————————————————"#
-- r#"" nnoremap e	 v"#
-- r""
-- r#"" "Ⓝ                	Compat with non-modal editors"#
-- r#"" "    'C-a'        	= ['save_selection','select_all']	# 🖈∀▋"#
-- r#"" nnoremap <A-Down> 	:"command":"select_lines","args":{"forward":true }<CR>"#
-- r#"" nnoremap <A-Up>   	:"command":"select_lines","args":{"forward":false}<CR>"#
-- r#"" nnoremap <S-Down> 	vj"#
-- r#"" nnoremap <S-Up>   	vk"#
-- r#"" nnoremap <S-Left> 	vh"#
-- r#"" nnoremap <S-Right>	vl"#
-- r""
-- r#"" "Ⓝ                 	Mark jump points"#
-- r#"" nnoremap G         	m"#
-- r#"" nnoremap <C-g>     	m"#
-- r#"" nnoremap <A-g><A-g>	`"#
-- r#"" nnoremap <A-g><A-x>	:delmarks!"#
-- r#"" nnoremap <A-g><A-h>	:delmarks"#
-- r""
-- r#"" nnoremap J     	V"#
-- r#"" "nnoremap <A-r>	extend_line"#
-- r#"" nnoremap E     	V"#
-- r#"" nnoremap <A-e> 	*"#
-- r#"" nnoremap <A-E> 	#"#
-- r#"" nnoremap 5     	vip"#
-- r#"" nnoremap %     	:%y<CR>"#
-- r""
-- r#"" " ↓×2 mapped in Karabiner to l⎇ to work in both modes and not interfere with insert symbols mapped to those keys"#
-- r#"" " !!!todo: rebind to l⎇ when Sublime supports side modifiers"#
-- r#"" nnoremap <A-j> 	:"command":"select_lines"  ,"args":{"forward":true }<CR>"#
-- r#"" nnoremap <A-k> 	:"command":"select_lines"  ,"args":{"forward":false}<CR>"#
-- r#"" nnoremap <A-J> 	:"command":"deselect_lines","args":{"forward":true }<CR>"#
-- r#"" nnoremap <A-K> 	:"command":"deselect_lines","args":{"forward":false}<CR>"#
-- r#"" "nnoremap <A-l>	select_prev_sibling"#
-- r#"" "nnoremap A-;  	select_next_sibling"#
-- r#"" "nnoremap M    	shrink_selection"#
-- r#"" "nnoremap <    	expand_selection"#
-- r#"" "nnoremap <A-s>	select_regex"#
-- r#"" "nnoremap N    	split_selection"#
-- r#"" "nnoremap <A-n>	split_selection_on_newline"#
-- r""
-- r#""   "nnoremap "'"   	collapse_selection"#
-- r#""   "nnoremap <A-'> 	flip_selections"#
-- r#""   "nnoremap <A-a> 	flip_selections"#
-- r#""   "nnoremap <A-A> 	flip_selections"#
-- r#""   "nnoremap <A-p> 	ensure_selections_forward"#
-- r#""   "nnoremap <A-:> 	ensure_selections_forward"#
-- r#""   ""nnoremap <A-l>	rotate_selections_backward"#
-- r#""   ""nnoremap <A-;>	rotate_selections_forward"#
-- r#""   "nnoremap <A-m> 	rotate_selections_forward"#
-- r#""   "nnoremap A-,   	rotate_selections_backward"#
-- r#""   "nnoremap <A-u> 	remove_primary_selection"#
-- r#"" nnoremap <A-i>    	:"command":"deselect_lines_to_first"<CR>"#
-- r#"" nnoremap <A-o>    	:"command":"deselect_lines_to_last"<CR>"#
-- r#"" nnoremap <A-U>    	:"command":"soft_undo"<CR>"#
-- r#""   "nnoremap K     	keep_selections"#
-- r#""   "nnoremap L     	remove_selections"#
-- r#""   "nnoremap <A-Z> 	:"command":"deselect_lines_to_first"<CR>"#
-- r#""   "      ,        	  'collapse_selection']			#"#
-- r""
-- r#""   "nnoremap minus	trim_selections"#
-- r#""   "nnoremap _    	merge_consecutive_selections"#
-- r#""   "nnoremap +    	dupe_selections"#
-- r""
-- r#""   "Ⓝ Change ——————————————————————————————————————————————————————————————————————"#
-- r#""   "                      	Compat with non-modal editors"#
-- r#""   "nnoremap <A-del>      	delete_word_forward"#
-- r#""   "    'C-del'           	= ['extend_next_long_word_end',	# ⌦W"#
-- r#""   "                      	   'delete_selection']         	# ᵡ Word →"#
-- r#""   "nnoremap <A-backspace>	delete_word_backward"#
-- r#""   "    'C-backspace'     	= ['extend_prev_long_word_start',	# ⌫W"#
-- r#""   "                      	   'delete_selection']           	# ᵡ Word ←"#
-- r#""   "nnoremap del          	delete_selection"#
-- r#""   "nnoremap <S-del>      	delete_selection_noyank"#
-- r#"" nnoremap <CR>            	o<Esc>"#
-- r#"" nnoremap <S-CR>          	O<Esc>"#
-- r#"" nnoremap <C-y>           	<C-r>"#
-- r#"" nnoremap <C-z>           	u"#
-- r#"" nnoremap <C-Z>           	<C-r>"#
-- r""
-- r#"" nnoremap <C-/>	:"command":"toggle_comment","args":{"block":false}<CR>"#
-- r""
-- r""
-- r#""   "nnoremap <C-ret>	:reflow"#
-- r""
-- r""
-- r#""   "nnoremap .    	N/A"#
-- r#""   "nnoremap 6    	delete_char_forward"#
-- r#"" nnoremap x       	d"#
-- r#""   "nnoremap <A-x>	delete_selection_noyank"#
-- r#""   "nnoremap <A-c>	change_selection"#
-- r#"" nnoremap h       	X"#
-- r#"" nnoremap <BS>    	X"#
-- r#"" nnoremap <C-h>   	X"#
-- r#"" nnoremap H       	<del>"#
-- r#"" "nnoremap del    	delete_char_forward"#
-- r#"" "nnoremap <C-d>  	delete_char_forward"#
-- r#""   "nnoremap <A-h>	delete_word_backward"#
-- r#""   "nnoremap <A-H>	delete_word_forward"#
-- r#"" "    'C-h'       	= ['move_prev_long_word_start',      	# ⌫W"#
-- r#"" "                	   'delete_selection']               	# ᵡ Word ←"#
-- r#"" "    'C-x'       	= ['yank_main_selection_to_clipboard'	          	,"#
-- r#"" "                	   'delete_selection']               	#         		×📋 cut to clipboard <i class='fa fa-clipboard'></i>"#
-- r#""   "nnoremap X    	join_selections"#
-- r#""   "nnoremap <A-X>	join_selections_space"#
-- r""
-- r#"" nnoremap t       	r"#
-- r#""   "nnoremap T    	replace_with_yanked"#
-- r#""   "nnoremap <A-t>	replace_selections_with_clipboard"#
-- r""
-- r#""   "nnoremap `"#
-- r#"" nnoremap B    	guiw"#
-- r#"" nnoremap <C-b>	cru"#
-- r""
-- r#""   " Ⓝ         	line"#
-- r#"" nnoremap <C-J>	:"command":"swap_line_down"<CR>"#
-- r#"" nnoremap <C-K>	:"command":"swap_line_up"<CR>"#
-- r""
-- r#""   "nnoremap A-.	unindent"#
-- r#""   "nnoremap A-/	indent"#
-- r""
-- r#""   "nnoremap q	record_macro"#
-- r#""   "nnoremap Q	replay_macro"#
-- r#""   "nnoremap "	select_register"#
-- r""
-- r#"" nnoremap b       	."#
-- r#"" nnoremap <A-B>   	,"#
-- r#"" nnoremap i       	i"#
-- r#"" nnoremap o       	a"#
-- r#"" nnoremap O       	o"#
-- r#"" nnoremap I       	O"#
-- r#"" nnoremap u       	u"#
-- r#"" nnoremap y       	<C-r>"#
-- r#""   "nnoremap U    	earlier"#
-- r#""   "nnoremap Y    	later"#
-- r#"" nnoremap v       	p"#
-- r#""   "nnoremap <C-v>	paste_clipboard_after"#
-- r#"" nnoremap V       	P"#
-- r#"" "nnoremap I      	insert_at_line_start"#
-- r#"" "nnoremap A      	insert_at_line_end"#
-- r""
-- r#"" "    'A-I'	=["split_selection_on_newline"	# ⭰䷖ Line: split & insert @ start"#
-- r#"" "     ,   	  "insert_at_line_start"]     	#"#
-- r#"" "    'A-O'	=["split_selection_on_newline"	# ䷖⭲ Line: split & insert @ end"#
-- r#"" "     ,   	  "insert_at_line_end"]       	#"#
-- r""
-- r#""   "Ⓝ Select manipulation ————————————————————————————————————————————————————————————————————"#
-- r#""   "nnoremap (	rotate_selection_contents_backward"#
-- r#""   "nnoremap )	rotate_selection_contents_forward"#
-- r#""   "nnoremap 7	align_selections"#
-- r#""   "nnoremap &	align_selections"#
-- r#""   "nnoremap =	format_selections"#
-- r""
-- r#""   "Ⓝ          	Misc"#
-- r#"" nnoremap z    	:"command":"toggle_comment","args":{"block":false}<CR>"#
-- r#"" nnoremap Z    	:"command":"toggle_comment","args":{"block":true }<CR>"#
-- r#"" nnoremap <A-z>	:"command":"toggle_comment","args":{"block":true ,"variant":3}<CR>"#
-- r#"" nnoremap <C-m>	<C-x>"#
-- r#"" nnoremap <C-,>	<C-a>"#
-- r#"" nnoremap \    	:set invwrap<CR>"#
-- r#"" nnoremap <C-l>	<C-z>"#
-- r""
-- r#""   "  nnoremap $	shell_keep_pipe"#
-- r""
-- r#""   "Ⓝ space mode"#
-- r#""   " "'"	= 'last_picker'"#
-- r""
-- r#""   "Ⓝ Shell       	#	#"#
-- r#""   "  nnoremap !  	shell_insert_output"#
-- r#""   "  nnoremap @  	shell_append_output"#
-- r#""   "  nnoremap A-!	shell_append_output"#
-- r""
-- r""
-- r#"" " ## Cursor     	move"#
-- r#"" " #             	‸	search backward for the Nth occurrence of the ident under the cursor"#
-- r#"" " $             	‸	cursor to the end of Nth next line"#
-- r#"" " %             	‸	find the next (curly/square) bracket on this line and go to its match, or go to matching comment bracket, or go to matching preprocessor directive."#
-- r#"" " {count}%      	‸	go to N percentage in the file"#
-- r#"" " &             	🗘	repeat last :s"#
-- r#"" " ``            	‸	→position before latest jump"#
-- r#"" " `(            	‸	→current sentence         	start"#
-- r#"" " `)            	‸	→current sentence         	end"#
-- r#"" " `<            	‸	→highlighted area         	start"#
-- r#"" " `>            	‸	→highlighted area         	end"#
-- r#"" " `[            	‸	→last operated/putted text	start"#
-- r#"" " `]            	‸	→last operated/putted text	end"#
-- r#"" " `{            	‸	→current paragraph        	start"#
-- r#"" " `}            	‸	→current paragraph        	end"#
-- r#"" " `{a-zA-Z0-9}  	‸	→mark {a-zA-Z0-9}"#
-- r#"" " (             	‸	№    sentences	backward"#
-- r#"" " )             	‸	№    sentences	forward"#
-- r#"" " 0             	‸	→1st CHAR@Line start"#
-- r#"" " '{a-zA-Z0-9}  	‸	→1st CHAR@Line with mark {a-zA-Z0-9}"#
-- r#"" " ''            	‸	→1st CHAR@Line where the cursor was before the latest jump"#
-- r#"" " '(            	‸	→1st CHAR@Line sentence                 	start"#
-- r#"" " ')            	‸	→1st CHAR@Line sentence                 	end"#
-- r#"" " '<            	‸	→1st CHAR@Line buffer's highlighted area	start"#
-- r#"" " '>            	‸	→1st CHAR@Line buffer's highlighted area	end"#
-- r#"" " '[            	‸	→1st CHAR@Line last operated/put text   	start"#
-- r#"" " ']            	‸	→1st CHAR@Line last operated/put text   	end"#
-- r#"" " '{            	‸	→1st CHAR@Line paragraph                	start"#
-- r#"" " '}            	‸	→1st CHAR@Line paragraph                	end"#
-- r#"" " -             	‸	→1st CHAR N lines higher"#
-- r#"" " ^             	‸	→1st CHAR@Line of the line"#
-- r#"" " _             	‸	→1st CHAR@Line N - 1 lines lower"#
-- r#"" " *             	‸	search forward for the Nth occurrence of the ident under the cursor"#
-- r#"" " +             	‸	same as <CR>"#
-- r#"" " ,             	‸	repeat latest f, t, F or T in opposite direction N times"#
-- r#"" " .             	🗘	repeat last change with count replaced with N"#
-- r#"" " /{pattern}<CR>	‸	search forward for the Nth occurrence of {pattern}"#
-- r#"" " /<CR>         	‸	search forward for {pattern} of last search"#
-- r#"" " 1–9           	‸	prepend to command to give a count"#
-- r""
-- r#"" """ Ⓝ ☰Minor modes  Accessible from Normal mode, typically switch back to Normal mode after a command"#
-- r""
-- r#"" " includeTemplate (joinPath .cfg "nHelp.toml.tmpl") (dict "m" "normal" "i" "Ⓝ ☰?" "k" "F1" "cfg" .cfg) ›"#
-- r""
-- r#"" "nnoremap	` 	cmd	Ⓝ ☰𝔸𝕒 Case conversion mode	「 」	「 」"#
-- r#"" nnoremap 	`j	guiw"#
-- r#"" nnoremap 	`k	cru"#
-- r#"" "nnoremap	`l	crm"#
-- r#"" nnoremap 	`;	crc"#
-- r#"" nnoremap 	`m	crm"#
-- r#"" nnoremap 	`-	cr-"#
-- r#"" nnoremap 	`.	cr."#
-- r""
-- r""
-- r#"" " includeTemplate (joinPath .cfg "nView.nv.tmpl") (dict "m" "normal" "i" "Ⓝ ☰👁" "k" "p" "cfg" .cfg) ›"#
-- r#""   " # nnoremap p	view_mode_sticky"#
-- r#"" " includeTemplate (joinPath .cfg "nView.nv.tmpl") (dict "m" "normal" "i" "Ⓝ 👁ₛ" "k" "P" "cfg" .cfg) ›"#
-- r#"" " includeTemplate (joinPath .cfg "nView.nv.tmpl") (dict "m" "normal" "i" "Ⓝ 👁ₛ" "k" "Z" "cfg" .cfg) ›"#
-- r""
-- r#"" " × not implemented yet"#
-- r#"" " Move"#
-- r#"" " noremap gs $"#
-- r#"" " "× g$        	‸  when 'wrap' off go to rightmost character of the current line that is on the screen; when 'wrap' on go to the rightmost character of the current screen line"#
-- r#"" " noremap gs g_	" g_ 	‸  cursor to the last CHAR N - 1 lines lower"#
-- r#"" "              	"$   	‸  cursor to the end of Nth next line"#
-- r#"" "              	" gm 	‸  go to character at middle of the screenline"#
-- r#""    a"a         	"× gM	‸  go to characterga at middle of the text line"#
-- r""
-- r#"" "nnoremap g   	cmd	Ⓝ ⓖ☰⮊ Goto mode Jumps to various locations	「 」	「 」"#
-- r#"" nnoremap  gp  	no_op"#
-- r#"" nnoremap  gb  	`"#
-- r#"" nnoremap  gA  	'"#
-- r#"" nnoremap  gB  	'"#
-- r#"" "nnoremap gb  	jumplist_picker"#
-- r#"" nnoremap  ga  	g^"#
-- r#"" nnoremap  gs  	$"#
-- r#"" nnoremap  gh  	0"#
-- r#"" nnoremap  gg  	gg"#
-- r#"" nnoremap  gj  	j"#
-- r#"" nnoremap  gk  	k"#
-- r#"" nnoremap  g'  	G"#
-- r#"" nnoremap  gl  	goto_prev_paragraph"#
-- r#"" nnoremap  g;  	goto_next_paragraph"#
-- r#"" nnoremap  g.  	goto_prev_paragraph"#
-- r#"" nnoremap  g/  	goto_next_paragraph"#
-- r#"" nnoremap  gf  	goto_file"#
-- r#"" nnoremap  gm  	L"#
-- r#"" nnoremap  g,  	H"#
-- r#"" nnoremap  gn  	M"#
-- r#"" nnoremap  gD  	goto_declaration"#
-- r#"" nnoremap  gd  	goto_definition"#
-- r#"" nnoremap  gF12	goto_definition"#
-- r#"" nnoremap  gi  	goto_implementation"#
-- r#"" nnoremap  gt  	goto_implementation"#
-- r#"" nnoremap  gr  	goto_reference"#
-- r#"" nnoremap  ge  	goto_type_definition"#
-- r#"" nnoremap  gy  	goto_type_definition"#
-- r#"" nnoremap  gc  	goto_last_accessed_file"#
-- r#"" nnoremap  gv  	goto_last_modified_file"#
-- r#"" nnoremap  g1  	goto_previous_buffer"#
-- r#"" nnoremap  g2  	goto_next_buffer"#
-- r#"" nnoremap  g3  	jump_backward"#
-- r#"" nnoremap  g4  	jump_forward"#
-- r#"" nnoremap  gu  	goto_last_modification"#
-- r#"" "nnoremap g'  	gotochar"#
-- r""
-- r#"" " ☰🧩 Match Mode"#
-- r#"" " x=Visual v=Vis+Sel o=operator-pending"#
-- r#"" " xnoremap fails!!! maybe not implemented"#
-- r#"" " (+)  Surround current selection with <char>"#
-- r#"" onoremap ne 	a"#
-- r#"" onoremap na 	i"#
-- r#"" "onoremap e 	a"#
-- r#"" "onoremap a 	i"#
-- r#"" "onoremap aw	iw"#
-- r#"" "onoremap aW	iW"#
-- r#"" "onoremap as	is"#
-- r#"" "onoremap at	it"#
-- r""
-- r#"" "" ☰  Surround (github.com/tpope/vim-surround), add text object after a command, eg, niwd to insert () around (word)"#
-- r#"" nnoremap nx	ds"#
-- r#"" onoremap nx	ds"#
-- r#"" nnoremap nt	cs"#
-- r#"" onoremap nt	cs"#
-- r#"" nnoremap ni	ysi"#
-- r#"" nnoremap no	ysa"#
-- r#"" nnoremap nl	yss"#
-- r#"" vnoremap ni	S"#
-- r#"" " # 2.1 Text objects"#
-- r#"" " These can be used after an operator or in Visual mode to select an object"#
-- r#"" " # cmd		action in op-pending and Visual mode"#
-- r#"" " a'   	string in single quotes"#
-- r#"" " a"   	string in double quotes"#
-- r#"" " a``  	string in backticks"#
-- r#"" " aw   	a word                   	(with white space)"#
-- r#"" " aW   	`a WORD`                 	(with white space)"#
-- r#"" " as   	a sentence               	(with white space)"#
-- r#"" " ap   	a paragraph              	(with white space)"#
-- r#"" " at   	a tag block              	(with white space)"#
-- r#"" " ab   	a block from `[(` to `])`	(with braces)"#
-- r#"" " a(¦) 	=`ab`"#
-- r#"" " aB   	`a Block` from `[{` to `]}`	(with brackets)"#
-- r#"" " a{¦} 	=`aB`"#
-- r#"" " a[   	`a []`    from `[` to matching `]`"#
-- r#"" " a]   	=`a[`"#
-- r#"" " a<   	`a <>`    from `<` to matching `>`"#
-- r#"" " a>   	=`a<`"#
-- r#"" " i"   	string in double quotes without quotes"#
-- r#"" " i'   	string in single quotes without quotes"#
-- r#"" " i\`  	string in backticks     without backticks"#
-- r#"" " iw   	inner word"#
-- r#"" " iW   	inner WORD"#
-- r#"" " is   	inner sentence"#
-- r#"" " ip   	inner paragraph"#
-- r#"" " it   	inner tag block"#
-- r#"" " ib   	inner block from `[(` to `])`"#
-- r#"" " i(¦) 	=`ib`"#
-- r#"" " iB   	inner Block from `[{` and `]}`"#
-- r#"" " i{¦} 	=`iB`"#
-- r#"" " i[   	inner `[]`  from `[` to matching `]`"#
-- r#"" " i]   	=`i[`"#
-- r#"" " i<   	inner `<>`  from `<` to matching `>`"#
-- r#"" " i>   	=`i<`"#
-- r""
-- r#"" " includeTemplate (joinPath .cfg "nWindow.nv.tmpl") (dict "m" "normal" "i" "Ⓝ ☰🗔" "k" "C-w" "ksp" "" "cfg" .cfg) ›"#
-- r""
-- r""
-- r#"" let mapleader=<space>"#
-- r""
-- r#"" "nnoremap	space           	cmd	Ⓝ Space mode	「 」	「 」"#
-- r#"" nnoremap 	<leader><leader>	:NvEnterNormalMode<CR>"#
-- r""
-- r""
-- r#"" " includeTemplate (joinPath .cfg "nUnimpaired.nv.tmpl") (dict "m" "normal" "i" "Ⓝ" "k1" "[" "k0" "]" "cfg" .cfg) ›"#
-- r#"" " ⓘ Insert mode ——————————————————————————————————————————————————————————————————————"#
-- r#"" " Can't be remapped, use this temporarily"#
-- r#"" vnoremap <M-I>	:"command":"swap_line_down"<CR>"#
-- r#"" vnoremap <M-O>	:"command":"swap_line_up"<CR>"#
-- r""
-- r#"" "Ⓝ Test ——————————————————————————————————————————————————————————————————————"#
-- r#"" vnoremap а	 e"#
-- r#"" vnoremap в	 b"#
-- r#"" " noremap Д w"#
-- r#"" " noremap й     	 w"#
-- r#"" " noremap ц     	 w"#
-- r#"" " noremap у     	 w"#
-- r#"" " noremap к     	 w"#
-- r#"" " noremap е     	 w"#
-- r#"" " noremap н     	 w"#
-- r#"" " noremap ф     	 w"#
-- r#"" " noremap ы     	 w"#
-- r#"" " noremap в     	 w"#
-- r#"" " noremap а     	 w"#
-- r#"" " noremap п     	 w"#
-- r#"" " " noremap й   	 q"#
-- r#"" " noremap <f1>  	 w"#
-- r#"" " noremap <f2>  	 w"#
-- r#"" " noremap <f3>  	 b"#
-- r#"" " noremap <f4>  	 e"#
-- r#"" " noremap <f5>  	 e"#
-- r#"" " noremap <S-f6>	 b"#
-- r#"" " noremap <S-f7>	 w"#
-- r#"" " noremap <f6>  	 b"#
-- r#"" " noremap <f7>  	 w"#
-- r#"" " " noremap <⇟> b"#
-- r""
-- r#"" vnoremap <leader>d	:Neovintageous action=toggle_side_bar<CR>"#
-- r#"" " vnoremap gg     	:Neovintageous action=toggle_side_bar<CR>"#
-- r#"" " vnoremap t r    	2  replace N chars with {char}"#
-- r""
-- r#"" " vnoremap <C-q>	:quit!"#
-- r#"" " vnoremap G    	move_prev_word_end"#
-- r#"" " vnoremap 0    	univeral_arg"#
-- r#"" " 'C-j'         	= ['page_down','align_view_center']	# ⇟ Move      page down"#
-- r#"" " 'C-k'         	= ['page_up','align_view_center']  	# ⇞ Move      page up"#
-- r""
-- r#"" " 'C-K'	= "insert_char"	# ⇞ Move      page up"#
-- r""
-- r#"" "Ⓝ Free ——————————————————————————————————————————————————————————————————————"#
-- r#""   "vnoremap <C-u>	no_op"#
-- r#""   "vnoremap <A-C>	no_op"#
-- r#""   "vnoremap A-(  	no_op"#
-- r#""   "vnoremap A-)  	no_op"#
-- r#""   "vnoremap <A-K>	no_op"#
-- r#""   "vnoremap <C-i>	no_op"#
-- r#""   "vnoremap b    	no_op"#
-- r#"" "    '~'         	= "no_op"	#"#
-- r#"" "    'A-`'       	= "no_op"	#"#
-- r#"" " vnoremap X     	change_selection"#
-- r#"" "Ⓝ Major modes ——————————————————————————————————————————————————————————————————————"#
-- r#"" " vnoremap i	insert_mode"#
-- r#"" " vnoremap e	select_mode"#
-- r#"" "Ⓝ Minor modes / menu dialogs ———————————————————————————————————————————————————————"#
-- r#"" "p    	  	 ☰👁 View mode            	Ⓝ"#
-- r#"" "P    	  	 ☰👁ₛ 'sticky', persistent	Ⓝ"#
-- r#"" "Z    	  	 ☰👁ₛ 'sticky', persistent	Ⓝ"#
-- r#"" "g    	  	 ⓖ☰⮊ Goto mode           	  Ⓝ"#
-- r#"" "⎇d   	gh	 ☰Multicursor (@select)  	Ⓝ"#
-- r#"" "n    	  	 ☰🧩  Match mode          	Ⓝ ☰<i class='fa fa-puzzle-piece'></i>"#
-- r#"" "C-w  	  	 ☰🗔  Window mode         	  Ⓝ"#
-- r#"" "space	  	 ☰␠  Space mode          	  Ⓝ"#
-- r#"" "[    	  	 ☰⧛ Unimpaired           	  Ⓝ"#
-- r#"" "]    	  	 ☰⧚                      	  Ⓝ"#
-- r#"" "`    	  	 ☰𝔸𝕒 Case conversion     	  Ⓝ"#
-- r""
-- r#"" vnoremap :	:"#
-- r#"" vnoremap R	:"command":"show_overlay","args":{"overlay":"command_palette"}<CR>"#
-- r""
-- r#"" "vnoremap g	:"command":"show_overlay","args":{"overlay":"goto","text":"@"}<CR>"#
-- r""
-- r#""   "Ⓝ                  	Compat with non-modal editors"#
-- r#""   " vnoremap <C-o>    	file_picker"#
-- r#""   " vnoremap <C-O>    	file_picker_in_current_directory"#
-- r#""   " vnoremap <C-s>    	commit_undo_checkpoint :write	# 💾 save file"#
-- r#""   " vnoremap C-S-s    	Save As"#
-- r#""   " vnoremap <C-n>    	:new"#
-- r#""   " vnoremap C-S-t    	open-last-closed"#
-- r#""   " vnoremap C-+      	zoom-in"#
-- r#""   " vnoremap <C-minus>	zoom-out"#
-- r""
-- r#""   "Ⓝ           	Copy"#
-- r#"" vnoremap  c    	y"#
-- r#"" "vnoremap <C-c>	??"#
-- r#"" "vnoremap C    	??"#
-- r#"" "vnoremap <A-c>	??"#
-- r""
-- r#""   "Ⓝ Shell"#
-- r#"" " vnoremap |  	shell_pipe"#
-- r#"" "A-\\"        	= 'shell_pipe_to'"#
-- r#"" " vnoremap A-|	shell_pipe_to"#
-- r""
-- r#""   "Ⓝ Move ——————————————————————————————————————————————————————————————————————"#
-- r#"" " Cursor@H"#
-- r#"" vnoremap  	j    	gj"#
-- r#"" vnoremap  	k    	gk"#
-- r#"" vnoremap  	l    	h"#
-- r#"" vnoremap  	;    	l"#
-- r#"" vnoremap  	m    	<C-d>"#
-- r#"" vnoremap  	,    	<C-u>"#
-- r#"" vnoremap  	<C-j>	<C-f>"#
-- r#"" vnoremap  	<C-k>	<C-b>"#
-- r#"" " vnoremap	a    	0"#
-- r#"" " vnoremap	A    	$"#
-- r#"" vnoremap  	a    	:"command":"move_to","args":{"to":"bol","extend":false}<CR>"#
-- r#"" vnoremap  	A    	:"command":"move_to","args":{"to":"eol","extend":false}<CR>"#
-- r#"" " ⎈e      	     	scroll Up   N lines (Extra) bug https://github.com/NeoVintageous/NeoVintageous/issues/866"#
-- r""
-- r#"" "vnoremap g	:"command":"show_overlay","args":{"overlay":"goto","text":"@"}<CR>"#
-- r""
-- r#"" "Ⓝ                   	Compat with non-modal editors"#
-- r#"" vnoremap <C-home>    	gg"#
-- r#"" vnoremap <C-end>     	G"#
-- r#"" "vnoremap <D-Home>   	gg"#
-- r#"" "vnoremap <D-End>    	G"#
-- r#"" vnoremap <D-Up>      	gg"#
-- r#"" vnoremap <D-Down>    	G"#
-- r#"" vnoremap <D-1>       	gT"#
-- r#"" vnoremap <D-2>       	gt"#
-- r#"" vnoremap <C-S-tab>   	gT"#
-- r#"" vnoremap <C-tab>     	gt"#
-- r#"" vnoremap <C-pageup>  	gT"#
-- r#"" vnoremap <C-pagedown>	gt"#
-- r#"" vnoremap <A-pageup>  	<C-o>"#
-- r#"" vnoremap <A-pagedown>	<Tab>"#
-- r#"" vnoremap <C-j>       	<C-o>"#
-- r#"" vnoremap <C-;>       	<Tab>"#
-- r""
-- r#"" vnoremap 1      	gT"#
-- r#"" vnoremap <A-1>  	gT"#
-- r#"" vnoremap 2      	gt"#
-- r#"" vnoremap <A-2>  	gt"#
-- r#"" vnoremap 3      	<C-o>"#
-- r#"" vnoremap <A-3>  	<C-o>"#
-- r#"" vnoremap <S-Tab>	<C-o>"#
-- r#"" vnoremap 4      	<Tab>"#
-- r#"" vnoremap <A-4>  	<Tab>"#
-- r#"" "vnoremap <Tab> 	<Tab>"#
-- r""
-- r""
-- r#"" "Ⓝ word !!! sometimes prev≠next by a space"#
-- r#"" vnoremap f        	 e"#
-- r#"" vnoremap <A-f>    	 w"#
-- r#"" vnoremap <A-Right>	 w"#
-- r#"" vnoremap d        	 b"#
-- r#"" vnoremap <A-d>    	ge"#
-- r#"" vnoremap <A-Left> 	ge"#
-- r#"" vnoremap F        	 E"#
-- r#"" vnoremap <A-F>    	 W"#
-- r#"" vnoremap D        	 B"#
-- r#"" vnoremap <A-D>    	gE"#
-- r#"" vnoremap <C-f>    	 E"#
-- r#"" vnoremap <C-d>    	gE"#
-- r#"" vnoremap <C-Right>	 W"#
-- r#"" vnoremap <C-Left> 	 B"#
-- r#"" "vnoremap G       	gg"#
-- r""
-- r#"" "Ⓝ             	Line"#
-- r#"" vnoremap <Home>	0"#
-- r#"" vnoremap <End> 	$"#
-- r""
-- r#"" "Ⓝ        	Block"#
-- r#"" vnoremap >	{"#
-- r#"" vnoremap ?	}"#
-- r""
-- r#"" "Ⓝ             	Marked"#
-- r#"" "vnoremap <A-g>	jumplist_picker"#
-- r#"" vnoremap  <A-g>	`"#
-- r""
-- r#"" vnoremap r    	;"#
-- r#"" vnoremap <A-R>	,"#
-- r""
-- r#"" "Ⓝ            	Find"#
-- r#"" vnoremap <A-w>	t"#
-- r#"" vnoremap w    	f"#
-- r#"" vnoremap <A-W>	T"#
-- r#"" vnoremap W    	F"#
-- r#"" vnoremap S    	?"#
-- r#"" vnoremap s    	/"#
-- r#"" vnoremap .    	?<CR>"#
-- r#"" vnoremap /    	/<CR>"#
-- r#"" " vnoremap 8  	search_selection"#
-- r#"" " vnoremap *  	search_selection"#
-- r#"" vnoremap 8    	*"#
-- r#"" vnoremap *    	#"#
-- r""
-- r#""   "Ⓝ Select ——————————————————————————————————————————————————————————————————————"#
-- r#"" vnoremap e	 v"#
-- r""
-- r#"" "Ⓝ                	Compat with non-modal editors"#
-- r#"" "    'C-a'        	= ['save_selection','select_all']	# 🖈∀▋"#
-- r#"" vnoremap <A-Down> 	:"command":"select_lines","args":{"forward":true }<CR>"#
-- r#"" vnoremap <A-Up>   	:"command":"select_lines","args":{"forward":false}<CR>"#
-- r#"" vnoremap <S-Down> 	vj"#
-- r#"" vnoremap <S-Up>   	vk"#
-- r#"" vnoremap <S-Left> 	vh"#
-- r#"" vnoremap <S-Right>	vl"#
-- r""
-- r#"" "Ⓝ                 	Mark jump points"#
-- r#"" vnoremap G         	m"#
-- r#"" vnoremap <C-g>     	m"#
-- r#"" vnoremap <A-g><A-g>	`"#
-- r#"" vnoremap <A-g><A-x>	:delmarks!"#
-- r#"" vnoremap <A-g><A-h>	:delmarks"#
-- r""
-- r#"" vnoremap J     	V"#
-- r#"" "vnoremap <A-r>	extend_line"#
-- r#"" vnoremap E     	V"#
-- r#"" vnoremap <A-e> 	*"#
-- r#"" vnoremap <A-E> 	#"#
-- r#"" vnoremap 5     	vip"#
-- r#"" vnoremap %     	:%y<CR>"#
-- r""
-- r#"" " ↓×2 mapped in Karabiner to l⎇ to work in both modes and not interfere with insert symbols mapped to those keys"#
-- r#"" " !!!todo: rebind to l⎇ when Sublime supports side modifiers"#
-- r#"" vnoremap <A-j> 	:"command":"select_lines"  ,"args":{"forward":true }<CR>"#
-- r#"" vnoremap <A-k> 	:"command":"select_lines"  ,"args":{"forward":false}<CR>"#
-- r#"" vnoremap <A-J> 	:"command":"deselect_lines","args":{"forward":true }<CR>"#
-- r#"" vnoremap <A-K> 	:"command":"deselect_lines","args":{"forward":false}<CR>"#
-- r#"" "vnoremap <A-l>	select_prev_sibling"#
-- r#"" "vnoremap A-;  	select_next_sibling"#
-- r#"" "vnoremap M    	shrink_selection"#
-- r#"" "vnoremap <    	expand_selection"#
-- r#"" "vnoremap <A-s>	select_regex"#
-- r#"" "vnoremap N    	split_selection"#
-- r#"" "vnoremap <A-n>	split_selection_on_newline"#
-- r""
-- r#""   "vnoremap "'"   	collapse_selection"#
-- r#""   "vnoremap <A-'> 	flip_selections"#
-- r#""   "vnoremap <A-a> 	flip_selections"#
-- r#""   "vnoremap <A-A> 	flip_selections"#
-- r#""   "vnoremap <A-p> 	ensure_selections_forward"#
-- r#""   "vnoremap <A-:> 	ensure_selections_forward"#
-- r#""   ""vnoremap <A-l>	rotate_selections_backward"#
-- r#""   ""vnoremap <A-;>	rotate_selections_forward"#
-- r#""   "vnoremap <A-m> 	rotate_selections_forward"#
-- r#""   "vnoremap A-,   	rotate_selections_backward"#
-- r#""   "vnoremap <A-u> 	remove_primary_selection"#
-- r#"" vnoremap <A-i>    	:"command":"deselect_lines_to_first"<CR>"#
-- r#"" vnoremap <A-o>    	:"command":"deselect_lines_to_last"<CR>"#
-- r#"" vnoremap <A-U>    	:"command":"soft_undo"<CR>"#
-- r#""   "vnoremap K     	keep_selections"#
-- r#""   "vnoremap L     	remove_selections"#
-- r#""   "vnoremap <A-Z> 	:"command":"deselect_lines_to_first"<CR>"#
-- r#""   "      ,        	  'collapse_selection']			#"#
-- r""
-- r#""   "vnoremap minus	trim_selections"#
-- r#""   "vnoremap _    	merge_consecutive_selections"#
-- r#""   "vnoremap +    	dupe_selections"#
-- r""
-- r#""   "Ⓝ Change ——————————————————————————————————————————————————————————————————————"#
-- r#""   "                      	Compat with non-modal editors"#
-- r#""   "vnoremap <A-del>      	delete_word_forward"#
-- r#""   "    'C-del'           	= ['extend_next_long_word_end',	# ⌦W"#
-- r#""   "                      	   'delete_selection']         	# ᵡ Word →"#
-- r#""   "vnoremap <A-backspace>	delete_word_backward"#
-- r#""   "    'C-backspace'     	= ['extend_prev_long_word_start',	# ⌫W"#
-- r#""   "                      	   'delete_selection']           	# ᵡ Word ←"#
-- r#""   "vnoremap del          	delete_selection"#
-- r#""   "vnoremap <S-del>      	delete_selection_noyank"#
-- r#"" vnoremap <CR>            	o<Esc>"#
-- r#"" vnoremap <S-CR>          	O<Esc>"#
-- r#"" vnoremap <C-y>           	<C-r>"#
-- r#"" vnoremap <C-z>           	u"#
-- r#"" vnoremap <C-Z>           	<C-r>"#
-- r""
-- r#"" vnoremap <C-/>	:"command":"toggle_comment","args":{"block":false}<CR>"#
-- r""
-- r""
-- r#""   "vnoremap <C-ret>	:reflow"#
-- r""
-- r""
-- r#""   "vnoremap .    	N/A"#
-- r#""   "vnoremap 6    	delete_char_forward"#
-- r#"" vnoremap x       	d"#
-- r#""   "vnoremap <A-x>	delete_selection_noyank"#
-- r#""   "vnoremap <A-c>	change_selection"#
-- r#"" vnoremap h       	X"#
-- r#"" vnoremap <BS>    	X"#
-- r#"" vnoremap <C-h>   	X"#
-- r#"" vnoremap H       	<del>"#
-- r#"" "vnoremap del    	delete_char_forward"#
-- r#"" "vnoremap <C-d>  	delete_char_forward"#
-- r#""   "vnoremap <A-h>	delete_word_backward"#
-- r#""   "vnoremap <A-H>	delete_word_forward"#
-- r#"" "    'C-h'       	= ['move_prev_long_word_start',      	# ⌫W"#
-- r#"" "                	   'delete_selection']               	# ᵡ Word ←"#
-- r#"" "    'C-x'       	= ['yank_main_selection_to_clipboard'	          	,"#
-- r#"" "                	   'delete_selection']               	#         		×📋 cut to clipboard <i class='fa fa-clipboard'></i>"#
-- r#""   "vnoremap X    	join_selections"#
-- r#""   "vnoremap <A-X>	join_selections_space"#
-- r""
-- r#"" vnoremap t       	r"#
-- r#""   "vnoremap T    	replace_with_yanked"#
-- r#""   "vnoremap <A-t>	replace_selections_with_clipboard"#
-- r""
-- r#""   "vnoremap `"#
-- r#"" vnoremap B    	guiw"#
-- r#"" vnoremap <C-b>	cru"#
-- r""
-- r#""   " Ⓝ         	line"#
-- r#"" vnoremap <C-J>	:"command":"swap_line_down"<CR>"#
-- r#"" vnoremap <C-K>	:"command":"swap_line_up"<CR>"#
-- r""
-- r#""   "vnoremap A-.	unindent"#
-- r#""   "vnoremap A-/	indent"#
-- r""
-- r#""   "vnoremap q	record_macro"#
-- r#""   "vnoremap Q	replay_macro"#
-- r#""   "vnoremap "	select_register"#
-- r""
-- r#"" vnoremap b       	."#
-- r#"" vnoremap <A-B>   	,"#
-- r#"" vnoremap i       	i"#
-- r#"" vnoremap o       	a"#
-- r#"" vnoremap O       	o"#
-- r#"" vnoremap I       	O"#
-- r#"" vnoremap u       	u"#
-- r#"" vnoremap y       	<C-r>"#
-- r#""   "vnoremap U    	earlier"#
-- r#""   "vnoremap Y    	later"#
-- r#"" vnoremap v       	p"#
-- r#""   "vnoremap <C-v>	paste_clipboard_after"#
-- r#"" vnoremap V       	P"#
-- r#"" "vnoremap I      	insert_at_line_start"#
-- r#"" "vnoremap A      	insert_at_line_end"#
-- r""
-- r#"" "    'A-I'	=["split_selection_on_newline"	# ⭰䷖ Line: split & insert @ start"#
-- r#"" "     ,   	  "insert_at_line_start"]     	#"#
-- r#"" "    'A-O'	=["split_selection_on_newline"	# ䷖⭲ Line: split & insert @ end"#
-- r#"" "     ,   	  "insert_at_line_end"]       	#"#
-- r""
-- r#""   "Ⓝ Select manipulation ————————————————————————————————————————————————————————————————————"#
-- r#""   "vnoremap (	rotate_selection_contents_backward"#
-- r#""   "vnoremap )	rotate_selection_contents_forward"#
-- r#""   "vnoremap 7	align_selections"#
-- r#""   "vnoremap &	align_selections"#
-- r#""   "vnoremap =	format_selections"#
-- r""
-- r#""   "Ⓝ          	Misc"#
-- r#"" vnoremap z    	:"command":"toggle_comment","args":{"block":false}<CR>"#
-- r#"" vnoremap Z    	:"command":"toggle_comment","args":{"block":true }<CR>"#
-- r#"" vnoremap <A-z>	:"command":"toggle_comment","args":{"block":true ,"variant":3}<CR>"#
-- r#"" vnoremap <C-m>	<C-x>"#
-- r#"" vnoremap <C-,>	<C-a>"#
-- r#"" vnoremap \    	:set invwrap<CR>"#
-- r#"" vnoremap <C-l>	<C-z>"#
-- r""
-- r#""   "  vnoremap $	shell_keep_pipe"#
-- r""
-- r#""   "Ⓝ space mode"#
-- r#""   " "'"	= 'last_picker'"#
-- r""
-- r#""   "Ⓝ Shell       	#	#"#
-- r#""   "  vnoremap !  	shell_insert_output"#
-- r#""   "  vnoremap @  	shell_append_output"#
-- r#""   "  vnoremap A-!	shell_append_output"#
-- r""
-- r""
-- r#"" " ## Cursor     	move"#
-- r#"" " #             	‸	search backward for the Nth occurrence of the ident under the cursor"#
-- r#"" " $             	‸	cursor to the end of Nth next line"#
-- r#"" " %             	‸	find the next (curly/square) bracket on this line and go to its match, or go to matching comment bracket, or go to matching preprocessor directive."#
-- r#"" " {count}%      	‸	go to N percentage in the file"#
-- r#"" " &             	🗘	repeat last :s"#
-- r#"" " ``            	‸	→position before latest jump"#
-- r#"" " `(            	‸	→current sentence         	start"#
-- r#"" " `)            	‸	→current sentence         	end"#
-- r#"" " `<            	‸	→highlighted area         	start"#
-- r#"" " `>            	‸	→highlighted area         	end"#
-- r#"" " `[            	‸	→last operated/putted text	start"#
-- r#"" " `]            	‸	→last operated/putted text	end"#
-- r#"" " `{            	‸	→current paragraph        	start"#
-- r#"" " `}            	‸	→current paragraph        	end"#
-- r#"" " `{a-zA-Z0-9}  	‸	→mark {a-zA-Z0-9}"#
-- r#"" " (             	‸	№    sentences	backward"#
-- r#"" " )             	‸	№    sentences	forward"#
-- r#"" " 0             	‸	→1st CHAR@Line start"#
-- r#"" " '{a-zA-Z0-9}  	‸	→1st CHAR@Line with mark {a-zA-Z0-9}"#
-- r#"" " ''            	‸	→1st CHAR@Line where the cursor was before the latest jump"#
-- r#"" " '(            	‸	→1st CHAR@Line sentence                 	start"#
-- r#"" " ')            	‸	→1st CHAR@Line sentence                 	end"#
-- r#"" " '<            	‸	→1st CHAR@Line buffer's highlighted area	start"#
-- r#"" " '>            	‸	→1st CHAR@Line buffer's highlighted area	end"#
-- r#"" " '[            	‸	→1st CHAR@Line last operated/put text   	start"#
-- r#"" " ']            	‸	→1st CHAR@Line last operated/put text   	end"#
-- r#"" " '{            	‸	→1st CHAR@Line paragraph                	start"#
-- r#"" " '}            	‸	→1st CHAR@Line paragraph                	end"#
-- r#"" " -             	‸	→1st CHAR N lines higher"#
-- r#"" " ^             	‸	→1st CHAR@Line of the line"#
-- r#"" " _             	‸	→1st CHAR@Line N - 1 lines lower"#
-- r#"" " *             	‸	search forward for the Nth occurrence of the ident under the cursor"#
-- r#"" " +             	‸	same as <CR>"#
-- r#"" " ,             	‸	repeat latest f, t, F or T in opposite direction N times"#
-- r#"" " .             	🗘	repeat last change with count replaced with N"#
-- r#"" " /{pattern}<CR>	‸	search forward for the Nth occurrence of {pattern}"#
-- r#"" " /<CR>         	‸	search forward for {pattern} of last search"#
-- r#"" " 1–9           	‸	prepend to command to give a count"#
-- r""
-- r#"" """ Ⓝ ☰Minor modes  Accessible from Normal mode, typically switch back to Normal mode after a command"#
-- r""
-- r#"" " includeTemplate (joinPath .cfg "nHelp.toml.tmpl") (dict "m" "normal" "i" "Ⓝ ☰?" "k" "F1" "cfg" .cfg) ›"#
-- r""
-- r#"" "vnoremap	` 	cmd	Ⓝ ☰𝔸𝕒 Case conversion mode	「 」	「 」"#
-- r#"" vnoremap 	`j	guiw"#
-- r#"" vnoremap 	`k	cru"#
-- r#"" "vnoremap	`l	crm"#
-- r#"" vnoremap 	`;	crc"#
-- r#"" vnoremap 	`m	crm"#
-- r#"" vnoremap 	`-	cr-"#
-- r#"" vnoremap 	`.	cr."#
-- r""
-- r""
-- r#"" " includeTemplate (joinPath .cfg "nView.nv.tmpl") (dict "m" "normal" "i" "Ⓝ ☰👁" "k" "p" "cfg" .cfg) ›"#
-- r#""   " # vnoremap p	view_mode_sticky"#
-- r#"" " includeTemplate (joinPath .cfg "nView.nv.tmpl") (dict "m" "normal" "i" "Ⓝ 👁ₛ" "k" "P" "cfg" .cfg) ›"#
-- r#"" " includeTemplate (joinPath .cfg "nView.nv.tmpl") (dict "m" "normal" "i" "Ⓝ 👁ₛ" "k" "Z" "cfg" .cfg) ›"#
-- r""
-- r#"" " × not implemented yet"#
-- r#"" " Move"#
-- r#"" " noremap gs $"#
-- r#"" " "× g$        	‸  when 'wrap' off go to rightmost character of the current line that is on the screen; when 'wrap' on go to the rightmost character of the current screen line"#
-- r#"" " noremap gs g_	" g_ 	‸  cursor to the last CHAR N - 1 lines lower"#
-- r#"" "              	"$   	‸  cursor to the end of Nth next line"#
-- r#"" "              	" gm 	‸  go to character at middle of the screenline"#
-- r#""    a"a         	"× gM	‸  go to characterga at middle of the text line"#
-- r""
-- r#"" "vnoremap g   	cmd	Ⓝ ⓖ☰⮊ Goto mode Jumps to various locations	「 」	「 」"#
-- r#"" vnoremap  gp  	no_op"#
-- r#"" vnoremap  gb  	`"#
-- r#"" vnoremap  gA  	'"#
-- r#"" vnoremap  gB  	'"#
-- r#"" "vnoremap gb  	jumplist_picker"#
-- r#"" vnoremap  ga  	g^"#
-- r#"" vnoremap  gs  	$"#
-- r#"" vnoremap  gh  	0"#
-- r#"" vnoremap  gg  	gg"#
-- r#"" vnoremap  gj  	j"#
-- r#"" vnoremap  gk  	k"#
-- r#"" vnoremap  g'  	G"#
-- r#"" vnoremap  gl  	goto_prev_paragraph"#
-- r#"" vnoremap  g;  	goto_next_paragraph"#
-- r#"" vnoremap  g.  	goto_prev_paragraph"#
-- r#"" vnoremap  g/  	goto_next_paragraph"#
-- r#"" vnoremap  gf  	goto_file"#
-- r#"" vnoremap  gm  	L"#
-- r#"" vnoremap  g,  	H"#
-- r#"" vnoremap  gn  	M"#
-- r#"" vnoremap  gD  	goto_declaration"#
-- r#"" vnoremap  gd  	goto_definition"#
-- r#"" vnoremap  gF12	goto_definition"#
-- r#"" vnoremap  gi  	goto_implementation"#
-- r#"" vnoremap  gt  	goto_implementation"#
-- r#"" vnoremap  gr  	goto_reference"#
-- r#"" vnoremap  ge  	goto_type_definition"#
-- r#"" vnoremap  gy  	goto_type_definition"#
-- r#"" vnoremap  gc  	goto_last_accessed_file"#
-- r#"" vnoremap  gv  	goto_last_modified_file"#
-- r#"" vnoremap  g1  	goto_previous_buffer"#
-- r#"" vnoremap  g2  	goto_next_buffer"#
-- r#"" vnoremap  g3  	jump_backward"#
-- r#"" vnoremap  g4  	jump_forward"#
-- r#"" vnoremap  gu  	goto_last_modification"#
-- r#"" "vnoremap g'  	gotochar"#
-- r""
-- r#"" " ☰🧩 Match Mode"#
-- r#"" " x=Visual v=Vis+Sel o=operator-pending"#
-- r#"" " xnoremap fails!!! maybe not implemented"#
-- r#"" " (+)  Surround current selection with <char>"#
-- r#"" onoremap ne 	a"#
-- r#"" onoremap na 	i"#
-- r#"" "onoremap e 	a"#
-- r#"" "onoremap a 	i"#
-- r#"" "onoremap aw	iw"#
-- r#"" "onoremap aW	iW"#
-- r#"" "onoremap as	is"#
-- r#"" "onoremap at	it"#
-- r""
-- r#"" "" ☰  Surround (github.com/tpope/vim-surround), add text object after a command, eg, niwd to insert () around (word)"#
-- r#"" nnoremap nx	ds"#
-- r#"" onoremap nx	ds"#
-- r#"" nnoremap nt	cs"#
-- r#"" onoremap nt	cs"#
-- r#"" nnoremap ni	ysi"#
-- r#"" nnoremap no	ysa"#
-- r#"" nnoremap nl	yss"#
-- r#"" vnoremap ni	S"#
-- r#"" " # 2.1 Text objects"#
-- r#"" " These can be used after an operator or in Visual mode to select an object"#
-- r#"" " # cmd		action in op-pending and Visual mode"#
-- r#"" " a'   	string in single quotes"#
-- r#"" " a"   	string in double quotes"#
-- r#"" " a``  	string in backticks"#
-- r#"" " aw   	a word                   	(with white space)"#
-- r#"" " aW   	`a WORD`                 	(with white space)"#
-- r#"" " as   	a sentence               	(with white space)"#
-- r#"" " ap   	a paragraph              	(with white space)"#
-- r#"" " at   	a tag block              	(with white space)"#
-- r#"" " ab   	a block from `[(` to `])`	(with braces)"#
-- r#"" " a(¦) 	=`ab`"#
-- r#"" " aB   	`a Block` from `[{` to `]}`	(with brackets)"#
-- r#"" " a{¦} 	=`aB`"#
-- r#"" " a[   	`a []`    from `[` to matching `]`"#
-- r#"" " a]   	=`a[`"#
-- r#"" " a<   	`a <>`    from `<` to matching `>`"#
-- r#"" " a>   	=`a<`"#
-- r#"" " i"   	string in double quotes without quotes"#
-- r#"" " i'   	string in single quotes without quotes"#
-- r#"" " i\`  	string in backticks     without backticks"#
-- r#"" " iw   	inner word"#
-- r#"" " iW   	inner WORD"#
-- r#"" " is   	inner sentence"#
-- r#"" " ip   	inner paragraph"#
-- r#"" " it   	inner tag block"#
-- r#"" " ib   	inner block from `[(` to `])`"#
-- r#"" " i(¦) 	=`ib`"#
-- r#"" " iB   	inner Block from `[{` and `]}`"#
-- r#"" " i{¦} 	=`iB`"#
-- r#"" " i[   	inner `[]`  from `[` to matching `]`"#
-- r#"" " i]   	=`i[`"#
-- r#"" " i<   	inner `<>`  from `<` to matching `>`"#
-- r#"" " i>   	=`i<`"#
-- r""
-- r#"" " includeTemplate (joinPath .cfg "nWindow.nv.tmpl") (dict "m" "normal" "i" "Ⓝ ☰🗔" "k" "C-w" "ksp" "" "cfg" .cfg) ›"#
-- r""
-- r""
-- r#"" let mapleader=<space>"#
-- r""
-- r#"" "vnoremap	space           	cmd	Ⓝ Space mode	「 」	「 」"#
-- r#"" vnoremap 	<leader><leader>	:NvEnterNormalMode<CR>"#
-- r""
-- r""
-- r#"" " includeTemplate (joinPath .cfg "nUnimpaired.nv.tmpl") (dict "m" "normal" "i" "Ⓝ" "k1" "[" "k0" "]" "cfg" .cfg) ›"#
-- r#"" " Major mode: Insert ⓘ"#
-- r#"" inoremap <A-j>	<Down>"#
-- r#"" inoremap <A-k>	<Up>"#
-- r#"" inoremap <A-j>	<Down>"#
-- r#"" inoremap <A-k>	<Up>"#
-- r""
-- r#""   " ⓘ         	line"#
-- r#"" inoremap <C-J>	:SwapLineDown<CR>"#
-- r#"" inoremap <C-K>	:SwapLineUp<CR>"#
-- r#"" inoremap <M-I>	:SwapLineDown<CR>"#
-- r#"" inoremap <M-O>	:SwapLineUp<CR>"#
-- r""
-- r#"" ""#
-- r#"" " Ⓢ Select Mode (Visual)"#
-- r#"" " x=Visual v=Vis+Sel xnoremap fails!!! maybe not implemented"#
-- r#"" vnoremap i :NvEnterInsertMode<CR>"#
-- r#"" vnoremap  c       	y"#
-- r#"" vnoremap <S-Down> 	j"#
-- r#"" vnoremap <S-Up>   	k"#
-- r#"" vnoremap <S-Left> 	h"#
-- r#"" vnoremap <S-Right>	l"#
-- r#"" vnoremap J        	j"#
-- r""
-- r#""   "vnoremap <A-Z>	:DeselectLinesToFirst<CR>"#
-- r#""   "      ,       	  'collapse_selection']			#"#
-- r""
-- r""
-- r#"" cnoremap <C-c> <C-y>"#
-- r""
-- r#"" " ☰🧩 Match Mode"#
-- r#"" " x=Visual v=Vis+Sel o=operator-pending"#
-- r#"" " xnoremap fails!!! maybe not implemented"#
-- r#"" " (+)  Surround current selection with <char>"#
-- r#"" xnoremap ne 	a"#
-- r#"" xnoremap na 	i"#
-- r#"" "xnoremap e 	a"#
-- r#"" "xnoremap a 	i"#
-- r#"" "xnoremap aw	iw"#
-- r#"" "xnoremap aW	iW"#
-- r#"" "xnoremap as	is"#
-- r#"" "xnoremap at	it"#
-- r""
-- r#"" "" ☰  Surround (github.com/tpope/vim-surround), add text object after a command, eg, niwd to insert () around (word)"#
-- r#"" nnoremap nx	ds"#
-- r#"" onoremap nx	ds"#
-- r#"" nnoremap nt	cs"#
-- r#"" onoremap nt	cs"#
-- r#"" nnoremap ni	ysi"#
-- r#"" nnoremap no	ysa"#
-- r#"" nnoremap nl	yss"#
-- r#"" vnoremap ni	S"#
-- r#"" " # 2.1 Text objects"#
-- r#"" " These can be used after an operator or in Visual mode to select an object"#
-- r#"" " # cmd		action in op-pending and Visual mode"#
-- r#"" " a'   	string in single quotes"#
-- r#"" " a"   	string in double quotes"#
-- r#"" " a``  	string in backticks"#
-- r#"" " aw   	a word                   	(with white space)"#
-- r#"" " aW   	`a WORD`                 	(with white space)"#
-- r#"" " as   	a sentence               	(with white space)"#
-- r#"" " ap   	a paragraph              	(with white space)"#
-- r#"" " at   	a tag block              	(with white space)"#
-- r#"" " ab   	a block from `[(` to `])`	(with braces)"#
-- r#"" " a(¦) 	=`ab`"#
-- r#"" " aB   	`a Block` from `[{` to `]}`	(with brackets)"#
-- r#"" " a{¦} 	=`aB`"#
-- r#"" " a[   	`a []`    from `[` to matching `]`"#
-- r#"" " a]   	=`a[`"#
-- r#"" " a<   	`a <>`    from `<` to matching `>`"#
-- r#"" " a>   	=`a<`"#
-- r#"" " i"   	string in double quotes without quotes"#
-- r#"" " i'   	string in single quotes without quotes"#
-- r#"" " i\`  	string in backticks     without backticks"#
-- r#"" " iw   	inner word"#
-- r#"" " iW   	inner WORD"#
-- r#"" " is   	inner sentence"#
-- r#"" " ip   	inner paragraph"#
-- r#"" " it   	inner tag block"#
-- r#"" " ib   	inner block from `[(` to `])`"#
-- r#"" " i(¦) 	=`ib`"#
-- r#"" " iB   	inner Block from `[{` and `]}`"#
-- r#"" " i{¦} 	=`iB`"#
-- r#"" " i[   	inner `[]`  from `[` to matching `]`"#
-- r#"" " i]   	=`i[`"#
-- r#"" " i<   	inner `<>`  from `<` to matching `>`"#
-- r#"" " i>   	=`i<`"#
-- r#"" " Multicursor match mode (inside select mode)"#
-- r#"" " use visual commands e.g. c, I, x, y work"#
-- r#"" snoremap e      	:NvEnterNormalMode<CR>"#
-- r#"" snoremap <Space>	:NvEnterNormalMode<CR>"#
-- r#"" " v=normal mode"#
-- r#"" "×gH	Select all search occurrences (/ ? * #)"#
-- r#"" noremap <D-d> gh"#
-- r#"" " gh      start Select mode"#
-- r#"" snoremap <D-d> j"#
-- r#"" snoremap <C-a> A"#
-- r#"" snoremap l k"#
-- r#"" snoremap ; l"#
-- r#"" snoremap h k"#
-- r#"" snoremap <C-a> A"#
-- r#"" " start  <C-n> or gh     Start multiple cursor"#
-- r#"" " prev   <C-p> or k      Remove current match"#
-- r#"" " next   <C-n> or j      Add    next    match"#
-- r#"" " skip   <C-x> or l      Skip   next    match"#
-- r#"" " all    <M-n> or A      Select all     matches"#
-- r#"" nnoremap j gu"#
-- r#"" nnoremap k gui"#
-(Ⓝ)l "cru" defc="MoveRightByChars"
-- r#"" nnoremap l guiw"#
-- r#"" nnoremap m k"#
-- r#"" nnoremap guidf guib"#
-- r#"" nnoremap guid> guib"#
-- r#"" nnoremap guidd gui>"#
-- r#"" s<dDDD(gdffgSDFSD)fas>d f""#
-- r#"" inoremap <C-[>	<Down>"#
-- r#"" inoremap <C-[> <C-o>:cru<Cr>"#
-- r""
-- r#"" nnoremap ; cru"#
-set nowinaltkeys=null
+≠ r#"" " Option	      Opt	|Default|	Comment"#
+≠ r#"" :set winaltkeys=no"#
+≠ r#"" " :set autoindent"#
+≠ r#"" " :set belloff"#
+≠ r#"" " :set equalalways"#
+≠ r#"" " :set hlsearch"#
+≠ r#"" " :set ignorecase"#
+≠ r#"" " :set smartcase"#
+≠ r#"" " :set incsearch"#
+≠ r#"" " :set magic"#
+≠ r#"" " :set menu"#
+≠ r#"" " :set minimap"#
+≠ r#"" " :set modeline"#
+≠ r#"" " :set modelines"#
+≠ r#"" " :set shell"#
+≠ r#"" " :set sidebar"#
+≠ r#"" " :set statusbar"#
+≠ r#"" " :set wrapscan"#
+≠ r#"" " Sublime Settings			""#
+≠ r#"" :set relativenumber"#
+≠ r#"" " :set expandtab"#
+≠ r#"" " :set list"#
+≠ r#"" " :set number"#
+≠ r#"" " :set scrolloff"#
+≠ r#"" " :set spell"#
+≠ r#"" " :set tabstop"#
+≠ r#"" " :set textwidth"#
+≠ r#"" " :set wrap"#
+≠ r""
+≠ r""
+≠ r#"" " ⓘ Insert mode ——————————————————————————————————————————————————————————————————————"#
+≠ r#"" " Can't be remapped, use this temporarily"#
+≠ r#"" nnoremap <M-I>	:"command":"swap_line_down"<CR>"#
+≠ r#"" nnoremap <M-O>	:"command":"swap_line_up"<CR>"#
+≠ r""
+≠ r#"" "Ⓝ Test ——————————————————————————————————————————————————————————————————————"#
+≠ r#"" nnoremap а	 e"#
+≠ r#"" nnoremap в	 b"#
+≠ r#"" " noremap Д w"#
+≠ r#"" " noremap й     	 w"#
+≠ r#"" " noremap ц     	 w"#
+≠ r#"" " noremap у     	 w"#
+≠ r#"" " noremap к     	 w"#
+≠ r#"" " noremap е     	 w"#
+≠ r#"" " noremap н     	 w"#
+≠ r#"" " noremap ф     	 w"#
+≠ r#"" " noremap ы     	 w"#
+≠ r#"" " noremap в     	 w"#
+≠ r#"" " noremap а     	 w"#
+≠ r#"" " noremap п     	 w"#
+≠ r#"" " " noremap й   	 q"#
+≠ r#"" " noremap <f1>  	 w"#
+≠ r#"" " noremap <f2>  	 w"#
+≠ r#"" " noremap <f3>  	 b"#
+≠ r#"" " noremap <f4>  	 e"#
+≠ r#"" " noremap <f5>  	 e"#
+≠ r#"" " noremap <S-f6>	 b"#
+≠ r#"" " noremap <S-f7>	 w"#
+≠ r#"" " noremap <f6>  	 b"#
+≠ r#"" " noremap <f7>  	 w"#
+≠ r#"" " " noremap <⇟> b"#
+≠ r""
+≠ r#"" nnoremap <leader>d	:Neovintageous action=toggle_side_bar<CR>"#
+≠ r#"" " nnoremap gg     	:Neovintageous action=toggle_side_bar<CR>"#
+≠ r#"" " nnoremap t r    	2  replace N chars with {char}"#
+≠ r""
+≠ r#"" " nnoremap <C-q>	:quit!"#
+≠ r#"" " nnoremap G    	move_prev_word_end"#
+≠ r#"" " nnoremap 0    	univeral_arg"#
+≠ r#"" " 'C-j'         	= ['page_down','align_view_center']	# ⇟ Move      page down"#
+≠ r#"" " 'C-k'         	= ['page_up','align_view_center']  	# ⇞ Move      page up"#
+≠ r""
+≠ r#"" " 'C-K'	= "insert_char"	# ⇞ Move      page up"#
+≠ r""
+≠ r#"" "Ⓝ Free ——————————————————————————————————————————————————————————————————————"#
+≠ r#""   "nnoremap <C-u>	no_op"#
+≠ r#""   "nnoremap <A-C>	no_op"#
+≠ r#""   "nnoremap A-(  	no_op"#
+≠ r#""   "nnoremap A-)  	no_op"#
+≠ r#""   "nnoremap <A-K>	no_op"#
+≠ r#""   "nnoremap <C-i>	no_op"#
+≠ r#""   "nnoremap b    	no_op"#
+≠ r#"" "    '~'         	= "no_op"	#"#
+≠ r#"" "    'A-`'       	= "no_op"	#"#
+≠ r#"" " nnoremap X     	change_selection"#
+≠ r#"" "Ⓝ Major modes ——————————————————————————————————————————————————————————————————————"#
+≠ r#"" " nnoremap i	insert_mode"#
+≠ r#"" " nnoremap e	select_mode"#
+≠ r#"" "Ⓝ Minor modes / menu dialogs ———————————————————————————————————————————————————————"#
+≠ r#"" "p    	  	 ☰👁 View mode            	Ⓝ"#
+≠ r#"" "P    	  	 ☰👁ₛ 'sticky', persistent	Ⓝ"#
+≠ r#"" "Z    	  	 ☰👁ₛ 'sticky', persistent	Ⓝ"#
+≠ r#"" "g    	  	 ⓖ☰⮊ Goto mode           	  Ⓝ"#
+≠ r#"" "⎇d   	gh	 ☰Multicursor (@select)  	Ⓝ"#
+≠ r#"" "n    	  	 ☰🧩  Match mode          	Ⓝ ☰<i class='fa fa-puzzle-piece'></i>"#
+≠ r#"" "C-w  	  	 ☰🗔  Window mode         	  Ⓝ"#
+≠ r#"" "space	  	 ☰␠  Space mode          	  Ⓝ"#
+≠ r#"" "[    	  	 ☰⧛ Unimpaired           	  Ⓝ"#
+≠ r#"" "]    	  	 ☰⧚                      	  Ⓝ"#
+≠ r#"" "`    	  	 ☰𝔸𝕒 Case conversion     	  Ⓝ"#
+≠ r""
+≠ r#"" nnoremap :	:"#
+≠ r#"" nnoremap R	:"command":"show_overlay","args":{"overlay":"command_palette"}<CR>"#
+≠ r""
+≠ r#"" "nnoremap g	:"command":"show_overlay","args":{"overlay":"goto","text":"@"}<CR>"#
+≠ r""
+≠ r#""   "Ⓝ                  	Compat with non-modal editors"#
+≠ r#""   " nnoremap <C-o>    	file_picker"#
+≠ r#""   " nnoremap <C-O>    	file_picker_in_current_directory"#
+≠ r#""   " nnoremap <C-s>    	commit_undo_checkpoint :write	# 💾 save file"#
+≠ r#""   " nnoremap C-S-s    	Save As"#
+≠ r#""   " nnoremap <C-n>    	:new"#
+≠ r#""   " nnoremap C-S-t    	open-last-closed"#
+≠ r#""   " nnoremap C-+      	zoom-in"#
+≠ r#""   " nnoremap <C-minus>	zoom-out"#
+≠ r""
+≠ r#""   "Ⓝ           	Copy"#
+≠ r#"" nnoremap  c    	y"#
+≠ r#"" "nnoremap <C-c>	??"#
+≠ r#"" "nnoremap C    	??"#
+≠ r#"" "nnoremap <A-c>	??"#
+≠ r""
+≠ r#""   "Ⓝ Shell"#
+≠ r#"" " nnoremap |  	shell_pipe"#
+≠ r#"" "A-\\"        	= 'shell_pipe_to'"#
+≠ r#"" " nnoremap A-|	shell_pipe_to"#
+≠ r""
+≠ r#""   "Ⓝ Move ——————————————————————————————————————————————————————————————————————"#
+≠ r#"" " Cursor@H"#
+≠ r#"" nnoremap  	j    	gj"#
+≠ r#"" nnoremap  	k    	gk"#
+≠ r#"" nnoremap  	l    	h"#
+≠ r#"" nnoremap  	;    	l"#
+≠ r#"" nnoremap  	m    	<C-d>"#
+≠ r#"" nnoremap  	,    	<C-u>"#
+≠ r#"" nnoremap  	<C-j>	<C-f>"#
+≠ r#"" nnoremap  	<C-k>	<C-b>"#
+≠ r#"" " nnoremap	a    	0"#
+≠ r#"" " nnoremap	A    	$"#
+≠ r#"" nnoremap  	a    	:"command":"move_to","args":{"to":"bol","extend":false}<CR>"#
+≠ r#"" nnoremap  	A    	:"command":"move_to","args":{"to":"eol","extend":false}<CR>"#
+≠ r#"" " ⎈e      	     	scroll Up   N lines (Extra) bug https://github.com/NeoVintageous/NeoVintageous/issues/866"#
+≠ r""
+≠ r#"" "nnoremap g	:"command":"show_overlay","args":{"overlay":"goto","text":"@"}<CR>"#
+≠ r""
+≠ r#"" "Ⓝ                   	Compat with non-modal editors"#
+≠ r#"" nnoremap <C-home>    	gg"#
+≠ r#"" nnoremap <C-end>     	G"#
+≠ r#"" "nnoremap <D-Home>   	gg"#
+≠ r#"" "nnoremap <D-End>    	G"#
+≠ r#"" nnoremap <D-Up>      	gg"#
+≠ r#"" nnoremap <D-Down>    	G"#
+≠ r#"" nnoremap <D-1>       	gT"#
+≠ r#"" nnoremap <D-2>       	gt"#
+≠ r#"" nnoremap <C-S-tab>   	gT"#
+≠ r#"" nnoremap <C-tab>     	gt"#
+≠ r#"" nnoremap <C-pageup>  	gT"#
+≠ r#"" nnoremap <C-pagedown>	gt"#
+≠ r#"" nnoremap <A-pageup>  	<C-o>"#
+≠ r#"" nnoremap <A-pagedown>	<Tab>"#
+≠ r#"" nnoremap <C-j>       	<C-o>"#
+≠ r#"" nnoremap <C-;>       	<Tab>"#
+≠ r""
+≠ r#"" nnoremap 1      	gT"#
+≠ r#"" nnoremap <A-1>  	gT"#
+≠ r#"" nnoremap 2      	gt"#
+≠ r#"" nnoremap <A-2>  	gt"#
+≠ r#"" nnoremap 3      	<C-o>"#
+≠ r#"" nnoremap <A-3>  	<C-o>"#
+≠ r#"" nnoremap <S-Tab>	<C-o>"#
+≠ r#"" nnoremap 4      	<Tab>"#
+≠ r#"" nnoremap <A-4>  	<Tab>"#
+≠ r#"" "nnoremap <Tab> 	<Tab>"#
+≠ r""
+≠ r""
+≠ r#"" "Ⓝ word !!! sometimes prev≠next by a space"#
+≠ r#"" nnoremap f        	 e"#
+≠ r#"" nnoremap <A-f>    	 w"#
+≠ r#"" nnoremap <A-Right>	 w"#
+≠ r#"" nnoremap d        	 b"#
+≠ r#"" nnoremap <A-d>    	ge"#
+≠ r#"" nnoremap <A-Left> 	ge"#
+≠ r#"" nnoremap F        	 E"#
+≠ r#"" nnoremap <A-F>    	 W"#
+≠ r#"" nnoremap D        	 B"#
+≠ r#"" nnoremap <A-D>    	gE"#
+≠ r#"" nnoremap <C-f>    	 E"#
+≠ r#"" nnoremap <C-d>    	gE"#
+≠ r#"" nnoremap <C-Right>	 W"#
+≠ r#"" nnoremap <C-Left> 	 B"#
+≠ r#"" "nnoremap G       	gg"#
+≠ r""
+≠ r#"" "Ⓝ             	Line"#
+≠ r#"" nnoremap <Home>	0"#
+≠ r#"" nnoremap <End> 	$"#
+≠ r""
+≠ r#"" "Ⓝ        	Block"#
+≠ r#"" nnoremap >	{"#
+≠ r#"" nnoremap ?	}"#
+≠ r""
+≠ r#"" "Ⓝ             	Marked"#
+≠ r#"" "nnoremap <A-g>	jumplist_picker"#
+≠ r#"" nnoremap  <A-g>	`"#
+≠ r""
+≠ r#"" nnoremap r    	;"#
+≠ r#"" nnoremap <A-R>	,"#
+≠ r""
+≠ r#"" "Ⓝ            	Find"#
+≠ r#"" nnoremap <A-w>	t"#
+≠ r#"" nnoremap w    	f"#
+≠ r#"" nnoremap <A-W>	T"#
+≠ r#"" nnoremap W    	F"#
+≠ r#"" nnoremap S    	?"#
+≠ r#"" nnoremap s    	/"#
+≠ r#"" nnoremap .    	?<CR>"#
+≠ r#"" nnoremap /    	/<CR>"#
+≠ r#"" " nnoremap 8  	search_selection"#
+≠ r#"" " nnoremap *  	search_selection"#
+≠ r#"" nnoremap 8    	*"#
+≠ r#"" nnoremap *    	#"#
+≠ r""
+≠ r#""   "Ⓝ Select ——————————————————————————————————————————————————————————————————————"#
+≠ r#"" nnoremap e	 v"#
+≠ r""
+≠ r#"" "Ⓝ                	Compat with non-modal editors"#
+≠ r#"" "    'C-a'        	= ['save_selection','select_all']	# 🖈∀▋"#
+≠ r#"" nnoremap <A-Down> 	:"command":"select_lines","args":{"forward":true }<CR>"#
+≠ r#"" nnoremap <A-Up>   	:"command":"select_lines","args":{"forward":false}<CR>"#
+≠ r#"" nnoremap <S-Down> 	vj"#
+≠ r#"" nnoremap <S-Up>   	vk"#
+≠ r#"" nnoremap <S-Left> 	vh"#
+≠ r#"" nnoremap <S-Right>	vl"#
+≠ r""
+≠ r#"" "Ⓝ                 	Mark jump points"#
+≠ r#"" nnoremap G         	m"#
+≠ r#"" nnoremap <C-g>     	m"#
+≠ r#"" nnoremap <A-g><A-g>	`"#
+≠ r#"" nnoremap <A-g><A-x>	:delmarks!"#
+≠ r#"" nnoremap <A-g><A-h>	:delmarks"#
+≠ r""
+≠ r#"" nnoremap J     	V"#
+≠ r#"" "nnoremap <A-r>	extend_line"#
+≠ r#"" nnoremap E     	V"#
+≠ r#"" nnoremap <A-e> 	*"#
+≠ r#"" nnoremap <A-E> 	#"#
+≠ r#"" nnoremap 5     	vip"#
+≠ r#"" nnoremap %     	:%y<CR>"#
+≠ r""
+≠ r#"" " ↓×2 mapped in Karabiner to l⎇ to work in both modes and not interfere with insert symbols mapped to those keys"#
+≠ r#"" " !!!todo: rebind to l⎇ when Sublime supports side modifiers"#
+≠ r#"" nnoremap <A-j> 	:"command":"select_lines"  ,"args":{"forward":true }<CR>"#
+≠ r#"" nnoremap <A-k> 	:"command":"select_lines"  ,"args":{"forward":false}<CR>"#
+≠ r#"" nnoremap <A-J> 	:"command":"deselect_lines","args":{"forward":true }<CR>"#
+≠ r#"" nnoremap <A-K> 	:"command":"deselect_lines","args":{"forward":false}<CR>"#
+≠ r#"" "nnoremap <A-l>	select_prev_sibling"#
+≠ r#"" "nnoremap A-;  	select_next_sibling"#
+≠ r#"" "nnoremap M    	shrink_selection"#
+≠ r#"" "nnoremap <    	expand_selection"#
+≠ r#"" "nnoremap <A-s>	select_regex"#
+≠ r#"" "nnoremap N    	split_selection"#
+≠ r#"" "nnoremap <A-n>	split_selection_on_newline"#
+≠ r""
+≠ r#""   "nnoremap "'"   	collapse_selection"#
+≠ r#""   "nnoremap <A-'> 	flip_selections"#
+≠ r#""   "nnoremap <A-a> 	flip_selections"#
+≠ r#""   "nnoremap <A-A> 	flip_selections"#
+≠ r#""   "nnoremap <A-p> 	ensure_selections_forward"#
+≠ r#""   "nnoremap <A-:> 	ensure_selections_forward"#
+≠ r#""   ""nnoremap <A-l>	rotate_selections_backward"#
+≠ r#""   ""nnoremap <A-;>	rotate_selections_forward"#
+≠ r#""   "nnoremap <A-m> 	rotate_selections_forward"#
+≠ r#""   "nnoremap A-,   	rotate_selections_backward"#
+≠ r#""   "nnoremap <A-u> 	remove_primary_selection"#
+≠ r#"" nnoremap <A-i>    	:"command":"deselect_lines_to_first"<CR>"#
+≠ r#"" nnoremap <A-o>    	:"command":"deselect_lines_to_last"<CR>"#
+≠ r#"" nnoremap <A-U>    	:"command":"soft_undo"<CR>"#
+≠ r#""   "nnoremap K     	keep_selections"#
+≠ r#""   "nnoremap L     	remove_selections"#
+≠ r#""   "nnoremap <A-Z> 	:"command":"deselect_lines_to_first"<CR>"#
+≠ r#""   "      ,        	  'collapse_selection']			#"#
+≠ r""
+≠ r#""   "nnoremap minus	trim_selections"#
+≠ r#""   "nnoremap _    	merge_consecutive_selections"#
+≠ r#""   "nnoremap +    	dupe_selections"#
+≠ r""
+≠ r#""   "Ⓝ Change ——————————————————————————————————————————————————————————————————————"#
+≠ r#""   "                      	Compat with non-modal editors"#
+≠ r#""   "nnoremap <A-del>      	delete_word_forward"#
+≠ r#""   "    'C-del'           	= ['extend_next_long_word_end',	# ⌦W"#
+≠ r#""   "                      	   'delete_selection']         	# ᵡ Word →"#
+≠ r#""   "nnoremap <A-backspace>	delete_word_backward"#
+≠ r#""   "    'C-backspace'     	= ['extend_prev_long_word_start',	# ⌫W"#
+≠ r#""   "                      	   'delete_selection']           	# ᵡ Word ←"#
+≠ r#""   "nnoremap del          	delete_selection"#
+≠ r#""   "nnoremap <S-del>      	delete_selection_noyank"#
+≠ r#"" nnoremap <CR>            	o<Esc>"#
+≠ r#"" nnoremap <S-CR>          	O<Esc>"#
+≠ r#"" nnoremap <C-y>           	<C-r>"#
+≠ r#"" nnoremap <C-z>           	u"#
+≠ r#"" nnoremap <C-Z>           	<C-r>"#
+≠ r""
+≠ r#"" nnoremap <C-/>	:"command":"toggle_comment","args":{"block":false}<CR>"#
+≠ r""
+≠ r""
+≠ r#""   "nnoremap <C-ret>	:reflow"#
+≠ r""
+≠ r""
+≠ r#""   "nnoremap .    	N/A"#
+≠ r#""   "nnoremap 6    	delete_char_forward"#
+≠ r#"" nnoremap x       	d"#
+≠ r#""   "nnoremap <A-x>	delete_selection_noyank"#
+≠ r#""   "nnoremap <A-c>	change_selection"#
+≠ r#"" nnoremap h       	X"#
+≠ r#"" nnoremap <BS>    	X"#
+≠ r#"" nnoremap <C-h>   	X"#
+≠ r#"" nnoremap H       	<del>"#
+≠ r#"" "nnoremap del    	delete_char_forward"#
+≠ r#"" "nnoremap <C-d>  	delete_char_forward"#
+≠ r#""   "nnoremap <A-h>	delete_word_backward"#
+≠ r#""   "nnoremap <A-H>	delete_word_forward"#
+≠ r#"" "    'C-h'       	= ['move_prev_long_word_start',      	# ⌫W"#
+≠ r#"" "                	   'delete_selection']               	# ᵡ Word ←"#
+≠ r#"" "    'C-x'       	= ['yank_main_selection_to_clipboard'	          	,"#
+≠ r#"" "                	   'delete_selection']               	#         		×📋 cut to clipboard <i class='fa fa-clipboard'></i>"#
+≠ r#""   "nnoremap X    	join_selections"#
+≠ r#""   "nnoremap <A-X>	join_selections_space"#
+≠ r""
+≠ r#"" nnoremap t       	r"#
+≠ r#""   "nnoremap T    	replace_with_yanked"#
+≠ r#""   "nnoremap <A-t>	replace_selections_with_clipboard"#
+≠ r""
+≠ r#""   "nnoremap `"#
+≠ r#"" nnoremap B    	guiw"#
+≠ r#"" nnoremap <C-b>	cru"#
+≠ r""
+≠ r#""   " Ⓝ         	line"#
+≠ r#"" nnoremap <C-J>	:"command":"swap_line_down"<CR>"#
+≠ r#"" nnoremap <C-K>	:"command":"swap_line_up"<CR>"#
+≠ r""
+≠ r#""   "nnoremap A-.	unindent"#
+≠ r#""   "nnoremap A-/	indent"#
+≠ r""
+≠ r#""   "nnoremap q	record_macro"#
+≠ r#""   "nnoremap Q	replay_macro"#
+≠ r#""   "nnoremap "	select_register"#
+≠ r""
+≠ r#"" nnoremap b       	."#
+≠ r#"" nnoremap <A-B>   	,"#
+≠ r#"" nnoremap i       	i"#
+≠ r#"" nnoremap o       	a"#
+≠ r#"" nnoremap O       	o"#
+≠ r#"" nnoremap I       	O"#
+≠ r#"" nnoremap u       	u"#
+≠ r#"" nnoremap y       	<C-r>"#
+≠ r#""   "nnoremap U    	earlier"#
+≠ r#""   "nnoremap Y    	later"#
+≠ r#"" nnoremap v       	p"#
+≠ r#""   "nnoremap <C-v>	paste_clipboard_after"#
+≠ r#"" nnoremap V       	P"#
+≠ r#"" "nnoremap I      	insert_at_line_start"#
+≠ r#"" "nnoremap A      	insert_at_line_end"#
+≠ r""
+≠ r#"" "    'A-I'	=["split_selection_on_newline"	# ⭰䷖ Line: split & insert @ start"#
+≠ r#"" "     ,   	  "insert_at_line_start"]     	#"#
+≠ r#"" "    'A-O'	=["split_selection_on_newline"	# ䷖⭲ Line: split & insert @ end"#
+≠ r#"" "     ,   	  "insert_at_line_end"]       	#"#
+≠ r""
+≠ r#""   "Ⓝ Select manipulation ————————————————————————————————————————————————————————————————————"#
+≠ r#""   "nnoremap (	rotate_selection_contents_backward"#
+≠ r#""   "nnoremap )	rotate_selection_contents_forward"#
+≠ r#""   "nnoremap 7	align_selections"#
+≠ r#""   "nnoremap &	align_selections"#
+≠ r#""   "nnoremap =	format_selections"#
+≠ r""
+≠ r#""   "Ⓝ          	Misc"#
+≠ r#"" nnoremap z    	:"command":"toggle_comment","args":{"block":false}<CR>"#
+≠ r#"" nnoremap Z    	:"command":"toggle_comment","args":{"block":true }<CR>"#
+≠ r#"" nnoremap <A-z>	:"command":"toggle_comment","args":{"block":true ,"variant":3}<CR>"#
+≠ r#"" nnoremap <C-m>	<C-x>"#
+≠ r#"" nnoremap <C-,>	<C-a>"#
+≠ r#"" nnoremap \    	:set invwrap<CR>"#
+≠ r#"" nnoremap <C-l>	<C-z>"#
+≠ r""
+≠ r#""   "  nnoremap $	shell_keep_pipe"#
+≠ r""
+≠ r#""   "Ⓝ space mode"#
+≠ r#""   " "'"	= 'last_picker'"#
+≠ r""
+≠ r#""   "Ⓝ Shell       	#	#"#
+≠ r#""   "  nnoremap !  	shell_insert_output"#
+≠ r#""   "  nnoremap @  	shell_append_output"#
+≠ r#""   "  nnoremap A-!	shell_append_output"#
+≠ r""
+≠ r""
+≠ r#"" " ## Cursor     	move"#
+≠ r#"" " #             	‸	search backward for the Nth occurrence of the ident under the cursor"#
+≠ r#"" " $             	‸	cursor to the end of Nth next line"#
+≠ r#"" " %             	‸	find the next (curly/square) bracket on this line and go to its match, or go to matching comment bracket, or go to matching preprocessor directive."#
+≠ r#"" " {count}%      	‸	go to N percentage in the file"#
+≠ r#"" " &             	🗘	repeat last :s"#
+≠ r#"" " ``            	‸	→position before latest jump"#
+≠ r#"" " `(            	‸	→current sentence         	start"#
+≠ r#"" " `)            	‸	→current sentence         	end"#
+≠ r#"" " `<            	‸	→highlighted area         	start"#
+≠ r#"" " `>            	‸	→highlighted area         	end"#
+≠ r#"" " `[            	‸	→last operated/putted text	start"#
+≠ r#"" " `]            	‸	→last operated/putted text	end"#
+≠ r#"" " `{            	‸	→current paragraph        	start"#
+≠ r#"" " `}            	‸	→current paragraph        	end"#
+≠ r#"" " `{a-zA-Z0-9}  	‸	→mark {a-zA-Z0-9}"#
+≠ r#"" " (             	‸	№    sentences	backward"#
+≠ r#"" " )             	‸	№    sentences	forward"#
+≠ r#"" " 0             	‸	→1st CHAR@Line start"#
+≠ r#"" " '{a-zA-Z0-9}  	‸	→1st CHAR@Line with mark {a-zA-Z0-9}"#
+≠ r#"" " ''            	‸	→1st CHAR@Line where the cursor was before the latest jump"#
+≠ r#"" " '(            	‸	→1st CHAR@Line sentence                 	start"#
+≠ r#"" " ')            	‸	→1st CHAR@Line sentence                 	end"#
+≠ r#"" " '<            	‸	→1st CHAR@Line buffer's highlighted area	start"#
+≠ r#"" " '>            	‸	→1st CHAR@Line buffer's highlighted area	end"#
+≠ r#"" " '[            	‸	→1st CHAR@Line last operated/put text   	start"#
+≠ r#"" " ']            	‸	→1st CHAR@Line last operated/put text   	end"#
+≠ r#"" " '{            	‸	→1st CHAR@Line paragraph                	start"#
+≠ r#"" " '}            	‸	→1st CHAR@Line paragraph                	end"#
+≠ r#"" " -             	‸	→1st CHAR N lines higher"#
+≠ r#"" " ^             	‸	→1st CHAR@Line of the line"#
+≠ r#"" " _             	‸	→1st CHAR@Line N - 1 lines lower"#
+≠ r#"" " *             	‸	search forward for the Nth occurrence of the ident under the cursor"#
+≠ r#"" " +             	‸	same as <CR>"#
+≠ r#"" " ,             	‸	repeat latest f, t, F or T in opposite direction N times"#
+≠ r#"" " .             	🗘	repeat last change with count replaced with N"#
+≠ r#"" " /{pattern}<CR>	‸	search forward for the Nth occurrence of {pattern}"#
+≠ r#"" " /<CR>         	‸	search forward for {pattern} of last search"#
+≠ r#"" " 1–9           	‸	prepend to command to give a count"#
+≠ r""
+≠ r#"" """ Ⓝ ☰Minor modes  Accessible from Normal mode, typically switch back to Normal mode after a command"#
+≠ r""
+≠ r#"" " includeTemplate (joinPath .cfg "nHelp.toml.tmpl") (dict "m" "normal" "i" "Ⓝ ☰?" "k" "F1" "cfg" .cfg) ›"#
+≠ r""
+≠ r#"" "nnoremap	` 	cmd	Ⓝ ☰𝔸𝕒 Case conversion mode	「 」	「 」"#
+≠ r#"" nnoremap 	`j	guiw"#
+≠ r#"" nnoremap 	`k	cru"#
+≠ r#"" "nnoremap	`l	crm"#
+≠ r#"" nnoremap 	`;	crc"#
+≠ r#"" nnoremap 	`m	crm"#
+≠ r#"" nnoremap 	`-	cr-"#
+≠ r#"" nnoremap 	`.	cr."#
+≠ r""
+≠ r""
+≠ r#"" " includeTemplate (joinPath .cfg "nView.nv.tmpl") (dict "m" "normal" "i" "Ⓝ ☰👁" "k" "p" "cfg" .cfg) ›"#
+≠ r#""   " # nnoremap p	view_mode_sticky"#
+≠ r#"" " includeTemplate (joinPath .cfg "nView.nv.tmpl") (dict "m" "normal" "i" "Ⓝ 👁ₛ" "k" "P" "cfg" .cfg) ›"#
+≠ r#"" " includeTemplate (joinPath .cfg "nView.nv.tmpl") (dict "m" "normal" "i" "Ⓝ 👁ₛ" "k" "Z" "cfg" .cfg) ›"#
+≠ r""
+≠ r#"" " × not implemented yet"#
+≠ r#"" " Move"#
+≠ r#"" " noremap gs $"#
+≠ r#"" " "× g$        	‸  when 'wrap' off go to rightmost character of the current line that is on the screen; when 'wrap' on go to the rightmost character of the current screen line"#
+≠ r#"" " noremap gs g_	" g_ 	‸  cursor to the last CHAR N - 1 lines lower"#
+≠ r#"" "              	"$   	‸  cursor to the end of Nth next line"#
+≠ r#"" "              	" gm 	‸  go to character at middle of the screenline"#
+≠ r#""    a"a         	"× gM	‸  go to characterga at middle of the text line"#
+≠ r""
+≠ r#"" "nnoremap g   	cmd	Ⓝ ⓖ☰⮊ Goto mode Jumps to various locations	「 」	「 」"#
+≠ r#"" nnoremap  gp  	no_op"#
+≠ r#"" nnoremap  gb  	`"#
+≠ r#"" nnoremap  gA  	'"#
+≠ r#"" nnoremap  gB  	'"#
+≠ r#"" "nnoremap gb  	jumplist_picker"#
+≠ r#"" nnoremap  ga  	g^"#
+≠ r#"" nnoremap  gs  	$"#
+≠ r#"" nnoremap  gh  	0"#
+≠ r#"" nnoremap  gg  	gg"#
+≠ r#"" nnoremap  gj  	j"#
+≠ r#"" nnoremap  gk  	k"#
+≠ r#"" nnoremap  g'  	G"#
+≠ r#"" nnoremap  gl  	goto_prev_paragraph"#
+≠ r#"" nnoremap  g;  	goto_next_paragraph"#
+≠ r#"" nnoremap  g.  	goto_prev_paragraph"#
+≠ r#"" nnoremap  g/  	goto_next_paragraph"#
+≠ r#"" nnoremap  gf  	goto_file"#
+≠ r#"" nnoremap  gm  	L"#
+≠ r#"" nnoremap  g,  	H"#
+≠ r#"" nnoremap  gn  	M"#
+≠ r#"" nnoremap  gD  	goto_declaration"#
+≠ r#"" nnoremap  gd  	goto_definition"#
+≠ r#"" nnoremap  gF12	goto_definition"#
+≠ r#"" nnoremap  gi  	goto_implementation"#
+≠ r#"" nnoremap  gt  	goto_implementation"#
+≠ r#"" nnoremap  gr  	goto_reference"#
+≠ r#"" nnoremap  ge  	goto_type_definition"#
+≠ r#"" nnoremap  gy  	goto_type_definition"#
+≠ r#"" nnoremap  gc  	goto_last_accessed_file"#
+≠ r#"" nnoremap  gv  	goto_last_modified_file"#
+≠ r#"" nnoremap  g1  	goto_previous_buffer"#
+≠ r#"" nnoremap  g2  	goto_next_buffer"#
+≠ r#"" nnoremap  g3  	jump_backward"#
+≠ r#"" nnoremap  g4  	jump_forward"#
+≠ r#"" nnoremap  gu  	goto_last_modification"#
+≠ r#"" "nnoremap g'  	gotochar"#
+≠ r""
+≠ r#"" " ☰🧩 Match Mode"#
+≠ r#"" " x=Visual v=Vis+Sel o=operator-pending"#
+≠ r#"" " xnoremap fails!!! maybe not implemented"#
+≠ r#"" " (+)  Surround current selection with <char>"#
+≠ r#"" onoremap ne 	a"#
+≠ r#"" onoremap na 	i"#
+≠ r#"" "onoremap e 	a"#
+≠ r#"" "onoremap a 	i"#
+≠ r#"" "onoremap aw	iw"#
+≠ r#"" "onoremap aW	iW"#
+≠ r#"" "onoremap as	is"#
+≠ r#"" "onoremap at	it"#
+≠ r""
+≠ r#"" "" ☰  Surround (github.com/tpope/vim-surround), add text object after a command, eg, niwd to insert () around (word)"#
+≠ r#"" nnoremap nx	ds"#
+≠ r#"" onoremap nx	ds"#
+≠ r#"" nnoremap nt	cs"#
+≠ r#"" onoremap nt	cs"#
+≠ r#"" nnoremap ni	ysi"#
+≠ r#"" nnoremap no	ysa"#
+≠ r#"" nnoremap nl	yss"#
+≠ r#"" vnoremap ni	S"#
+≠ r#"" " # 2.1 Text objects"#
+≠ r#"" " These can be used after an operator or in Visual mode to select an object"#
+≠ r#"" " # cmd		action in op-pending and Visual mode"#
+≠ r#"" " a'   	string in single quotes"#
+≠ r#"" " a"   	string in double quotes"#
+≠ r#"" " a``  	string in backticks"#
+≠ r#"" " aw   	a word                   	(with white space)"#
+≠ r#"" " aW   	`a WORD`                 	(with white space)"#
+≠ r#"" " as   	a sentence               	(with white space)"#
+≠ r#"" " ap   	a paragraph              	(with white space)"#
+≠ r#"" " at   	a tag block              	(with white space)"#
+≠ r#"" " ab   	a block from `[(` to `])`	(with braces)"#
+≠ r#"" " a(¦) 	=`ab`"#
+≠ r#"" " aB   	`a Block` from `[{` to `]}`	(with brackets)"#
+≠ r#"" " a{¦} 	=`aB`"#
+≠ r#"" " a[   	`a []`    from `[` to matching `]`"#
+≠ r#"" " a]   	=`a[`"#
+≠ r#"" " a<   	`a <>`    from `<` to matching `>`"#
+≠ r#"" " a>   	=`a<`"#
+≠ r#"" " i"   	string in double quotes without quotes"#
+≠ r#"" " i'   	string in single quotes without quotes"#
+≠ r#"" " i\`  	string in backticks     without backticks"#
+≠ r#"" " iw   	inner word"#
+≠ r#"" " iW   	inner WORD"#
+≠ r#"" " is   	inner sentence"#
+≠ r#"" " ip   	inner paragraph"#
+≠ r#"" " it   	inner tag block"#
+≠ r#"" " ib   	inner block from `[(` to `])`"#
+≠ r#"" " i(¦) 	=`ib`"#
+≠ r#"" " iB   	inner Block from `[{` and `]}`"#
+≠ r#"" " i{¦} 	=`iB`"#
+≠ r#"" " i[   	inner `[]`  from `[` to matching `]`"#
+≠ r#"" " i]   	=`i[`"#
+≠ r#"" " i<   	inner `<>`  from `<` to matching `>`"#
+≠ r#"" " i>   	=`i<`"#
+≠ r""
+≠ r#"" " includeTemplate (joinPath .cfg "nWindow.nv.tmpl") (dict "m" "normal" "i" "Ⓝ ☰🗔" "k" "C-w" "ksp" "" "cfg" .cfg) ›"#
+≠ r""
+≠ r""
+≠ r#"" let mapleader=<space>"#
+≠ r""
+≠ r#"" "nnoremap	space           	cmd	Ⓝ Space mode	「 」	「 」"#
+≠ r#"" nnoremap 	<leader><leader>	:NvEnterNormalMode<CR>"#
+≠ r""
+≠ r""
+≠ r#"" " includeTemplate (joinPath .cfg "nUnimpaired.nv.tmpl") (dict "m" "normal" "i" "Ⓝ" "k1" "[" "k0" "]" "cfg" .cfg) ›"#
+≠ r#"" " ⓘ Insert mode ——————————————————————————————————————————————————————————————————————"#
+≠ r#"" " Can't be remapped, use this temporarily"#
+≠ r#"" vnoremap <M-I>	:"command":"swap_line_down"<CR>"#
+≠ r#"" vnoremap <M-O>	:"command":"swap_line_up"<CR>"#
+≠ r""
+≠ r#"" "Ⓝ Test ——————————————————————————————————————————————————————————————————————"#
+≠ r#"" vnoremap а	 e"#
+≠ r#"" vnoremap в	 b"#
+≠ r#"" " noremap Д w"#
+≠ r#"" " noremap й     	 w"#
+≠ r#"" " noremap ц     	 w"#
+≠ r#"" " noremap у     	 w"#
+≠ r#"" " noremap к     	 w"#
+≠ r#"" " noremap е     	 w"#
+≠ r#"" " noremap н     	 w"#
+≠ r#"" " noremap ф     	 w"#
+≠ r#"" " noremap ы     	 w"#
+≠ r#"" " noremap в     	 w"#
+≠ r#"" " noremap а     	 w"#
+≠ r#"" " noremap п     	 w"#
+≠ r#"" " " noremap й   	 q"#
+≠ r#"" " noremap <f1>  	 w"#
+≠ r#"" " noremap <f2>  	 w"#
+≠ r#"" " noremap <f3>  	 b"#
+≠ r#"" " noremap <f4>  	 e"#
+≠ r#"" " noremap <f5>  	 e"#
+≠ r#"" " noremap <S-f6>	 b"#
+≠ r#"" " noremap <S-f7>	 w"#
+≠ r#"" " noremap <f6>  	 b"#
+≠ r#"" " noremap <f7>  	 w"#
+≠ r#"" " " noremap <⇟> b"#
+≠ r""
+≠ r#"" vnoremap <leader>d	:Neovintageous action=toggle_side_bar<CR>"#
+≠ r#"" " vnoremap gg     	:Neovintageous action=toggle_side_bar<CR>"#
+≠ r#"" " vnoremap t r    	2  replace N chars with {char}"#
+≠ r""
+≠ r#"" " vnoremap <C-q>	:quit!"#
+≠ r#"" " vnoremap G    	move_prev_word_end"#
+≠ r#"" " vnoremap 0    	univeral_arg"#
+≠ r#"" " 'C-j'         	= ['page_down','align_view_center']	# ⇟ Move      page down"#
+≠ r#"" " 'C-k'         	= ['page_up','align_view_center']  	# ⇞ Move      page up"#
+≠ r""
+≠ r#"" " 'C-K'	= "insert_char"	# ⇞ Move      page up"#
+≠ r""
+≠ r#"" "Ⓝ Free ——————————————————————————————————————————————————————————————————————"#
+≠ r#""   "vnoremap <C-u>	no_op"#
+≠ r#""   "vnoremap <A-C>	no_op"#
+≠ r#""   "vnoremap A-(  	no_op"#
+≠ r#""   "vnoremap A-)  	no_op"#
+≠ r#""   "vnoremap <A-K>	no_op"#
+≠ r#""   "vnoremap <C-i>	no_op"#
+≠ r#""   "vnoremap b    	no_op"#
+≠ r#"" "    '~'         	= "no_op"	#"#
+≠ r#"" "    'A-`'       	= "no_op"	#"#
+≠ r#"" " vnoremap X     	change_selection"#
+≠ r#"" "Ⓝ Major modes ——————————————————————————————————————————————————————————————————————"#
+≠ r#"" " vnoremap i	insert_mode"#
+≠ r#"" " vnoremap e	select_mode"#
+≠ r#"" "Ⓝ Minor modes / menu dialogs ———————————————————————————————————————————————————————"#
+≠ r#"" "p    	  	 ☰👁 View mode            	Ⓝ"#
+≠ r#"" "P    	  	 ☰👁ₛ 'sticky', persistent	Ⓝ"#
+≠ r#"" "Z    	  	 ☰👁ₛ 'sticky', persistent	Ⓝ"#
+≠ r#"" "g    	  	 ⓖ☰⮊ Goto mode           	  Ⓝ"#
+≠ r#"" "⎇d   	gh	 ☰Multicursor (@select)  	Ⓝ"#
+≠ r#"" "n    	  	 ☰🧩  Match mode          	Ⓝ ☰<i class='fa fa-puzzle-piece'></i>"#
+≠ r#"" "C-w  	  	 ☰🗔  Window mode         	  Ⓝ"#
+≠ r#"" "space	  	 ☰␠  Space mode          	  Ⓝ"#
+≠ r#"" "[    	  	 ☰⧛ Unimpaired           	  Ⓝ"#
+≠ r#"" "]    	  	 ☰⧚                      	  Ⓝ"#
+≠ r#"" "`    	  	 ☰𝔸𝕒 Case conversion     	  Ⓝ"#
+≠ r""
+≠ r#"" vnoremap :	:"#
+≠ r#"" vnoremap R	:"command":"show_overlay","args":{"overlay":"command_palette"}<CR>"#
+≠ r""
+≠ r#"" "vnoremap g	:"command":"show_overlay","args":{"overlay":"goto","text":"@"}<CR>"#
+≠ r""
+≠ r#""   "Ⓝ                  	Compat with non-modal editors"#
+≠ r#""   " vnoremap <C-o>    	file_picker"#
+≠ r#""   " vnoremap <C-O>    	file_picker_in_current_directory"#
+≠ r#""   " vnoremap <C-s>    	commit_undo_checkpoint :write	# 💾 save file"#
+≠ r#""   " vnoremap C-S-s    	Save As"#
+≠ r#""   " vnoremap <C-n>    	:new"#
+≠ r#""   " vnoremap C-S-t    	open-last-closed"#
+≠ r#""   " vnoremap C-+      	zoom-in"#
+≠ r#""   " vnoremap <C-minus>	zoom-out"#
+≠ r""
+≠ r#""   "Ⓝ           	Copy"#
+≠ r#"" vnoremap  c    	y"#
+≠ r#"" "vnoremap <C-c>	??"#
+≠ r#"" "vnoremap C    	??"#
+≠ r#"" "vnoremap <A-c>	??"#
+≠ r""
+≠ r#""   "Ⓝ Shell"#
+≠ r#"" " vnoremap |  	shell_pipe"#
+≠ r#"" "A-\\"        	= 'shell_pipe_to'"#
+≠ r#"" " vnoremap A-|	shell_pipe_to"#
+≠ r""
+≠ r#""   "Ⓝ Move ——————————————————————————————————————————————————————————————————————"#
+≠ r#"" " Cursor@H"#
+≠ r#"" vnoremap  	j    	gj"#
+≠ r#"" vnoremap  	k    	gk"#
+≠ r#"" vnoremap  	l    	h"#
+≠ r#"" vnoremap  	;    	l"#
+≠ r#"" vnoremap  	m    	<C-d>"#
+≠ r#"" vnoremap  	,    	<C-u>"#
+≠ r#"" vnoremap  	<C-j>	<C-f>"#
+≠ r#"" vnoremap  	<C-k>	<C-b>"#
+≠ r#"" " vnoremap	a    	0"#
+≠ r#"" " vnoremap	A    	$"#
+≠ r#"" vnoremap  	a    	:"command":"move_to","args":{"to":"bol","extend":false}<CR>"#
+≠ r#"" vnoremap  	A    	:"command":"move_to","args":{"to":"eol","extend":false}<CR>"#
+≠ r#"" " ⎈e      	     	scroll Up   N lines (Extra) bug https://github.com/NeoVintageous/NeoVintageous/issues/866"#
+≠ r""
+≠ r#"" "vnoremap g	:"command":"show_overlay","args":{"overlay":"goto","text":"@"}<CR>"#
+≠ r""
+≠ r#"" "Ⓝ                   	Compat with non-modal editors"#
+≠ r#"" vnoremap <C-home>    	gg"#
+≠ r#"" vnoremap <C-end>     	G"#
+≠ r#"" "vnoremap <D-Home>   	gg"#
+≠ r#"" "vnoremap <D-End>    	G"#
+≠ r#"" vnoremap <D-Up>      	gg"#
+≠ r#"" vnoremap <D-Down>    	G"#
+≠ r#"" vnoremap <D-1>       	gT"#
+≠ r#"" vnoremap <D-2>       	gt"#
+≠ r#"" vnoremap <C-S-tab>   	gT"#
+≠ r#"" vnoremap <C-tab>     	gt"#
+≠ r#"" vnoremap <C-pageup>  	gT"#
+≠ r#"" vnoremap <C-pagedown>	gt"#
+≠ r#"" vnoremap <A-pageup>  	<C-o>"#
+≠ r#"" vnoremap <A-pagedown>	<Tab>"#
+≠ r#"" vnoremap <C-j>       	<C-o>"#
+≠ r#"" vnoremap <C-;>       	<Tab>"#
+≠ r""
+≠ r#"" vnoremap 1      	gT"#
+≠ r#"" vnoremap <A-1>  	gT"#
+≠ r#"" vnoremap 2      	gt"#
+≠ r#"" vnoremap <A-2>  	gt"#
+≠ r#"" vnoremap 3      	<C-o>"#
+≠ r#"" vnoremap <A-3>  	<C-o>"#
+≠ r#"" vnoremap <S-Tab>	<C-o>"#
+≠ r#"" vnoremap 4      	<Tab>"#
+≠ r#"" vnoremap <A-4>  	<Tab>"#
+≠ r#"" "vnoremap <Tab> 	<Tab>"#
+≠ r""
+≠ r""
+≠ r#"" "Ⓝ word !!! sometimes prev≠next by a space"#
+≠ r#"" vnoremap f        	 e"#
+≠ r#"" vnoremap <A-f>    	 w"#
+≠ r#"" vnoremap <A-Right>	 w"#
+≠ r#"" vnoremap d        	 b"#
+≠ r#"" vnoremap <A-d>    	ge"#
+≠ r#"" vnoremap <A-Left> 	ge"#
+≠ r#"" vnoremap F        	 E"#
+≠ r#"" vnoremap <A-F>    	 W"#
+≠ r#"" vnoremap D        	 B"#
+≠ r#"" vnoremap <A-D>    	gE"#
+≠ r#"" vnoremap <C-f>    	 E"#
+≠ r#"" vnoremap <C-d>    	gE"#
+≠ r#"" vnoremap <C-Right>	 W"#
+≠ r#"" vnoremap <C-Left> 	 B"#
+≠ r#"" "vnoremap G       	gg"#
+≠ r""
+≠ r#"" "Ⓝ             	Line"#
+≠ r#"" vnoremap <Home>	0"#
+≠ r#"" vnoremap <End> 	$"#
+≠ r""
+≠ r#"" "Ⓝ        	Block"#
+≠ r#"" vnoremap >	{"#
+≠ r#"" vnoremap ?	}"#
+≠ r""
+≠ r#"" "Ⓝ             	Marked"#
+≠ r#"" "vnoremap <A-g>	jumplist_picker"#
+≠ r#"" vnoremap  <A-g>	`"#
+≠ r""
+≠ r#"" vnoremap r    	;"#
+≠ r#"" vnoremap <A-R>	,"#
+≠ r""
+≠ r#"" "Ⓝ            	Find"#
+≠ r#"" vnoremap <A-w>	t"#
+≠ r#"" vnoremap w    	f"#
+≠ r#"" vnoremap <A-W>	T"#
+≠ r#"" vnoremap W    	F"#
+≠ r#"" vnoremap S    	?"#
+≠ r#"" vnoremap s    	/"#
+≠ r#"" vnoremap .    	?<CR>"#
+≠ r#"" vnoremap /    	/<CR>"#
+≠ r#"" " vnoremap 8  	search_selection"#
+≠ r#"" " vnoremap *  	search_selection"#
+≠ r#"" vnoremap 8    	*"#
+≠ r#"" vnoremap *    	#"#
+≠ r""
+≠ r#""   "Ⓝ Select ——————————————————————————————————————————————————————————————————————"#
+≠ r#"" vnoremap e	 v"#
+≠ r""
+≠ r#"" "Ⓝ                	Compat with non-modal editors"#
+≠ r#"" "    'C-a'        	= ['save_selection','select_all']	# 🖈∀▋"#
+≠ r#"" vnoremap <A-Down> 	:"command":"select_lines","args":{"forward":true }<CR>"#
+≠ r#"" vnoremap <A-Up>   	:"command":"select_lines","args":{"forward":false}<CR>"#
+≠ r#"" vnoremap <S-Down> 	vj"#
+≠ r#"" vnoremap <S-Up>   	vk"#
+≠ r#"" vnoremap <S-Left> 	vh"#
+≠ r#"" vnoremap <S-Right>	vl"#
+≠ r""
+≠ r#"" "Ⓝ                 	Mark jump points"#
+≠ r#"" vnoremap G         	m"#
+≠ r#"" vnoremap <C-g>     	m"#
+≠ r#"" vnoremap <A-g><A-g>	`"#
+≠ r#"" vnoremap <A-g><A-x>	:delmarks!"#
+≠ r#"" vnoremap <A-g><A-h>	:delmarks"#
+≠ r""
+≠ r#"" vnoremap J     	V"#
+≠ r#"" "vnoremap <A-r>	extend_line"#
+≠ r#"" vnoremap E     	V"#
+≠ r#"" vnoremap <A-e> 	*"#
+≠ r#"" vnoremap <A-E> 	#"#
+≠ r#"" vnoremap 5     	vip"#
+≠ r#"" vnoremap %     	:%y<CR>"#
+≠ r""
+≠ r#"" " ↓×2 mapped in Karabiner to l⎇ to work in both modes and not interfere with insert symbols mapped to those keys"#
+≠ r#"" " !!!todo: rebind to l⎇ when Sublime supports side modifiers"#
+≠ r#"" vnoremap <A-j> 	:"command":"select_lines"  ,"args":{"forward":true }<CR>"#
+≠ r#"" vnoremap <A-k> 	:"command":"select_lines"  ,"args":{"forward":false}<CR>"#
+≠ r#"" vnoremap <A-J> 	:"command":"deselect_lines","args":{"forward":true }<CR>"#
+≠ r#"" vnoremap <A-K> 	:"command":"deselect_lines","args":{"forward":false}<CR>"#
+≠ r#"" "vnoremap <A-l>	select_prev_sibling"#
+≠ r#"" "vnoremap A-;  	select_next_sibling"#
+≠ r#"" "vnoremap M    	shrink_selection"#
+≠ r#"" "vnoremap <    	expand_selection"#
+≠ r#"" "vnoremap <A-s>	select_regex"#
+≠ r#"" "vnoremap N    	split_selection"#
+≠ r#"" "vnoremap <A-n>	split_selection_on_newline"#
+≠ r""
+≠ r#""   "vnoremap "'"   	collapse_selection"#
+≠ r#""   "vnoremap <A-'> 	flip_selections"#
+≠ r#""   "vnoremap <A-a> 	flip_selections"#
+≠ r#""   "vnoremap <A-A> 	flip_selections"#
+≠ r#""   "vnoremap <A-p> 	ensure_selections_forward"#
+≠ r#""   "vnoremap <A-:> 	ensure_selections_forward"#
+≠ r#""   ""vnoremap <A-l>	rotate_selections_backward"#
+≠ r#""   ""vnoremap <A-;>	rotate_selections_forward"#
+≠ r#""   "vnoremap <A-m> 	rotate_selections_forward"#
+≠ r#""   "vnoremap A-,   	rotate_selections_backward"#
+≠ r#""   "vnoremap <A-u> 	remove_primary_selection"#
+≠ r#"" vnoremap <A-i>    	:"command":"deselect_lines_to_first"<CR>"#
+≠ r#"" vnoremap <A-o>    	:"command":"deselect_lines_to_last"<CR>"#
+≠ r#"" vnoremap <A-U>    	:"command":"soft_undo"<CR>"#
+≠ r#""   "vnoremap K     	keep_selections"#
+≠ r#""   "vnoremap L     	remove_selections"#
+≠ r#""   "vnoremap <A-Z> 	:"command":"deselect_lines_to_first"<CR>"#
+≠ r#""   "      ,        	  'collapse_selection']			#"#
+≠ r""
+≠ r#""   "vnoremap minus	trim_selections"#
+≠ r#""   "vnoremap _    	merge_consecutive_selections"#
+≠ r#""   "vnoremap +    	dupe_selections"#
+≠ r""
+≠ r#""   "Ⓝ Change ——————————————————————————————————————————————————————————————————————"#
+≠ r#""   "                      	Compat with non-modal editors"#
+≠ r#""   "vnoremap <A-del>      	delete_word_forward"#
+≠ r#""   "    'C-del'           	= ['extend_next_long_word_end',	# ⌦W"#
+≠ r#""   "                      	   'delete_selection']         	# ᵡ Word →"#
+≠ r#""   "vnoremap <A-backspace>	delete_word_backward"#
+≠ r#""   "    'C-backspace'     	= ['extend_prev_long_word_start',	# ⌫W"#
+≠ r#""   "                      	   'delete_selection']           	# ᵡ Word ←"#
+≠ r#""   "vnoremap del          	delete_selection"#
+≠ r#""   "vnoremap <S-del>      	delete_selection_noyank"#
+≠ r#"" vnoremap <CR>            	o<Esc>"#
+≠ r#"" vnoremap <S-CR>          	O<Esc>"#
+≠ r#"" vnoremap <C-y>           	<C-r>"#
+≠ r#"" vnoremap <C-z>           	u"#
+≠ r#"" vnoremap <C-Z>           	<C-r>"#
+≠ r""
+≠ r#"" vnoremap <C-/>	:"command":"toggle_comment","args":{"block":false}<CR>"#
+≠ r""
+≠ r""
+≠ r#""   "vnoremap <C-ret>	:reflow"#
+≠ r""
+≠ r""
+≠ r#""   "vnoremap .    	N/A"#
+≠ r#""   "vnoremap 6    	delete_char_forward"#
+≠ r#"" vnoremap x       	d"#
+≠ r#""   "vnoremap <A-x>	delete_selection_noyank"#
+≠ r#""   "vnoremap <A-c>	change_selection"#
+≠ r#"" vnoremap h       	X"#
+≠ r#"" vnoremap <BS>    	X"#
+≠ r#"" vnoremap <C-h>   	X"#
+≠ r#"" vnoremap H       	<del>"#
+≠ r#"" "vnoremap del    	delete_char_forward"#
+≠ r#"" "vnoremap <C-d>  	delete_char_forward"#
+≠ r#""   "vnoremap <A-h>	delete_word_backward"#
+≠ r#""   "vnoremap <A-H>	delete_word_forward"#
+≠ r#"" "    'C-h'       	= ['move_prev_long_word_start',      	# ⌫W"#
+≠ r#"" "                	   'delete_selection']               	# ᵡ Word ←"#
+≠ r#"" "    'C-x'       	= ['yank_main_selection_to_clipboard'	          	,"#
+≠ r#"" "                	   'delete_selection']               	#         		×📋 cut to clipboard <i class='fa fa-clipboard'></i>"#
+≠ r#""   "vnoremap X    	join_selections"#
+≠ r#""   "vnoremap <A-X>	join_selections_space"#
+≠ r""
+≠ r#"" vnoremap t       	r"#
+≠ r#""   "vnoremap T    	replace_with_yanked"#
+≠ r#""   "vnoremap <A-t>	replace_selections_with_clipboard"#
+≠ r""
+≠ r#""   "vnoremap `"#
+≠ r#"" vnoremap B    	guiw"#
+≠ r#"" vnoremap <C-b>	cru"#
+≠ r""
+≠ r#""   " Ⓝ         	line"#
+≠ r#"" vnoremap <C-J>	:"command":"swap_line_down"<CR>"#
+≠ r#"" vnoremap <C-K>	:"command":"swap_line_up"<CR>"#
+≠ r""
+≠ r#""   "vnoremap A-.	unindent"#
+≠ r#""   "vnoremap A-/	indent"#
+≠ r""
+≠ r#""   "vnoremap q	record_macro"#
+≠ r#""   "vnoremap Q	replay_macro"#
+≠ r#""   "vnoremap "	select_register"#
+≠ r""
+≠ r#"" vnoremap b       	."#
+≠ r#"" vnoremap <A-B>   	,"#
+≠ r#"" vnoremap i       	i"#
+≠ r#"" vnoremap o       	a"#
+≠ r#"" vnoremap O       	o"#
+≠ r#"" vnoremap I       	O"#
+≠ r#"" vnoremap u       	u"#
+≠ r#"" vnoremap y       	<C-r>"#
+≠ r#""   "vnoremap U    	earlier"#
+≠ r#""   "vnoremap Y    	later"#
+≠ r#"" vnoremap v       	p"#
+≠ r#""   "vnoremap <C-v>	paste_clipboard_after"#
+≠ r#"" vnoremap V       	P"#
+≠ r#"" "vnoremap I      	insert_at_line_start"#
+≠ r#"" "vnoremap A      	insert_at_line_end"#
+≠ r""
+≠ r#"" "    'A-I'	=["split_selection_on_newline"	# ⭰䷖ Line: split & insert @ start"#
+≠ r#"" "     ,   	  "insert_at_line_start"]     	#"#
+≠ r#"" "    'A-O'	=["split_selection_on_newline"	# ䷖⭲ Line: split & insert @ end"#
+≠ r#"" "     ,   	  "insert_at_line_end"]       	#"#
+≠ r""
+≠ r#""   "Ⓝ Select manipulation ————————————————————————————————————————————————————————————————————"#
+≠ r#""   "vnoremap (	rotate_selection_contents_backward"#
+≠ r#""   "vnoremap )	rotate_selection_contents_forward"#
+≠ r#""   "vnoremap 7	align_selections"#
+≠ r#""   "vnoremap &	align_selections"#
+≠ r#""   "vnoremap =	format_selections"#
+≠ r""
+≠ r#""   "Ⓝ          	Misc"#
+≠ r#"" vnoremap z    	:"command":"toggle_comment","args":{"block":false}<CR>"#
+≠ r#"" vnoremap Z    	:"command":"toggle_comment","args":{"block":true }<CR>"#
+≠ r#"" vnoremap <A-z>	:"command":"toggle_comment","args":{"block":true ,"variant":3}<CR>"#
+≠ r#"" vnoremap <C-m>	<C-x>"#
+≠ r#"" vnoremap <C-,>	<C-a>"#
+≠ r#"" vnoremap \    	:set invwrap<CR>"#
+≠ r#"" vnoremap <C-l>	<C-z>"#
+≠ r""
+≠ r#""   "  vnoremap $	shell_keep_pipe"#
+≠ r""
+≠ r#""   "Ⓝ space mode"#
+≠ r#""   " "'"	= 'last_picker'"#
+≠ r""
+≠ r#""   "Ⓝ Shell       	#	#"#
+≠ r#""   "  vnoremap !  	shell_insert_output"#
+≠ r#""   "  vnoremap @  	shell_append_output"#
+≠ r#""   "  vnoremap A-!	shell_append_output"#
+≠ r""
+≠ r""
+≠ r#"" " ## Cursor     	move"#
+≠ r#"" " #             	‸	search backward for the Nth occurrence of the ident under the cursor"#
+≠ r#"" " $             	‸	cursor to the end of Nth next line"#
+≠ r#"" " %             	‸	find the next (curly/square) bracket on this line and go to its match, or go to matching comment bracket, or go to matching preprocessor directive."#
+≠ r#"" " {count}%      	‸	go to N percentage in the file"#
+≠ r#"" " &             	🗘	repeat last :s"#
+≠ r#"" " ``            	‸	→position before latest jump"#
+≠ r#"" " `(            	‸	→current sentence         	start"#
+≠ r#"" " `)            	‸	→current sentence         	end"#
+≠ r#"" " `<            	‸	→highlighted area         	start"#
+≠ r#"" " `>            	‸	→highlighted area         	end"#
+≠ r#"" " `[            	‸	→last operated/putted text	start"#
+≠ r#"" " `]            	‸	→last operated/putted text	end"#
+≠ r#"" " `{            	‸	→current paragraph        	start"#
+≠ r#"" " `}            	‸	→current paragraph        	end"#
+≠ r#"" " `{a-zA-Z0-9}  	‸	→mark {a-zA-Z0-9}"#
+≠ r#"" " (             	‸	№    sentences	backward"#
+≠ r#"" " )             	‸	№    sentences	forward"#
+≠ r#"" " 0             	‸	→1st CHAR@Line start"#
+≠ r#"" " '{a-zA-Z0-9}  	‸	→1st CHAR@Line with mark {a-zA-Z0-9}"#
+≠ r#"" " ''            	‸	→1st CHAR@Line where the cursor was before the latest jump"#
+≠ r#"" " '(            	‸	→1st CHAR@Line sentence                 	start"#
+≠ r#"" " ')            	‸	→1st CHAR@Line sentence                 	end"#
+≠ r#"" " '<            	‸	→1st CHAR@Line buffer's highlighted area	start"#
+≠ r#"" " '>            	‸	→1st CHAR@Line buffer's highlighted area	end"#
+≠ r#"" " '[            	‸	→1st CHAR@Line last operated/put text   	start"#
+≠ r#"" " ']            	‸	→1st CHAR@Line last operated/put text   	end"#
+≠ r#"" " '{            	‸	→1st CHAR@Line paragraph                	start"#
+≠ r#"" " '}            	‸	→1st CHAR@Line paragraph                	end"#
+≠ r#"" " -             	‸	→1st CHAR N lines higher"#
+≠ r#"" " ^             	‸	→1st CHAR@Line of the line"#
+≠ r#"" " _             	‸	→1st CHAR@Line N - 1 lines lower"#
+≠ r#"" " *             	‸	search forward for the Nth occurrence of the ident under the cursor"#
+≠ r#"" " +             	‸	same as <CR>"#
+≠ r#"" " ,             	‸	repeat latest f, t, F or T in opposite direction N times"#
+≠ r#"" " .             	🗘	repeat last change with count replaced with N"#
+≠ r#"" " /{pattern}<CR>	‸	search forward for the Nth occurrence of {pattern}"#
+≠ r#"" " /<CR>         	‸	search forward for {pattern} of last search"#
+≠ r#"" " 1–9           	‸	prepend to command to give a count"#
+≠ r""
+≠ r#"" """ Ⓝ ☰Minor modes  Accessible from Normal mode, typically switch back to Normal mode after a command"#
+≠ r""
+≠ r#"" " includeTemplate (joinPath .cfg "nHelp.toml.tmpl") (dict "m" "normal" "i" "Ⓝ ☰?" "k" "F1" "cfg" .cfg) ›"#
+≠ r""
+≠ r#"" "vnoremap	` 	cmd	Ⓝ ☰𝔸𝕒 Case conversion mode	「 」	「 」"#
+≠ r#"" vnoremap 	`j	guiw"#
+≠ r#"" vnoremap 	`k	cru"#
+≠ r#"" "vnoremap	`l	crm"#
+≠ r#"" vnoremap 	`;	crc"#
+≠ r#"" vnoremap 	`m	crm"#
+≠ r#"" vnoremap 	`-	cr-"#
+≠ r#"" vnoremap 	`.	cr."#
+≠ r""
+≠ r""
+≠ r#"" " includeTemplate (joinPath .cfg "nView.nv.tmpl") (dict "m" "normal" "i" "Ⓝ ☰👁" "k" "p" "cfg" .cfg) ›"#
+≠ r#""   " # vnoremap p	view_mode_sticky"#
+≠ r#"" " includeTemplate (joinPath .cfg "nView.nv.tmpl") (dict "m" "normal" "i" "Ⓝ 👁ₛ" "k" "P" "cfg" .cfg) ›"#
+≠ r#"" " includeTemplate (joinPath .cfg "nView.nv.tmpl") (dict "m" "normal" "i" "Ⓝ 👁ₛ" "k" "Z" "cfg" .cfg) ›"#
+≠ r""
+≠ r#"" " × not implemented yet"#
+≠ r#"" " Move"#
+≠ r#"" " noremap gs $"#
+≠ r#"" " "× g$        	‸  when 'wrap' off go to rightmost character of the current line that is on the screen; when 'wrap' on go to the rightmost character of the current screen line"#
+≠ r#"" " noremap gs g_	" g_ 	‸  cursor to the last CHAR N - 1 lines lower"#
+≠ r#"" "              	"$   	‸  cursor to the end of Nth next line"#
+≠ r#"" "              	" gm 	‸  go to character at middle of the screenline"#
+≠ r#""    a"a         	"× gM	‸  go to characterga at middle of the text line"#
+≠ r""
+≠ r#"" "vnoremap g   	cmd	Ⓝ ⓖ☰⮊ Goto mode Jumps to various locations	「 」	「 」"#
+≠ r#"" vnoremap  gp  	no_op"#
+≠ r#"" vnoremap  gb  	`"#
+≠ r#"" vnoremap  gA  	'"#
+≠ r#"" vnoremap  gB  	'"#
+≠ r#"" "vnoremap gb  	jumplist_picker"#
+≠ r#"" vnoremap  ga  	g^"#
+≠ r#"" vnoremap  gs  	$"#
+≠ r#"" vnoremap  gh  	0"#
+≠ r#"" vnoremap  gg  	gg"#
+≠ r#"" vnoremap  gj  	j"#
+≠ r#"" vnoremap  gk  	k"#
+≠ r#"" vnoremap  g'  	G"#
+≠ r#"" vnoremap  gl  	goto_prev_paragraph"#
+≠ r#"" vnoremap  g;  	goto_next_paragraph"#
+≠ r#"" vnoremap  g.  	goto_prev_paragraph"#
+≠ r#"" vnoremap  g/  	goto_next_paragraph"#
+≠ r#"" vnoremap  gf  	goto_file"#
+≠ r#"" vnoremap  gm  	L"#
+≠ r#"" vnoremap  g,  	H"#
+≠ r#"" vnoremap  gn  	M"#
+≠ r#"" vnoremap  gD  	goto_declaration"#
+≠ r#"" vnoremap  gd  	goto_definition"#
+≠ r#"" vnoremap  gF12	goto_definition"#
+≠ r#"" vnoremap  gi  	goto_implementation"#
+≠ r#"" vnoremap  gt  	goto_implementation"#
+≠ r#"" vnoremap  gr  	goto_reference"#
+≠ r#"" vnoremap  ge  	goto_type_definition"#
+≠ r#"" vnoremap  gy  	goto_type_definition"#
+≠ r#"" vnoremap  gc  	goto_last_accessed_file"#
+≠ r#"" vnoremap  gv  	goto_last_modified_file"#
+≠ r#"" vnoremap  g1  	goto_previous_buffer"#
+≠ r#"" vnoremap  g2  	goto_next_buffer"#
+≠ r#"" vnoremap  g3  	jump_backward"#
+≠ r#"" vnoremap  g4  	jump_forward"#
+≠ r#"" vnoremap  gu  	goto_last_modification"#
+≠ r#"" "vnoremap g'  	gotochar"#
+≠ r""
+≠ r#"" " ☰🧩 Match Mode"#
+≠ r#"" " x=Visual v=Vis+Sel o=operator-pending"#
+≠ r#"" " xnoremap fails!!! maybe not implemented"#
+≠ r#"" " (+)  Surround current selection with <char>"#
+≠ r#"" onoremap ne 	a"#
+≠ r#"" onoremap na 	i"#
+≠ r#"" "onoremap e 	a"#
+≠ r#"" "onoremap a 	i"#
+≠ r#"" "onoremap aw	iw"#
+≠ r#"" "onoremap aW	iW"#
+≠ r#"" "onoremap as	is"#
+≠ r#"" "onoremap at	it"#
+≠ r""
+≠ r#"" "" ☰  Surround (github.com/tpope/vim-surround), add text object after a command, eg, niwd to insert () around (word)"#
+≠ r#"" nnoremap nx	ds"#
+≠ r#"" onoremap nx	ds"#
+≠ r#"" nnoremap nt	cs"#
+≠ r#"" onoremap nt	cs"#
+≠ r#"" nnoremap ni	ysi"#
+≠ r#"" nnoremap no	ysa"#
+≠ r#"" nnoremap nl	yss"#
+≠ r#"" vnoremap ni	S"#
+≠ r#"" " # 2.1 Text objects"#
+≠ r#"" " These can be used after an operator or in Visual mode to select an object"#
+≠ r#"" " # cmd		action in op-pending and Visual mode"#
+≠ r#"" " a'   	string in single quotes"#
+≠ r#"" " a"   	string in double quotes"#
+≠ r#"" " a``  	string in backticks"#
+≠ r#"" " aw   	a word                   	(with white space)"#
+≠ r#"" " aW   	`a WORD`                 	(with white space)"#
+≠ r#"" " as   	a sentence               	(with white space)"#
+≠ r#"" " ap   	a paragraph              	(with white space)"#
+≠ r#"" " at   	a tag block              	(with white space)"#
+≠ r#"" " ab   	a block from `[(` to `])`	(with braces)"#
+≠ r#"" " a(¦) 	=`ab`"#
+≠ r#"" " aB   	`a Block` from `[{` to `]}`	(with brackets)"#
+≠ r#"" " a{¦} 	=`aB`"#
+≠ r#"" " a[   	`a []`    from `[` to matching `]`"#
+≠ r#"" " a]   	=`a[`"#
+≠ r#"" " a<   	`a <>`    from `<` to matching `>`"#
+≠ r#"" " a>   	=`a<`"#
+≠ r#"" " i"   	string in double quotes without quotes"#
+≠ r#"" " i'   	string in single quotes without quotes"#
+≠ r#"" " i\`  	string in backticks     without backticks"#
+≠ r#"" " iw   	inner word"#
+≠ r#"" " iW   	inner WORD"#
+≠ r#"" " is   	inner sentence"#
+≠ r#"" " ip   	inner paragraph"#
+≠ r#"" " it   	inner tag block"#
+≠ r#"" " ib   	inner block from `[(` to `])`"#
+≠ r#"" " i(¦) 	=`ib`"#
+≠ r#"" " iB   	inner Block from `[{` and `]}`"#
+≠ r#"" " i{¦} 	=`iB`"#
+≠ r#"" " i[   	inner `[]`  from `[` to matching `]`"#
+≠ r#"" " i]   	=`i[`"#
+≠ r#"" " i<   	inner `<>`  from `<` to matching `>`"#
+≠ r#"" " i>   	=`i<`"#
+≠ r""
+≠ r#"" " includeTemplate (joinPath .cfg "nWindow.nv.tmpl") (dict "m" "normal" "i" "Ⓝ ☰🗔" "k" "C-w" "ksp" "" "cfg" .cfg) ›"#
+≠ r""
+≠ r""
+≠ r#"" let mapleader=<space>"#
+≠ r""
+≠ r#"" "vnoremap	space           	cmd	Ⓝ Space mode	「 」	「 」"#
+≠ r#"" vnoremap 	<leader><leader>	:NvEnterNormalMode<CR>"#
+≠ r""
+≠ r""
+≠ r#"" " includeTemplate (joinPath .cfg "nUnimpaired.nv.tmpl") (dict "m" "normal" "i" "Ⓝ" "k1" "[" "k0" "]" "cfg" .cfg) ›"#
+≠ r#"" " Major mode: Insert ⓘ"#
+≠ r#"" inoremap <A-j>	<Down>"#
+≠ r#"" inoremap <A-k>	<Up>"#
+≠ r#"" inoremap <A-j>	<Down>"#
+≠ r#"" inoremap <A-k>	<Up>"#
+≠ r""
+≠ r#""   " ⓘ         	line"#
+≠ r#"" inoremap <C-J>	:SwapLineDown<CR>"#
+≠ r#"" inoremap <C-K>	:SwapLineUp<CR>"#
+≠ r#"" inoremap <M-I>	:SwapLineDown<CR>"#
+≠ r#"" inoremap <M-O>	:SwapLineUp<CR>"#
+≠ r""
+≠ r#"" ""#
+≠ r#"" " Ⓢ Select Mode (Visual)"#
+≠ r#"" " x=Visual v=Vis+Sel xnoremap fails!!! maybe not implemented"#
+≠ r#"" vnoremap i :NvEnterInsertMode<CR>"#
+≠ r#"" vnoremap  c       	y"#
+≠ r#"" vnoremap <S-Down> 	j"#
+≠ r#"" vnoremap <S-Up>   	k"#
+≠ r#"" vnoremap <S-Left> 	h"#
+≠ r#"" vnoremap <S-Right>	l"#
+≠ r#"" vnoremap J        	j"#
+≠ r""
+≠ r#""   "vnoremap <A-Z>	:DeselectLinesToFirst<CR>"#
+≠ r#""   "      ,       	  'collapse_selection']			#"#
+≠ r""
+≠ r""
+≠ r#"" cnoremap <C-c> <C-y>"#
+≠ r""
+≠ r#"" " ☰🧩 Match Mode"#
+≠ r#"" " x=Visual v=Vis+Sel o=operator-pending"#
+≠ r#"" " xnoremap fails!!! maybe not implemented"#
+≠ r#"" " (+)  Surround current selection with <char>"#
+≠ r#"" xnoremap ne 	a"#
+≠ r#"" xnoremap na 	i"#
+≠ r#"" "xnoremap e 	a"#
+≠ r#"" "xnoremap a 	i"#
+≠ r#"" "xnoremap aw	iw"#
+≠ r#"" "xnoremap aW	iW"#
+≠ r#"" "xnoremap as	is"#
+≠ r#"" "xnoremap at	it"#
+≠ r""
+≠ r#"" "" ☰  Surround (github.com/tpope/vim-surround), add text object after a command, eg, niwd to insert () around (word)"#
+≠ r#"" nnoremap nx	ds"#
+≠ r#"" onoremap nx	ds"#
+≠ r#"" nnoremap nt	cs"#
+≠ r#"" onoremap nt	cs"#
+≠ r#"" nnoremap ni	ysi"#
+≠ r#"" nnoremap no	ysa"#
+≠ r#"" nnoremap nl	yss"#
+≠ r#"" vnoremap ni	S"#
+≠ r#"" " # 2.1 Text objects"#
+≠ r#"" " These can be used after an operator or in Visual mode to select an object"#
+≠ r#"" " # cmd		action in op-pending and Visual mode"#
+≠ r#"" " a'   	string in single quotes"#
+≠ r#"" " a"   	string in double quotes"#
+≠ r#"" " a``  	string in backticks"#
+≠ r#"" " aw   	a word                   	(with white space)"#
+≠ r#"" " aW   	`a WORD`                 	(with white space)"#
+≠ r#"" " as   	a sentence               	(with white space)"#
+≠ r#"" " ap   	a paragraph              	(with white space)"#
+≠ r#"" " at   	a tag block              	(with white space)"#
+≠ r#"" " ab   	a block from `[(` to `])`	(with braces)"#
+≠ r#"" " a(¦) 	=`ab`"#
+≠ r#"" " aB   	`a Block` from `[{` to `]}`	(with brackets)"#
+≠ r#"" " a{¦} 	=`aB`"#
+≠ r#"" " a[   	`a []`    from `[` to matching `]`"#
+≠ r#"" " a]   	=`a[`"#
+≠ r#"" " a<   	`a <>`    from `<` to matching `>`"#
+≠ r#"" " a>   	=`a<`"#
+≠ r#"" " i"   	string in double quotes without quotes"#
+≠ r#"" " i'   	string in single quotes without quotes"#
+≠ r#"" " i\`  	string in backticks     without backticks"#
+≠ r#"" " iw   	inner word"#
+≠ r#"" " iW   	inner WORD"#
+≠ r#"" " is   	inner sentence"#
+≠ r#"" " ip   	inner paragraph"#
+≠ r#"" " it   	inner tag block"#
+≠ r#"" " ib   	inner block from `[(` to `])`"#
+≠ r#"" " i(¦) 	=`ib`"#
+≠ r#"" " iB   	inner Block from `[{` and `]}`"#
+≠ r#"" " i{¦} 	=`iB`"#
+≠ r#"" " i[   	inner `[]`  from `[` to matching `]`"#
+≠ r#"" " i]   	=`i[`"#
+≠ r#"" " i<   	inner `<>`  from `<` to matching `>`"#
+≠ r#"" " i>   	=`i<`"#
+≠ r#"" " Multicursor match mode (inside select mode)"#
+≠ r#"" " use visual commands e.g. c, I, x, y work"#
+≠ r#"" snoremap e      	:NvEnterNormalMode<CR>"#
+≠ r#"" snoremap <Space>	:NvEnterNormalMode<CR>"#
+≠ r#"" " v=normal mode"#
+≠ r#"" "×gH	Select all search occurrences (/ ? * #)"#
+≠ r#"" noremap <D-d> gh"#
+≠ r#"" " gh      start Select mode"#
+≠ r#"" snoremap <D-d> j"#
+≠ r#"" snoremap <C-a> A"#
+≠ r#"" snoremap l k"#
+≠ r#"" snoremap ; l"#
+≠ r#"" snoremap h k"#
+≠ r#"" snoremap <C-a> A"#
+≠ r#"" " start  <C-n> or gh     Start multiple cursor"#
+≠ r#"" " prev   <C-p> or k      Remove current match"#
+≠ r#"" " next   <C-n> or j      Add    next    match"#
+≠ r#"" " skip   <C-x> or l      Skip   next    match"#
+≠ r#"" " all    <M-n> or A      Select all     matches"#
+≠ r#"" inoremap <C-E> <C-w>"#
+≠ r#"" inoremap <C-e> w"#
+≠ r#"" nnoremap <C-e> w"#
+≠ r#"" inoremap <C-e> <C-w>"#
+≠ r#"" nnoremap <C-e> <C-w>"#
+≠ r""
+≠ r#"" " nnoremap <C-q> <C-w>"#
+≠ r#"" nnoremap <C-w><C-w> <	C-w>c"#
+≠ r#"" " inoremap <C-w><C-w> <C-w>c"#
+≠ r#"" nnoremap <C-q><C-q> w"#
+≠ r#"" " inoremap <C-w><C-w> <C-w>c"#
+≠ r#"" nnoremap <C-q><C-q> >"#
+≠ r#"" nnoremap <C-w><C-w> <lt>"#
+≠ r""
+≠ r#"" nnoremap a ""#
+≠ r#"" vnoremap a ""#
+≠ r#"" nnoremap s y"#
+≠ r#"" vnoremap s y"#
+≠ r""
+≠ r#"" nnoremap X dd"#
+(Ⓝ)C "DeleteByChars" defk="d" defc="ChangeToEol"
+set winaltkeys="menu"
 set relativenumber=null
 set relativenumber?=null
 

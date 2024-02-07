@@ -184,7 +184,7 @@ def reload_with_user_data_kdl() -> None:
                 val = arg.value if hasattr(arg,'value') else arg
                 # if tag:
                     # _log.debug("node ‘%s’ has unrecognized tag in argument %s",node.name,arg)
-                if val == 'clear':
+                if   val == 'clear':
                     lbl_remove = []
                     for lbl,(sep,txt_obj) in CFG['pairs'].items():
                         if lbl not in replaced and txt_obj == text_obj:
@@ -193,8 +193,23 @@ def reload_with_user_data_kdl() -> None:
                         _log.debug(f"clearing CFG ‘{cfg_key}’ pair: {CFG['pairs'].get(lbl,None)}")
                         CFG['pairs'].pop(lbl,None)
                     continue
-                if val not in replaced:
-                    CFG['pairs'].pop(val,None)
+                elif len(val) == 1:
+                    pair = (re.escape(val[0]),re.escape(val[0])) # dupe symmetric pair like ''
+                    lbl  =           (val[0] ,          val[0] )
+                elif len(val) == 2:
+                    pair = (re.escape(val[0]),re.escape(val[1])) # \( \)
+                    lbl  =           (val[0] ,          val[1] )
+                elif (_sp := re_sp.split(val)) and\
+                    len(_sp) == 2:
+                    pair = (re.escape(_sp[0]),re.escape(_sp[1])) # ="  "
+                    lbl  =           (_sp[0] ,          _sp[1] )
+                else:
+                    _log.error("node ‘%s’ has unparseable argument %s\n  expecting a paired symbol or a space separated string",node.name,arg)
+                    continue
+                CFG['pairs']   [lbl[0]] = (pair,text_obj)
+                CFG['pairs']   [lbl[1]] = (pair,text_obj)
+                replaced.append(lbl[0])
+                replaced.append(lbl[1])
 
             for pkey,tag_val in node.props.items(): # Parse properties, +NEW pairs d="()"
                 tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
@@ -202,8 +217,11 @@ def reload_with_user_data_kdl() -> None:
                 # if tag:
                     # _log.debug("node ‘%s’ has unrecognized value tag in property %s",node.name,pkey)
                 pair = None
-                if   len(val) == 0:
-                    pass
+                if       val is None\
+                  or len(val) == 0 :
+                    if val not in replaced:
+                        CFG['pairs'].pop(pkey,None)
+                        continue
                 elif len(val) == 1:
                     pair = (re.escape(val[0]),re.escape(val[0])) # dupe symmetric pair like ''
                 elif len(val) == 2:

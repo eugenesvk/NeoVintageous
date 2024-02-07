@@ -6,26 +6,15 @@ from sublime import find_resources
 from sublime import load_resource
 from sublime import version
 
-from NeoVintageous.nv.jumplist import jumplist_updater
-from NeoVintageous.nv.marks import get_mark
-from NeoVintageous.nv.polyfill import set_selection
-from NeoVintageous.nv.polyfill import view_find
-from NeoVintageous.nv.ui import ui_bell
-from NeoVintageous.nv.utils import next_non_blank
-from NeoVintageous.nv.utils import regions_transform_to_normal_mode
-from NeoVintageous.nv.utils import regions_transformer
-from NeoVintageous.nv.utils import resolve_normal_target
-from NeoVintageous.nv.utils import resolve_visual_block_target
-from NeoVintageous.nv.utils import resolve_visual_line_target
-from NeoVintageous.nv.utils import resolve_visual_target
-from NeoVintageous.nv.utils import show_if_not_visible
-from NeoVintageous.nv.utils import wrapscan
-from NeoVintageous.nv.vi.text_objects import find_next_lone_bracket
-from NeoVintageous.nv.vi.text_objects import find_prev_lone_bracket
-from NeoVintageous.nv.vim import EOF
-from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
-from NeoVintageous.nv.vim import enter_normal_mode
-from NeoVintageous.nv.vim import status_message
+from NeoVintageous.nv.jumplist        import jumplist_updater
+from NeoVintageous.nv.marks           import get_mark
+from NeoVintageous.nv.polyfill        import set_selection, view_find
+from NeoVintageous.nv.ui              import ui_bell
+from NeoVintageous.nv.utils           import next_non_blank, regions_transform_to_normal_mode, regions_transformer, resolve_normal_target, resolve_visual_block_target, resolve_visual_line_target, resolve_visual_target, show_if_not_visible, wrapscan
+from NeoVintageous.nv.vi.text_objects import find_next_lone_bracket, find_prev_lone_bracket
+from NeoVintageous.nv.vim             import EOF
+from NeoVintageous.nv.modes           import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
+from NeoVintageous.nv.vim             import enter_normal_mode, status_message
 
 
 def goto_help(view) -> None:

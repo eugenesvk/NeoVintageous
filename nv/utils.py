@@ -4,7 +4,7 @@ from functools   import wraps
 import os
 import re
 
-from sublime import FORCE_GROUP, Region, View, Window, CLASS_WORD_END, CLASS_WORD_START
+from sublime import FORCE_GROUP, Region, View, Window, CLASS_WORD_END, CLASS_WORD_START, version, SymbolSource, SymbolType, KindId
 
 from NeoVintageous.nv.options  import get_option
 from NeoVintageous.nv.polyfill import make_all_groups_same_size, set_selection, spell_add, spell_undo
@@ -1328,18 +1328,36 @@ def find_symbol(view, r, globally=False):
     if not fname:
         return
 
-    locations = view.window().lookup_symbol_in_index(query)
+    if int(version()) >= 4050: # find all locations where symbol sym is located
+        locations = view.window().symbol_locations(sym=query
+            , source     =SymbolSource.ANY # ANY|INDEX|OPEN_FILES Sources which should be searched for symbol
+            , type       =SymbolType  .ANY # ANY|DEFINITION|REFERENCE type of symbol to find
+            , kind_id    =KindId.AMBIGUOUS # KindId of symbol AMBIGUOUS|KEYWORD|TYPE|FUNCTION|NAMESPACE|NAVIGATION|MARKUP|VARIABLE|SNIPPET|COLOR_REDISH|COLOR_ORANGISH|COLOR_YELLOWISH|COLOR_GREENISH|COLOR_CYANISH|COLOR_BLUISH|COLOR_PURPLISH|COLOR_PINKISH|COLOR_DARK|COLOR_LIGHT|
+            , kind_letter=''               # letter representing the kind of the symbol. See Kind
+        ) # Contains information about a file that contains a symbol
+        # path          : str           filesystem       path to the file containing the symbol
+        # display_name  : str           project-relative path to the file containing the symbol
+        # row           : int           row    of the file     the symbol is contained on
+        # col           : int           column of the row that the symbol is contained on
+        # syntax        : str           name of the syntax for the symbol
+        # type          : SymbolType    type of the                symbol. See SymbolType
+        # kind          : Kind          kind of the                symbol. See Kind
+    else: # ↓ deprecated
+        locations = view.window().lookup_symbol_in_index(query)
     if not locations:
         return
 
-    fname = fname.replace('\\', '/')
-
     try:
         if not globally:
-            location = [hit[2] for hit in locations if fname.endswith(hit[1])][0]
-            return location[0] - 1, location[1] - 1
-        else:
-            # TODO: There might be many symbols with the same name.
+            if int(version()) >= 4050:
+                for hit in locations:
+                    if fname.endswith(hit.path):
+                        return hit.row - 1, hit.col - 1
+            else:
+                fname = fname.replace('\\', '/')
+                location = [hit[2] for hit in locations if fname.endswith(hit[1])][0]
+                return location[0] - 1, location[1] - 1
+        else: # TODO: There might be many symbols with the same name.
             return locations[0]
     except IndexError:
         return

@@ -11,6 +11,7 @@ from NeoVintageous.nv.marks           import get_mark
 from NeoVintageous.nv.polyfill        import set_selection, view_find
 from NeoVintageous.nv.ui              import ui_bell
 from NeoVintageous.nv.utils           import next_non_blank, regions_transform_to_normal_mode, regions_transformer, resolve_normal_target, resolve_visual_block_target, resolve_visual_line_target, resolve_visual_target, show_if_not_visible, wrapscan
+from NeoVintageous.nv.vi              import text_objects # to get uptodate CFG?
 from NeoVintageous.nv.vi.text_objects import find_next_lone_bracket, find_prev_lone_bracket
 from NeoVintageous.nv.vim             import EOF
 from NeoVintageous.nv.modes           import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
@@ -301,12 +302,9 @@ def goto_prev_changelist(view, mode: str, count: int) -> None:
 
 
 def goto_prev_target(view, mode: str, count: int, target: str) -> None:
-    targets = {
-        '{': ('\\{', '\\}'),
-        '(': ('\\(', '\\)'),
-    }
+    targets = text_objects.CFG['pairs'] # '(' : (('\\(', '\\)'), TO.Bracket)
 
-    brackets = targets.get(target)
+    brackets = targets.get(target,[None])[0]
     if not brackets or mode not in (NORMAL, VISUAL, VISUAL_LINE):
         ui_bell()
         return
@@ -332,7 +330,7 @@ def goto_prev_target(view, mode: str, count: int, target: str) -> None:
             prev_target = find_prev_lone_bracket(view, start, brackets)
             if prev_target:
                 if mode == VISUAL:
-                    resolve_visual_target(s, prev_target.a)
+                    resolve_visual_target     (      s, prev_target.a)
                 elif mode == VISUAL_LINE:
                     resolve_visual_line_target(view, s, prev_target.a)
 
@@ -342,13 +340,9 @@ def goto_prev_target(view, mode: str, count: int, target: str) -> None:
 
 
 def goto_next_target(view, mode: str, count: int, target: str) -> None:
-    targets = {
-        '}': ('\\{', '\\}'),
-        ')': ('\\(', '\\)'),
-    }
+    targets = text_objects.CFG['pairs'] # '(' : (('\\(', '\\)'), TO.Bracket)
 
-    brackets = targets.get(target)
-
+    brackets = targets.get(target,[None])[0]
     if not brackets or mode not in (NORMAL, VISUAL, VISUAL_LINE):
         ui_bell()
         return
@@ -371,7 +365,7 @@ def goto_next_target(view, mode: str, count: int, target: str) -> None:
             next_target = find_next_lone_bracket(view, start, brackets)
             if next_target:
                 if mode == VISUAL:
-                    resolve_visual_target(s, next_target.a)
+                    resolve_visual_target     (      s, next_target.a)
                 elif mode == VISUAL_LINE:
                     resolve_visual_line_target(view, s, next_target.a)
 

@@ -22,6 +22,11 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
   <!-- - __Security__ -->
    <!-- + :lock: ??? -->
    <!-- vulnerabilities -->
+  - __Added__
+   + support for text object pairs as targets for the goto command
+   + `GotoTargetPrev`/`GotoTargetNext` commands to allow using the brackets as arguments instead of as names<br/>
+     `(Ⓝ)gdd" "GotoTargetPrev" "‹"`<br/>
+     `(Ⓝ)gdd" "GotoTargetPrevWhateverThatBracketIsNamed"`
   - __Fixed__
    + :beetle: falsy user settings treated as missing instead of being saved as value false values
   - __Changed__

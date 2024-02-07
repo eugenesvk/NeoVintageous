@@ -390,6 +390,7 @@ def _parse_keybind_arg(node:kdl.Node, prop_subl={}):
     for arg in node.args:          # Parse arguments
         tag = clean_name(arg.tag   if hasattr(arg,'tag'  ) else '' )
         val = clean_cmd (arg.value if hasattr(arg,'value') else arg)
+        val_dirt = arg.value if hasattr(arg,'value') else arg
         count = 1
         if val == 'chain':
             isChain = True
@@ -400,10 +401,11 @@ def _parse_keybind_arg(node:kdl.Node, prop_subl={}):
                 if clean_name(key) in CFG['res_tag']:
                     del prop_subl_clean[key]
             subl_arg = f',"args":{json.dumps(prop_subl_clean)}' if prop_subl_clean else ''
-            cmd      = f'"command":"{val}"{subl_arg}<CR>'
+            cmd      = f'"command":"{val_dirt}"{subl_arg}<CR>'
             # (Ⓝ)q (subl)"move" by="words" forward=true extend=true
             # →"command":"move","args":{"by": "words", "forward": true, "extend": true}<CR>
-            _log.cfg("parsed (subl) command val=¦%s¦ arg=¦%s¦ → ¦%s¦", val, subl_arg, prop_subl_clean)
+            _log.cfg("parsed (subl) command ¦%s¦ val_dirty=¦%s¦ arg=¦%s¦ → ¦%s¦"
+                ,                            cmd, val_dirt,subl_arg, prop_subl_clean)
         else:
             cmd = val
         if count_l := re_count.findall(tag): # find a count tag and add commands×count

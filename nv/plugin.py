@@ -50,14 +50,16 @@ def register(seq: list, modes: tuple, *args, **kwargs):
         return cls
     return inner
 
-def register_text(commands: list, modes: tuple, *args, **kwargs):
+def register_text(commands: list, modes: tuple, *args, icon:str='', **kwargs):
     """Register a 'text command' to 'command' mapping with NeoVintageous
       'text command' must be known to NeoVintageous (converted to lower case)
       'command'      must be a ViMotionDef or ViOperatorDef
+      'icon'         display in the status bar when the command is used in a sequence
     Decorated class is instantiated with `*args` and `**kwargs`.
     @keys: A list of (`mode:tuple`, `commands:list`) pairs to map the decorated class to
     """
     def inner(cls):
+        cls.icon = icon
         for cmd in commands:  # 'SneakBack' → class SneakS(SneakInputMotion)
             if (C := cmd.lower())               not in map_textcmd2cmd:
                 map_textcmd2cmd[C] = cls(*args,**kwargs)

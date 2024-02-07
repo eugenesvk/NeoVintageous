@@ -118,6 +118,6 @@ def _handle_rhs_text(view, rhs: Union[str, list]) -> None: # find a key that is 
                     ,text_cmd,(f" as Ⓞ‘{seq}’" if mode == OPERATOR_PENDING else ''),mode)
                 win.run_command('nv_process_notation',{'keys':seq, 'check_user_mappings':False,'cont':cont})
             else:
-                _log.key("  ‘%s’cmd_txt process w/o translating to a sequence m‘%s’",cmd_txt,mode)
+                _log.key("  ‘%s’text_cmd process w/o translating to a sequence m‘%s’",text_cmd,mode)
                 win.run_command('nv_process_cmd_text',{'text_cmd':text_cmd, 'cont':cont})
                 continue

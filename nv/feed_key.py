@@ -22,6 +22,125 @@ if _log.hasHandlers(): # clear existing handlers, including sublime's
 _L = True if _log.isEnabledFor(logging.KEY) else False
 
 
+class FeedTextCmdHandler():
+    def __init__(self, view, text_cmd:str, count:int, do_eval:bool):
+        self.view     = view
+        self.window   = self.view.window()
+        self.text_cmd = text_cmd
+        self.count    = count
+        self.do_eval  = do_eval
+        self.mode     = get_mode(self.view)
+        if _L:
+            _log.keyt('—————Txt⌨️%s %s #%s Eval=%s'
+            ,text_cmd,self.mode,count,do_eval) # ⏰%s,TFMT.format(t=datetime.now()))
+    def handle(self) -> None:
+        self   ._handle_bad_selection()
+        if self._handle_register():
+            return
+        self   ._handle()
+    def _handle_bad_selection(self) -> None:
+        if _is_selection_malformed              (self.view, self.mode):
+            self.mode = _fix_malformed_selection(self.view, self.mode)
+    def _append_sequence(self) -> None:
+        _log.keyt('%s icon status %s'
+            ,self.text_cmd,self.cmd.icon)
+        append_sequence         (self.view, self.cmd.icon or self.text_cmd)
+        update_status_line      (self.view)
+    def _handle_register(self) -> bool:
+        if get_capture_register (self.view):
+            set_register        (self.view, self.keyt)
+            set_partial_sequence(self.view, '')
+            set_partial_text    (self.view, '')
+            return True
+        return False
+
+    def _handle(self) -> None:
+        if _L:
+          self.dbg = ''
+        text_cmd = self.text_cmd
+        mode     = self.mode
+        view     = self.view
+        cmd = mappings_resolve_text(view, text_command=text_cmd, mode=mode, check_user_mappings=False)
+        if isinstance(cmd, CommandNotFound):
+            _log.warn("  ‘%s’text_cmd NotFound, skipping m‘%s’",text_cmd,mode)
+            return
+        self.cmd = cmd
+        self   ._append_sequence() # status bar vim-seq sequence
+        if (isCmdHandled := self._handle_cmd()):
+            if _L:
+                _log.keyt('%s',self.dbg)
+            return
+        else:
+            _log.warn("  ‘%s’text_cmd couldn't be handled")
+
+    def _handle_mapping_text(self, mapping: Mapping) -> None:
+        if self.do_eval: # TODO Review What happens if Mapping + do_eval=False
+            evaluate_mapping_text(self.view, mapping)
+
+    def _handle_cmd(self) -> bool:
+        cmd  = self.cmd
+        if isinstance(cmd, IncompleteMapping):
+            if _L:
+                self.dbg += f" ↩+ ¦{cmd}¦cmd=IncompleteMapping"
+            return True
+        if isinstance(cmd, ViOpenNameSpace  ):
+            if _L:
+                self.dbg += f" ↩+ ¦{cmd}¦cmd=OpenNameSpace"
+            return True
+        if isinstance(cmd, ViOpenRegister   ):
+            if _L:
+                self.dbg += f" ↩+ ¦{cmd}¦cmd=OpenRegister→set"
+            set_capture_register(self.view, True)
+            return True
+        if isinstance(cmd, Mapping):
+            if _L:
+                self.dbg += f" ↩+ ‹‘{cmd.lhs}’=‘{cmd.rhs}’› ¦{cmd}¦cmd=Map→_h "
+            self._handle_mapping_text(cmd)
+            return True
+        if isinstance(cmd, CommandNotFound):
+            if _L:
+                self.dbg += f" ↩− ¦¦cmd=NotFound"
+            return False # pass to handle sequence
+        if (isinstance(cmd, ViOperatorDef) and get_mode(self.view) == OPERATOR_PENDING):
+            if _L:
+                self.dbg += f" ↩− ¦{cmd}¦cmd=ⓄOperatorDef"
+            return False # pass to handle sequence
+        if _L:
+            self.dbg += f", _hCmd"
+        self._handle_command(cmd, self.do_eval)
+        if _L:
+            self.dbg += f" ↩+ ¦{cmd}¦cmd=_handle_cmd"
+        return True
+
+    def _handle_command(self, command:ViCommandDefBase, do_eval:bool) -> None:
+        """ Raises ValueError if too many motions|actions, or unexpected command type"""
+        _is_runnable = is_runnable(self.view)
+
+        if   isinstance(command, ViMotionDef):
+            if _is_runnable:
+                raise ValueError('too many motions')
+            set_motion  (self.view, command)
+            if  get_mode(self.view) == OPERATOR_PENDING:
+                set_mode(self.view, NORMAL)
+        elif isinstance(command, ViOperatorDef):
+            if _is_runnable:
+                raise ValueError('too many actions')
+            set_action  (self.view, command)
+            if command.motion_required and not is_visual_mode(get_mode(self.view)):
+                set_mode(self.view, OPERATOR_PENDING)
+        else:
+            raise ValueError('unexpected command type')
+
+        if is_interactive(self.view):
+            if command.accept_input and command.input_parser and command.input_parser.is_panel():
+                command.input_parser.run_command(self.view.window())
+
+        if get_mode(self.view) == OPERATOR_PENDING:
+            set_partial_sequence(self.view, '')
+            set_partial_text    (self.view, '')
+        if do_eval:
+            evaluate_state      (self.view)
+
 class FeedKeyHandler():
 
     def __init__(self, view, key: str, repeat_count: int, do_eval: bool, check_user_mappings: bool):

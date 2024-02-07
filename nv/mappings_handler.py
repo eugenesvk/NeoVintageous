@@ -109,42 +109,15 @@ def _handle_rhs_text(view, rhs: Union[str, list]) -> None: # find a key that is 
             _log.debug(" redirect text command with ‘:’ command to _hRHS as ‘%s’",text_cmd)
             _handle_rhs(win,     text_cmd)
         else:
-            cmd_txt = mappings_resolve_text(view, text_command=text_cmd, mode=mode, check_user_mappings=False)
-            if isinstance(cmd_txt, CommandNotFound):
-                if len(text_cmd) == 1:
-                    if (mode == OPERATOR_PENDING): # ToDO: is this needed?
-                        seq = get_sequence(view)[:-len(get_partial_sequence(view))] + text_cmd
-                    else:
-                        seq =                                                         text_cmd
-                    _log.key("  ‘%s’text_cmd NotFound, but it's 1 symbol, so process it anyway%s m‘%s’"
-                        ,text_cmd,(f" as Ⓞ‘{seq}’" if mode == OPERATOR_PENDING else ''),mode)
-                    win.run_command(    'nv_process_notation',{'keys':seq, 'check_user_mappings':False,'cont':cont})
+            if len(text_cmd) == 1:
+                if (mode == OPERATOR_PENDING): # ToDO: is this needed?
+                    seq = get_sequence(view)[:-len(get_partial_sequence(view))] + text_cmd
                 else:
-                    _log.warn("  ‘%s’text_cmd NotFound, skipping m‘%s’",text_cmd,mode)
-                    continue
+                    seq =                                                         text_cmd
+                _log.key("  ‘%s’text_cmd NotFound, but it's 1 symbol, so process it anyway%s m‘%s’"
+                    ,text_cmd,(f" as Ⓞ‘{seq}’" if mode == OPERATOR_PENDING else ''),mode)
+                win.run_command('nv_process_notation',{'keys':seq, 'check_user_mappings':False,'cont':cont})
             else:
-                _log.key("  ‘%s’cmd_txt m‘%s’",cmd_txt,mode)
-                if mode in (mappings := plugin.mappings_reverse):
-                    dict_cls_to_cmd = mappings[mode] # <...plugin_commentary.CommentaryMotion'>:'gc'
-                    cmdT = type(cmd_txt)
-                    if (seq := dict_cls_to_cmd.get(cmdT,None)):
-                        _log.key("  ‘%s’seq←‘%s’cmd_txt from plugin_dict's class ‘¦%s¦’"
-                            ,       seq,    cmd_txt,                              cmdT)
-                        win.run_command('nv_process_notation',{'keys':seq, 'check_user_mappings':False,'cont':cont})
-                        continue
-                if mode in (mappings := keys.mappings_reverse):
-                    dict_cls_to_cmd = mappings[mode] # <...cmd_defs.ViUndo'>:'u'
-                    cmdT = type(cmd_txt)
-                    if (seq := dict_cls_to_cmd.get(cmdT,None)):
-                        _log.key("  ‘%s’seq←‘%s’cmd_txt from keys_dict's class ‘¦%s¦’"
-                            ,       seq,    cmd_txt,                            cmdT)
-                        win.run_command('nv_process_notation',{'keys':seq, 'check_user_mappings':False,'cont':cont})
-                        continue
-
-                if mode in (mappings := keys.mappings_reverse):
-                    # if (seq := dict_cls_to_cmd.get(cmdT,None)): # todo later add a mode check to text commands
-                    cmdT = type(cmd_txt)
-                    _log.key("  running ‘%s’cmd_txt directly w/o translating into a sequence"
-                        ,             cmd_txt)
-                    win.run_command('nv_process_cmd_text',{'cmd':cmd_txt, 'cont':cont})
-                    continue
+                _log.key("  ‘%s’cmd_txt process w/o translating to a sequence m‘%s’",cmd_txt,mode)
+                win.run_command('nv_process_cmd_text',{'text_cmd':text_cmd, 'cont':cont})
+                continue

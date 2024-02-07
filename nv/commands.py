@@ -14,7 +14,7 @@ from NeoVintageous.nv.cmdline          import Cmdline
 from NeoVintageous.nv.cmdline_search   import CmdlineSearch
 from NeoVintageous.nv.ex.completions   import insert_best_cmdline_completion, on_change_cmdline_completion_prefix, reset_cmdline_completion_state
 from NeoVintageous.nv.ex_cmds          import do_ex_cmd_edit_wrap, do_ex_cmdline, do_ex_command
-from NeoVintageous.nv.feed_key         import FeedKeyHandler
+from NeoVintageous.nv.feed_key         import FeedKeyHandler, FeedTextCmdHandler
 from NeoVintageous.nv.goto             import GotoView, get_linewise_non_blank_target, jump_to_mark
 from NeoVintageous.nv.history          import history_update
 from NeoVintageous.nv.history          import next_cmdline_history
@@ -57,7 +57,7 @@ __all__ = [
     'nv_enter_visual_line_mode',
     'nv_enter_visual_mode',
     'nv_ex_cmd_edit_wrap',
-    'nv_feed_key',
+    'nv_feed_key','nv_feed_text_cmd',
     'nv_process_notation','nv_process_cmd_text',
     'nv_run_cmds',
     'nv_vi_a',
@@ -254,6 +254,19 @@ class nv_run_cmds(TextCommand):
         for cmd, args in commands:
             self.view.run_command(cmd, args)
 
+
+class nv_feed_text_cmd(WindowCommand):
+    def run(self, text_cmd=None, count=None, do_eval=True):
+        start_time = time.time()
+        try:
+            _log.key('HFeedTextCmd ⌨️‘%s’ #%s eval=%s'
+                ,             text_cmd,count,do_eval)
+            FeedTextCmdHandler(self.window.active_view(),text_cmd=text_cmd,count=count,do_eval=do_eval).handle()
+        except Exception as e:
+            print('NeoVintageous: An error occurred:')
+            _log.exception(e)
+            clean_views()
+        _log.info('text_cmd evt finished in %s ms','{:.2f}'.format((time.time() - start_time)*1000))
 
 class nv_feed_key(WindowCommand):
 

@@ -24,6 +24,8 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
    <!-- vulnerabilities -->
   - __Fixed__
    + :beetle: falsy user settings treated as missing instead of being saved as value false values
+  - __Changed__
+   + text object labels are removed with an explicit no value (`l=null` or `l=""` instead of the old `"l"`), while that syntax is repurposed: a pair as an argument is parsed using self (`"‘’"` is the same as `‘="‘’"` and `’="‘’"`)
 
 [0.9.1342]: https://github.com/eugenesvk/NeoVintageous/releases/tag/0.9.1342
 ## [0.9.1342]

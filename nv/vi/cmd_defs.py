@@ -425,6 +425,13 @@ class ViEnterVisualMode(ViOperatorDef):
         self.scroll_into_view = True
         self.command = 'nv_enter_visual_mode'
 
+@assign_text(['EnterVisualModeF'], ACTION_MODES)
+class ViEnterVisualModeF(ViOperatorDef):
+    def init(self):
+        self.updates_xpos     = True
+        self.scroll_into_view = True
+    def translate(self, view):
+        return translate_action(view,'nv_enter_visual_mode',{'force':True})
 
 @assign(seqs.Z_ENTER, ACTION_MODES)
 @assign_text(['ScrollToScreenTopNonBlank'], ACTION_MODES)

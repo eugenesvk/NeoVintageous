@@ -44,7 +44,7 @@ class ProcessCmdTextHandler():
         #     return
         # commands = map_cmd2textcmd.get(cmdT,None)
         # cmd = commands[0] # EnterInsertMode
-        _log.key('processing cmd txt ‘%s’ #%s act=‘%s’'
+        _log.keyt('processing cmd txt ‘%s’ #%s act=‘%s’'
             ,                   text_cmd,count,get_action(self.view))
 
         set_interactive(self.view, False) # Disable interactive prompts. For example, supress interactive input collecting for the command-line and search: :ls<CR> and /foo<CR>
@@ -55,30 +55,30 @@ class ProcessCmdTextHandler():
 
         if not self.cont and\
            not get_action(self.view): # 1st command or no action, so execute it
-            _log.key("  ‘%s’ lead‘%s’ nv_feed_text_cmd(HFeedTextCmd) doEval→False @ HProcessCmdText",text_cmd,leading_motions)
+            _log.keyt("  ‘%s’ lead‘%s’ nv_feed_text_cmd(HFeedTextCmd) doEval→False @ HProcessCmdText",text_cmd,leading_motions)
             self.window.run_command('nv_feed_text_cmd',{'text_cmd':text_cmd,'do_eval':False,'count':count})
 
             if get_action(self.view): # The last key press has caused an action to be primed. That means there are no more leading motions. Break out of here
                 reset_command_data(self.view)
                 if  get_mode(self.view) == OPERATOR_PENDING:
                     set_mode(self.view, NORMAL)
-                _log.key("    ~break, get_action exists")
+                _log.keyt("    ~break, get_action exists")
                 # break
             elif is_runnable(self.view): # Run any primed motion
                 leading_motions += get_sequence(self.view)
-                _log.key("    running primed motion ‘%s’",leading_motions)
+                _log.keyt("    running primed motion ‘%s’",leading_motions)
                 evaluate_state    (self.view)
                 reset_command_data(self.view)
             else:
-                _log.key("    evaluate_state")
+                _log.keyt("    evaluate_state")
                 evaluate_state    (self.view)
 
         if must_collect_input(self.view, get_motion(self.view), get_action(self.view)): # State is requesting more input, so this is the last command in the sequence and it needs more input
             if self.cont:
-                _log.key("  ↩− _collect→feed_key ‘%s’¦‘%s’ lead‘%s’ nv_feed_text_cmd(HFeedTextCmd) doEval→True @HProcessCmdText",key_cont,keys,leading_motions)
+                _log.keyt("  ↩− _collect→feed_key ‘%s’¦‘%s’ lead‘%s’ nv_feed_text_cmd(HFeedTextCmd) doEval→True @HProcessCmdText",key_cont,keys,leading_motions)
                 self.window.run_command('nv_feed_text_cmd',{'text_cmd':text_cmd,'do_eval':True,'count':count})
             else:
-                _log.key("  ↩− _collect_input")
+                _log.keyt("  ↩− _collect_input")
                 self._collect_input()
             return
 
@@ -87,8 +87,8 @@ class ProcessCmdTextHandler():
             with gluing_undo_groups(self.view):
                 try:
                     if   get_mode(self.view) in (INSERT, REPLACE):
-                        _log.key("  key sequence notation handler would insert chars here, but we still do commands!")
-                    _log.key("  ‘%s’ lead‘%s’ nv_feed_text_cmd(HFeedTextCmd) doEval→None @HProcessCmdText",text_cmd,leading_motions)
+                        _log.keyt("  key sequence notation handler would insert chars here, but we still do commands!")
+                    _log.keyt("  ‘%s’ lead‘%s’ nv_feed_text_cmd(HFeedTextCmd) doEval→None @HProcessCmdText",text_cmd,leading_motions)
                     self.window.run_command('nv_feed_text_cmd',{'text_cmd':text_cmd,'count':count})
                     if not must_collect_input(self.view, get_motion(self.view), get_action(self.view)):
                         return
@@ -128,12 +128,12 @@ class ProcessCmdTextHandler():
             else:
                 command = action or motion
 
-            _log.key("_collect_input mot‘%s’⎀?%s‘%s’ act‘%s’⎀?%s‘%s’  inParse=%s  isInter=%s"
+            _log.keyt("_collect_input mot‘%s’⎀?%s‘%s’ act‘%s’⎀?%s‘%s’  inParse=%s  isInter=%s"
                 ,motion,motion.accept_input if motion else '_',motion.inp if motion else '_'
                 ,action,action.accept_input if action else '_',action.inp if action else '_'
                 ,command.input_parser, command.input_parser.is_interactive())
             if command.input_parser and command.input_parser.is_interactive():
-                _log.key("_collect_input interactive ‘%s’",command.inp)
+                _log.keyt("_collect_input interactive ‘%s’",command.inp)
                 command.input_parser.run_interactive_command(self.window, command.inp)
 
         except IndexError:

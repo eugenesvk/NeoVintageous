@@ -17,15 +17,15 @@
   Node names are CaSe, ␠whitespace⭾, and _.separator- insensitive: keymap = key-map = key_map = "key map"
   (except for ‘keybind’ and ‘event’ where such characters matter for keys/cli commands)
 */
-#v 0.1 // config format version to hopefully allow updates without breaking existing configs (‘#’ is optional)
-#import (keybind)"NeoVintageous.key.kdl"
-  /*↑import file name ↑ relative to this main config file (‘#’ is optional) or an absolute '/'-prefixed path since this calls pathlib's 'Path(main_config_folder, import_value)' docs.python.org/3/library/pathlib.html
+v 0.1 // config format version to hopefully allow updates without breaking existing configs
+import (keybind)"NeoVintageous.key.kdl"
+  /*↑import file name ↑ relative to this main config file or an absolute '/'-prefixed path since this calls pathlib's 'Path(main_config_folder, import_value)' docs.python.org/3/library/pathlib.html
     group  ↑ values in ‘keybind{}’, so the file itself can include only top-level ‘key command’ lines
   */
 keybind { // or add keybinds in the main config file
   // moves back in a .KDL file, but forward elsewhere (2nd keybind doesn't overwrite the 1st's file types)
-    (Ⓝ_)q (#2)"MoveByBigWordsBackward" file="kdl"
-    (Ⓝ_)q (#2)"MoveByBigWords"
+    (Ⓝ_)q (⋅2)"MoveByBigWordsBackward" file="kdl"
+    (Ⓝ_)q (⋅2)"MoveByBigWords"
   // execute two Sublime Text commands without any "chain" intermediary
     (Ⓝ)w r#":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"# r#":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"#
   // execute multiple         commands with    a   "chain" intermediary
@@ -47,8 +47,8 @@ keybind { // or add keybinds in the main config file
     // - r#":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"#
     // ! but this is NOT suitable for chains since prop=val in KDL do not maintain position vs. arguments, so to execute multiple Sublime Text commands with arguments you'd still need to "chain them"
     (Ⓝ)t "chain" {
-      - (#5subl)"move" by="words" forward=true extend=false
-      - (#5subl)"move" by="words" forward=true extend=true
+      - (⋅5subl)"move" by="words" forward=true extend=false
+      - (⋅5subl)"move" by="words" forward=true extend=true
     }
     // ! also, this doesn't work for nested arguments, those still require pasting the full json snippet
 
@@ -56,9 +56,9 @@ keybind { // or add keybinds in the main config file
     //      [    toggle relative lines in Normal mode
     // Ctrl+[                             Insert
     // Content of NeoVintageous.keyB.kdl:                                 (‘m’)"‘ipre’[‘ipos’" ":set invrnu<CR>"
-    #import "NeoVintageous.keyB.kdl" m=(var)"Ⓝ" ipre=(var)""    ipos=(var)""  //  (Ⓝ)[
-    #import "NeoVintageous.keyB.kdl" m=(var)"ⓘ" ipre=(var)"<C-" ipos=(var)">" //  (ⓘ)<C-[>
-    #import "NeoVintageous.keyB.kdl" m=(varpass)"" // or use the mode variable passed to this config through to the next one
+    import "NeoVintageous.keyB.kdl" m=(var)"Ⓝ" ipre=(var)""    ipos=(var)""  //  (Ⓝ)[
+    import "NeoVintageous.keyB.kdl" m=(var)"ⓘ" ipre=(var)"<C-" ipos=(var)">" //  (ⓘ)<C-[>
+    import "NeoVintageous.keyB.kdl" m=(varpass)"" // or use the mode variable passed to this config through to the next one
 }
 
 rc { // Literal Ex commands

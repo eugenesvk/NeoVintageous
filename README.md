@@ -34,8 +34,8 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
     - BUT automatic reload on file change isn't supported, use `NeoVintageous: Reload config` command manually
   + :sparkles: support for importing other config files
     ```
-    #import (keybind)"NeoVintageous.key.kdl"
-    /*↑import file name ↑ relative to this main config file (‘#’ is optional) or an absolute '/'-prefixed path since this calls pathlib's 'Path(main_config_folder, import_value)' docs.python.org/3/library/pathlib.html
+    import (keybind)"NeoVintageous.key.kdl"
+    /*↑import file name ↑ relative to this main config file or an absolute '/'-prefixed path since this calls pathlib's 'Path(main_config_folder, import_value)' docs.python.org/3/library/pathlib.html
     group values↑ in ‘keybind{}’, so the file itself can include only top-level ‘key command’ lines
     */
     ```
@@ -45,7 +45,7 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
     `nnoremap d b` why do you need to remember that `b` moves by words backwards if you never use it?
     `vnoremap d b "b=MoveByWordsBackward` oh, and you can't even add a comment on the same line to clarify it
     And the whole `noremap` doesn't need to be repeated on every single line
-    + command repeat count in keybinds: `(Ⓝ)d (#4)"MoveByBigWordsBackward"` (or `№` `#` `⌗` `c` `n` `×` `⋅` prefix) will move by 4 Words
+    + command repeat count in keybinds: `(Ⓝ)d (⋅4)"MoveByBigWordsBackward"` (or `№` `⌗` `c` `n` `×` `⋅` prefix) will move by 4 Words
     + list of commands is executed as a single chain without the need to specify `chain` command (`(Ⓝ)q "MoveByBigWords" "MoveByBigWords"`)
     + `chain` argument to add node children as a sequence of commands for the same keybind (in case they need to set their own properties)
       ```kdl
@@ -61,12 +61,12 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
       ```
       `NeoVintageous.key.kdl` file that will import ↑
       ```kdl
-      #import "NeoVintageous.keyB.kdl" m=(var)"Ⓝ" ipre=(var)""    ipos=(var)""  //  (Ⓝ)[
-      #import "NeoVintageous.keyB.kdl" m=(var)"ⓘ" ipre=(var)"<C-" ipos=(var)">" //  (ⓘ)<C-[>
+      import "NeoVintageous.keyB.kdl" m=(var)"Ⓝ" ipre=(var)""    ipos=(var)""  //  (Ⓝ)[
+      import "NeoVintageous.keyB.kdl" m=(var)"ⓘ" ipre=(var)"<C-" ipos=(var)">" //  (ⓘ)<C-[>
       ```
       Can also passing variables through to subsequent imports via the `varpass` tag, e.g.:
-        - @`NeoVintageous.kdl`: `#import "cfgA.kd" m=(var)"Ⓝ"` defines variable `m` as a normal mode
-        - @`cfgA.kdl`: `#import "cfgB.kd" m=(varpass)""` passes the value of `m` further
+        - @`NeoVintageous.kdl`: `import "cfgA.kd" m=(var)"Ⓝ"` defines variable `m` as a normal mode
+        - @`cfgA.kdl`: `import "cfgB.kd" m=(varpass)""` passes the value of `m` further
         - @`cfgB.kdl`: `(‘m’)a MoveToEol` will get `Ⓝ` as the value of `m`
 
     + group keybinds under a single mode without having to repeat mode's name in each keybind
@@ -82,8 +82,8 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
       //- r#":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"#
       // ! but this is NOT suitable for chains since prop=val in KDL do not maintain position vs. arguments, so to execute multiple Sublime Text commands with arguments you'd still need to "chain them"
       (Ⓝ)t "chain" {
-        - (#5subl)"move" by="words" forward=true extend=false
-        - (#5subl)"move" by="words" forward=true extend=true
+        - (⋅5subl)"move" by="words" forward=true extend=false
+        - (⋅5subl)"move" by="words" forward=true extend=true
       }
       // ! also, this doesn't work for nested arguments, those still require pasting the full json snippet
       ```

@@ -46,7 +46,7 @@ def open_config_file_kdl(window) -> None:
             f.write('  (run ‘NeoVintageous: Open new config file example (KDL)’ in Command Palette to open it)\n')
             f.write('  (run ‘Preferences: NeoVintageous New Settings (KDL)’ in Command Palette to open it along with your config)\n')
             f.write('*/\n')
-            f.write('#v 0.1 // config format version to hopefully allow updates without breaking existing configs (‘#’ is optional)\n')
+            f.write('v 0.1 // config format version to hopefully allow updates without breaking existing configs (‘#’ is optional)\n')
     window.open_file(file)
 
 
@@ -328,7 +328,7 @@ def _parse_general_cfg_kdl(general_cfg:kdl.Node,st_pref=None) -> None:
     elif opt_name == 'set':
         _parse_set_kdl(node)
         return None
-    elif opt_name in ['#vardef','vardef']: #vardef pre="‹" pos="›"
+    elif opt_name == 'vardef': #vardef pre="‹" pos="›"
         # print('CFG pre',CFG)
         tag_val = node.name
         tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''

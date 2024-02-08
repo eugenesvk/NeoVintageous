@@ -212,7 +212,7 @@ class ProcessNotationHandler():
         if leading_motions:# Strip the already run commands
             if ((len(leading_motions) == len(keys)) and (not must_collect_input(self.view, get_motion(self.view), get_action(self.view)))):  # noqa: E501
                 set_interactive(self.view, True)
-                _log.key("  ↩ leading_motions, not collect")
+                _log.key("  ↩ leading_motions ‘%s’, not collect",leading_motions)
                 return
             leading_motions_len =     len(list(tokenize_keys(leading_motions)))
             keys                = ''.join(list(tokenize_keys(keys))[leading_motions_len:])

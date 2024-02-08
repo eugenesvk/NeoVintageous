@@ -29,6 +29,7 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
      `(Ⓝ)gdd" "GotoTargetPrevWhateverThatBracketIsNamed"`
   - __Fixed__
    + :beetle: falsy user settings treated as missing instead of being saved as value false values
+   + :beetle: `ViGotoSymbolInFile` using deprecated APIs to get symbol position
   - __Changed__
    + text object labels are removed with an explicit no value (`l=null` or `l=""` instead of the old `"l"`), while that syntax is repurposed: a pair as an argument is parsed using self (`"‘’"` is the same as `‘="‘’"` and `’="‘’"`)
 

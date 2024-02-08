@@ -298,7 +298,7 @@ class FeedKeyHandler():
             return
         if isinstance(cmd, Mapping):
             if _L:
-                self._dbg_seq += f" ↩ ‹‘{cmd.lhs}’=‘{cmd.rhs}’› Map→_h¦{cmd}¦"
+                self._dbg_seq += f" ↩ ‹‘{cmd.lhs}’=‘{cmd.rhs}’› Map→_h"
             self._handle_mapping     (cmd)
             return
         if isinstance(cmd, CommandNotFound): # TODO We shouldn't need to try resolve the command again. The resolver should handle commands correctly the first time. The reason this logic is still needed is because we might be looking at a command like 'dd', which currently doesn't resolve properly. The first 'd' is mapped for NORMAL mode, but 'dd' is not mapped in OPERATOR PENDING mode, so we get a missing command, and here we try to fix that (user mappings are excluded, since they've already been given a chance to evaluate).

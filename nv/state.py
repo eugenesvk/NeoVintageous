@@ -297,42 +297,28 @@ def evaluate_state(view) -> None:
     action = get_action(view)
     motion = get_motion(view)
 
-    if action and motion:
-
-        # Evaluate action with motion: runs the action with the motion as an
-        # argument. The motion's mode is set to INTERNAL_NORMAL and is run
-        # by the action internally to make the selection it operates on. For
-        # example the motion commands can be used after an operator command,
-        # to have the command operate on the text that was moved over.
-
+    if action and motion: # Evaluate action with motion: runs the action with the motion as an argument. The motion's mode is set to INTERNAL_NORMAL and is run by the action internally to make the selection it operates on. For example the motion commands can be used after an operator command, to have the command operate on the text that was moved over.
         action_cmd = action.translate(view)
         motion_cmd = motion.translate(view)
-
         _log.debug('action: %s', action_cmd)
         _log.debug('motion: %s', motion_cmd)
 
         set_mode(view, INTERNAL_NORMAL)
-
         if 'mode' in action_cmd['action_args']:
-            action_cmd['action_args']['mode'] = INTERNAL_NORMAL
-
+            action_cmd         ['action_args']['mode'] = INTERNAL_NORMAL
         if 'mode' in motion_cmd['motion_args']:
-            motion_cmd['motion_args']['mode'] = INTERNAL_NORMAL
+            motion_cmd         ['motion_args']['mode'] = INTERNAL_NORMAL
 
         args = action_cmd['action_args']
-
+        _log.debug("action_args ¦%s¦", args)
         args['count'] = 1
-
-        # Let the action run the motion within its edit object so that we
-        # don't need to worry about grouping edits to the buffer.
-        args['motion'] = motion_cmd
+        args['motion'] = motion_cmd # Let the action run the motion within its edit object so that we don't need to worry about grouping edits to the buffer.
 
         if get_glue_until_normal_mode(view) and not is_processing_notation(view):
             run_window_command('mark_undo_groups_for_gluing')
 
-        add_macro_step(view, action_cmd['action'], args)
-
-        run_window_command(action_cmd['action'], args)
+        add_macro_step    (view, action_cmd['action'], args)
+        run_window_command(      action_cmd['action'], args)
 
         if is_interactive(view) and get_action(view).repeatable:
             set_repeat_data(view, ('vi', str(get_sequence(view)), get_mode(view), None))
@@ -341,48 +327,29 @@ def evaluate_state(view) -> None:
 
         return  # Nothing more to do.
 
-    if motion:
-
-        # Evaluate motion: Run it.
-
+    if motion: # Evaluate motion: Run it.
         motion_cmd = motion.translate(view)
-
         _log.debug('motion: %s', motion_cmd)
-
         add_macro_step(view, motion_cmd['motion'], motion_cmd['motion_args'])
-
         run_motion(view, motion_cmd)
 
     if action:
         action_cmd = action.translate(view)
-
         _log.debug('action: %s', action_cmd)
-
         if get_mode(view) == NORMAL:
             set_mode(view, INTERNAL_NORMAL)
-
             if 'mode' in action_cmd['action_args']:
                 action_cmd['action_args']['mode'] = INTERNAL_NORMAL
-
-        elif is_visual_mode(get_mode(view)):
-            # Special-case exclusion: saving the previous selection would
-            # overwrite the previous selection needed e.g. gv in a VISUAL
-            # mode needs to expand or contract to previous selection.
+        elif is_visual_mode(get_mode(view)): # Special-case exclusion: saving the previous selection would overwrite the previous selection needed e.g. gv in a VISUAL mode needs to expand or contract to previous selection.
             if action_cmd['action'] != 'nv_vi_gv':
                 save_previous_selection(view, get_mode(view))
 
-        # Some commands, like 'i' or 'a', open a series of edits that need
-        # to be grouped together unless we are gluing a larger sequence
-        # through nv_process_notation. For example, aFOOBAR<Esc> should be
-        # grouped atomically, but not inside a sequence like
-        # iXXX<Esc>llaYYY<Esc>, where we want to group the whole sequence
-        # instead.
-        if get_glue_until_normal_mode(view) and not is_processing_notation(view):
+        if get_glue_until_normal_mode(view) and not is_processing_notation(view): # Some commands, like 'i' or 'a', open a series of edits that need to be grouped together unless we are gluing a larger sequence through nv_process_notation. For example, aFOOBAR<Esc> should be grouped atomically, but not inside a sequence like iXXX<Esc>llaYYY<Esc>, where we want to group the whole sequence instead.
             run_window_command('mark_undo_groups_for_gluing')
 
-        sequence = get_sequence(view)
+        sequence           = get_sequence          (view)
         visual_repeat_data = get_visual_repeat_data(view, get_mode(view))
-        action = get_action(view)
+        action             = get_action            (view)
 
         add_macro_step(view, action_cmd['action'], action_cmd['action_args'])
 

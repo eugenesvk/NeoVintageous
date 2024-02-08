@@ -166,7 +166,7 @@ __all__ = [
     'nv_vi_tilde',
     'nv_vi_u',
     'nv_vi_visual_big_u',
-    'nv_vi_visual_o',
+    'nv_vi_flip_selection',
     'nv_vi_visual_u',
     'nv_vi_w',
     'nv_vi_x',
@@ -1038,7 +1038,7 @@ class nv_vi_cc(TextCommand):
             raise ValueError('could not set xpos:' + str(e))
 
 
-class nv_vi_visual_o(TextCommand):
+class nv_vi_flip_selection(TextCommand):
 
     def run(self, edit, mode=None, count=1, register=None, same_line_if_visual_block: bool = False):
         if mode == VISUAL_BLOCK:

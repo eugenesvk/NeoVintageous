@@ -43,11 +43,9 @@ class ViInsertLineBefore(ViOperatorDef):
 class ViGoToOtherBigEnd(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.updates_xpos = True
-        self.command = 'nv_vi_visual_o'
-        self.command_args = {
-            'same_line_if_visual_block': True,
-        }
+        self.updates_xpos     = True
+        self.command          = 'nv_vi_flip_selection'
+        self.command_args     = {'same_line_if_visual_block':True,}
 
 
 @assign(seqs.SEQ['o'], (NORMAL,))
@@ -65,8 +63,8 @@ class ViInsertLineAfter(ViOperatorDef):
 class ViGoToOtherEnd(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.updates_xpos = True
-        self.command = 'nv_vi_visual_o'
+        self.updates_xpos     = True
+        self.command          = 'nv_vi_flip_selection'
 
 
 @assign(seqs.SEQ['␡'], ACTION_MODES + (SELECT,))

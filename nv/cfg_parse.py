@@ -142,8 +142,8 @@ def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d
     nativeUntaggedValues	=True       	#|True| produce native Py objects (str int float bool None) for ()untagged values, or kdl-Py objects (kdl.String kdl.Decimal...)
     ,nativeTaggedValues 	=True       	#|True| produce native Py objects for (tagged)values for predefined tags like i8..u64 f32 uuid url regex
     #,valueConverters   	= {"i":fn_i}	# A dictionary of tag->converter functions
-    ,nodeConverters     	= {(None,"#import"):fn_import,(None,"#Import"):fn_import # match untagged import node
-      ,                      (None, "import"):fn_import,(None, "Import"):fn_import} # A dictionary of NodeKey->converter functions
+    ,nodeConverters     	= {(None,"import"):fn_import,(None,"Import"):fn_import # match untagged import node ()
+      } # A dictionary of NodeKey->converter functions
   )
   printConfig = kdl.PrintConfig(
     indent            	="  " 	#|"\t"|

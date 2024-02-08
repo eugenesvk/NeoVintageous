@@ -5,7 +5,7 @@ import time
 import webbrowser
 from datetime import datetime
 
-from sublime import CLASS_EMPTY_LINE, CLASS_WORD_START, ENCODED_POSITION, LITERAL, MONOSPACE_FONT, Region
+from sublime import CLASS_EMPTY_LINE, CLASS_WORD_START, ENCODED_POSITION, LITERAL, MONOSPACE_FONT, Region, version
 from sublime_plugin import TextCommand, WindowCommand
 
 from NeoVintageous.nv                  import listener
@@ -3814,16 +3814,14 @@ class nv_vi_go_to_symbol(TextCommand):
         if not location:
             return
 
-        if globally:
-            # Global symbol; simply open the file; not a motion.
-            # TODO: Perhaps must be a motion if the target file happens to be
-            #       the current one?
+        if globally: # Global symbol; simply open the file; not a motion.
+            # TODO: Perhaps must be a motion if the target file happens to be the current one?
+            if int(version()) >= 4050: # find all locations where symbol sym is located
+                loc = f"{location.path}:{location.row}:{location.col}"
+            else:
+                loc = location[0] + ':' + ':'.join([str(x) for x in location[2]])
             with jumplist_updater(self.view):
-                self.view.window().open_file(
-                    location[0] + ':' + ':'.join([str(x) for x in location[2]]),
-                    ENCODED_POSITION
-                )
-
+                self.view.window().open_file(loc,ENCODED_POSITION)
             return
 
         location = self.view.text_point(*location)

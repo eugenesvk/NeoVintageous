@@ -39,7 +39,7 @@ class ViInsertLineBefore(ViOperatorDef):
 
 
 @assign(seqs.SEQ['⇧o'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
-@assign_text(['GoToOtherBigEnd'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
+@assign_text(['FlipSelectionInline','GoToOtherBigEnd'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
 class ViGoToOtherBigEnd(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -59,7 +59,7 @@ class ViInsertLineAfter(ViOperatorDef):
 
 
 @assign(seqs.SEQ['o'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
-@assign_text(['GoToOtherEnd'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
+@assign_text(['FlipSelection','GoToOtherEnd'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
 class ViGoToOtherEnd(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True

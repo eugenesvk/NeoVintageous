@@ -263,20 +263,20 @@ DEF['general'] = { # todo: replace float with int when kdl-py issue is fixed
 import copy
 CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
 
-def _set_general_def() -> None:
-    if (st_pref := sublime.load_settings('Preferences.sublime-settings')):
-        for opt_name in CFG['general']:
-            opt_d   	= CFG['general'][opt_name]
-            name_def	= opt_d['key']
-            type_def	= opt_d['t']
-            val_def 	= opt_d['v']
-            if val_def:
-                st_pref.set(f"{name_def}", val_def)
-                # _log.warn("set default %s=%s",name_def,val_def)
+# def _set_general_def() -> None:
+#     if (st_pref := sublime.load_settings('Preferences.sublime-settings')):
+#         for opt_name in CFG['general']:
+#             opt_d   	= CFG['general'][opt_name]
+#             name_def	= opt_d['key']
+#             type_def	= opt_d['t']
+#             val_def 	= opt_d['v']
+#             if val_def:
+#                 st_pref.set(f"{name_def}", val_def)
+#                 # _log.warn("set default %s=%s",name_def,val_def)
 
 def _parse_rc_g_kdl(rc_g:kdl.Node):
     win = sublime.active_window()
-    st_pref = sublime.load_settings('Preferences.sublime-settings')
+    # st_pref = sublime.load_settings('Preferences.sublime-settings')
     for node in rc_g.nodes: # r#":set invrelativenumber"#
         _parse_rc_cfg_kdl(win,rc_cfg=node)
 def _parse_rc_cfg_kdl(win,rc_cfg:kdl.Node) -> None:

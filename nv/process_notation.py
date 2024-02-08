@@ -48,9 +48,7 @@ class ProcessCmdTextHandler():
             ,                   text_cmd,count,get_action(self.view))
 
         set_interactive(self.view, False) # Disable interactive prompts. For example, supress interactive input collecting for the command-line and search: :ls<CR> and /foo<CR>
-        leading_motions = '' # run any motions coming before the first action. We don't keep these in the undo stack, but they will still be repeated via '.'. This ensures that undoing will leave the caret where the  first editing action started. For example, 'lldl' would skip 'll' in the undo history, but store the full sequence for '.' to use
-        # First, run any motions coming before the first action. We don't keep these in the undo stack, but they will still be repeated via '.'. This ensures that undoing will leave the caret where the  first editing action started. For example, 'lldl' would skip 'll' in the undo history, but store the full sequence for '.' to use.
-        leading_motions = ''
+        leading_motions = [] # run any motions coming before the first action. We don't keep these in the undo stack, but they will still be repeated via '.'. This ensures that undoing will leave the caret where the  first editing action started. For example, 'lldl' would skip 'll' in the undo history, but store the full sequence for '.' to use
         key_cont = None
 
         if not self.cont and\
@@ -65,7 +63,7 @@ class ProcessCmdTextHandler():
                 _log.keyt("    ~break, get_action exists")
                 # break
             elif is_runnable(self.view): # Run any primed motion
-                leading_motions += get_sequence(self.view)
+                leading_motions.append(get_sequence(self.view))
                 _log.keyt("    running primed motion ‘%s’",leading_motions)
                 evaluate_state    (self.view)
                 reset_command_data(self.view)
@@ -81,6 +79,16 @@ class ProcessCmdTextHandler():
                 _log.keyt("  ↩− _collect_input")
                 self._collect_input()
             return
+
+        if leading_motions:# Strip the already run commands
+            leading_motions_len = len(leading_motions)
+            text_cmd_len        = len(text_cmd) if isinstance(text_cmd,list) else 1
+            if ((leading_motions_len == text_cmd_len) and\
+                (not must_collect_input(self.view,get_motion(self.view),get_action(self.view)))):  # noqa: E501
+                set_interactive(self.view, True)
+                _log.keyt("  ↩ leading_motions ‘%s’, not collect",leading_motions)
+                return
+            text_cmd_next = text_cmd[leading_motions_len:] # todo: use ↓ for iteration if this handler is converted to accept a list of commands
 
         if not (get_motion(self.view) and\
            not  get_action(self.view)):

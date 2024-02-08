@@ -25,6 +25,7 @@ from NeoVintageous.nv.rc import cfgU
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
+_L = True if _log.isEnabledFor(logging.KEY) else False
 
 DEF = dict(
      enable   	= True

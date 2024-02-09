@@ -217,66 +217,55 @@ def _parse_let_kdl(node:kdl.Node,cfg='') -> None:
 DEF = dict()
 DEF['res_tag'] = ['i','des','defk','defkey','≝k','defc','defcmd','≝c'] # internal command description tags, exclude these when parsing a sublime command so that it doesn't get arguments it can't understand
 DEF['var_def'] = ['‘','’']
-DEF['general'] = { # todo: replace float with int when kdl-py issue is fixed
+DEF['general'] = {}
+DEF['gen_def'] = { # todo: replace float with int when kdl-py issue is fixed
     # clean name                    	: dict(type   default value	 old/internal key name
-    'defaultmode'                   	: dict(t=str ,v="normal"   	,key='vintageous_default_mode'),
-    'resetmodewhenswitchingtabs'    	: dict(t=bool,v=False      	,key='vintageous_reset_mode_when_switching_tabs'),
-    'highlightedyank'               	: dict(t=bool,v=True       	,key='vintageous_highlighted_yank'),
-    'highlightedyankduration'       	: dict(t=float,v=1000      	,key='vintageous_highlighted_yank_duration'),
-    'highlightedyankstyle'          	: dict(t=str ,v="fill"     	,key='vintageous_highlighted_yank_style'),
-    'searchcurstyle'                	: dict(t=str ,v="fill"     	,key='vintageous_search_cur_style'),
-    'searchincstyle'                	: dict(t=str ,v="fill"     	,key='vintageous_search_inc_style'),
-    'searchoccstyle'                	: dict(t=str ,v="fill"     	,key='vintageous_search_occ_style'),
-    'bell'                          	: dict(t=str ,v="blink"    	,key='vintageous_bell'),
-    'bellcolorscheme'               	: dict(t=str ,v="dark"     	,key='vintageous_bell_color_scheme'),
-    'autonohlsearchonnormalenter'   	: dict(t=bool,v=True       	,key='vintageous_auto_nohlsearch_on_normal_enter'),
-    'enableabolish'                 	: dict(t=bool,v=True       	,key='vintageous_enable_abolish'),
-    'enablecommentary'              	: dict(t=bool,v=True       	,key='vintageous_enable_commentary'),
-    'enablemultiplecursors'         	: dict(t=bool,v=True       	,key='vintageous_enable_multiple_cursors'),
-    'enablesneak'                   	: dict(t=bool,v=True       	,key='vintageous_enable_sneak'),
-    'enablesublime'                 	: dict(t=bool,v=True       	,key='vintageous_enable_sublime'),
-    'enablesurround'                	: dict(t=bool,v=True       	,key='vintageous_enable_surround'),
-    'enabletargets'                 	: dict(t=bool,v=True       	,key='vintageous_enable_targets'),
-    'enableunimpaired'              	: dict(t=bool,v=True       	,key='vintageous_enable_unimpaired'),
-    'usectrlkeys'                   	: dict(t=bool,v=True       	,key='vintageous_use_ctrl_keys'),
-    'usesuperkeys'                  	: dict(t=bool,v=True       	,key='vintageous_use_super_keys'),
-    'handlekeys'                    	: dict(t=dict,v={}         	,key='vintageous_handle_keys'),
-    'iescapejj'                     	: dict(t=bool,v=True       	,key='vintageous_i_escape_jj'),
-    'iescapejk'                     	: dict(t=bool,v=True       	,key='vintageous_i_escape_jk'),
+    'defaultmode'                   	: dict(t=str ,v="normal"   	,key='default_mode'),
+    'resetmodewhenswitchingtabs'    	: dict(t=bool,v=False      	,key='reset_mode_when_switching_tabs'),
+    'highlightedyank'               	: dict(t=bool,v=True       	,key='highlighted_yank'),
+    'highlightedyankduration'       	: dict(t=float,v=1000      	,key='highlighted_yank_duration'),
+    'highlightedyankstyle'          	: dict(t=str ,v="fill"     	,key='highlighted_yank_style'),
+    'searchcurstyle'                	: dict(t=str ,v="fill"     	,key='search_cur_style'),
+    'searchincstyle'                	: dict(t=str ,v="fill"     	,key='search_inc_style'),
+    'searchoccstyle'                	: dict(t=str ,v="fill"     	,key='search_occ_style'),
+    'bell'                          	: dict(t=str ,v="blink"    	,key='bell'),
+    'bellcolorscheme'               	: dict(t=str ,v="dark"     	,key='bell_color_scheme'),
+    'autonohlsearchonnormalenter'   	: dict(t=bool,v=True       	,key='auto_nohlsearch_on_normal_enter'),
+    'enableabolish'                 	: dict(t=bool,v=True       	,key='enable_abolish'),
+    'enablecommentary'              	: dict(t=bool,v=True       	,key='enable_commentary'),
+    'enablemultiplecursors'         	: dict(t=bool,v=True       	,key='enable_multiple_cursors'),
+    'enablesneak'                   	: dict(t=bool,v=True       	,key='enable_sneak'),
+    'enablesublime'                 	: dict(t=bool,v=True       	,key='enable_sublime'),
+    'enablesurround'                	: dict(t=bool,v=True       	,key='enable_surround'),
+    'enabletargets'                 	: dict(t=bool,v=True       	,key='enable_targets'),
+    'enableunimpaired'              	: dict(t=bool,v=True       	,key='enable_unimpaired'),
+    'usectrlkeys'                   	: dict(t=bool,v=True       	,key='use_ctrl_keys'),
+    'usesuperkeys'                  	: dict(t=bool,v=True       	,key='use_super_keys'),
+    'handlekeys'                    	: dict(t=dict,v={}         	,key='handle_keys'),
+    'iescapejj'                     	: dict(t=bool,v=True       	,key='i_escape_jj'),
+    'iescapejk'                     	: dict(t=bool,v=True       	,key='i_escape_jk'),
     'nvⓘ⎋←ii'                       	: dict(t=bool,v=True       	,key='nvⓘ_⎋←ii'),
     'nvⓘ⎋←;i'                       	: dict(t=bool,v=True       	,key='nvⓘ_⎋←;i'),
-    'usesysclipboard'               	: dict(t=bool,v=True       	,key='vintageous_use_sys_clipboard'),
-    'clearautoindentonesc'          	: dict(t=bool,v=True       	,key='vintageous_clear_auto_indent_on_esc'),
-    'autocompleteexitfrominsertmode'	: dict(t=bool,v=True       	,key='vintageous_auto_complete_exit_from_insert_mode'),
-    'multicursorexitfromvisualmode' 	: dict(t=bool,v=False      	,key='vintageous_multi_cursor_exit_from_visual_mode'),
-    'lspsave'                       	: dict(t=bool,v=False      	,key='vintageous_lsp_save'),
-    'shellsilent'                   	: dict(t=bool,v=False      	,key='vintageous_shell_silent'),
-    'showmarksingutter'             	: dict(t=bool,v=True       	,key='vintageous_show_marks_in_gutter'),
-    'sneakuseicscs'                 	: dict(t=float,v=1         	,key='vintageous_sneak_use_ic_scs'),
-    'exitwhenquittinglastwindow'    	: dict(t=[bool,str],v=True 	,key='vintageous_exit_when_quitting_last_window'),
-    'source'                        	: dict(t=str ,v=''         	,key='vintageous_source'),
-    'autoswitchinputmethod'         	: dict(t=bool,v=False      	,key='vintageous_auto_switch_input_method'),
-    'autoswitchinputmethoddefault'  	: dict(t=str ,v=''         	,key='vintageous_auto_switch_input_method_default'),
-    'autoswitchinputmethodgetcmd'   	: dict(t=str ,v=''         	,key='vintageous_auto_switch_input_method_get_cmd'),
-    'autoswitchinputmethodsetcmd'   	: dict(t=str ,v=''         	,key='vintageous_auto_switch_input_method_set_cmd'),
+    'usesysclipboard'               	: dict(t=bool,v=True       	,key='use_sys_clipboard'),
+    'clearautoindentonesc'          	: dict(t=bool,v=True       	,key='clear_auto_indent_on_esc'),
+    'autocompleteexitfrominsertmode'	: dict(t=bool,v=True       	,key='auto_complete_exit_from_insert_mode'),
+    'multicursorexitfromvisualmode' 	: dict(t=bool,v=False      	,key='multi_cursor_exit_from_visual_mode'),
+    'lspsave'                       	: dict(t=bool,v=False      	,key='lsp_save'),
+    'shellsilent'                   	: dict(t=bool,v=False      	,key='shell_silent'),
+    'showmarksingutter'             	: dict(t=bool,v=True       	,key='show_marks_in_gutter'),
+    'sneakuseicscs'                 	: dict(t=float,v=1         	,key='sneak_use_ic_scs'),
+    'exitwhenquittinglastwindow'    	: dict(t=[bool,str],v=True 	,key='exit_when_quitting_last_window'),
+    'source'                        	: dict(t=str ,v=''         	,key='source'),
+    'autoswitchinputmethod'         	: dict(t=bool,v=False      	,key='auto_switch_input_method'),
+    'autoswitchinputmethoddefault'  	: dict(t=str ,v=''         	,key='auto_switch_input_method_default'),
+    'autoswitchinputmethodgetcmd'   	: dict(t=str ,v=''         	,key='auto_switch_input_method_get_cmd'),
+    'autoswitchinputmethodsetcmd'   	: dict(t=str ,v=''         	,key='auto_switch_input_method_set_cmd'),
 }
 import copy
 CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
 
-# def _set_general_def() -> None:
-#     if (st_pref := sublime.load_settings('Preferences.sublime-settings')):
-#         for opt_name in CFG['general']:
-#             opt_d   	= CFG['general'][opt_name]
-#             name_def	= opt_d['key']
-#             type_def	= opt_d['t']
-#             val_def 	= opt_d['v']
-#             if val_def:
-#                 st_pref.set(f"{name_def}", val_def)
-#                 # _log.warn("set default %s=%s",name_def,val_def)
-
 def _parse_rc_g_kdl(rc_g:kdl.Node):
     win = sublime.active_window()
-    # st_pref = sublime.load_settings('Preferences.sublime-settings')
     for node in rc_g.nodes: # r#":set invrelativenumber"#
         _parse_rc_cfg_kdl(win,rc_cfg=node)
 def _parse_rc_cfg_kdl(win,rc_cfg:kdl.Node) -> None:
@@ -345,8 +334,8 @@ def _parse_general_cfg_kdl(general_cfg:kdl.Node,st_pref=None) -> None:
                 CFG['var_def'][1] = val #›
         # print('CFG pos',CFG)
         return None
-    elif opt_name in CFG['general']:
-        opt_d    =   CFG['general'][opt_name]
+    elif opt_name in DEF['gen_def']:
+        opt_d    =   DEF['gen_def'][opt_name]
         name_def = opt_d['key'] # vintageous_auto_switch_input_method
         type_def = opt_d['t']   # bool
         val_def  = opt_d['v']   # False
@@ -354,9 +343,16 @@ def _parse_general_cfg_kdl(general_cfg:kdl.Node,st_pref=None) -> None:
             if not node.props:
                 _log.error("Unrecognized option type for %s in the ‘general’ config group, expecting %s, but there are no key=val properties!"
                         ,                             opt_name,                                   type_def)
-            elif st_pref:
-                st_pref.set(f"{name_def}", node.props)
-                _log.cfg("set user dict ‘%s’=‘%s’",name_def,node.props)
+            else:
+                CFG['general'][name_def] = node.props
+                _over = ''
+                if  st_pref.has(f"vintageous_{name_def}"): # override Preferences with KDL's
+                    st_pref.set(f"vintageous_{name_def}", node.props)
+                    _over = ' (overridden Preferences)'
+                if  st_pref.has(           f"{name_def}"): # override Preferences with KDL's
+                    st_pref.set(           f"{name_def}", node.props)
+                    _over = ' (overridden Preferences)'
+                _log.cfg("set user dict ‘%s’=‘%s’%s",name_def,node.props,_over)
             return None
         else:
             for arg in node.args:
@@ -375,10 +371,16 @@ def _parse_general_cfg_kdl(general_cfg:kdl.Node,st_pref=None) -> None:
                     _log.error("Unrecognized option type for %s in the ‘general’ config group, expecting %s not ‘%s’ (‘%s’)"
                         ,                             opt_name,                                   type_def,type(val),val)
                     return None
-                if st_pref:
-                    st_pref.set(f"{name_def}", val)
-                    _log.cfg("set user ‘%s=%s’ (%s)"
-                        ,         name_def,val, type(val))
+                CFG['general'][name_def] = val
+                _over = ''
+                if  st_pref.has(f"vintageous_{name_def}"): # override Preferences with KDL's
+                    st_pref.set(f"vintageous_{name_def}", val)
+                    _over = ' (overridden Preferences)'
+                if  st_pref.has(           f"{name_def}"):
+                    st_pref.set(           f"{name_def}", val)
+                    _over = ' (overridden Preferences)'
+                _log.cfg("set user ‘%s=%s’ (%s)%s"
+                    ,         name_def,val, type(val), _over)
                 return None
     else:
         _log.error("Unrecognized option type within ‘general’ config group, expecting ‘let’/‘set’/‘-’, not ‘%s’",opt_name)

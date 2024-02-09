@@ -48,19 +48,14 @@ def reset_setting(view, name: str       ) -> None:
 
 def _get_private(obj, name: str, default=None):
     return obj.settings().get('_vintageous_%s' % name, default)
-
-
-def _set_private(obj, name: str, value) -> None:
-    obj.settings().set('_vintageous_%s' % name, value)
+def _set_private(obj, name: str, value       ) -> None:
+    obj       .settings().set('_vintageous_%s' % name, value  )
 
 
 def get_internal_setting(obj, name: str, default=None):
-    return _get_private(obj, name, default)
-
-
-def set_internal_setting(obj, name: str, value) -> None:
-    _set_private(obj, name, value)
-
+    return _get_private (obj, name,       default    )
+def set_internal_setting(obj, name: str, value       ) -> None:
+    _set_private        (obj, name,       value      )
 
 # @deprecated since v1.32 use get_setting() instead.
 def get_setting_neo(view, name: str):

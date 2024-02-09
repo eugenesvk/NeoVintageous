@@ -67,22 +67,18 @@ def _command_or_insert(view, operator: int, operand: bool, match_all: bool) -> b
 
 
 def _winaltkeys(view, operator: int, operand: str, match_all: bool) -> bool:
-    # Some GUI versions allow the access to menu entries by using the ALT
-    # key in combination with a character that appears underlined in the
-    # menu.  This conflicts with the use of the ALT key for mappings and
-    # entering special characters.  This option tells what to do:
-    #   no    Don't use ALT keys for menus.  ALT key combinations can be
-    #         mapped, but there is no automatic handling.
-    #   yes   ALT key handling is done by the windowing system.  ALT key
-    #         combinations cannot be mapped.
-    #   menu  Using ALT in combination with a character that is a menu
-    #         shortcut key, will be handled by the windowing system.  Other
-    #         keys can be mapped.
+    # ALT+X is used to access menu entries X (underlined). This option resolves this conflicts with the use of the ALT key for mappings and entering special characters
+    # Val 	ALT menu keys      	ALT+X NV map
+    # no  	Off                	On (no auto handling)
+    # yes 	On                 	Off
+    # menu	On for ‘efghinpstv’	Off for the same keys
     winaltkeys = get_option(view, 'winaltkeys')
-    if winaltkeys == 'menu':
-        return (operand not in tuple('efghinpstv') or not view.window().is_menu_visible()) and _is_command_mode(view)
-
-    return False if winaltkeys == 'yes' else _is_command_mode(view)
+    if   winaltkeys == 'menu':
+        return (operand not in tuple('efghinpstv') or not view.window().is_menu_visible()) #and _is_command_mode(view)
+    elif winaltkeys == 'yes':
+        return False
+    else:
+       return True #_is_command_mode(view)
 
 
 def _handle_key(view, operator: int, operand: str, match_all: bool) -> bool:

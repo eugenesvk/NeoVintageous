@@ -14,6 +14,7 @@ from NeoVintageous.nv.events_user import on_mode_change
 
 from NeoVintageous.nv.log import addLoggingLevel, stream_handler
 from NeoVintageous.nv.rc import cfgU
+from NeoVintageous.nv    import rc
 from NeoVintageous.nv.cfg_parse import clean_name, clean_path
 
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
@@ -32,16 +33,17 @@ def get_config(path:str, default=None):
         return None
     return cfgU.flat.get(clean_path(path), default)
 
-def get_setting(view, name: str, default=None):
-    return view.settings().get('vintageous_%s' % name, default)
-
-
-def set_setting(view, name: str, value) -> None:
-    view.settings().set('vintageous_%s' % name, value)
-
-
-def reset_setting(view, name: str) -> None:
-    view.settings().erase('vintageous_%s' % name)
+def get_setting  (view, name: str, default=None):
+    if         view.settings().has  ('vintageous_%s' % name):
+        return view.settings().get  ('vintageous_%s' % name)
+    elif name in rc.CFG['general']:
+        return   rc.CFG['general'].get  (                  name, default)
+    else:
+        return default
+def set_setting  (view, name: str, value) -> None:
+    view           .settings().set  ('vintageous_%s' % name, value  )
+def reset_setting(view, name: str       ) -> None:
+    view           .settings().erase('vintageous_%s' % name         )
 
 
 def _get_private(obj, name: str, default=None):

@@ -31,7 +31,7 @@ class FeedTextCmdHandler():
         self.do_eval  = do_eval
         self.mode     = get_mode(self.view)
         if _L:
-            _log.keyt('—————Txt⌨️%s %s #%s Eval=%s'
+            _log.keyt('\n—————T⌨️%s %s #%s Eval=%s'
             ,text_cmd,self.mode,count,do_eval) # ⏰%s,TFMT.format(t=datetime.now()))
     def handle(self) -> None:
         self   ._handle_bad_selection()
@@ -94,7 +94,7 @@ class FeedTextCmdHandler():
             return True
         if isinstance(cmd, Mapping):
             if _L:
-                self.dbg += f" ↩+ ‹‘{cmd.lhs}’=‘{cmd.rhs}’› ¦{cmd}¦cmd=Map→_h "
+                self.dbg += f" ↩+ ‹‘{cmd.lhs}’=‘{cmd.rhs}’› cmd=Map→_h "
             self._handle_mapping_text(cmd)
             return True
         if isinstance(cmd, CommandNotFound):
@@ -152,7 +152,7 @@ class FeedKeyHandler():
         self.check_user_mappings = check_user_mappings
         self.mode                = get_mode(self.view)
         if _L:
-            _log.key('—————⌨️%s %s #%s Eval=%s usrMap=%s'
+            _log.key('\n—————⌨️%s %s #%s Eval=%s usrMap=%s'
             ,key,self.mode,repeat_count,do_eval,check_user_mappings) # ⏰%s,TFMT.format(t=datetime.now()))
 
     def handle(self) -> None:
@@ -357,7 +357,7 @@ class FeedKeyHandler():
             return True
         if isinstance(cmd, Mapping):
             if _L:
-                self._dbg_txt += f" ↩+ ‹‘{cmd.lhs}’=‘{cmd.rhs}’› ¦{cmd}¦cmd=Map→_h "
+                self._dbg_txt += f" ↩+ ‹‘{cmd.lhs}’=‘{cmd.rhs}’› cmd=Map→_h "
             self._handle_mapping_text(cmd)
             return True
         if isinstance(cmd, CommandNotFound):

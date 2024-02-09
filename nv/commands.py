@@ -276,7 +276,7 @@ class nv_feed_key(WindowCommand):
         if character is not None: # "<character>" in sublime-keymap receives ST input for all chars (temp backwards compatibility bridge towards removing the {key} argument)
             key = character
         try:
-            _log.key('HFeedKey ⌨️‘%s’¦‘%s’ #%s eval=%s usrMap=%s'
+            _log.key('\n\n—⌨️—\nHFeedKey ‘%s’¦‘%s’ #%s eval=%s usrMap=%s'
                 ,             key,character,repeat_count,do_eval,check_user_mappings)
             FeedKeyHandler(self.window.active_view(),key,repeat_count,do_eval,check_user_mappings).handle()
         except Exception as e:

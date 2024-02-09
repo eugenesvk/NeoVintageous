@@ -53,14 +53,14 @@ class ProcessCmdTextHandler():
 
         if not self.cont and\
            not get_action(self.view): # 1st command or no action, so execute it
-            _log.keyt("  ‘%s’ lead‘%s’ nv_feed_text_cmd(HFeedTextCmd) doEval→False @ HProcessCmdText",text_cmd,leading_motions)
+            _log.keyt("  ‘%s’ lead‘%s’ act‘%s’ nv_feed_text_cmd(HFeedTextCmd) doEval→False @ HProcessCmdText",text_cmd,leading_motions,get_action(self.view))
             self.window.run_command('nv_feed_text_cmd',{'text_cmd':text_cmd,'do_eval':False,'count':count})
 
             if get_action(self.view): # The last key press has caused an action to be primed. That means there are no more leading motions. Break out of here
+                _log.keyt("    ~break, get_action exists ‘%s’, reset state",get_action(self.view))
                 reset_command_data(self.view)
                 if  get_mode(self.view) == OPERATOR_PENDING:
                     set_mode(self.view, NORMAL)
-                _log.keyt("    ~break, get_action exists")
                 # break
             elif is_runnable(self.view): # Run any primed motion
                 leading_motions.append(get_sequence(self.view))
@@ -184,7 +184,7 @@ class ProcessNotationHandler():
             key_count = '_'
         key_cont = None
         for i,key in enumerate(keys_iter):
-            _log.key("  —%s¦%s—‘%s’¦‘%s’ lead‘%s’ nv_feed_key(HFeedKey) doEval→False @ HProcessNotation",i+1,key_count,key,keys,leading_motions)
+            _log.key("  —%s¦%s—‘%s’¦‘%s’ lead‘%s’ act‘%s’ nv_feed_key(HFeedKey) doEval→False @ HProcessNotation",i+1,key_count,key,keys,leading_motions,get_action(self.view))
             if self.cont and get_action(self.view): # check if we need to break early on continuation sequence before processing the "1st" key that's not really the 1st
                 _log.key("    break early, get_action exists")
                 key_cont = key
@@ -193,10 +193,10 @@ class ProcessNotationHandler():
                 'repeat_count':repeat_count,'check_user_mappings':check_user_mappings})
 
             if get_action(self.view): # The last key press has caused an action to be primed. That means there are no more leading motions. Break out of here
+                _log.key("    break, get_action exists ‘%s’, reset state",get_action(self.view))
                 reset_command_data(self.view)
                 if  get_mode(self.view) == OPERATOR_PENDING:
                     set_mode(self.view, NORMAL)
-                _log.key("    break, get_action exists")
                 break
             elif is_runnable(self.view): # Run any primed motion
                 leading_motions += get_sequence(self.view)

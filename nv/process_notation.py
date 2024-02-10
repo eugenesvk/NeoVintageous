@@ -75,7 +75,10 @@ class ProcessNotationHandler():
         # editing action started. For example, 'lldl' would skip 'll' in the
         # undo history, but store the full sequence for '.' to use.
         leading_motions = ''
+        i = 0
         for key in tokenize_keys(keys):
+            i += 1
+            _log.warning("  —%s¦%s—‘%s’¦‘%s’ lead‘%s’ act‘%s’ nv_feed_key(HFeedKey) doEval→False @ HProcessNotation",i,'',key,keys,leading_motions,get_action(self.view))
             self.window.run_command('nv_feed_key', {
                 'key': key,
                 'do_eval': False,
@@ -84,6 +87,7 @@ class ProcessNotationHandler():
             })
 
             if get_action(self.view):
+                _log.warning("    break, get_action exists ‘%s’, reset state",get_action(self.view))
                 # The last key press has caused an action to be primed. That
                 # means there are no more leading motions. Break out of here.
                 reset_command_data(self.view)
@@ -95,10 +99,12 @@ class ProcessNotationHandler():
             elif is_runnable(self.view):
                 # Run any primed motion.
                 leading_motions += get_sequence(self.view)
+                _log.warning("    running primed motion ‘%s’",leading_motions)
                 evaluate_state(self.view)
                 reset_command_data(self.view)
 
             else:
+                _log.warning("    evaluate_state")
                 evaluate_state(self.view)
 
         if must_collect_input(self.view, get_motion(self.view), get_action(self.view)):

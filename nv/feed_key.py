@@ -302,19 +302,17 @@ class FeedKeyHandler():
             self._handle_mapping     (cmd)
             return
         if isinstance(cmd, CommandNotFound): # TODO We shouldn't need to try resolve the command again. The resolver should handle commands correctly the first time. The reason this logic is still needed is because we might be looking at a command like 'dd', which currently doesn't resolve properly. The first 'd' is mapped for NORMAL mode, but 'dd' is not mapped in OPERATOR PENDING mode, so we get a missing command, and here we try to fix that (user mappings are excluded, since they've already been given a chance to evaluate).
-            if _L:
-                self._dbg_seq += f" ↩ ¦¦cmd=NotFound"
             if get_mode(self.view) == OPERATOR_PENDING:
                 cmd = mappings_resolve(self.view, sequence=to_bare_command_name(get_sequence(self.view)),mode=NORMAL, check_user_mappings=False)
             else:
                 cmd = mappings_resolve(self.view, sequence=to_bare_command_name(get_sequence(self.view)))
             if self._handle_command_not_found(cmd):
                 if _L:
-                    self._dbg_seq += f" ↩ cmd=NotFound×2"
+                    self._dbg_seq += f" ↩− cmd=NotFound×2/2"
                 return
             else:
                 if _L:
-                    self._dbg_seq += f" ¦{cmd}¦cmd=wasNotFound"
+                    self._dbg_seq += f" ¦{cmd}¦cmd=NotFound×1/2"
         if (isinstance(cmd, ViOperatorDef) and get_mode(self.view) == OPERATOR_PENDING): # TODO This should be unreachable code. The mapping resolver should handle anything that can still reach this point (the first time). We're expecting a motion, but we could still get an action. For example, dd, g~g~ or g~~ remove counts. It looks like it might only be the '>>' command that needs this code.
             if _L:
                 self._dbg_seq += f" ¦{cmd}¦cmd=ⓄOperatorDef"
@@ -330,7 +328,7 @@ class FeedKeyHandler():
                 set_mode(self.view, NORMAL)
         elif (isinstance(cmd, ViOperatorDef)):
             if _L:
-                self._dbg_seq += f" ¦{cmd}¦cmd→_h= OperatorDef"
+                self._dbg_seq += f" ¦{cmd}¦cmd→_h=OperatorDef"
         else:
             if _L:
                 self._dbg_seq += f" ¦{cmd}¦cmd→_h" # ToDo

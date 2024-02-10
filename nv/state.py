@@ -235,23 +235,21 @@ def reset_command_data(view) -> None:
     if _must_update_xpos(motion, action):
         update_xpos(view)
 
-    if _should_scroll_into_view(motion, action):
-        # Intentionally using the active view because the previous command
-        # may have switched views and view would be the previous one.
+    if _should_scroll_into_view(motion, action): # Intentionally using the active view because the previous command may have switched views and view would be the previous one.
         _scroll_into_active_view()
 
     action and action.reset()
-    set_action(view, None)
+    set_action          (view, None          )
     motion and motion.reset()
-    set_motion(view, None)
-    set_action_count(view, '')
-    set_motion_count(view, '')
-    set_sequence(view, '')
-    set_partial_sequence(view, '')
-    set_partial_text(view, '')
-    set_register(view, '"')
-    set_capture_register(view, False)
-    reset_status_line(view, get_mode(view))
+    set_motion          (view, None          )
+    set_action_count    (view, ''            )
+    set_motion_count    (view, ''            )
+    set_sequence        (view, ''            )
+    set_partial_sequence(view, ''            )
+    set_partial_text    (view, ''            )
+    set_register        (view, '"'           )
+    set_capture_register(view, False         )
+    reset_status_line   (view, get_mode(view))
 
 
 def is_runnable(view) -> bool:

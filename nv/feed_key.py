@@ -37,6 +37,8 @@ class FeedTextCmdHandler():
         self   ._handle_bad_selection()
         if self._handle_register():
             return
+        if self._collect_input():
+            return
         self   ._handle()
     def _handle_bad_selection(self) -> None: # TextCmd
         if _is_selection_malformed              (self.view, self.mode):
@@ -51,6 +53,28 @@ class FeedTextCmdHandler():
             set_register        (self.view, self.keyt)
             set_partial_sequence(self.view, '')
             set_partial_text    (self.view, '')
+            return True
+        return False
+    def _collect_input(self) -> bool: # TextCmd
+        motion = get_motion(self.view)
+        action = get_action(self.view)
+        _log.keyt("mot‘%s’ act‘%s’", motion, action)
+
+        if must_collect_input(self.view, motion, action):
+            if motion and\
+               motion.accept_input:
+                _log.warn('must collect input for a motion, but this is a text command, not a key')
+                # motion.accept(self.key)
+                # set_motion   (self.view, motion)  # Processed motion needs to reserialised and stored
+            else:
+                _log.warn('must collect input for an action, but this is a text command, not a key')
+                # action.accept(self.key)
+                # set_action   (self.view, action)  # Processed action needs to reserialised and stored
+
+            if self.do_eval and is_runnable(self.view):
+                _log.keyt('doeval on a runnable, reset_command_data')
+                evaluate_state    (self.view)
+                reset_command_data(self.view)
             return True
         return False
 

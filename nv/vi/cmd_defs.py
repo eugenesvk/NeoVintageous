@@ -1877,9 +1877,8 @@ class ViOpenNameSpace(ViMotionDef):  # TODO This should not be a motion.
 
 
 @assign(seqs.SEQ['"'], MOTION_MODES)
-@assign_text(['OpenRegister'], MOTION_MODES)
+@assign_text(['OpenRegister'], MOTION_MODES, icon="®")
 class ViOpenRegister(ViMotionDef):
-
     def translate(self, view):
         return {}
 

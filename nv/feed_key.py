@@ -33,20 +33,20 @@ class FeedTextCmdHandler():
         if _L:
             _log.keyt('\n—————T⌨️%s %s #%s Eval=%s'
             ,text_cmd,self.mode,count,do_eval) # ⏰%s,TFMT.format(t=datetime.now()))
-    def handle(self) -> None:
+    def handle(self) -> None: # TextCmd
         self   ._handle_bad_selection()
         if self._handle_register():
             return
         self   ._handle()
-    def _handle_bad_selection(self) -> None:
+    def _handle_bad_selection(self) -> None: # TextCmd
         if _is_selection_malformed              (self.view, self.mode):
             self.mode = _fix_malformed_selection(self.view, self.mode)
-    def _append_sequence(self) -> None:
-        _log.keyt('%s icon status %s'
+    def _append_sequence(self) -> None: # TextCmd
+        _log.keyt('‘%s’ icon status ‘%s’'
             ,self.text_cmd,self.cmd.icon)
         append_sequence         (self.view, self.cmd.icon or self.text_cmd)
         update_status_line      (self.view)
-    def _handle_register(self) -> bool:
+    def _handle_register(self) -> bool: # TextCmd
         if get_capture_register (self.view):
             set_register        (self.view, self.keyt)
             set_partial_sequence(self.view, '')
@@ -54,7 +54,7 @@ class FeedTextCmdHandler():
             return True
         return False
 
-    def _handle(self) -> None:
+    def _handle(self) -> None: # TextCmd
         if _L:
           self.dbg = ''
         text_cmd = self.text_cmd

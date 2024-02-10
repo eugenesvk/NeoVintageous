@@ -50,7 +50,7 @@ class FeedTextCmdHandler():
         update_status_line      (self.view)
     def _handle_register(self) -> bool: # TextCmd
         if get_capture_register (self.view):
-            set_register        (self.view, self.keyt)
+            # set_register        (self.view, self.text_cmd)
             set_partial_sequence(self.view, '')
             set_partial_text    (self.view, '')
             return True

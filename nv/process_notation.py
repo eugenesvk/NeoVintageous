@@ -57,8 +57,11 @@ class ProcessCmdTextHandler():
             self.window.run_command('nv_feed_text_cmd',{'text_cmd':text_cmd,'do_eval':False,'count':count})
 
             if get_action(self.view): # The last key press has caused an action to be primed. That means there are no more leading motions. Break out of here
+                setReg = True
+                if not get_register(self.view) == '"': # don't clean reg/seq if register non-standard? #todo: test workaround for register cleared up when it shouldn't in nnoremap X dd
+                    setReg = False
                 _log.keyt("    ~break, get_action exists ‘%s’, reset state",get_action(self.view))
-                reset_command_data(self.view)
+                reset_command_data(self.view,setReg=setReg)
                 if  get_mode(self.view) == OPERATOR_PENDING:
                     set_mode(self.view, NORMAL)
                 # break
@@ -193,8 +196,11 @@ class ProcessNotationHandler():
                 'repeat_count':repeat_count,'check_user_mappings':check_user_mappings})
 
             if get_action(self.view): # The last key press has caused an action to be primed. That means there are no more leading motions. Break out of here
+                setReg = True
+                if not get_register(self.view) == '"': # don't clean reg/seq if register non-standard? #todo: test workaround for register cleared up when it shouldn't in nnoremap X dd
+                    setReg = False
                 _log.key("    break, get_action exists ‘%s’, reset state",get_action(self.view))
-                reset_command_data(self.view)
+                reset_command_data(self.view,setReg=setReg)
                 if  get_mode(self.view) == OPERATOR_PENDING:
                     set_mode(self.view, NORMAL)
                 break

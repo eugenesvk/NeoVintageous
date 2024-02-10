@@ -190,6 +190,8 @@ class FeedKeyHandler():
         return False
 
     def _append_sequence(self) -> None:
+        _log.keyt('‘%s’ icon status ‘%s’'
+            ,self.key,"")
         append_sequence         (self.view, self.key)
         update_status_line      (self.view)
 

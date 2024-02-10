@@ -1,6 +1,6 @@
 import logging
 
-from NeoVintageous.nv.settings import get_mode, get_sequence, set_interactive, set_mode, set_repeat_data
+from NeoVintageous.nv.settings import get_mode, get_sequence, set_interactive, set_mode, set_repeat_data, get_register, get_capture_register
 from NeoVintageous.nv.state    import evaluate_state, get_action, get_motion, is_runnable, must_collect_input, reset_command_data
 from NeoVintageous.nv.ui       import ui_bell
 from NeoVintageous.nv.utils    import gluing_undo_groups, translate_char
@@ -53,14 +53,14 @@ class ProcessCmdTextHandler():
 
         if not self.cont and\
            not get_action(self.view): # 1st command or no action, so execute it
-            _log.keyt("  ‘%s’ lead‘%s’ act‘%s’ nv_feed_text_cmd(HFeedTextCmd) doEval→False @ HProcessCmdText",text_cmd,leading_motions,get_action(self.view))
+            _log.keyt("  ‘%s’ lead‘%s’ mot‘%s’ act‘%s’ reg‘%s’%s nv_feed_text_cmd(HFeedTextCmd) doEval→False @ HProcessCmdText",text_cmd,leading_motions,get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view))
             self.window.run_command('nv_feed_text_cmd',{'text_cmd':text_cmd,'do_eval':False,'count':count})
 
             if get_action(self.view): # The last key press has caused an action to be primed. That means there are no more leading motions. Break out of here
                 setReg = True
                 if not get_register(self.view) == '"': # don't clean reg/seq if register non-standard? #todo: test workaround for register cleared up when it shouldn't in nnoremap X dd
                     setReg = False
-                _log.keyt("    ~break, get_action exists ‘%s’, reset state",get_action(self.view))
+                _log.keyt("    ~break, get_action exists mot‘%s’ act‘%s’ reg‘%s’%s, reset state, reg_%s",get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view),setReg)
                 reset_command_data(self.view,setReg=setReg)
                 if  get_mode(self.view) == OPERATOR_PENDING:
                     set_mode(self.view, NORMAL)
@@ -76,7 +76,7 @@ class ProcessCmdTextHandler():
 
         if must_collect_input(self.view, get_motion(self.view), get_action(self.view)): # State is requesting more input, so this is the last command in the sequence and it needs more input
             if self.cont:
-                _log.keyt("  ↩− _collect→feed_key ‘%s’¦‘%s’ lead‘%s’ nv_feed_text_cmd(HFeedTextCmd) doEval→True @HProcessCmdText",key_cont,keys,leading_motions)
+                _log.keyt("  ↩− _collect→feed_key ‘%s’¦‘%s’ lead‘%s’ mot‘%s’ act‘%s’ reg‘%s’%s nv_feed_text_cmd(HFeedTextCmd) doEval→True @HProcessCmdText",key_cont,keys,leading_motions,get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view))
                 self.window.run_command('nv_feed_text_cmd',{'text_cmd':text_cmd,'do_eval':True,'count':count})
             else:
                 _log.keyt("  ↩− _collect_input")
@@ -187,7 +187,7 @@ class ProcessNotationHandler():
             key_count = '_'
         key_cont = None
         for i,key in enumerate(keys_iter):
-            _log.key("  —%s¦%s—‘%s’¦‘%s’ lead‘%s’ act‘%s’ nv_feed_key(HFeedKey) doEval→False @ HProcessNotation",i+1,key_count,key,keys,leading_motions,get_action(self.view))
+            _log.key("  —%s¦%s—‘%s’¦‘%s’ lead‘%s’ mot‘%s’ act‘%s’ nv_feed_key(HFeedKey) doEval→False @ HProcessNotation",i+1,key_count,key,keys,leading_motions,get_motion(self.view),get_action(self.view))
             if self.cont and get_action(self.view): # check if we need to break early on continuation sequence before processing the "1st" key that's not really the 1st
                 _log.key("    break early, get_action exists")
                 key_cont = key
@@ -199,7 +199,7 @@ class ProcessNotationHandler():
                 setReg = True
                 if not get_register(self.view) == '"': # don't clean reg/seq if register non-standard? #todo: test workaround for register cleared up when it shouldn't in nnoremap X dd
                     setReg = False
-                _log.key("    break, get_action exists ‘%s’, reset state",get_action(self.view))
+                _log.key("    break, get_action exists mot‘%s’ act‘%s’ reg‘%s’%s, reset state, reg_%s",get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view),setReg)
                 reset_command_data(self.view,setReg=setReg)
                 if  get_mode(self.view) == OPERATOR_PENDING:
                     set_mode(self.view, NORMAL)
@@ -215,7 +215,7 @@ class ProcessNotationHandler():
 
         if must_collect_input(self.view, get_motion(self.view), get_action(self.view)): # State is requesting more input, so this is the last command in the sequence and it needs more input
             if self.cont:
-                _log.key("  ↩− _collect→feed_key ‘%s’¦‘%s’ lead‘%s’ nv_feed_key(HFeedKey) doEval→True @ HProcessNotation",key_cont,keys,leading_motions)
+                _log.key("  ↩− _collect→feed_key ‘%s’¦‘%s’ lead‘%s’ mot‘%s’ act‘%s’ nv_feed_key(HFeedKey) doEval→True @ HProcessNotation",key_cont,keys,leading_motions,get_motion(self.view), get_action(self.view))
                 self.window.run_command('nv_feed_key',{'key':key_cont,'do_eval':True,
                 'repeat_count':repeat_count,'check_user_mappings':check_user_mappings})
             else:

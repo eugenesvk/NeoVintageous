@@ -111,10 +111,6 @@ __all__ = [
     'nv_vi_g_big_e',
     'nv_vi_g_big_h',
     'nv_vi_g_big_t',
-    'nv_vi_g_big_u',
-    'nv_vi_g_big_u_big_u',
-    'nv_vi_g_tilde',
-    'nv_vi_g_tilde_g_tilde',
     'nv_vi_ga',
     'nv_vi_ge',
     'nv_vi_gg',
@@ -127,8 +123,9 @@ __all__ = [
     'nv_vi_greater_than',
     'nv_vi_greater_than_greater_than',
     'nv_vi_gt',
-    'nv_vi_case_lower_char',
-    'nv_vi_case_lower_line',
+    'nv_vi_case_lower_char' ,'nv_vi_case_lower_char_vis' ,'nv_vi_case_lower_line',
+    'nv_vi_case_invert_char','nv_vi_case_invert_char_vis','nv_vi_case_invert_line',
+    'nv_vi_case_upper_char' ,'nv_vi_case_upper_char_vis' ,'nv_vi_case_upper_line',
     'nv_vi_gv',
     'nv_vi_gx',
     'nv_vi_move_to_bol','nv_vi_move_to_soft_bol','nv_vi_move_to_hard_bol',
@@ -163,11 +160,8 @@ __all__ = [
     'nv_vi_slash',
     'nv_vi_slash_impl',
     'nv_vi_star',
-    'nv_vi_tilde',
     'nv_vi_u',
-    'nv_vi_visual_big_u',
     'nv_vi_flip_selection',
-    'nv_vi_visual_u',
     'nv_vi_w',
     'nv_vi_x',
     'nv_vi_y',
@@ -402,7 +396,7 @@ class SequenceCommand(TextCommand):
             self.view.run_command(cmd, args)
 
 
-class nv_vi_g_big_u(TextCommand):
+class nv_vi_case_upper_char(TextCommand):
 
     def run(self, edit, mode=None, count=1, register=None, motion=None):
         def f(view, s):
@@ -2173,27 +2167,23 @@ class nv_vi_select_k(WindowCommand):
                 enter_normal_mode(self.view, mode)
 
 
-class nv_vi_tilde(TextCommand):
-
+class nv_vi_case_invert_char_vis(TextCommand):
     def run(self, edit, mode=None, count=1, register=None, motion=None):
         def select(view, s):
             if mode == VISUAL:
-                return Region(s.end(), s.begin())
-            return Region(s.begin(), s.end() + count)
-
+                return Region(s.end  (), s.begin()        )
+            return     Region(s.begin(), s.end  () + count)
         def after(view, s):
-            return Region(s.begin())
-
+            return     Region(s.begin())
         regions_transformer(self.view, select)
         self.view.run_command('swap_case')
 
         if mode in (VISUAL, VISUAL_LINE, VISUAL_BLOCK):
             regions_transformer(self.view, after)
+        enter_normal_mode      (self.view, mode )
 
-        enter_normal_mode(self.view, mode)
 
-
-class nv_vi_g_tilde(TextCommand):
+class nv_vi_case_invert_char(TextCommand):
 
     def run(self, edit, mode=None, count=1, register=None, motion=None):
         def f(view, s):
@@ -2220,7 +2210,7 @@ class nv_vi_g_tilde(TextCommand):
         enter_normal_mode(self.view, mode)
 
 
-class nv_vi_visual_u(TextCommand):
+class nv_vi_case_lower_char_vis(TextCommand):
 
     def run(self, edit, mode=None, count=1, register=None):
         for s in self.view.sel():
@@ -2233,7 +2223,7 @@ class nv_vi_visual_u(TextCommand):
         enter_normal_mode(self.view, mode)
 
 
-class nv_vi_visual_big_u(TextCommand):
+class nv_vi_case_upper_char_vis(TextCommand):
 
     def run(self, edit, mode=None, count=1, register=None):
         for s in self.view.sel():
@@ -2246,7 +2236,7 @@ class nv_vi_visual_big_u(TextCommand):
         enter_normal_mode(self.view, mode)
 
 
-class nv_vi_g_tilde_g_tilde(TextCommand):
+class nv_vi_case_invert_line(TextCommand):
 
     def run(self, edit, mode=None, count=1, register=None):
         def select(view, s):
@@ -2263,7 +2253,7 @@ class nv_vi_g_tilde_g_tilde(TextCommand):
         enter_normal_mode(self.view, mode)
 
 
-class nv_vi_g_big_u_big_u(TextCommand):
+class nv_vi_case_upper_line(TextCommand):
 
     def run(self, edit, mode=None, count=1, register=None):
         def select(view, s):

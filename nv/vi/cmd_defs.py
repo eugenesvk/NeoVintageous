@@ -172,13 +172,13 @@ class ViUndo(ViOperatorDef):
 
 
 @assign(seqs.SEQ['u'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
-@assign_text(['ChangeToLowerCaseByCharsVisual'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
+@assign_text(['CaseLowerCharVis'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
 class ViChangeToLowerCaseByCharsVisual(ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.repeatable = True
-        self.command = 'nv_vi_visual_u'
+        self.repeatable       = True
+        self.command          = 'nv_vi_case_lower_char_vis'
 
 
 @assign(seqs.SEQ['⎈r'], ACTION_MODES)
@@ -213,13 +213,13 @@ class ViChangeToEol(ViOperatorDef):
 
 @assign(seqs.G_BIG_U_BIG_U, ACTION_MODES)
 @assign(seqs.G_BIG_U_G_BIG_U, ACTION_MODES)
-@assign_text(['ChangeToUpperCaseByLines'], ACTION_MODES)
+@assign_text(['CaseUpperLine'], ACTION_MODES)
 class ViChangeToUpperCaseByLines(ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
-        self.scroll_into_view = True
-        self.repeatable = True
-        self.command = 'nv_vi_g_big_u_big_u'
+        self.updates_xpos    	= True
+        self.scroll_into_view	= True
+        self.repeatable      	= True
+        self.command         	= 'nv_vi_case_upper_line'
 
 
 @assign(seqs.SEQ['cc'], ACTION_MODES)
@@ -266,7 +266,7 @@ class ViIndentLine(ViOperatorDef):
 
 @assign(seqs.GUGU, ACTION_MODES)
 @assign(seqs.GUU, ACTION_MODES)
-@assign_text(['ChangeToLowerCaseByLines'], ACTION_MODES)
+@assign_text(['CaseLowerLine'], ACTION_MODES)
 class ViChangeToLowerCaseByLines(ViOperatorDef):
     def init(self):
         self.updates_xpos     = True
@@ -276,7 +276,7 @@ class ViChangeToLowerCaseByLines(ViOperatorDef):
 
 
 @assign(seqs.SEQ['gu'], ACTION_MODES)
-@assign_text(['ChangeToLowerCaseByChars'], ACTION_MODES)
+@assign_text(['CaseLowerChar'], ACTION_MODES)
 class ViChangeToLowerCaseByChars(ViOperatorDef):
     def init(self):
         self.updates_xpos     = True
@@ -317,23 +317,23 @@ class ViYankLine(ViOperatorDef):
 
 
 @assign(seqs.G_TILDE_TILDE, ACTION_MODES)
-@assign_text(['InvertCaseByLines'], ACTION_MODES)
+@assign_text(['CaseInvertLine','InvertCaseByLines'], ACTION_MODES)
 class ViInvertCaseByLines(ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.repeatable = True
-        self.command = 'nv_vi_g_tilde_g_tilde'
+        self.repeatable       = True
+        self.command          = 'nv_vi_case_invert_line'
 
 
 @assign(seqs.SEQ["~"], MOTION_MODES)
-@assign_text(['ForceInvertCaseByChars'], MOTION_MODES)
+@assign_text(['CaseInvertCharVis','ForceInvertCaseByChars'], MOTION_MODES)
 class ViForceInvertCaseByChars(ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.repeatable = True
-        self.command = 'nv_vi_tilde'
+        self.repeatable       = True
+        self.command          = 'nv_vi_case_invert_char_vis'
 
 
 @assign(seqs.SEQ['⇧s'], ACTION_MODES)
@@ -348,25 +348,25 @@ class ViSubstituteByLines(ViOperatorDef):
 
 
 @assign(seqs.G_TILDE, ACTION_MODES)
-@assign_text(['InvertCaseByChars'], ACTION_MODES)
+@assign_text(['CaseInvertChar'], ACTION_MODES)
 class ViInvertCaseByChars(ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.motion_required = True
-        self.repeatable = True
-        self.command = 'nv_vi_g_tilde'
+        self.motion_required  = True
+        self.repeatable       = True
+        self.command          = 'nv_vi_case_invert_char'
 
 
 @assign(seqs.SEQ['g⇧u'], ACTION_MODES)
-@assign_text(['ChangeToUpperCaseByChars'], ACTION_MODES)
+@assign_text(['CaseUpperChar'], ACTION_MODES)
 class ViChangeToUpperCaseByChars(ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.motion_required = True
-        self.repeatable = True
-        self.command = 'nv_vi_g_big_u'
+        self.motion_required  = True
+        self.repeatable       = True
+        self.command          = 'nv_vi_case_upper_char'
 
 
 @assign(seqs.SEQ['⇧j'], ACTION_MODES)
@@ -1022,13 +1022,13 @@ class ViScrollByLinesUp(ViMotionDef):
 
 
 @assign(seqs.SEQ['⇧u'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
-@assign_text(['ChangeToUpperCaseByCharsVisual'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
+@assign_text(['CaseUpperCharVis'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
 class ViChangeToUpperCaseByCharsVisual(ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.repeatable = True
-        self.command = 'nv_vi_visual_big_u'
+        self.repeatable       = True
+        self.command          = 'nv_vi_case_upper_char_vis'
 
 
 @assign(seqs.SEQ['⎈e'], ACTION_MODES)

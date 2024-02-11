@@ -95,7 +95,7 @@ class FeedTextCmdHandler():
                 _log.keyt('%s',self.dbg)
             return
         else:
-            _log.warn("  ‘%s’text_cmd couldn't be handled")
+            _log.warn("  ‘%s’text_cmd couldn't be handled m‘%s’",text_cmd,get_mode(self.view))
 
     def _handle_mapping_text(self, mapping: Mapping) -> None:
         if self.do_eval: # TODO Review What happens if Mapping + do_eval=False

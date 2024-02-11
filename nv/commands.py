@@ -106,7 +106,7 @@ __all__ = [
     'nv_vi_equal',
     'nv_vi_equal_equal',
     'nv_vi_find_in_line',
-    'nv_vi_g',
+    'nv_vi_go_to_file',
     'nv_vi_g__',
     'nv_vi_g_big_e',
     'nv_vi_g_big_h',
@@ -1753,7 +1753,7 @@ class nv_vi_g_big_t(WindowCommand):
         enter_normal_mode(self.window, mode)
 
 
-class nv_vi_g(TextCommand):
+class nv_vi_go_to_file(TextCommand):
 
     def run(self, edit, action, mode=None, count=None, register=None):
         if action in ('f', 'F'):

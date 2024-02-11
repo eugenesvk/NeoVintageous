@@ -1082,25 +1082,21 @@ class ViShowAsciiValueOfChar(ViOperatorDef):
 
 @assign(seqs.CTRL_W_GF, ACTION_MODES)
 @assign(seqs.SEQ['gf'], ACTION_MODES)
-@assign_text(['Vigf'], ACTION_MODES)
+@assign_text(['GoToFile','Vigf'], ACTION_MODES)
 class Vigf(ViOperatorDef):
     def init(self):
-        self.command = 'nv_vi_g'
-        self.command_args = {
-            'action': 'f'
-        }
+        self.command      = 'nv_vi_go_to_file'
+        self.command_args = {'action':'f'}
 
 
 @assign(seqs.SEQ['gf'], (NORMAL,))
 @assign(seqs.SEQ['g⇧f'], (NORMAL,))
 @assign(seqs.CTRL_W_G_BIG_F, ACTION_MODES)
-@assign_text(['VigF'], ACTION_MODES)
+@assign_text(['GoToFileLine','VigF'], ACTION_MODES)
 class VigF(ViOperatorDef):
     def init(self):
-        self.command = 'nv_vi_g'
-        self.command_args = {
-            'action': 'F'
-        }
+        self.command      = 'nv_vi_go_to_file'
+        self.command_args = {'action':'F'}
 
 
 @assign(seqs.SEQ['i'], (NORMAL, SELECT))

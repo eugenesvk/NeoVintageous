@@ -53,7 +53,7 @@ class ProcessCmdTextHandler():
 
         if not self.cont and\
            not get_action(self.view): # 1st command or no action, so execute it
-            _log.keyt("  ‘%s’ lead‘%s’ mot‘%s’ act‘%s’ reg‘%s’%s nv_feed_text_cmd(HFeedTextCmd) doEval→False @ HProcessCmdText",text_cmd,leading_motions,get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view))
+            _log.keyt("  ‘%s’ lead‘%s’ mot‘%s’ act‘%s’ reg‘%s’%s nv_feed_text_cmd(HFeedTextCmd) doEval→False @TXT",text_cmd,leading_motions,get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view))
             self.window.run_command('nv_feed_text_cmd',{'text_cmd':text_cmd,'do_eval':False,'count':count})
 
             if get_action(self.view): # The last key press has caused an action to be primed. That means there are no more leading motions. Break out of here
@@ -187,7 +187,7 @@ class ProcessNotationHandler():
             key_count = '_'
         key_cont = None
         for i,key in enumerate(keys_iter):
-            _log.key("  —%s¦%s—‘%s’¦‘%s’ lead‘%s’ mot‘%s’ act‘%s’ nv_feed_key(HFeedKey) doEval→False @ HProcessNotation",i+1,key_count,key,keys,leading_motions,get_motion(self.view),get_action(self.view))
+            _log.key("  ¹—%s¦%s—‘%s’¦‘%s’ lead‘%s’ mot‘%s’ act‘%s’ reg‘%s’%s nv_feed_key(HFeedKey) doEval→False @SEQ",i+1,key_count,key,keys,leading_motions,get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view))
             if self.cont and get_action(self.view): # check if we need to break early on continuation sequence before processing the "1st" key that's not really the 1st
                 _log.key("    break early, get_action exists")
                 key_cont = key
@@ -215,7 +215,7 @@ class ProcessNotationHandler():
 
         if must_collect_input(self.view, get_motion(self.view), get_action(self.view)): # State is requesting more input, so this is the last command in the sequence and it needs more input
             if self.cont:
-                _log.key("  ↩− _collect→feed_key ‘%s’¦‘%s’ lead‘%s’ mot‘%s’ act‘%s’ nv_feed_key(HFeedKey) doEval→True @ HProcessNotation",key_cont,keys,leading_motions,get_motion(self.view), get_action(self.view))
+                _log.key("  ↩− _collect→feed_key ‘%s’¦‘%s’ lead‘%s’ mot‘%s’ act‘%s’ nv_feed_key(HFeedKey) doEval→True @SEQ",key_cont,keys,leading_motions,get_motion(self.view), get_action(self.view))
                 self.window.run_command('nv_feed_key',{'key':key_cont,'do_eval':True,
                 'repeat_count':repeat_count,'check_user_mappings':check_user_mappings})
             else:
@@ -231,7 +231,8 @@ class ProcessNotationHandler():
             leading_motions_len =     len(list(tokenize_keys(leading_motions)))
             keys                = ''.join(list(tokenize_keys(keys))[leading_motions_len:])
 
-        if not (get_motion(self.view) and not get_action(self.view)):
+        if not (get_motion(self.view) and
+           not  get_action(self.view)):
             with gluing_undo_groups(self.view):
                 try:
                     if _L: # preiterate to know the full count of keys for logging 1/5, 2/5
@@ -248,11 +249,11 @@ class ProcessNotationHandler():
                             enter_normal_mode(self.window) # XXX: We should pass a mode here?
                             continue
                         elif get_mode(self.view) not in (INSERT, REPLACE):
-                            _log.key("  —%s¦%s—‘%s’¦‘%s’ nv_feed_key(HFeedKey) doEval→None @ HProcessNotation",i+1,key_count,key,keys)
+                            _log.key("  ²—%s¦%s—‘%s’¦‘%s’ lead‘%s’ mot‘%s’ act‘%s’ reg‘%s’%s nv_feed_key(HFeedKey) doEval→None @SEQ",i+1,key_count,key,keys,leading_motions,get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view))
                             self.window.run_command('nv_feed_key',{'key':key,
                                 'repeat_count':repeat_count,'check_user_mappings':check_user_mappings})
                         else:
-                            _log.key("  —%s¦%s—‘%s’¦‘%s’ insert chars @ HProcessNotation",i+1,key_count,key,keys)
+                            _log.key("  ²—%s¦%s—‘%s’¦‘%s’ insert chars @SEQ",i+1,key_count,key,keys)
                             self.window.run_command('insert',{'characters':translate_char(key)})
                     if not must_collect_input(self.view, get_motion(self.view), get_action(self.view)):
                         return

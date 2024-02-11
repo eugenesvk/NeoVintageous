@@ -51,10 +51,15 @@ class ProcessCmdTextHandler():
         leading_motions = [] # run any motions coming before the first action. We don't keep these in the undo stack, but they will still be repeated via '.'. This ensures that undoing will leave the caret where the  first editing action started. For example, 'lldl' would skip 'll' in the undo history, but store the full sequence for '.' to use
         key_cont = None
 
+        cmd_reg = {} # store i,key that set the register so that we can skip it in iter² (!but index should be adjusted for leading_motions that modifies keys)
         if not self.cont and\
            not get_action(self.view): # 1st command or no action, so execute it
             _log.keyt("  ‘%s’ lead‘%s’ mot‘%s’ act‘%s’ reg‘%s’%s nv_feed_text_cmd(HFeedTextCmd) doEval→False @TXT",text_cmd,leading_motions,get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view))
+            _reg_pre = get_capture_register(self.view)
             self.window.run_command('nv_feed_text_cmd',{'text_cmd':text_cmd,'do_eval':False,'count':count})
+            if not _reg_pre == get_capture_register(self.view):
+                _log.key("    ‘%s’ #%s set the register, remember to skip it!",text_cmd,0)
+                cmd_reg[0] = text_cmd
 
             if get_action(self.view): # The last key press has caused an action to be primed. That means there are no more leading motions. Break out of here
                 setReg = True
@@ -83,6 +88,7 @@ class ProcessCmdTextHandler():
                 self._collect_input()
             return
 
+        reg_i_offset = 0
         if leading_motions:# Strip the already run commands
             leading_motions_len = len(leading_motions)
             text_cmd_len        = len(text_cmd) if isinstance(text_cmd,list) else 1
@@ -92,6 +98,7 @@ class ProcessCmdTextHandler():
                 _log.keyt("  ↩ leading_motions ‘%s’, not collect",leading_motions)
                 return
             text_cmd_next = text_cmd[leading_motions_len:] # todo: use ↓ for iteration if this handler is converted to accept a list of commands
+            reg_i_offset = leading_motions_len # todo: use for index match if this accepts a list of commands
 
         if not (get_motion(self.view) and\
            not  get_action(self.view)):
@@ -100,7 +107,10 @@ class ProcessCmdTextHandler():
                     if   get_mode(self.view) in (INSERT, REPLACE):
                         _log.keyt("  key sequence notation handler would insert chars here, but we still do commands!")
                     _log.keyt("  ²—‘%s’ lead‘%s’ mot‘%s’ act‘%s’ reg‘%s’%s nv_feed_text_cmd(HFeedTextCmd) doEval→None @TXT",text_cmd,leading_motions,get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view))
-                    self.window.run_command('nv_feed_text_cmd',{'text_cmd':text_cmd,'count':count})
+                    if 0 in cmd_reg and cmd_reg[0] == text_cmd:
+                        _log.key("    ‘%s’ #%s (%s) set the register, skip it!",text_cmd,0,0)
+                    else:
+                        self.window.run_command('nv_feed_text_cmd',{'text_cmd':text_cmd,'count':count})
                     if not must_collect_input(self.view, get_motion(self.view), get_action(self.view)):
                         return
                 finally:

@@ -38,7 +38,7 @@ def evaluate_mapping(view, mapping: Mapping) -> None:
 
 def evaluate_mapping_text(view, mapping: Mapping) -> None:
     rhs = mapping.rhs
-    if (m_txt := get_mode(view) == OPERATOR_PENDING):
+    if ((m_txt := get_mode(view)) == OPERATOR_PENDING):
         if   isinstance(rhs, str ):
             rhs    = get_sequence(view)[:-len(get_partial_sequence(view))] + mapping.rhs
         elif isinstance(rhs, list):

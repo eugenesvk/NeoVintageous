@@ -1059,7 +1059,7 @@ class ViToggleMacroRecorder(RequireOneCharMixin, ViOperatorDef):
         self.scroll_into_view = True
 
     def translate(self, view):
-        return translate_action(view, 'nv_vi_q', {
+        return translate_action(view, 'nv_vi_toggle_macro_record', {
             'name': self.inp
         })
 

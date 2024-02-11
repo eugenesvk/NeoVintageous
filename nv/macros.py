@@ -76,9 +76,7 @@ def set_last_used_register_name(name: str) -> None:
 
 def add_macro_step(view, cmd: str, args: dict) -> None:
     if is_recording():
-        # Don't store the ending macro step.
-        if cmd == 'nv_vi_q':
+        if cmd == 'nv_vi_toggle_macro_record': # Don't store the ending macro step.
             return
-
         if not get_glue_until_normal_mode(view):
             _data['recording_steps'].append((cmd, args))

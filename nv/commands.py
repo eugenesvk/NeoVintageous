@@ -147,7 +147,7 @@ __all__ = [
     'nv_vi_octothorp',
     'nv_vi_paste',
     'nv_vi_percent',
-    'nv_vi_q',
+    'nv_vi_toggle_macro_record',
     'nv_vi_question_mark','nv_vi_question_mark_impl',
     'nv_vi_quote',
     'nv_vi_r',
@@ -2088,16 +2088,14 @@ class nv_vi_ctrl_y(TextCommand):
         self.view.run_command('scroll_lines', {'amount': count})
 
 
-class nv_vi_q(TextCommand):
-
+class nv_vi_toggle_macro_record(TextCommand):
     def run(self, edit, mode=None, count=1, register=None, name=None):
-        if macros.is_recording():
+        if  macros.is_recording  ():
             macros.stop_recording()
         else:
             if not macros.is_writable(name):
                 return ui_bell("E354: Invalid register name: '" + name + "'")
-
-            macros.start_recording(name)
+            macros.start_recording   (name)
 
 
 class nv_vi_at(TextCommand):

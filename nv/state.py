@@ -9,7 +9,7 @@ from NeoVintageous.nv import plugin
 from NeoVintageous.nv.macros import add_macro_step
 from NeoVintageous.nv.polyfill import run_window_command
 from NeoVintageous.nv.session import get_session_view_value, set_session_view_value
-from NeoVintageous.nv.settings import get_glue_until_normal_mode, get_mode, get_reset_during_init, get_sequence, get_seq_icon, get_setting, is_interactive, is_processing_notation, set_action_count, set_capture_register, set_mode, set_motion_count, set_partial_sequence, set_text, set_partial_text, set_register, set_repeat_data, set_reset_during_init, set_sequence, set_seq_icon
+from NeoVintageous.nv.settings import get_glue_until_normal_mode, get_mode, get_reset_during_init, get_sequence, get_seq_icon, get_setting, is_interactive, is_processing_notation, set_action_count, set_capture_register, set_mode, set_motion_count, set_partial_sequence, set_partial_text, set_register, set_repeat_data, set_reset_during_init, set_sequence, set_seq_icon
 from NeoVintageous.nv.utils import get_visual_block_sel_b
 from NeoVintageous.nv.utils import get_visual_repeat_data, is_view, save_previous_selection, update_xpos
 from NeoVintageous.nv.vi import cmd_defs
@@ -19,8 +19,6 @@ from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PEN
 from NeoVintageous.nv.modes import Mode as M, mode_names, mode_names_rev, text_to_modes, text_to_mode_alone
 from NeoVintageous.nv     import vim # for always fresh config values, defaults + user
 from NeoVintageous.nv.vim import clean_view, enter_insert_mode, enter_normal_mode, enter_visual_mode, is_visual_mode, mode_to_name, reset_status_line, run_action, run_motion
-from NeoVintageous.nv.helper import fname
-from NeoVintageous.nv.events_user import on_mode_change
 
 from NeoVintageous.nv.rc import cfgU
 
@@ -44,28 +42,40 @@ def reload_with_user_data_kdl() -> None:
         global CFG
         _log.debug("@registers: Parsing config indicator/count")
         for cfg_key in CFG:
-            if (node := cfgU.cfg_parse.node_get(cfg,cfg_key,None)): # prefix "⌗" node/arg pair
-                args = False
-                for i,(arg,tag,val) in enumerate(cfgU.cfg_parse.arg_tag_val(node)):
-                    args = True
-                    if i == 0:
-                        if tag:
-                            _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’",node.name,arg)
-                        CFG[node.name] = val #;_log.debug('indicator count from arg @%s %s',node.name,val)
-                    elif i > 0:
-                        _log.warn("node ‘%s’ has extra arguments in its child ‘%s’ (only the 1st was used): ‘%s’...",cfg_key,node.name,arg)
-                        break
-                if not args:
+            if (node := cfg.get(cfg_key,None)): # prefix "⌗" node/arg pair
+                if (args := node.args):
+                    tag_val = args[0] #(t)"⌗" if (t) exists (though shouldn't)
+                    # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
+                    if hasattr(tag_val,'value'):
+                        val = tag_val.value # ignore tag
+                        _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
+                            ,      node.name,                               tag_val)
+                    else:
+                        val = tag_val
+                    CFG[node.name] = val
+                    # print(f"indicator count from argument ‘{tag_val}’")
+                elif not args:
                     _log.warn("node ‘%s’ is missing arguments in its child ‘%s’"
                         ,         cfg_key,                               node.name)
+                if len(args) > 1:
+                    _log.warn("node ‘%s’ has extra arguments in its child ‘%s’, only the 1st was used ‘%s’"
+                        ,         cfg_key,                              node.name,         {', '.join(args)})
         node = cfg
-        for i,(key,tag_val,tag,val) in enumerate(cfgU.cfg_parse.prop_key_tag_val(node)): # prefix="⌗", alt notation to child node/arg pairs
-            if tag:
-                _log.warn("node ‘%s’ has unrecognized tag in property ‘%s=%s’",node.name,key,tag_val)
-            if key in CFG:
-                CFG[key] = val ;_log.debug("indicator count from property ‘%s=%s’",key,val)
+        for i,key in enumerate(prop_d := node.props): # prefix="⌗", alternative notation to child node/arg pairs
+            tag_val = prop_d[key] #prefix=(t)"⌗" if (t) exists (though shouldn't)
+            # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
+            if hasattr(tag_val,'value'):
+                val = tag_val.value # ignore tag
+                _log.warn("node ‘%s’ has unrecognized tag in property ‘%s=%s’"
+                    ,             node.name,                         key,tag_val)
             else:
-                _log.error("node ‘%s’ has unrecognized property ‘%s=%s’",node.name,key,tag_val)
+                val = tag_val
+            if key in CFG:
+                CFG[key] = val
+                # print(f"indicator count from property ‘{key}={val}’")
+            else:
+                _log.error("node ‘%s’ has unrecognized property ‘%s=%s’"
+                    ,             node.name,                   key,tag_val)
     else:
         CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
 
@@ -97,7 +107,6 @@ def update_status_line(view) -> None:
     seq_txt = get_sequence(view)
     seq_icon = get_seq_icon(view)
     view.set_status(vim.CFG['idseq'], seq_icon)
-    _log.key("set ‘idseq’ status to ‘%s’ from ‘%s’ m‘%s’ @%s",seq_icon,seq_txt,get_mode(view),fname())
 
     if CFG['enable'] and (match := re_cmd_count.findall(seq_txt)): # show popup
         count_s = ''.join(match)
@@ -218,7 +227,7 @@ def set_motion(view, value) -> None:
     set_session_view_value(view, 'motion', serialized)
 
 
-def reset_command_data(view,setReg:bool=True,setACount:bool=True) -> None:
+def reset_command_data(view,setReg:bool=True) -> None:
     # Resets all temp data needed to build a command or partial command.
     motion = get_motion(view)
     action = get_action(view)
@@ -233,14 +242,12 @@ def reset_command_data(view,setReg:bool=True,setACount:bool=True) -> None:
     set_action          (view, None          )
     motion and motion.reset()
     set_motion          (view, None          )
-    if setACount:
-      set_action_count  (view, ''            )
+    set_action_count    (view, ''            )
     set_motion_count    (view, ''            )
     set_sequence        (view, ''            )
-    set_text            (view, []            )
     set_seq_icon        (view, ''            )
     set_partial_sequence(view, ''            )
-    set_partial_text    (view, []            )
+    set_partial_text    (view, ''            )
     if setReg:
         set_register    (view, '"'           )
     set_capture_register(view, False         )
@@ -248,25 +255,34 @@ def reset_command_data(view,setReg:bool=True,setACount:bool=True) -> None:
 
 
 def is_runnable(view) -> bool:
-    """→ True if motion and/or action is in a runnable state, False otherwise
-    ValueError: Invalid mode
-    """
+    # Returns:
+    #   True if motion and/or action is in a runnable state, False otherwise.
+    # Raises:
+    #   ValueError: Invlid mode.
     action = get_action(view)
     motion = get_motion(view)
+
     if must_collect_input(view, motion, action):
         return False
+
     mode = get_mode(view)
+
     if action and motion:
         if mode != NORMAL:
             raise ValueError('invalid mode')
+
         return True
+
     if (action and (not action.motion_required or is_visual_mode(mode))):
         if mode == OPERATOR_PENDING:
             raise ValueError('action has invalid mode')
+
         return True
+
     if motion:
         if mode == OPERATOR_PENDING:
             raise ValueError('motion has invalid mode')
+
         return True
 
     return False
@@ -275,6 +291,7 @@ def is_runnable(view) -> bool:
 def evaluate_state(view) -> None:
     _log.debug('evaluating...')
     if not is_runnable(view):
+        _log.key('not run')
         _log.debug('not runnable!')
         return
 
@@ -284,6 +301,7 @@ def evaluate_state(view) -> None:
     if action and motion: # Evaluate action with motion: runs the action with the motion as an argument. The motion's mode is set to INTERNAL_NORMAL and is run by the action internally to make the selection it operates on. For example the motion commands can be used after an operator command, to have the command operate on the text that was moved over.
         action_cmd = action.translate(view)
         motion_cmd = motion.translate(view)
+        _log.key("act‘%s’←‘%s’ mot‘%s’←‘%s’ ",action_cmd,action,motion_cmd,motion)
         _log.debug('action: %s', action_cmd)
         _log.debug('motion: %s', motion_cmd)
 
@@ -313,6 +331,7 @@ def evaluate_state(view) -> None:
 
     if motion: # Evaluate motion: Run it.
         motion_cmd = motion.translate(view)
+        _log.key("mot‘%s’←‘%s’ ",motion_cmd,motion)
         _log.debug('motion: %s', motion_cmd)
         add_macro_step(view, motion_cmd['motion'], motion_cmd['motion_args'])
         run_motion(view, motion_cmd)
@@ -353,20 +372,23 @@ def _should_reset_mode(view, mode: str) -> bool:
 
 
 def init_view(view) -> None:
-    if not is_view(view): # If the view not a regular vim capable view (e.g. console, widget, panel), skip the state initialisation and perform a clean routine on the view.
-        clean_view(view) # TODO is a clean routine really necessary on non-vim capable views?
-        on_mode_change(view,None,M.Empty)
+    # If the view not a regular vim capable view (e.g. console, widget, panel),
+    # skip the state initialisation and perform a clean routine on the view.
+    # TODO is a clean routine really necessary on non-vim capable views?
+    if not is_view(view):
+        clean_view(view)
+        return
+
+    if not get_reset_during_init(view):
+        # Probably exiting from an input panel, like when using '/'. Don't reset
+        # the global state, as it may contain data needed to complete the
+        # command that's being built.
+        set_reset_during_init(view, True)
         return
 
     mode = get_mode(view)
-    if not get_reset_during_init(view): # Probably exiting from an input panel, like when using '/'. Don't reset the global state, as it may contain data needed to complete the command that's being built.
-        set_reset_during_init(view, True)
-        on_mode_change(view,None,mode)
-        return
-
 
     if not _should_reset_mode(view, mode):
-        on_mode_change(view,None,mode)
         return
 
     # Fix malformed selection: if we have no selections, add one.
@@ -395,5 +417,3 @@ def init_view(view) -> None:
         view.window().run_command('nv_enter_normal_mode', {'mode': mode, 'from_init': True})
 
     reset_command_data(view)
-    mode = get_mode(view)
-    on_mode_change(view,None,mode)

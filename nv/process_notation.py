@@ -186,14 +186,19 @@ class ProcessNotationHandler():
             keys_iter = tokenize_keys(keys)
             key_count = '_'
         key_cont = None
+        key_reg = {} # store i,key that set the register so that we can skip it in iter² (!but index should be adjusted for leading_motions that modifies keys)
         for i,key in enumerate(keys_iter):
             _log.key("  ¹—%s¦%s—‘%s’¦‘%s’ lead‘%s’ mot‘%s’ act‘%s’ reg‘%s’%s nv_feed_key(HFeedKey) doEval→False @SEQ",i+1,key_count,key,keys,leading_motions,get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view))
             if self.cont and get_action(self.view): # check if we need to break early on continuation sequence before processing the "1st" key that's not really the 1st
                 _log.key("    break early, get_action exists")
                 key_cont = key
                 break
+            _reg_pre = get_capture_register(self.view)
             self.window.run_command('nv_feed_key',{'key':key,'do_eval':False,
                 'repeat_count':repeat_count,'check_user_mappings':check_user_mappings})
+            if not _reg_pre == get_capture_register(self.view):
+                _log.key("    ‘%s’ #%s set the register, remember to skip it!",key,i)
+                key_reg[i] = key
 
             if get_action(self.view): # The last key press has caused an action to be primed. That means there are no more leading motions. Break out of here
                 setReg = True
@@ -223,6 +228,7 @@ class ProcessNotationHandler():
                 self._collect_input()
             return
 
+        reg_i_offset = 0
         if leading_motions:# Strip the already run commands
             if ((len(leading_motions) == len(keys)) and (not must_collect_input(self.view, get_motion(self.view), get_action(self.view)))):  # noqa: E501
                 set_interactive(self.view, True)
@@ -230,6 +236,7 @@ class ProcessNotationHandler():
                 return
             leading_motions_len =     len(list(tokenize_keys(leading_motions)))
             keys                = ''.join(list(tokenize_keys(keys))[leading_motions_len:])
+            reg_i_offset = leading_motions_len
 
         if not (get_motion(self.view) and
            not  get_action(self.view)):
@@ -250,6 +257,13 @@ class ProcessNotationHandler():
                             continue
                         elif get_mode(self.view) not in (INSERT, REPLACE):
                             _log.key("  ²—%s¦%s—‘%s’¦‘%s’ lead‘%s’ mot‘%s’ act‘%s’ reg‘%s’%s nv_feed_key(HFeedKey) doEval→None @SEQ",i+1,key_count,key,keys,leading_motions,get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view))
+                            if (i+reg_i_offset) in key_reg:
+                                if key_reg[i+reg_i_offset] == key:
+                                    _log.key("    ‘%s’ #%s (%s) set the register, skip it!",key,i+reg_i_offset,i)
+                                    continue
+                                else:
+                                    _log.warn("    #%s (%s) set the register, but keys don't match ‘%s’≠‘%s’"
+                                        ,i+reg_i_offset,i,                     key_reg[i+reg_i_offset],key)
                             self.window.run_command('nv_feed_key',{'key':key,
                                 'repeat_count':repeat_count,'check_user_mappings':check_user_mappings})
                         else:

@@ -40,9 +40,9 @@ def evaluate_mapping_text(view, mapping: Mapping) -> None:
     rhs = mapping.rhs
     if ((m_txt := get_mode(view)) == OPERATOR_PENDING):
         if   isinstance(rhs, str ):
-            rhs    = get_sequence(view)[:-len(get_partial_sequence(view))] + mapping.rhs
+            rhs =  get_sequence(view)[:-len(get_partial_sequence(view))]  + mapping.rhs
         elif isinstance(rhs, list):
-            rhs[0] = get_sequence(view)[:-len(get_partial_sequence(view))] + mapping.rhs[0]
+            rhs = [get_sequence(view)[:-len(get_partial_sequence(view))]] + mapping.rhs
     _log.key(' evalMapT ‹‘%s’=%s‘%s’←‘%s’› m%s'
         ,mapping.lhs
         ,('Ⓞ'        if m_txt == OPERATOR_PENDING else '')

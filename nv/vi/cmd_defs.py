@@ -59,7 +59,7 @@ class ViInsertLineAfter(ViOperatorDef):
 
 
 @assign(seqs.SEQ['o'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
-@assign_text(['FlipSelection','GoToOtherEnd'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
+@assign_text(['FlipSelection','GoToOtherEnd'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK), icon='⮀')
 class ViGoToOtherEnd(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -88,7 +88,7 @@ class ViSubstituteChar(ViOperatorDef):
 
 
 @assign(seqs.SEQ['y'], ACTION_MODES)
-@assign_text(['YankByChars'], ACTION_MODES)
+@assign_text(['YankByChars'], ACTION_MODES, icon='🗐▋')
 class ViYankByChars(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -118,7 +118,7 @@ class ViReindent(ViOperatorDef):
 
 
 @assign(seqs.GREATER_THAN, ACTION_MODES)
-@assign_text(['Indent'], ACTION_MODES)
+@assign_text(['Indent'], ACTION_MODES, icon='⇛')
 class ViIndent(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -129,7 +129,7 @@ class ViIndent(ViOperatorDef):
 
 
 @assign(seqs.LESS_THAN, ACTION_MODES)
-@assign_text(['Unindent'], ACTION_MODES)
+@assign_text(['Unindent'], ACTION_MODES, icon='⇚')
 class ViUnindent(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -163,7 +163,7 @@ class ViChangeMultipleCursor(ViOperatorDef):
 
 
 @assign(seqs.SEQ['u'], (NORMAL,))
-@assign_text(['Undo'], (NORMAL,))
+@assign_text(['Undo'], (NORMAL,), icon='⎌')
 class ViUndo(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -182,7 +182,7 @@ class ViChangeToLowerCaseByCharsVisual(ViOperatorDef):
 
 
 @assign(seqs.SEQ['⎈r'], ACTION_MODES)
-@assign_text(['Redo'], ACTION_MODES)
+@assign_text(['Redo'], ACTION_MODES, icon='↷')
 class ViRedo(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -234,7 +234,7 @@ class ViChangeLine(ViOperatorDef):
 
 
 @assign(seqs.SEQ['dd'], ACTION_MODES)
-@assign_text(['DeleteLine'], ACTION_MODES)
+@assign_text(['DeleteLine'], ACTION_MODES, icon='ᵡ━')
 class ViDeleteLine(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -244,7 +244,7 @@ class ViDeleteLine(ViOperatorDef):
 
 
 @assign(seqs.SEQ['⇧r'], ACTION_MODES)
-@assign_text(['EnterReplaceMode'], ACTION_MODES)
+@assign_text(['EnterReplaceMode'], ACTION_MODES, icon='Ⓡ')
 class ViEnterReplaceMode(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -380,7 +380,7 @@ class ViJoinLines(ViOperatorDef):
 
 
 @assign(seqs.SEQ['⎈x'], ACTION_MODES)
-@assign_text(['Decrement'], ACTION_MODES)
+@assign_text(['Decrement'], ACTION_MODES, icon='⊖')
 class ViDecrement(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -393,7 +393,7 @@ class ViDecrement(ViOperatorDef):
 
 
 @assign(seqs.SEQ['⎈a'], ACTION_MODES)
-@assign_text(['Increment'], ACTION_MODES)
+@assign_text(['Increment'], ACTION_MODES, icon='⊕')
 class ViIncrement(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -416,14 +416,14 @@ class ViJoinLinesNoSeparator(ViOperatorDef):
 
 
 @assign(seqs.SEQ['v'], ACTION_MODES)
-@assign_text(['EnterVisualMode'], ACTION_MODES)
+@assign_text(['EnterVisualMode'], ACTION_MODES, icon='ⓋⓋ')
 class ViEnterVisualMode(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
         self.command = 'nv_enter_visual_mode'
 
-@assign_text(['EnterVisualModeF'], ACTION_MODES)
+@assign_text(['EnterVisualModeF'], ACTION_MODES, icon='ⓋⓋ')
 class ViEnterVisualModeF(ViOperatorDef):
     def init(self):
         self.updates_xpos     = True
@@ -613,7 +613,7 @@ class ViLeftDeleteChar(ViOperatorDef):
 @assign(seqs.SEQ['⎈⇟'], ACTION_MODES)
 @assign(seqs.SEQ['gt'], ACTION_MODES)
 @assign(seqs.CTRL_W_GT, ACTION_MODES)
-@assign_text(['ActivateNextTab'], ACTION_MODES)
+@assign_text(['ActivateNextTab'], ACTION_MODES, icon='⎘')
 class ViActivateNextTab(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -627,7 +627,7 @@ class ViActivateNextTab(ViOperatorDef):
 @assign(seqs.SEQ['⎈⇞'], ACTION_MODES)
 @assign(seqs.SEQ['g⇧t'], ACTION_MODES)
 @assign(seqs.CTRL_W_G_BIG_T, ACTION_MODES)
-@assign_text(['ActivatePreviousTab'], ACTION_MODES)
+@assign_text(['ActivatePreviousTab'], ACTION_MODES, icon='⎗')
 class ViActivatePreviousTab(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -962,7 +962,7 @@ class ViExchangeCurrentWindowWithNextOrPreviousNthWindow(ViOperatorDef):
 
 
 @assign(seqs.SEQ['⇧v'], ACTION_MODES)
-@assign_text(['EnterVisualLineMode'], ACTION_MODES)
+@assign_text(['EnterVisualLineMode'], ACTION_MODES, icon='━')
 class ViEnterVisualLineMode(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -987,7 +987,7 @@ class ViNetrwGx(ViOperatorDef):
 
 
 @assign(seqs.SEQ['⎈o'], ACTION_MODES)
-@assign_text(['JumpBack'], ACTION_MODES)
+@assign_text(['JumpBack'], ACTION_MODES, icon='⎗̡')
 class ViJumpBack(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -997,7 +997,7 @@ class ViJumpBack(ViOperatorDef):
 
 @assign(seqs.SEQ['⎈i'], ACTION_MODES)
 @assign(seqs.SEQ['⭾'], ACTION_MODES)
-@assign_text(['JumpForward'], ACTION_MODES)
+@assign_text(['JumpForward'], ACTION_MODES, icon='⎘̡')
 class ViJumpForward(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -1006,7 +1006,7 @@ class ViJumpForward(ViOperatorDef):
 
 
 @assign(seqs.SEQ['.'], ACTION_MODES)
-@assign_text(['Repeat'], ACTION_MODES)
+@assign_text(['Repeat'], ACTION_MODES, icon='∞')
 class ViRepeat(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -1065,7 +1065,7 @@ class ViToggleMacroRecorder(RequireOneCharMixin, ViOperatorDef):
 
 
 @assign(seqs.SEQ['⎈v'], ACTION_MODES)
-@assign_text(['EnterVisualBlockMode'], ACTION_MODES)
+@assign_text(['EnterVisualBlockMode'], ACTION_MODES, icon='▋')
 class ViEnterVisualBlockMode(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -1101,7 +1101,7 @@ class VigF(ViOperatorDef):
 
 @assign(seqs.SEQ['i'], (NORMAL, SELECT))
 @assign(seqs.SEQ['⎀'], (NORMAL, SELECT))
-@assign_text(['EnterInsertMode'], (NORMAL, SELECT))
+@assign_text(['EnterInsertMode'], (NORMAL, SELECT), icon='ⓘ')
 class ViEnterInsertMode(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -1113,7 +1113,7 @@ class ViEnterInsertMode(ViOperatorDef):
 @assign(seqs.SEQ['⎋'], ACTION_MODES)
 @assign(seqs.SEQ['⎈c'], ACTION_MODES + (INSERT, SELECT))
 @assign(seqs.SEQ['⎈['], ACTION_MODES + (INSERT, SELECT))
-@assign_text(['EnterNormalMode'], ACTION_MODES + (INSERT, SELECT))
+@assign_text(['EnterNormalMode'], ACTION_MODES + (INSERT, SELECT), icon='Ⓝ')
 class ViEnterNormalMode(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -1178,7 +1178,7 @@ class ViInsertAtBol(ViOperatorDef):
 
 @assign(seqs.SEQ[':'], ACTION_MODES)
 @assign(seqs.CTRL_W_COLON, ACTION_MODES)
-@assign_text(['EnterCommandLineMode'], ACTION_MODES)
+@assign_text(['EnterCommandLineMode'], ACTION_MODES, icon='Ⓒ')
 class ViEnterCommandLineMode(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -1255,7 +1255,7 @@ class ViShiftEnterMotion(ViMotionDef):
 
 @assign(seqs.SEQ['b'], MOTION_MODES)
 @assign(seqs.SEQ['⇧◀'], MOTION_MODES)
-@assign_text(['MoveByWordsBackward'], MOTION_MODES)
+@assign_text(['MoveByWordsBackward'], MOTION_MODES, icon="⤝ω")
 class ViMoveByWordsBackward(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1265,7 +1265,7 @@ class ViMoveByWordsBackward(ViMotionDef):
 
 @assign(seqs.SEQ['⇧b'], MOTION_MODES)
 @assign(seqs.SEQ['⎈◀'], MOTION_MODES)
-@assign_text(['MoveByBigWordsBackward'], MOTION_MODES)
+@assign_text(['MoveByBigWordsBackward'], MOTION_MODES, icon="⤝W")
 class ViMoveByBigWordsBackward(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1275,7 +1275,7 @@ class ViMoveByBigWordsBackward(ViMotionDef):
 
 @assign(seqs.SEQ['⇧w'], MOTION_MODES)
 @assign(seqs.SEQ['⎈▶'], MOTION_MODES)
-@assign_text(['MoveByBigWords'], MOTION_MODES)
+@assign_text(['MoveByBigWords'], MOTION_MODES, icon="W⤞")
 class ViMoveByBigWords(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1284,7 +1284,7 @@ class ViMoveByBigWords(ViMotionDef):
 
 
 @assign(seqs.SEQ['e'], MOTION_MODES)
-@assign_text(['MoveByWordEnds'], MOTION_MODES)
+@assign_text(['MoveByWordEnds'], MOTION_MODES, icon="W⭲")
 class ViMoveByWordEnds(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1302,7 +1302,7 @@ class ViGotoScreenTop(ViMotionDef):
 
 
 @assign(seqs.SEQ['ge'], MOTION_MODES)
-@assign_text(['MoveByWordEndsBackward'], MOTION_MODES)
+@assign_text(['MoveByWordEndsBackward'], MOTION_MODES, icon="⭰ω")
 class ViMoveByWordEndsBackward(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1311,7 +1311,7 @@ class ViMoveByWordEndsBackward(ViMotionDef):
 
 
 @assign(seqs.SEQ['g⇧e'], MOTION_MODES)
-@assign_text(['MoveByBigWordEndsBackward'], MOTION_MODES)
+@assign_text(['MoveByBigWordEndsBackward'], MOTION_MODES, icon="⭰W")
 class ViMoveByBigWordEndsBackward(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1359,7 +1359,7 @@ class ViGotoScreenMiddle(ViMotionDef):
 
 
 @assign(seqs.SEQ['⎈d'], MOTION_MODES)
-@assign_text(['MoveHalfScreenDown'], MOTION_MODES)
+@assign_text(['MoveHalfScreenDown'], MOTION_MODES, icon='⤈')
 class ViMoveHalfScreenDown(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1372,7 +1372,7 @@ class ViMoveHalfScreenDown(ViMotionDef):
 
 
 @assign(seqs.SEQ['⎈u'], MOTION_MODES + (INSERT,))
-@assign_text(['MoveHalfScreenUp'], MOTION_MODES + (INSERT,))
+@assign_text(['MoveHalfScreenUp'], MOTION_MODES + (INSERT,), icon='⤉')
 class ViMoveHalfScreenUp(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1387,7 +1387,7 @@ class ViMoveHalfScreenUp(ViMotionDef):
 @assign(seqs.SEQ['⎈f'], MOTION_MODES)
 @assign(seqs.SEQ['⇟'], MOTION_MODES)
 @assign(seqs.SEQ['⇧▼'], MOTION_MODES)
-@assign_text(['MoveScreenDown'], MOTION_MODES)
+@assign_text(['MoveScreenDown'], MOTION_MODES, icon='⇟')
 class ViMoveScreenDown(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1398,7 +1398,7 @@ class ViMoveScreenDown(ViMotionDef):
 @assign(seqs.SEQ['⎈b'], MOTION_MODES)
 @assign(seqs.SEQ['⇞'], MOTION_MODES)
 @assign(seqs.SEQ['⇧▲'], MOTION_MODES)
-@assign_text(['MoveScreenUp'], MOTION_MODES)
+@assign_text(['MoveScreenUp'], MOTION_MODES, icon='⇞')
 class ViMoveScreenUp(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1407,7 +1407,7 @@ class ViMoveScreenUp(ViMotionDef):
 
 
 @assign(seqs.SEQ['`'], MOTION_MODES)
-@assign_text(['GotoExactMarkXpos'], MOTION_MODES)
+@assign_text(['GotoExactMarkXpos'], MOTION_MODES, icon='☰🖈')
 class ViGotoExactMarkXpos(RequireOneCharMixin, ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1432,7 +1432,7 @@ class ViMoveToEol(ViMotionDef):
 @assign(seqs.SEQ['⎈m'], MOTION_MODES)
 @assign(seqs.SEQ['⏎'], MOTION_MODES)
 @assign(seqs.SEQ['+'], MOTION_MODES)
-@assign_text(['MotionEnter'], MOTION_MODES)
+@assign_text(['MotionEnter'], MOTION_MODES, icon='⭣␤')
 class ViMotionEnter(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1460,7 +1460,7 @@ class ViMoveToSoftEol(ViMotionDef):
 
 @assign(seqs.G_DOWN, MOTION_MODES)
 @assign(seqs.SEQ['gj'], MOTION_MODES)
-@assign_text(['MoveByScreenLineDown'], MOTION_MODES)
+@assign_text(['MoveByScreenLineDown'], MOTION_MODES, icon='↪▼')
 class ViMoveByScreenLineDown(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1470,7 +1470,7 @@ class ViMoveByScreenLineDown(ViMotionDef):
 
 @assign(seqs.G_UP, MOTION_MODES)
 @assign(seqs.SEQ['gk'], MOTION_MODES)
-@assign_text(['MoveByScreenLineUp'], MOTION_MODES)
+@assign_text(['MoveByScreenLineUp'], MOTION_MODES, icon='↪▲')
 class ViMoveByScreenLineUp(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1479,7 +1479,7 @@ class ViMoveByScreenLineUp(ViMotionDef):
 
 
 @assign(seqs.SEQ['⇧['], MOTION_MODES)
-@assign_text(['MoveByBlockUp'], MOTION_MODES)
+@assign_text(['MoveByBlockUp'], MOTION_MODES, icon='🢔¶')
 class ViMoveByBlockUp(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1530,7 +1530,7 @@ class ViGotoMark(RequireOneCharMixin, ViMotionDef):
 
 
 @assign(seqs.SEQ["}"], MOTION_MODES)
-@assign_text(['MoveByBlockDown'], MOTION_MODES)
+@assign_text(['MoveByBlockDown'], MOTION_MODES, icon='¶🢖')
 class ViMoveByBlockDown(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1720,7 +1720,7 @@ class ViMoveByBigWordEnds(ViMotionDef):
 @assign(seqs.SEQ['⎈h'], MOTION_MODES)
 @assign(seqs.SEQ['h'], MOTION_MODES)
 @assign(seqs.SEQ['◀'], MOTION_MODES)
-@assign_text(['MoveLeftByChars'], MOTION_MODES)
+@assign_text(['MoveLeftByChars'], MOTION_MODES, icon="◀")
 class ViMoveLeftByChars(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1730,7 +1730,7 @@ class ViMoveLeftByChars(ViMotionDef):
 
 @assign(seqs.SEQ['⇧▶'], MOTION_MODES)
 @assign(seqs.SEQ['w'], MOTION_MODES)
-@assign_text(['MoveByWords'], MOTION_MODES)
+@assign_text(['MoveByWords'], MOTION_MODES, icon="ω⤞")
 class ViMoveByWords(ViMotionDef):
     def init(self):
         self.updates_xpos = True
@@ -1743,7 +1743,7 @@ class ViMoveByWords(ViMotionDef):
 @assign(seqs.SEQ['⎈n'], MOTION_MODES + (INSERT,))
 @assign(seqs.SEQ['▼'], MOTION_MODES)
 @assign(seqs.SEQ['j'], MOTION_MODES)
-@assign_text(['MoveDownByLines'], MOTION_MODES + (INSERT,))
+@assign_text(['MoveDownByLines'], MOTION_MODES + (INSERT,), icon="▼")
 class ViMoveDownByLines(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1754,7 +1754,7 @@ class ViMoveDownByLines(ViMotionDef):
 @assign(seqs.SEQ['⎈▲'], MOTION_MODES)
 @assign(seqs.SEQ['k'], MOTION_MODES)
 @assign(seqs.SEQ['▲'], MOTION_MODES)
-@assign_text(['MoveUpByLines'], MOTION_MODES)
+@assign_text(['MoveUpByLines'], MOTION_MODES, icon="▲")
 class ViMoveUpByLines(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1763,7 +1763,7 @@ class ViMoveUpByLines(ViMotionDef):
 
 @assign(seqs.SEQ["^"], MOTION_MODES)
 @assign(seqs.SEQ['⇤'], MOTION_MODES)
-@assign_text(['MoveToBol'], MOTION_MODES)
+@assign_text(['MoveToBol'], MOTION_MODES, icon="⇤")
 class ViMoveToBol(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1881,7 +1881,7 @@ class ViOpenRegister(ViMotionDef):
 
 @assign(seqs.CTRL_HOME, MOTION_MODES)
 @assign(seqs.SEQ['gg'], MOTION_MODES)
-@assign_text(['GotoBof'], MOTION_MODES)
+@assign_text(['GotoBof'], MOTION_MODES, icon='⇱')
 class ViGotoBof(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1894,7 +1894,7 @@ class ViGotoBof(ViMotionDef):
 
 
 @assign(seqs.SEQ['⇧g'], MOTION_MODES)
-@assign_text(['GotoEof'], MOTION_MODES)
+@assign_text(['GotoEof'], MOTION_MODES, icon='⇲')
 class ViGotoEof(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1921,7 +1921,7 @@ class ViReplaceCharacters(RequireOneCharMixin, ViOperatorDef):
 
 
 @assign(seqs.SEQ['m'], ACTION_MODES)
-@assign_text(['SetMark'], ACTION_MODES)
+@assign_text(['SetMark'], ACTION_MODES, icon='🖈Z')
 class ViSetMark(RequireOneCharMixin, ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -1933,7 +1933,7 @@ class ViSetMark(RequireOneCharMixin, ViOperatorDef):
 
 
 @assign(seqs.SEQ['f'], MOTION_MODES)
-@assign_text(['SearchCharForward'], MOTION_MODES)
+@assign_text(['SearchCharForward'], MOTION_MODES, icon='🔎')
 class ViSearchCharForward(RequireOneCharMixin, ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1947,7 +1947,7 @@ class ViSearchCharForward(RequireOneCharMixin, ViMotionDef):
 
 
 @assign(seqs.SEQ['t'], MOTION_MODES)
-@assign_text(['SearchCharForwardTill'], MOTION_MODES)
+@assign_text(['SearchCharForwardTill'], MOTION_MODES, icon='🔎₋₁')
 class ViSearchCharForwardTill(RequireOneCharMixin, ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -1989,7 +1989,7 @@ class ViITextObject(RequireOneCharMixin, ViMotionDef):
 
 
 @assign(seqs.SEQ['⇧f'], MOTION_MODES)
-@assign_text(['SearchCharBackward'], MOTION_MODES)
+@assign_text(['SearchCharBackward'], MOTION_MODES, icon='🔍')
 class ViSearchCharBackward(RequireOneCharMixin, ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -2003,7 +2003,7 @@ class ViSearchCharBackward(RequireOneCharMixin, ViMotionDef):
 
 
 @assign(seqs.SEQ['⇧t'], MOTION_MODES)
-@assign_text(['SearchCharBackwardTill'], MOTION_MODES)
+@assign_text(['SearchCharBackwardTill'], MOTION_MODES, icon='🔍₋₁')
 class ViSearchCharBackwardTill(RequireOneCharMixin, ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -2017,7 +2017,7 @@ class ViSearchCharBackwardTill(RequireOneCharMixin, ViMotionDef):
 
 
 @assign(seqs.SEQ["/"], MOTION_MODES)
-@assign_text(['SearchForward'], MOTION_MODES)
+@assign_text(['SearchForward'], MOTION_MODES, icon='◎🢖')
 class ViSearchForward(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
@@ -2062,7 +2062,7 @@ class ViSearchForwardImpl(ViMotionDef):
 
 
 @assign(seqs.SEQ['?'], MOTION_MODES)
-@assign_text(['SearchBackward'], MOTION_MODES)
+@assign_text(['SearchBackward'], MOTION_MODES, icon='🢔◎')
 class ViSearchBackward(ViMotionDef):
     def init(self):
         self.scroll_into_view = True

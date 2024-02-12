@@ -20,10 +20,11 @@ _log.setLevel(DEFAULT_LOG_LEVEL)
 if _log.hasHandlers(): # clear existing handlers, including sublime's
     logging.getLogger(__name__).handlers.clear()
     # _log.addHandler(stream_handler)
-_L = True if _log.isEnabledFor(logging.KEY) else False
+_L = True if _log.isEnabledFor(logging.KEYT) else False
 
 
 class FeedKeyHandler():
+
     def __init__(self, view, key: str, repeat_count: int, do_eval: bool, check_user_mappings: bool):
         self.view                = view
         self.window              = self.view.window()
@@ -37,21 +38,31 @@ class FeedKeyHandler():
             seqP = get_partial_sequence(view)
             #txt  = get_text            (view)
             txtP = get_partial_text    (view)
-            _log.key('\n—————⌨️%s %s #%s Eval=%s usrMap=%s seq‘%s’P‘%s’ txtP‘%s’'
+            _log.key('\n—————⌨️%s %s #%s Eval=%s usrMap=%s seq‘%s’ P‘%s’ txtP‘%s’'
             ,key,self.mode,repeat_count,do_eval,check_user_mappings,seq,seqP,txtP) # ⏰%s,TFMT.format(t=datetime.now()))
+
     def handle(self) -> None:
         self   ._handle_bad_selection()
         if self._handle_escape():
             return
+        _log.key('append with reg=%s seq‘%s’',get_capture_register(self.view),get_sequence(self.view))
         self   ._append_sequence() # status bar vim-seq sequence
-        if self._handle_register():
+        _reg = get_capture_register(self.view)
+        _log.key('h_reg with reg=%s', f'{_reg}↩+' if _reg else f'{_reg}')
+        hreg = self._handle_register()
+        if hreg:
             return
+        _log.key('collect input with reg %s', get_capture_register(self.view))
         if self._collect_input():
             return
+        _log.key(f'handle @ key m‘{get_mode(self.view)}’ seq‘{get_sequence(self.view)}’')
         self   ._handle()
+        _log.key(f'handle @ key m‘{get_mode(self.view)}’ seq‘{get_sequence(self.view)}’ POS')
+
     def _handle_bad_selection(self) -> None:
         if _is_selection_malformed(self.view, self.mode):
             self.mode = _fix_malformed_selection(self.view, self.mode)
+
     def _handle_escape(self) -> bool:
         if self.key.lower() in ESC:
             should_hide_auto_complete_on_escape = (
@@ -72,35 +83,34 @@ class FeedKeyHandler():
         return False
 
     def _append_sequence(self) -> None:
-        _log.keyt('‘%s’ icon status ‘%s’'
+        _log.key('+seq‘%s’ status icon‘%s’'
             ,self.key,"")
         append_sequence         (self.view, self.key)
-
         update_status_line      (self.view)
+
     def _handle_register(self) -> bool:
         if get_capture_register (self.view):
-
-
+            _log.key('_handle reg‘%s’ seqP‘’ txtP‘’',self.key)
             set_register        (self.view, self.key)
             set_partial_sequence(self.view, '')
             set_partial_text    (self.view, [])
             return True
         return False
+
     def _collect_input(self) -> bool:
         motion = get_motion(self.view)
         action = get_action(self.view)
         _log.keyy("_collect_input mot‘%s’ act‘%s’", motion, action)
 
         if must_collect_input(self.view, motion, action):
-            if motion and\
-               motion.accept_input:
+            if motion and motion.accept_input:
+                _log.key('_collect_input set mot‘%s’',motion)
                 motion.accept(self.key)
                 set_motion   (self.view, motion)  # Processed motion needs to reserialised and stored
-
             else:
+                _log.key('_collect_input set act‘%s’',action)
                 action.accept(self.key)
                 set_action   (self.view, action)  # Processed action needs to reserialised and stored
-
 
             if self.do_eval and is_runnable(self.view):
                 _log.key('doeval on a runnable, reset_command_data')
@@ -133,6 +143,7 @@ class FeedKeyHandler():
         # If the user has defined a mapping that starts with a number i.e. count then the count handler has to be skipped otherwise it won't resolve. See https://github.com/NeoVintageous/NeoVintageous/issues/434
         can_resolve_txt = mappings_can_resolve_text(self.view, self.key)
         can_resolve_seq = mappings_can_resolve     (self.view, self.key)
+        _log.key('_part_txt¦%s¦ _part_seq¦%s¦ key¦%s¦',can_resolve_txt,can_resolve_seq,self.key)
         if _L:
             self._dbg_txt += f"{'✓' if can_resolve_txt else '✗'}TXT ⌨️{self.key}"
             self._dbg_seq += f"{'✓' if can_resolve_seq else '✗'}SEQ ⌨️{self.key}"
@@ -146,6 +157,7 @@ class FeedKeyHandler():
         _part_seq = get_partial_sequence(self.view)
         set_partial_text                (self.view, _part_txt + [self.key])
         set_partial_sequence            (self.view, _part_seq +  self.key)
+        _log.key('_part_txt¦%s¦ _part_seq¦%s¦ key¦%s¦',_part_txt,_part_seq,self.key)
 
         cmdT = mappings_resolve_text(self.view, check_user_mappings=self.check_user_mappings)
         cmdS = mappings_resolve     (self.view, check_user_mappings=self.check_user_mappings)
@@ -158,18 +170,15 @@ class FeedKeyHandler():
 
 
         self.cmd = cmdT
-
         if (isTextHandled := self._handle_text()):
             if _L:
-                _log.key('%s\n%s',self._dbg_txt,self._dbg_seq)
+                _log.key('↩TXT %s\n%s',self._dbg_txt,self._dbg_seq)
             return
         else:
+            _log.key('_handle_seq')
             self._handle_seq()
             if _L:
-                _log.key('%s\n%s',self._dbg_txt,self._dbg_seq)
-    def _handle_mapping_text(self, mapping: Mapping) -> None:
-        if self.do_eval: # TODO Review What happens if Mapping + do_eval=False
-            evaluate_mapping_text(self.view, mapping)
+                _log.key('↩SEQ %s\n%s',self._dbg_txt,self._dbg_seq)
 
     def _handle_seq(self) -> None:
         cmdS = self.cmdS
@@ -228,7 +237,9 @@ class FeedKeyHandler():
                 self._dbg_seq += f" ¦{cmd}¦cmd→_h" # ToDo
         if _L:
             _log.key(self._dbg_seq)
+        _log.key('_handle command seq %s pre', self.do_eval)
         self._handle_command(cmd, self.do_eval)
+        _log.key('_handle command seq %s pos', self.do_eval)
 
     def _handle_text(self) -> bool:
         cmdS = self.cmdS
@@ -261,55 +272,65 @@ class FeedKeyHandler():
             if _L:
                 self._dbg_txt += f" ↩− ¦{cmd}¦cmd=ⓄOperatorDef"
             return False # pass to handle sequence
-
-
-
-
-
         if _L:
             self._dbg_txt += f", _hCmd"
+        _log.key('_handle command text %s pre', self.do_eval)
         self._handle_command(cmd, self.do_eval) # ToDo
+        _log.key('_handle command text %s pos', self.do_eval)
         if _L:
             self._dbg_txt += f" ↩+ ¦{cmd}¦cmd=n/a"
+        print(f'ret True')
         return True # False to handle sequence next
 
     def _handle_mapping(self, mapping: Mapping) -> None:
         if self.do_eval: # TODO Review What happens if Mapping + do_eval=False
             evaluate_mapping(self.view, mapping)
 
-    def _handle_command(self, command: ViCommandDefBase, do_eval: bool) -> None:
+    def _handle_mapping_text(self, mapping: Mapping) -> None:
+        if self.do_eval: # TODO Review What happens if Mapping + do_eval=False
+            evaluate_mapping_text(self.view, mapping)
+
+    def _handle_command(self, command:ViCommandDefBase, do_eval:bool) -> None:
         """ Raises ValueError if too many motions|actions, or unexpected command type"""
         _is_runnable = is_runnable(self.view)
+        _log.key('_handle command start run=%s',_is_runnable)
 
         if   isinstance(command, ViMotionDef):
             if _is_runnable:
                 raise ValueError('too many motions')
+            _log.key('_handle_command set mot‘%s’',command)
             set_motion  (self.view, command)
             if  get_mode(self.view) == OPERATOR_PENDING:
                 set_mode(self.view, NORMAL)
         elif isinstance(command, ViOperatorDef):
             if _is_runnable:
                 raise ValueError('too many actions')
+            _log.key('_handle_command set act‘%s’',command)
             set_action  (self.view, command)
             if command.motion_required and not is_visual_mode(get_mode(self.view)):
                 set_mode(self.view, OPERATOR_PENDING)
         else:
             raise ValueError('unexpected command type')
 
+        _log.key('_handle command preint')
         if is_interactive(self.view):
             if command.accept_input and command.input_parser and command.input_parser.is_panel():
                 command.input_parser.run_command(self.view.window())
 
         if get_mode(self.view) == OPERATOR_PENDING:
+            _log.key('_handle command seqP‘’ txtP‘’')
             set_partial_sequence(self.view, '')
             set_partial_text    (self.view, [])
+        _log.key('_handle command do_eval %s', do_eval)
         if do_eval:
             evaluate_state      (self.view)
+        _log.key('_handle command do_eval %s post', do_eval)
 
     def _handle_command_not_found(self, command) -> bool:
         if isinstance(command, CommandNotFound):
-            if   get_mode(self.view) == OPERATOR_PENDING:
+            if get_mode(self.view) == OPERATOR_PENDING:
                 set_mode(self.view, NORMAL)
+            _log.key('_h cmd not found, reset_command_data')
             reset_command_data(self.view)
             ui_bell()
             return True

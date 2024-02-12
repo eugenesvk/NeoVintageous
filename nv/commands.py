@@ -161,8 +161,7 @@ __all__ = [
     'nv_vi_flip_selection',
     'nv_vi_w',
     'nv_vi_x',
-    'nv_vi_y',
-    'nv_vi_yy',
+    'nv_vi_copy_char','nv_vi_copy_line',
     'nv_vi_z',
     'nv_vi_z_enter',
     'nv_vi_z_minus',
@@ -1046,7 +1045,7 @@ class nv_vi_flip_selection(TextCommand):
             self.view.show(self.view.sel()[0].b, False)
 
 
-class nv_vi_yy(TextCommand):
+class nv_vi_copy_line(TextCommand):
 
     def run(self, edit, mode=None, count=1, register=None):
         def f(view, s):
@@ -1082,7 +1081,7 @@ class nv_vi_yy(TextCommand):
             enter_normal_mode(self.view, mode)
 
 
-class nv_vi_y(TextCommand):
+class nv_vi_copy_char(TextCommand):
 
     def run(self, edit, mode=None, count=1, register=None, motion=None):
         if mode == INTERNAL_NORMAL:

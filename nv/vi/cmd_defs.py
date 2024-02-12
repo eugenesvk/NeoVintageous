@@ -88,22 +88,22 @@ class ViSubstituteChar(ViOperatorDef):
 
 
 @assign(seqs.SEQ['y'], ACTION_MODES)
-@assign_text(['YankByChars'], ACTION_MODES, icon='🗐▋')
+@assign_text(['CopyChar','YankByChars'], ACTION_MODES, icon='🗐▋')
 class ViYankByChars(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
         self.motion_required = True
-        self.command = 'nv_vi_y'
+        self.command = 'nv_vi_copy_char'
 
 
 @assign(seqs.SEQ['y'], (SELECT,))
-@assign_text(['YankSelectByChars'], (SELECT,))
+@assign_text(['CopyCharSel','YankSelectByChars'], (SELECT,))
 class ViYankSelectByChars(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
-        self.command = 'nv_vi_y'
+        self.command = 'nv_vi_copy_char'
 
 
 @assign(seqs.SEQ['='], ACTION_MODES)
@@ -308,12 +308,12 @@ class ViUnindentLine(ViOperatorDef):
 
 @assign(seqs.SEQ['yy'], ACTION_MODES)
 @assign(seqs.SEQ['⇧y'], ACTION_MODES)
-@assign_text(['YankLine'], ACTION_MODES)
+@assign_text(['CopyLine','YankLine'], ACTION_MODES)
 class ViYankLine(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
-        self.command = 'nv_vi_yy'
+        self.command = 'nv_vi_copy_line'
 
 
 @assign(seqs.G_TILDE_TILDE, ACTION_MODES)

@@ -64,7 +64,7 @@ __all__ = [
     'nv_vi_at',
     'nv_vi_b',
     'nv_vi_backtick',
-    'nv_vi_bar',
+    'nv_vi_move_column',
     'nv_vi_big_a',
     'nv_vi_big_b',
     'nv_vi_big_c',
@@ -3416,7 +3416,7 @@ class nv_vi_ctrl_d(TextCommand):
             scroll_viewport_position(self.view, number_of_scroll_lines)
 
 
-class nv_vi_bar(TextCommand):
+class nv_vi_move_column(TextCommand):
     def run(self, edit, mode=None, count=1):
         def _get_target(view, start, col):
             line = view.line(start)

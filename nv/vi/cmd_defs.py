@@ -1702,7 +1702,7 @@ class ViMoveByLineCols(ViMotionDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
-        self.command = 'nv_vi_bar'
+        self.command = 'nv_vi_move_column'
 
 
 @assign(seqs.SEQ['⇧e'], MOTION_MODES)

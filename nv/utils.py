@@ -1178,7 +1178,7 @@ def should_motion_apply_op_transformer(motion) -> bool:
                 return False
 
     blacklist = (
-        'nv_vi_bar',
+        'nv_vi_move_column',
         'nv_vi_dollar',
         'nv_vi_find_in_line',
         'nv_vi_g__',

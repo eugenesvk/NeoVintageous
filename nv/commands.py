@@ -3307,7 +3307,7 @@ class nv_vi_move_screen_line_down(TextCommand):
             self    .view.run_command('nv_vi_move_line_down',{'mode':mode,'count':count})
         elif mode == INTERNAL_NORMAL:
             for i in range(count):
-                self.view.run_command('move',{'by':'lines','forward':True,'extend':False})
+                self.view.run_command('move',{'by':'lines','forward':True,'extend':True })
 
 
 class nv_vi_move_screen_line_up(TextCommand):
@@ -3322,7 +3322,7 @@ class nv_vi_move_screen_line_up(TextCommand):
             self    .view.run_command('nv_vi_move_line_up',{'mode':mode,'count':count})
         elif mode == INTERNAL_NORMAL:
             for i in range(count):
-                self.view.run_command('move',{'by':'lines','forward':False,'extend':False})
+                self.view.run_command('move',{'by':'lines','forward':False,'extend':True })
 
 
 class nv_vi_g__(TextCommand):

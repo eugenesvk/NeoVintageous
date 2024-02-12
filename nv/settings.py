@@ -384,14 +384,20 @@ def set_reset_during_init(view, value: bool) -> None:
 
 def get_sequence(view) -> str:
     return get_session_view_value(view, 'sequence', '')
+def get_seq_icon(view) -> str:
+    return get_session_view_value(view, 'seq_icon', '')
 
 
 def set_sequence(view, value: str) -> None:
     set_session_view_value(view, 'sequence', value)
+def set_seq_icon(view, value: str) -> None:
+    set_session_view_value(view, 'seq_icon', value)
 
 
 def append_sequence(view, value: str) -> None:
     set_sequence(view, get_sequence(view) + value)
+def append_seq_icon(view, value: str) -> None:
+    set_seq_icon(view, get_seq_icon(view) + value)
 
 
 # Indicate that editing commands should be grouped together. They should be

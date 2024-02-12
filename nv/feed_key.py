@@ -4,7 +4,7 @@ from datetime import datetime
 
 from NeoVintageous.nv.mappings import IncompleteMapping, Mapping, mappings_can_resolve, mappings_can_resolve_text, mappings_resolve, mappings_resolve_text
 from NeoVintageous.nv.mappings_handler import evaluate_mapping, evaluate_mapping_text
-from NeoVintageous.nv.settings import append_sequence, get_action_count, get_capture_register, get_mode, get_motion_count, get_partial_sequence, get_partial_text, get_sequence, get_setting, is_interactive, set_action_count, set_capture_register, set_mode, set_motion_count, set_partial_sequence, set_partial_text, set_register
+from NeoVintageous.nv.settings import append_sequence, append_seq_icon, get_action_count, get_capture_register, get_mode, get_motion_count, get_partial_sequence, get_partial_text, get_sequence, get_setting, is_interactive, set_action_count, set_capture_register, set_mode, set_motion_count, set_partial_sequence, set_partial_text, set_register
 from NeoVintageous.nv.state import evaluate_state, get_action, get_motion, init_view, is_runnable, must_collect_input, reset_command_data, set_action, set_motion, update_status_line
 from NeoVintageous.nv.ui import ui_bell
 from NeoVintageous.nv.vi.cmd_base import CommandNotFound, ViCommandDefBase, ViMotionDef, ViOperatorDef
@@ -46,7 +46,8 @@ class FeedTextCmdHandler():
     def _append_sequence(self) -> None: # TextCmd
         _log.keyt('‘%s’ icon status ‘%s’'
             ,self.text_cmd,self.cmd.icon)
-        append_sequence         (self.view, self.cmd.icon or self.text_cmd)
+        append_sequence         (self.view,                  self.text_cmd)
+        append_seq_icon         (self.view, self.cmd.icon or self.text_cmd)
         update_status_line      (self.view)
     def _handle_register(self) -> bool: # TextCmd
         if get_capture_register (self.view):

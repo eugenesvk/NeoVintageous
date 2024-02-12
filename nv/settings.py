@@ -309,8 +309,9 @@ def get_register(view) -> str:
 
 
 def set_register(view, value: str) -> None:
+    print(f"f set register ‘{value}’")
     set_session_view_value(view, 'register', value)
-    set_capture_register(view, False)
+    set_capture_register  (view, False)
 
 
 def get_capture_register(view) -> bool:
@@ -318,6 +319,7 @@ def get_capture_register(view) -> bool:
 
 
 def set_capture_register(view, value: bool) -> None:
+    print(f"f set_capture_register ‘{value}’")
     set_session_view_value(view, 'capture_register', value)
 
 
@@ -388,6 +390,7 @@ def get_seq_icon(view) -> str:
 def set_text    (view, value:list) -> None:
     set_session_view_value(view, 'text'    , value)
 def set_sequence(view, value: str) -> None:
+    print(f"set seq ‘{value}’")
     set_session_view_value(view, 'sequence', value)
 def set_seq_icon(view, value: str) -> None:
     set_session_view_value(view, 'seq_icon', value)
@@ -399,6 +402,7 @@ def append_text    (view, value:list) -> None:
     elif isinstance(value,list):
         set_text(view, get_text    (view) +  value)
 def append_sequence(view, value: str) -> None:
+    print(f"app seq ‘{value}’ to ‘{get_sequence(view)}’")
     set_sequence(view, get_sequence(view) + value)
 def append_seq_icon(view, value: str) -> None:
     set_seq_icon(view, get_seq_icon(view) + value)

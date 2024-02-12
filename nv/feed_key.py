@@ -124,12 +124,18 @@ class FeedTextCmdHandler():
             return True
         if isinstance(cmd, CommandNotFound):
             if _L:
-                self.dbg += f" ↩− ¦¦cmd=NotFound"
-            return False # pass to handle sequence
-        if (isinstance(cmd, ViOperatorDef) and get_mode(self.view) == OPERATOR_PENDING):
-            if _L:
-                self.dbg += f" ↩− ¦{cmd}¦cmd=ⓄOperatorDef"
-            return False # pass to handle sequence
+                self.dbg += f" ↩− cmd=NotFound"
+            if self._handle_command_not_found(cmd):
+                return True
+        # if (isinstance(cmd, ViOperatorDef) and get_mode(self.view) == OPERATOR_PENDING): # unreachable code?
+        #     cmd = mappings_resolve_text(self.view, text_command=self.text_cmd)
+        #     if self._handle_command_not_found(cmd):
+        #         if _L:
+        #             self.dbg += f" ↩− ¦{_cmd_in}¦cmd=ⓄOperatorDef→NotFound"
+        #         return True
+        #     else:
+        #         if _L:
+        #             self.dbg += f" ↩+ ¦{cmd}¦cmd←¦{_cmd_in}¦ⓄOperatorDef"
         if _L:
             self.dbg += f", _hCmd"
         self._handle_command(cmd, self.do_eval)

@@ -2111,8 +2111,8 @@ class ViSearchBackwardImpl(ViMotionDef):
 class ViInsertLineWithCommonPrefix(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.updates_xpos = True
-        self.command = 'nv_vi_ctrl_x_ctrl_l'
+        self.updates_xpos     = True
+        self.command          = 'nv_vi_complete_line'
 
 
 @assign(seqs.SEQ['gm'], MOTION_MODES)

@@ -95,7 +95,7 @@ __all__ = [
     'nv_vi_ctrl_u',
     'nv_vi_window_control',
     'nv_vi_delete_word',
-    'nv_vi_ctrl_x_ctrl_l',
+    'nv_vi_complete_line',
     'nv_vi_ctrl_y',
     'nv_vi_d',
     'nv_vi_dd',
@@ -2298,33 +2298,32 @@ class nv_vi_g_big_h(WindowCommand):
         reset_command_data(self.view)
 
 
-class nv_vi_ctrl_x_ctrl_l(TextCommand):
+class nv_vi_complete_line(TextCommand):
     MAX_MATCHES = 20
-
     def run(self, edit, mode=None, count=None, register='"'):
         if mode != INSERT:
             raise ValueError('wrong mode')
-
-        if (len(self.view.sel()) > 1 or not self.view.sel()[0].empty()):
+        if (len(self.view.sel()) > 1 or\
+            not self.view.sel()[0].empty()):
             return ui_bell()
 
         s = self.view.sel()[0]
-        line_begin = self.view.text_point(row_at(self.view, s.b), 0)
-        prefix = self.view.substr(Region(line_begin, s.b)).lstrip()
+        line_begin = self.view.text_point(row_at(self.view , s.b), 0)
+        prefix     = self.view.substr    (Region(line_begin, s.b)).lstrip()
         self._matches = self.find_matches(prefix, end=self.view.line(s.b).a)
         if self._matches:
-            self.show_matches(self._matches)
+            self.show_matches    (self._matches)
             set_reset_during_init(self.view, False)
-            reset_command_data(self.view)
+            reset_command_data   (self.view)
             return
-
-        ui_bell()
+        else:
+            ui_bell()
 
     def show_matches(self, items):
         self.view.window().show_quick_panel(items, self.replace, MONOSPACE_FONT)
 
     def replace(self, s):
-        self.view.run_command('nv_view', {'action': 'replace_line', 'replacement': self._matches[s]})
+        self.view.run_command('nv_view',{'action':'replace_line','replacement':self._matches[s]})
         del self.__dict__['_matches']
         set_selection(self.view, self.view.sel()[0].b)
 

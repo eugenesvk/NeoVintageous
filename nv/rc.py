@@ -109,7 +109,7 @@ def _source(window, source, nodump=False) -> None:
             if ex_cmdline:
                 do_ex_cmdline(window, ex_cmdline)
             elif NeoVintageous.nv.cfg_parse._dump_to_kdl and not nodump:
-                node_key = kdl.Node(tag=None, name='-', args=[kdl.RawString(line.rstrip())])
+                node_key = kdl.Node(tag=None, name='≠', args=[kdl.RawString(line.rstrip())])
                 NeoVintageous.nv.cfg_parse._NVRC_KDL.nodes.append(node_key)
     finally:
         window.settings().erase('_nv_sourcing')
@@ -307,7 +307,7 @@ def _parse_general_cfg_kdl(general_cfg:kdl.Node,st_pref=None) -> None:
         return None
     node = general_cfg          # set relativenumber=true
     opt_name    = node.name     # ‘set’
-    if   opt_name == '-': # skip comment nodes (todo: when lib supports roundtrip, save as actual comments)
+    if   opt_name == '≠': # skip comment nodes (todo: when lib supports roundtrip, save as actual comments)
         return
     elif opt_name == 'source': # source was loaded before
         return

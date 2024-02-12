@@ -483,7 +483,7 @@ def _parse_keybind_kdl(keybind:kdl.Node, gmodes:Mode=Mode(0), var_d:dict={}):
     cmd_txt = []                   # ‘[OpenNameSpace]’
     if key in ['vardef','varset'] and node.tag is None: # skip variables (parsed earlier)
         return
-    if key == '-': # skip comment nodes (todo: when lib supports roundtrip, save as actual comments)
+    if key == '≠': # skip comment nodes (todo: when lib supports roundtrip, save as actual comments)
         return
     if key == 'let':
         _parse_let_kdl(node)

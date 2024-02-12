@@ -114,7 +114,7 @@ __all__ = [
     'nv_vi_ga',
     'nv_vi_ge',
     'nv_vi_gg',
-    'nv_vi_move_screen_line_down','nv_vi_move_screen_line_up',
+    'nv_vi_move_screen_line_down','nv_vi_move_screen_line_up','nv_vi_move_line_back',
     'nv_vi_gm',
     'nv_vi_go_to_symbol',
     'nv_vi_goto_changelist',
@@ -136,7 +136,6 @@ __all__ = [
     'nv_target_prev','nv_target_next',
     'nv_vi_less_than','nv_vi_less_than_less_than',
     'nv_vi_m',
-    'nv_vi_minus',
     'nv_vi_modify_numbers',
     'nv_vi_o',
     'nv_vi_octothorp',
@@ -3747,7 +3746,7 @@ class nv_vi_enter(TextCommand):
         regions_transformer(self.view, f)
 
 
-class nv_vi_minus(TextCommand):
+class nv_vi_move_line_back(TextCommand):
     def run(self, edit, mode=None, count=1):
         self.view.run_command('nv_vi_move_line_up', {'mode': mode, 'count': count})
 

@@ -563,7 +563,7 @@ def _parse_keybind_kdl(keybind:kdl.Node, gmodes:Mode=Mode(0), var_d:dict={}):
                 # print(f"kb map+ ({mode}){key}={cmd_txt} with {prop}")
     if children and not isChain:       # without Chain argument...
         for child in children:         # ...parse children as keybinds
-            _parse_keybind_kdl(keybind=child, gmodes=modes)
+            _parse_keybind_kdl(keybind=child, gmodes=modes, var_d=var_d)
 
 # cfgU_settings = (f'{PACKAGE_NAME}.sublime-settings')
 class cfgU(metaclass=Singleton):

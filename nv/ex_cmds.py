@@ -259,6 +259,7 @@ def ex_delete(view, edit, register: str, line_range: RangeNode, global_lines=Non
             if not text.endswith('\n'):
                 text = text + '\n'
 
+            print(f'ex delete registers_set {register}={text}')
             registers_set(view, register, [text])
 
     # Save stuff to be deleted in register
@@ -1111,6 +1112,7 @@ def ex_yank(view, register: str, line_range: RangeNode, **kwargs) -> None:
         return
 
     text = view.substr(resolved)
+    print(f'ex yank registers_set {register}={text}')
     registers_set(view, register, [text])
 
     if register == '"':

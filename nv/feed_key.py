@@ -165,6 +165,16 @@ class FeedTextCmdHandler():
         if do_eval:
             evaluate_state      (self.view)
 
+    def _handle_command_not_found(self, command) -> bool:
+        if isinstance(command, CommandNotFound):
+            if  get_mode(self.view) == OPERATOR_PENDING:
+                set_mode(self.view, NORMAL)
+            reset_command_data(self.view)
+            ui_bell()
+            return True
+        return False
+
+
 class FeedKeyHandler():
 
     def __init__(self, view, key: str, repeat_count: int, do_eval: bool, check_user_mappings: bool):

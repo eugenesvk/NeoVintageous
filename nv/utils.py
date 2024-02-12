@@ -1205,7 +1205,7 @@ def is_linewise_operation(mode: str, motion):
                     return 'maybe'
 
             # Motions with a count > 1 are linewise if lines > 1.
-            if motion_name in ('nv_vi_j', 'nv_vi_k'):
+            if motion_name in ('nv_vi_move_line_down', 'nv_vi_move_line_up'):
                 if 'count' in motion_args and motion_args['count'] > 1:
                     return 'maybe'
 

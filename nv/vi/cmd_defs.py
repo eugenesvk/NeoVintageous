@@ -1465,7 +1465,7 @@ class ViMoveByScreenLineDown(ViMotionDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
-        self.command = 'nv_vi_gj'
+        self.command = 'nv_vi_move_screen_line_down'
 
 
 @assign(seqs.G_UP, MOTION_MODES)
@@ -1475,7 +1475,7 @@ class ViMoveByScreenLineUp(ViMotionDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
-        self.command = 'nv_vi_gk'
+        self.command = 'nv_vi_move_screen_line_up'
 
 
 @assign(seqs.SEQ['⇧['], MOTION_MODES)
@@ -1747,7 +1747,7 @@ class ViMoveByWords(ViMotionDef):
 class ViMoveDownByLines(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_j'
+        self.command = 'nv_vi_move_line_down'
 
 
 @assign(seqs.SEQ['⎈p'], MOTION_MODES)
@@ -1758,7 +1758,7 @@ class ViMoveDownByLines(ViMotionDef):
 class ViMoveUpByLines(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_k'
+        self.command = 'nv_vi_move_line_up'
 
 
 @assign(seqs.SEQ["^"], MOTION_MODES)

@@ -114,8 +114,7 @@ __all__ = [
     'nv_vi_ga',
     'nv_vi_ge',
     'nv_vi_gg',
-    'nv_vi_gj',
-    'nv_vi_gk',
+    'nv_vi_move_screen_line_down','nv_vi_move_screen_line_up',
     'nv_vi_gm',
     'nv_vi_go_to_symbol',
     'nv_vi_goto_changelist',
@@ -129,9 +128,8 @@ __all__ = [
     'nv_vi_gv',
     'nv_vi_gx',
     'nv_vi_move_to_bol','nv_vi_move_to_soft_bol','nv_vi_move_to_hard_bol',
-    'nv_vi_j',
+    'nv_vi_move_line_down','nv_vi_move_line_up',
     'nv_vi_jump_back','nv_vi_jump_forward',
-    'nv_vi_k',
     'nv_vi_move_char_right','nv_vi_move_char_left',
     'nv_vi_left_brace' ,'nv_vi_left_paren' ,'nv_vi_left_square_bracket',
     'nv_vi_right_brace','nv_vi_right_paren','nv_vi_right_square_bracket',
@@ -2141,7 +2139,7 @@ class nv_enter_visual_block_mode(TextCommand):
             update_status_line(self.view)
 
 
-# TODO Refactor into nv_vi_j
+# TODO Refactor into nv_vi_move_line_down
 class nv_vi_select_j(WindowCommand):
 
     def run(self, mode=None, count=1, register=None):
@@ -2152,7 +2150,7 @@ class nv_vi_select_j(WindowCommand):
             self.window.run_command('find_under_expand')
 
 
-# TODO Refactor into nv_vi_k
+# TODO Refactor into nv_vi_move_line_up
 class nv_vi_select_k(WindowCommand):
 
     def run(self, mode=None, count=1, register=None):
@@ -2595,7 +2593,7 @@ class nv_vi_move_char_left(TextCommand):
         regions_transformer(self.view, f)
 
 
-class nv_vi_j(TextCommand):
+class nv_vi_move_line_down(TextCommand):
 
     def run(self, edit, mode=None, count=1, xpos=None):
         if mode == INSERT:
@@ -2688,7 +2686,7 @@ class nv_vi_jump_forward(TextCommand):
             self.view.run_command('jump_forward')
 
 
-class nv_vi_k(TextCommand):
+class nv_vi_move_line_up(TextCommand):
 
     def run(self, edit, mode=None, count=1, xpos=None):
         if xpos is None:
@@ -3297,34 +3295,34 @@ class nv_vi_move_to_bol(TextCommand):
         regions_transformer(self.view, f)
 
 
-class nv_vi_gj(TextCommand):
+class nv_vi_move_screen_line_down(TextCommand):
+    def run(self, edit, mode=None, count=1):
+        if   mode == NORMAL:
+            for i in range(count):
+                self.view.run_command('move',{'by':'lines','forward':True,'extend':False})
+        elif mode == VISUAL:
+            for i in range(count):
+                self.view.run_command('move',{'by':'lines','forward':True,'extend':True })
+        elif mode == VISUAL_LINE:
+            self    .view.run_command('nv_vi_move_line_down',{'mode':mode,'count':count})
+        elif mode == INTERNAL_NORMAL:
+            for i in range(count):
+                self.view.run_command('move',{'by':'lines','forward':True,'extend':False})
+
+
+class nv_vi_move_screen_line_up(TextCommand):
     def run(self, edit, mode=None, count=1):
         if mode == NORMAL:
             for i in range(count):
-                self.view.run_command('move', {'by': 'lines', 'forward': True, 'extend': False})
+                self.view.run_command('move',{'by':'lines','forward':False,'extend':False})
         elif mode == VISUAL:
             for i in range(count):
-                self.view.run_command('move', {'by': 'lines', 'forward': True, 'extend': True})
+                self.view.run_command('move',{'by':'lines','forward':False,'extend':True })
         elif mode == VISUAL_LINE:
-            self.view.run_command('nv_vi_j', {'mode': mode, 'count': count})
+            self    .view.run_command('nv_vi_move_line_up',{'mode':mode,'count':count})
         elif mode == INTERNAL_NORMAL:
             for i in range(count):
-                self.view.run_command('move', {'by': 'lines', 'forward': True, 'extend': False})
-
-
-class nv_vi_gk(TextCommand):
-    def run(self, edit, mode=None, count=1):
-        if mode == NORMAL:
-            for i in range(count):
-                self.view.run_command('move', {'by': 'lines', 'forward': False, 'extend': False})
-        elif mode == VISUAL:
-            for i in range(count):
-                self.view.run_command('move', {'by': 'lines', 'forward': False, 'extend': True})
-        elif mode == VISUAL_LINE:
-            self.view.run_command('nv_vi_k', {'mode': mode, 'count': count})
-        elif mode == INTERNAL_NORMAL:
-            for i in range(count):
-                self.view.run_command('move', {'by': 'lines', 'forward': False, 'extend': False})
+                self.view.run_command('move',{'by':'lines','forward':False,'extend':False})
 
 
 class nv_vi_g__(TextCommand):
@@ -3732,7 +3730,7 @@ class nv_vi_ctrl_b(TextCommand):
 
 class nv_vi_enter(TextCommand):
     def run(self, edit, mode=None, count=1):
-        self.view.run_command('nv_vi_j', {'mode': mode, 'count': count})
+        self.view.run_command('nv_vi_move_line_down', {'mode': mode, 'count': count})
 
         def f(view, s):
             target = next_non_blank(view, get_insertion_point_at_b(s))
@@ -3751,7 +3749,7 @@ class nv_vi_enter(TextCommand):
 
 class nv_vi_minus(TextCommand):
     def run(self, edit, mode=None, count=1):
-        self.view.run_command('nv_vi_k', {'mode': mode, 'count': count})
+        self.view.run_command('nv_vi_move_line_up', {'mode': mode, 'count': count})
 
         def f(view, s):
             target = next_non_blank(view, get_insertion_point_at_b(s))

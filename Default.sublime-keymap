@@ -203,6 +203,8 @@
 {"keys":["ctrl+space"    	],"command":"nv_feed_key"	,"args":{"key":"<C-space>"}   	,"context":[{"key":"nv_command_or_insert"},{"key":"setting.vintageous_use_ctrl_keys"},{"key":"nv_handle_key","operand":"<C-space>"}]},
 {"keys":["ctrl+up"       	],"command":"nv_feed_key"	,"args":{"key":"<C-up>"}      	,"context":[{"key":"nv_command_or_insert"},{"key":"setting.vintageous_use_ctrl_keys"},{"key":"nv_handle_key","operand":"<C-up>"}]},
 
+{"keys":["ctrl+-"	],"command":"nv_feed_key"	,"args":{"key":"<C-->"}	,"context":[{"key":"nv_command_or_insert"},{"key":"setting.vintageous_use_ctrl_keys"},{"key":"nv_handle_key","operand":"<C-->"}]},
+{"keys":["ctrl+="	],"command":"nv_feed_key"	,"args":{"key":"<C-=>"}	,"context":[{"key":"nv_command_or_insert"},{"key":"setting.vintageous_use_ctrl_keys"},{"key":"nv_handle_key","operand":"<C-=>"}]},
 {"keys":["ctrl+."	],"command":"nv_feed_key"	,"args":{"key":"<C-.>"}	,"context":[{"key":"nv_command_or_insert"},{"key":"setting.vintageous_use_ctrl_keys"},{"key":"nv_handle_key","operand":"<C-.>"}]},
 {"keys":["ctrl+0"	],"command":"nv_feed_key"	,"args":{"key":"<C-0>"}	,"context":[{"key":"nv_command_or_insert"},{"key":"setting.vintageous_use_ctrl_keys"},{"key":"nv_handle_key","operand":"<C-0>"}]},
 {"keys":["ctrl+1"	],"command":"nv_feed_key"	,"args":{"key":"<C-1>"}	,"context":[{"key":"nv_command_or_insert"},{"key":"setting.vintageous_use_ctrl_keys"},{"key":"nv_handle_key","operand":"<C-1>"}]},

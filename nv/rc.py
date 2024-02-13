@@ -521,7 +521,10 @@ def _parse_keybind_kdl(keybind:kdl.Node, gmodes:Mode=Mode(0), var_d:dict={}):
                 if pkey in key_abbrev:
                     prop[dkey] = val
             if pkey not in key_abbrev: # non-specified key=val pairs
-                prop_rest[pkey] = val
+                if isinstance(val,float) and val.is_integer():
+                    prop_rest[pkey] = int(val)
+                else:
+                    prop_rest[pkey] = val
     (cmd,isChain)         = _parse_keybind_arg(node=node, prop_subl=prop_rest) # Parse arguments
     cmd_txt.extend(cmd)
     if children and isChain:           # with Chain argument...

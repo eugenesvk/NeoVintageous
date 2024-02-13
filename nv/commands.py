@@ -133,6 +133,7 @@ __all__ = [
     'nv_vi_move_char_right','nv_vi_move_char_left',
     'nv_vi_left_brace' ,'nv_vi_left_paren' ,'nv_vi_left_square_bracket',
     'nv_vi_right_brace','nv_vi_right_paren','nv_vi_right_square_bracket',
+    'nv_move_change_prev','nv_move_change_next',
     'nv_target_prev','nv_target_next',
     'nv_vi_less_than','nv_vi_less_than_less_than',
     'nv_vi_m',
@@ -3832,6 +3833,16 @@ class nv_target_next(TextCommand):
     def run(self, edit,            mode, count=1, **kwargs):
         goto = GotoView(self.view, mode, count)
         goto.next_target(**kwargs)
+
+
+class nv_move_change_prev(TextCommand):
+    def run(self, edit, action, mode, count=1, **kwargs):
+        goto = GotoView(self.view, mode, count)
+        goto.prev_change()
+class nv_move_change_next(TextCommand):
+    def run(self, edit, action, mode, count=1, **kwargs):
+        goto = GotoView(self.view, mode, count)
+        goto.next_change()
 
 
 class nv_vi_left_square_bracket(TextCommand):

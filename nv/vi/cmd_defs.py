@@ -1555,27 +1555,19 @@ class ViMoveBySentenceDown(ViMotionDef):
 
 
 @assign(seqs.SEQ['[c'], ACTION_MODES)
-@assign_text(['BackwardToStartOfChange'], ACTION_MODES)
+@assign_text(['MoveChangePrev','BackwardToStartOfChange'], ACTION_MODES)
 class ViBackwardToStartOfChange(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
-        self.updates_xpos = True
-        self.command = 'nv_vi_left_square_bracket'
-        self.command_args = {
-            'action': 'c',
-        }
-
-
+        self.updates_xpos     = True
+        self.command          = 'move_change_prev'
 @assign(seqs.SEQ[']c'], ACTION_MODES)
-@assign_text(['ForwardToStartOfChange'], ACTION_MODES)
+@assign_text(['MoveChangeNext','ForwardToStartOfChange'], ACTION_MODES)
 class ViForwardToStartOfChange(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
-        self.updates_xpos = True
-        self.command = 'nv_vi_right_square_bracket'
-        self.command_args = {
-            'action': 'c',
-        }
+        self.updates_xpos     = True
+        self.command          = 'move_change_next'
 
 
 @assign(seqs.SEQ['[s'], ACTION_MODES)

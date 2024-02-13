@@ -226,21 +226,21 @@ class ViChangeToUpperCaseByLines(ViOperatorDef):
 @assign_text(['ChangeLine'], ACTION_MODES)
 class ViChangeLine(ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
-        self.scroll_into_view = True
-        self.repeatable = True
+        self.updates_xpos           = True
+        self.scroll_into_view       = True
+        self.repeatable             = True
         self.glue_until_normal_mode = True
-        self.command = 'nv_vi_cc'
+        self.command                = 'nv_vi_change_line'
 
 
 @assign(seqs.SEQ['dd'], ACTION_MODES)
 @assign_text(['DeleteLine'], ACTION_MODES, icon='ᵡ━')
 class ViDeleteLine(ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.repeatable = True
-        self.command = 'nv_vi_dd'
+        self.repeatable       = True
+        self.command          = 'nv_vi_delete_line'
 
 
 @assign(seqs.SEQ['⇧r'], ACTION_MODES)

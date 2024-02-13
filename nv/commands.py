@@ -83,7 +83,7 @@ __all__ = [
     'nv_vi_big_z_big_q',
     'nv_vi_big_z_big_z',
     'nv_vi_c',
-    'nv_vi_cc',
+    'nv_vi_change_line',
     'nv_vi_ctrl_b',
     'nv_vi_ctrl_d',
     'nv_vi_ctrl_e',
@@ -98,7 +98,7 @@ __all__ = [
     'nv_vi_complete_line',
     'nv_vi_ctrl_y',
     'nv_vi_d',
-    'nv_vi_dd',
+    'nv_vi_delete_line',
     'nv_vi_dollar',
     'nv_vi_dot',
     'nv_vi_e',
@@ -973,13 +973,11 @@ class nv_vi_dot(WindowCommand):
         set_repeat_data(self.view, repeat_data)
 
 
-class nv_vi_dd(TextCommand):
-
+class nv_vi_delete_line(TextCommand):
     def run(self, edit, mode=None, count=1, register='"'):
         def f(view, s):
             if mode != INTERNAL_NORMAL:
                 return s
-
             return lines(view, s, count)
 
         def fixup_sel_pos():
@@ -988,8 +986,7 @@ class nv_vi_dd(TextCommand):
             size = self.view.size()
             new = []
             for pt in old:
-                # If on the last char, then pur cursor on previous line
-                if pt == size and self.view.substr(pt) == EOF:
+                if pt == size and self.view.substr(pt) == EOF: # If on the last char, then pur cursor on previous line
                     pt = self.view.text_point(self.view.rowcol(pt)[0], 0)
                 pt = next_non_blank(self.view, pt)
                 new.append(pt)
@@ -1001,16 +998,13 @@ class nv_vi_dd(TextCommand):
         fixup_sel_pos()
 
 
-class nv_vi_cc(TextCommand):
-
+class nv_vi_change_line(TextCommand):
     def run(self, edit, mode=None, count=1, register='"'):
         def f(view, s):
             if mode != INTERNAL_NORMAL:
                 return s
-
             if view.line(s.b).empty():
-                return s
-
+                return               s
             return inner_lines(view, s, count)
 
         regions_transformer(self.view, f)
@@ -1021,8 +1015,7 @@ class nv_vi_cc(TextCommand):
 
         enter_insert_mode(self.view, mode)
 
-        # TODO Review exception handling
-        try:
+        try: # TODO Review exception handling
             set_xpos(self.view, self.view.rowcol(self.view.sel()[0].b)[1])
         except Exception as e:
             raise ValueError('could not set xpos:' + str(e))

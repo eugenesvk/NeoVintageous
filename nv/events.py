@@ -74,7 +74,7 @@ def _winaltkeys(view, operator: int, operand: str, match_all: bool) -> bool:
     # menu	On for ‘efghinpstv’	Off for the same keys
     winaltkeys = get_option(view, 'winaltkeys')
     if   winaltkeys == 'menu':
-        return (operand not in tuple('efghinpstv') or not view.window().is_menu_visible()) #and _is_command_mode(view)
+        return (operand not in tuple('efghinpstv') and not view.window().is_menu_visible()) #and _is_command_mode(view)
     elif winaltkeys == 'yes':
         return False
     else:

@@ -162,6 +162,7 @@ re_filetype = re.compile(r"[\s,]+")
 _keybind_prop = {
     'desc':['d','des','desc','description','inf','info'],
     'icon':['i','icn','icon','img','image'],
+    'type':['t','type'],
     'file':['ft','file','filetype'],
     'defk':['defk','default_key','≝k'],
     'defc':['defc','default_cmd','≝c'],
@@ -215,7 +216,10 @@ def _parse_let_kdl(node:kdl.Node,cfg='') -> None:
         variables.set(pkey,val)
 
 DEF = dict()
-DEF['res_tag'] = ['i','des','defk','defkey','≝k','defc','defcmd','≝c'] # internal command description tags, exclude these when parsing a sublime command so that it doesn't get arguments it can't understand
+DEF['res_tag'] = list() # internal command description tags, exclude these when parsing a sublime command so that it doesn't get arguments it can't understand
+for dkey,key_abbrev in _keybind_prop.items(): # 'type':['t','type']
+    for val in key_abbrev:                    #          t   type
+        DEF['res_tag'].append(val)
 DEF['var_def'] = ['‘','’']
 DEF['general'] = {}
 DEF['gen_def'] = { # todo: replace float with int when kdl-py issue is fixed

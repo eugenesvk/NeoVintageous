@@ -23,6 +23,7 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
    <!-- + :lock: ??? -->
    <!-- vulnerabilities -->
   - __Added__
+   + support for rebinding Ctrl/Win key combos in Insert mode (they're still ignored by default unless explicitly enabled via the `handle_keys` config to not break all of the default Sublime Text's combos with these modifiers)
    + support for text object pairs as targets for the goto command
    + `GotoTargetPrev`/`GotoTargetNext` commands to allow using the brackets as arguments instead of as names<br/>
      `(Ⓝ)gdd" "GotoTargetPrev" "‹"`<br/>

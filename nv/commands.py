@@ -976,8 +976,8 @@ class nv_vi_dot(WindowCommand):
 class nv_vi_delete_line(TextCommand):
     def run(self, edit, mode=None, count=1, register='"'):
         def f(view, s):
-            if mode != INTERNAL_NORMAL:
-                return s
+            # if mode != INTERNAL_NORMAL:
+                # return         s
             return lines(view, s, count)
 
         def fixup_sel_pos():
@@ -1001,8 +1001,8 @@ class nv_vi_delete_line(TextCommand):
 class nv_vi_change_line(TextCommand):
     def run(self, edit, mode=None, count=1, register='"'):
         def f(view, s):
-            if mode != INTERNAL_NORMAL:
-                return s
+            # if mode != INTERNAL_NORMAL:
+            #     return               s
             if view.line(s.b).empty():
                 return               s
             return inner_lines(view, s, count)

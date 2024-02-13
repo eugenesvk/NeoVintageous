@@ -143,23 +143,23 @@ class ViUnindent(ViOperatorDef):
 @assign_text(['ChangeByChars'], ACTION_MODES)
 class ViChangeByChars(ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
-        self.scroll_into_view = True
-        self.motion_required = True
-        self.repeatable = True
+        self.updates_xpos           = True
+        self.scroll_into_view       = True
+        self.motion_required        = True
+        self.repeatable             = True
         self.glue_until_normal_mode = True
-        self.command = 'nv_vi_c'
+        self.command                = 'nv_change_char'
 
 
 @assign(seqs.SEQ['c'], (SELECT,))
 @assign_text(['ChangeMultipleCursor'], (SELECT,))
 class ViChangeMultipleCursor(ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
-        self.scroll_into_view = True
-        self.repeatable = True
+        self.updates_xpos           = True
+        self.scroll_into_view       = True
+        self.repeatable             = True
         self.glue_until_normal_mode = True
-        self.command = 'nv_vi_c'
+        self.command                = 'nv_change_char'
 
 
 @assign(seqs.SEQ['u'], (NORMAL,))

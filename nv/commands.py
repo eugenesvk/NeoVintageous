@@ -82,7 +82,7 @@ __all__ = [
     'nv_vi_big_x',
     'nv_vi_big_z_big_q',
     'nv_vi_big_z_big_z',
-    'nv_vi_c',
+    'nv_change_char',
     'nv_vi_change_line',
     'nv_vi_ctrl_b',
     'nv_vi_ctrl_d',
@@ -573,7 +573,7 @@ class nv_vi_a(TextCommand):
         })
 
 
-class nv_vi_c(TextCommand):
+class nv_change_char(TextCommand):
 
     def run(self, edit, mode=None, count=1, register=None, motion=None):
         if mode is None:

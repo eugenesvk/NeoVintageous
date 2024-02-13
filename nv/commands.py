@@ -62,14 +62,11 @@ __all__ = [
     'nv_run_cmds',
     'nv_vi_a',
     'nv_vi_at',
-    'nv_vi_b',
     'nv_vi_backtick',
     'nv_vi_move_column',
     'nv_vi_big_a',
-    'nv_vi_big_b',
     'nv_vi_big_c',
     'nv_vi_big_d',
-    'nv_vi_big_e',
     'nv_vi_big_g',
     'nv_vi_big_h',
     'nv_vi_big_i',
@@ -78,7 +75,6 @@ __all__ = [
     'nv_vi_big_m',
     'nv_vi_big_o',
     'nv_vi_big_s',
-    'nv_vi_big_w',
     'nv_vi_big_x',
     'nv_vi_big_z_big_q',
     'nv_vi_big_z_big_z',
@@ -101,18 +97,15 @@ __all__ = [
     'nv_vi_delete_line',
     'nv_vi_dollar',
     'nv_vi_dot',
-    'nv_vi_e',
     'nv_vi_enter',
     'nv_vi_equal',
     'nv_vi_equal_equal',
     'nv_vi_find_in_line',
     'nv_vi_go_to_file',
     'nv_vi_g__',
-    'nv_vi_g_big_e',
     'nv_vi_g_big_h',
     'nv_vi_g_big_t',
     'nv_vi_ga',
-    'nv_vi_ge',
     'nv_vi_gg',
     'nv_vi_gm',
     'nv_vi_go_to_symbol',
@@ -127,6 +120,10 @@ __all__ = [
     'nv_vi_gv',
     'nv_vi_gx',
     'nv_vi_move_char_left'       ,'nv_vi_move_char_right'      ,
+    'nv_vi_move_word_prev'       ,'nv_vi_move_word_next'       ,
+    'nv_vi_move_wordend_prev'    ,'nv_vi_move_wordend_next'    ,
+    'nv_vi_move_bigword_prev'    ,'nv_vi_move_bigword_next'    ,
+    'nv_vi_move_bigwordend_prev' ,'nv_vi_move_bigwordend_next' ,
     'nv_vi_move_line_up'         ,'nv_vi_move_line_down'       ,
     'nv_vi_move_screen_line_up'  ,'nv_vi_move_screen_line_down','nv_vi_move_line_back',
     'nv_vi_move_sentence_prev'   ,'nv_vi_move_sentence_next'   ,
@@ -161,7 +158,6 @@ __all__ = [
     'nv_vi_star',
     'nv_vi_u',
     'nv_vi_flip_selection',
-    'nv_vi_w',
     'nv_vi_x',
     'nv_vi_copy_char','nv_vi_copy_line',
     'nv_vi_z',
@@ -1126,7 +1122,7 @@ class nv_vi_delete_char(TextCommand):
             if should_motion_apply_op_transformer(motion):
                 def f(view, s):
                     if motion and 'motion' in motion:
-                        if motion['motion'] in ('nv_vi_e', 'nv_vi_big_e'):
+                        if motion['motion'] in ('nv_vi_move_wordend_next', 'nv_vi_move_bigwordend_next'):
                             return Region(s.begin())
 
                     return Region(next_non_blank(self.view, s.b))
@@ -2845,7 +2841,7 @@ class nv_vi_dollar(TextCommand):
         regions_transformer(self.view, f)
 
 
-class nv_vi_w(TextCommand):
+class nv_vi_move_word_next(TextCommand):
     def run(self, edit, mode=None, count=1):
         if mode == VISUAL_BLOCK:
             resolve_visual_block_target(self.view, word_starts, count)
@@ -2854,7 +2850,9 @@ class nv_vi_w(TextCommand):
         def f(view, s):
             target = word_starts(view, get_insertion_point_at_b(s), count, internal=(mode == INTERNAL_NORMAL))
 
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, fixup_eof(view, target))
+            elif mode == INSERT:
                 resolve_normal_target(s, fixup_eof(view, target))
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -2869,7 +2867,7 @@ class nv_vi_w(TextCommand):
         regions_transformer(self.view, f)
 
 
-class nv_vi_big_w(TextCommand):
+class nv_vi_move_bigword_next(TextCommand):
     def run(self, edit, mode=None, count=1):
         if mode == VISUAL_BLOCK:
             resolve_visual_block_target(self.view, big_word_starts, count)
@@ -2878,7 +2876,9 @@ class nv_vi_big_w(TextCommand):
         def f(view, s):
             target = big_word_starts(view, get_insertion_point_at_b(s), count, internal=(mode == INTERNAL_NORMAL))
 
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, fixup_eof(view, target))
+            elif mode == INSERT:
                 resolve_normal_target(s, fixup_eof(view, target))
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -2893,7 +2893,7 @@ class nv_vi_big_w(TextCommand):
         regions_transformer(self.view, f)
 
 
-class nv_vi_e(TextCommand):
+class nv_vi_move_wordend_next(TextCommand):
     def run(self, edit, mode=None, count=1):
         def _get_target(view, start, count):
             # TODO Is the word_ends() function off-by-one?
@@ -2906,7 +2906,9 @@ class nv_vi_e(TextCommand):
         def f(view, s):
             target = _get_target(view, get_insertion_point_at_b(s), count)
 
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -3162,7 +3164,7 @@ class nv_vi_octothorp(TextCommand):
         show_if_not_visible(self.view)
 
 
-class nv_vi_b(TextCommand):
+class nv_vi_move_word_prev(TextCommand):
     def run(self, edit, mode=None, count=1):
         if mode == VISUAL_BLOCK:
             resolve_visual_block_target(self.view, word_reverse, count)
@@ -3171,7 +3173,9 @@ class nv_vi_b(TextCommand):
         def f(view, s):
             target = word_reverse(view, get_insertion_point_at_b(s), count)
 
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -3183,7 +3187,7 @@ class nv_vi_b(TextCommand):
         regions_transformer(self.view, f)
 
 
-class nv_vi_big_b(TextCommand):
+class nv_vi_move_bigword_prev(TextCommand):
 
     def run(self, edit, mode=None, count=1):
         if mode == VISUAL_BLOCK:
@@ -3193,7 +3197,9 @@ class nv_vi_big_b(TextCommand):
         def f(view, s):
             target = big_word_reverse(view, get_insertion_point_at_b(s), count)
 
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -3441,7 +3447,7 @@ class nv_vi_move_column(TextCommand):
         regions_transformer(self.view, f)
 
 
-class nv_vi_ge(TextCommand):
+class nv_vi_move_wordend_prev(TextCommand):
     def run(self, edit, mode=None, count=1):
         if mode == VISUAL_BLOCK:
             resolve_visual_block_target(self.view, word_end_reverse, count)
@@ -3450,7 +3456,9 @@ class nv_vi_ge(TextCommand):
         def f(view, s):
             target = word_end_reverse(view, get_insertion_point_at_b(s), count)
 
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -3462,7 +3470,7 @@ class nv_vi_ge(TextCommand):
         regions_transformer(self.view, f)
 
 
-class nv_vi_g_big_e(TextCommand):
+class nv_vi_move_bigwordend_prev(TextCommand):
     def run(self, edit, mode=None, count=1):
         if mode == VISUAL_BLOCK:
             resolve_visual_block_target(self.view, big_word_end_reverse, count)
@@ -3471,7 +3479,9 @@ class nv_vi_g_big_e(TextCommand):
         def f(view, s):
             target = big_word_end_reverse(view, get_insertion_point_at_b(s), count)
 
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -3654,7 +3664,7 @@ class nv_vi_search(TextCommand):
                     break
 
 
-class nv_vi_big_e(TextCommand):
+class nv_vi_move_bigwordend_next(TextCommand):
     def run(self, edit, mode=None, count=1):
         def _get_target(view, start, count):
             # TODO Is the big_word_ends() function off-by-one?
@@ -3667,7 +3677,9 @@ class nv_vi_big_e(TextCommand):
         def f(view, s):
             target = _get_target(view, get_insertion_point_at_b(s), count)
 
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)

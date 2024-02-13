@@ -1256,38 +1256,64 @@ class ViShiftEnterMotion(ViMotionDef):
 @assign_text(['MoveByWordsBackward'], MOTION_MODES, icon="⤝ω")
 class ViMoveByWordsBackward(ViMotionDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.command = 'nv_vi_b'
-
+        self.command          = 'nv_vi_move_word_prev'
+@assign(seqs.SEQ['⇧▶'], MOTION_MODES)
+@assign(seqs.SEQ['w'], MOTION_MODES)
+@assign_text(['MoveByWords'], MOTION_MODES, icon="ω⤞")
+class ViMoveByWords(ViMotionDef):
+    def init(self):
+        self.updates_xpos     = True
+        self.scroll_into_view = True
+        self.command          = 'nv_vi_move_word_next'
 
 @assign(seqs.SEQ['⇧b'], MOTION_MODES)
 @assign(seqs.SEQ['⎈◀'], MOTION_MODES)
 @assign_text(['MoveByBigWordsBackward'], MOTION_MODES, icon="⤝W")
 class ViMoveByBigWordsBackward(ViMotionDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.command = 'nv_vi_big_b'
-
-
+        self.command          = 'nv_vi_move_bigword_prev'
 @assign(seqs.SEQ['⇧w'], MOTION_MODES)
 @assign(seqs.SEQ['⎈▶'], MOTION_MODES)
 @assign_text(['MoveByBigWords'], MOTION_MODES, icon="W⤞")
 class ViMoveByBigWords(ViMotionDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.command = 'nv_vi_big_w'
+        self.command          = 'nv_vi_move_bigword_next'
 
-
+@assign(seqs.SEQ['ge'], MOTION_MODES)
+@assign_text(['MoveByWordEndsBackward'], MOTION_MODES, icon="⭰ω")
+class ViMoveByWordEndsBackward(ViMotionDef):
+    def init(self):
+        self.updates_xpos    	= True
+        self.scroll_into_view	= True
+        self.command         	= 'nv_vi_move_wordend_prev'
 @assign(seqs.SEQ['e'], MOTION_MODES)
 @assign_text(['MoveByWordEnds'], MOTION_MODES, icon="W⭲")
 class ViMoveByWordEnds(ViMotionDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.command = 'nv_vi_e'
+        self.command          = 'nv_vi_move_wordend_next'
+
+@assign(seqs.SEQ['g⇧e'], MOTION_MODES)
+@assign_text(['MoveByBigWordEndsBackward'], MOTION_MODES, icon="⭰W")
+class ViMoveByBigWordEndsBackward(ViMotionDef):
+    def init(self):
+        self.updates_xpos     = True
+        self.scroll_into_view = True
+        self.command          = 'nv_vi_move_bigwordend_prev'
+@assign(seqs.SEQ['⇧e'], MOTION_MODES)
+@assign_text(['MoveByBigWordEnds'], MOTION_MODES)
+class ViMoveByBigWordEnds(ViMotionDef):
+    def init(self):
+        self.updates_xpos     = True
+        self.scroll_into_view = True
+        self.command          = 'nv_vi_move_bigwordend_next'
 
 
 @assign(seqs.SEQ['⇧h'], MOTION_MODES)
@@ -1297,24 +1323,6 @@ class ViGotoScreenTop(ViMotionDef):
         self.updates_xpos = True
         self.scroll_into_view = True
         self.command = 'nv_vi_big_h'
-
-
-@assign(seqs.SEQ['ge'], MOTION_MODES)
-@assign_text(['MoveByWordEndsBackward'], MOTION_MODES, icon="⭰ω")
-class ViMoveByWordEndsBackward(ViMotionDef):
-    def init(self):
-        self.updates_xpos = True
-        self.scroll_into_view = True
-        self.command = 'nv_vi_ge'
-
-
-@assign(seqs.SEQ['g⇧e'], MOTION_MODES)
-@assign_text(['MoveByBigWordEndsBackward'], MOTION_MODES, icon="⭰W")
-class ViMoveByBigWordEndsBackward(ViMotionDef):
-    def init(self):
-        self.updates_xpos = True
-        self.scroll_into_view = True
-        self.command = 'nv_vi_g_big_e'
 
 
 @assign(seqs.G_SEMICOLON, MOTION_MODES)
@@ -1693,15 +1701,6 @@ class ViMoveByLineCols(ViMotionDef):
         self.command = 'nv_vi_move_column'
 
 
-@assign(seqs.SEQ['⇧e'], MOTION_MODES)
-@assign_text(['MoveByBigWordEnds'], MOTION_MODES)
-class ViMoveByBigWordEnds(ViMotionDef):
-    def init(self):
-        self.updates_xpos = True
-        self.scroll_into_view = True
-        self.command = 'nv_vi_big_e'
-
-
 @assign(seqs.SEQ['⎇◀'], MOTION_MODES)
 @assign(seqs.SEQ['␈'], MOTION_MODES)
 @assign(seqs.SEQ['⎈␈'], MOTION_MODES)
@@ -1714,16 +1713,6 @@ class ViMoveLeftByChars(ViMotionDef):
         self.updates_xpos = True
         self.scroll_into_view = True
         self.command = 'nv_vi_move_char_left'
-
-
-@assign(seqs.SEQ['⇧▶'], MOTION_MODES)
-@assign(seqs.SEQ['w'], MOTION_MODES)
-@assign_text(['MoveByWords'], MOTION_MODES, icon="ω⤞")
-class ViMoveByWords(ViMotionDef):
-    def init(self):
-        self.updates_xpos = True
-        self.scroll_into_view = True
-        self.command = 'nv_vi_w'
 
 
 @assign(seqs.SEQ['⎈▼'], MOTION_MODES)

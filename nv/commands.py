@@ -97,7 +97,7 @@ __all__ = [
     'nv_vi_delete_word',
     'nv_vi_complete_line',
     'nv_vi_ctrl_y',
-    'nv_vi_d',
+    'nv_vi_delete_char',
     'nv_vi_delete_line',
     'nv_vi_dollar',
     'nv_vi_dot',
@@ -1096,7 +1096,7 @@ class nv_vi_copy_char(TextCommand):
         enter_normal_mode(self.view, mode)
 
 
-class nv_vi_d(TextCommand):
+class nv_vi_delete_char(TextCommand):
 
     def run(self, edit, mode=None, count=1, register=None, motion=None):
         if mode == INTERNAL_NORMAL:

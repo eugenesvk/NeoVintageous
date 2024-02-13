@@ -131,8 +131,8 @@ __all__ = [
     'nv_vi_move_line_down','nv_vi_move_line_up',
     'nv_vi_jump_back','nv_vi_jump_forward',
     'nv_vi_move_char_right','nv_vi_move_char_left',
-    'nv_vi_left_brace' ,'nv_vi_left_paren' ,'nv_vi_left_square_bracket',
-    'nv_vi_right_brace','nv_vi_right_paren','nv_vi_right_square_bracket',
+    'nv_vi_left_brace' ,'nv_vi_move_sentence_prev' ,'nv_vi_left_square_bracket',
+    'nv_vi_right_brace','nv_vi_move_sentence_next','nv_vi_right_square_bracket',
     'nv_move_change_prev','nv_move_change_next',
     'nv_target_prev','nv_target_next',
     'nv_vi_less_than','nv_vi_less_than_less_than',
@@ -3491,15 +3491,16 @@ class nv_vi_goto_changelist(TextCommand):
             goto.prev_changelist()
 
 
-class nv_vi_left_paren(TextCommand):
-
+class nv_vi_move_sentence_prev(TextCommand):
     def run(self, edit, mode=None, count=1):
         def f(view, s):
             start = s.a if s.b >= s.a else s.b
             previous_sentence = find_sentences_backward(view, start, count)
             target = previous_sentence.a
 
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -3512,9 +3513,7 @@ class nv_vi_left_paren(TextCommand):
 
         regions_transformer(self.view, f)
 
-
-class nv_vi_right_paren(TextCommand):
-
+class nv_vi_move_sentence_next(TextCommand):
     def run(self, edit, mode=None, count=1):
         def f(view, s):
             next_sentence = find_sentences_forward(view, s, count)
@@ -3523,7 +3522,9 @@ class nv_vi_right_paren(TextCommand):
 
             target = next_sentence.b
 
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, min(target, view.size() - 1))
+            elif mode == INSERT:
                 resolve_normal_target(s, min(target, view.size() - 1))
             elif mode == VISUAL:
                 s = Region(s.a, min(target + 1, view.size() - 1))

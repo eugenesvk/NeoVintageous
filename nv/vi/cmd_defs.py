@@ -1540,18 +1540,16 @@ class ViMoveByBlockDown(ViMotionDef):
 @assign_text(['MoveBySentenceUp'], MOTION_MODES)
 class ViMoveBySentenceUp(ViMotionDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.command = 'nv_vi_left_paren'
-
-
+        self.command          = 'nv_vi_move_sentence_prev'
 @assign(seqs.SEQ[")"], MOTION_MODES)
 @assign_text(['MoveBySentenceDown'], MOTION_MODES)
 class ViMoveBySentenceDown(ViMotionDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.command = 'nv_vi_right_paren'
+        self.command          = 'nv_vi_move_sentence_next'
 
 
 @assign(seqs.SEQ['[c'], ACTION_MODES)

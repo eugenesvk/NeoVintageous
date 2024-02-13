@@ -84,23 +84,20 @@ def _winaltkeys(view, operator: int, operand: str, match_all: bool) -> bool:
 def _handle_key(view, operator: int, operand: str, match_all: bool) -> bool:
     handle_keys = get_setting(view, 'handle_keys')
     if handle_keys:
-        try:
-            # Check if the key (no mode prefix; all modes) should be handled.
-            return bool(handle_keys[operand])
+        try: # Check if the key (no mode prefix; all modes) should be handled
+            return bool(handle_keys[operand]) # <C-c>
         except KeyError:
-            # Check if the key should be handled only for a specific mode.
-            # The format is "{mode}_{key}" e.g. "n_<C-w>", "v_<C-w>"
-            # meaning NORMAL, VISUAL respectively. No prefix implies all
-            # modes. See mode_to_char() for a list of valid mode prefixes.
-            cur_mode_char = mode_to_char(get_mode(view))
+            cur_mode_char = mode_to_char(get_mode(view)) # Check if the key should be handled only for a specific mode. The format is "{mode}_{key}" e.g. "n_<C-w>", "v_<C-w>" meaning NORMAL, VISUAL respectively. No prefix implies all modes. See mode_to_char() for a list of valid mode prefixes
             if cur_mode_char:
                 try:
-                    return bool(handle_keys['%s_%s' % (cur_mode_char, operand)])
+                    return bool(handle_keys[f"{cur_mode_char}_{operand}"])
                 except KeyError:
                     pass
-
-    # By default all keys are handled.
-    return True
+    if 'c-' in operand.lower()\
+    or 'd-' in operand.lower(): # by default ignore all ⎈ or ◆ combos
+        return False
+    else:
+        return True # and handle everything else
 
 
 _OVERLAY_CONTROL_ELEMENTS = (
@@ -119,32 +116,23 @@ else:
 
 
 _query_contexts = {
-    'nv_command_or_insert': _command_or_insert,
-    'nv_handle_key': _handle_key,
-    'nv_overlay_control': _overlay_control,
-    'nv_winaltkeys': _winaltkeys,
-    'vi_command_mode_aware': _is_command_mode,
-    'vi_insert_mode_aware': _is_insert_mode,
+    'nv_command_or_insert'  : _command_or_insert,
+    'nv_handle_key'         : _handle_key,
+    'nv_overlay_control'    : _overlay_control,
+    'nv_winaltkeys'         : _winaltkeys,
+    'vi_command_mode_aware' : _is_command_mode,
+    'vi_insert_mode_aware'  : _is_insert_mode,
 }  # type: dict
 
 
 class NeoVintageousEvents(EventListener):
-
     _last_deactivated_file_name = None
 
     def on_query_context(self, view, key: str, operator: int, operand, match_all: bool):
-        # Called when determining to trigger a key binding with the given context key.
-        #
-        # If the plugin knows how to respond to the context, it should return
-        # either True of False. If the context is unknown, it should return
-        # None.
-        #
-        # Params:
-        #   operand: str|bool
-        #
-        # Returns:
-        #   bool: If the context is known.
-        #   None: If the context is unknown.
+        # Called when determining to trigger a key binding with the given context key
+        #→ operand: str|bool      e.g.: key=nv_handle_key operator=0 operand=<C-c>
+        #← bool  If the context is   known
+        #  None  If the context is unknown
         try:
             return _query_contexts[key](view, operator, operand, match_all)
         except KeyError:

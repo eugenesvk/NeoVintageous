@@ -78,7 +78,7 @@ def _winaltkeys(view, operator: int, operand: str, match_all: bool) -> bool:
     elif winaltkeys == 'yes':
         return False
     else:
-       return True #_is_command_mode(view)
+        return True #_is_command_mode(view)
 
 
 def _handle_key(view, operator: int, operand: str, match_all: bool) -> bool:

@@ -2091,29 +2091,96 @@ class ViMoveHalfScreenHorizontally(ViMotionDef):
         self.command = 'nv_vi_gm'
 
 
-@assign(seqs.SEQ['zc'], ACTION_MODES)
-@assign(seqs.SEQ['zg'], ACTION_MODES)
-@assign(seqs.SEQ['zh'], ACTION_MODES)
-@assign(seqs.SEQ['zl'], ACTION_MODES)
-@assign(seqs.SEQ['zo'], ACTION_MODES)
-@assign(seqs.ZUG, ACTION_MODES)
-@assign(seqs.ZUW, ACTION_MODES)
-@assign(seqs.SEQ['z⇧h'], ACTION_MODES)
-@assign(seqs.SEQ['z⇧c'], ACTION_MODES)
-@assign(seqs.SEQ['z⇧l'], ACTION_MODES)
-@assign(seqs.SEQ['z⇧m'], ACTION_MODES)
-@assign(seqs.SEQ['z⇧o'], ACTION_MODES)
-@assign(seqs.SEQ['z⇧r'], ACTION_MODES)
-@assign(seqs.Z_EQUAL, ACTION_MODES)
-@assign(seqs.Z_LEFT, ACTION_MODES)
-@assign(seqs.Z_RIGHT, ACTION_MODES)
 @assign_text(['Viz'], ACTION_MODES)
 class Viz(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.updates_xpos = True
-
+        self.updates_xpos     = True
     def translate(self, view):
-        return translate_action(view, 'nv_vi_z', {
-            'action': get_partial_sequence(view)[1:],
-        })
+        return translate_action(view, 'nv_vi_z', {'action':get_partial_sequence(view)[1:],})
+
+@assign(seqs.SEQ['zh'], ACTION_MODES)
+@assign(seqs.Z_LEFT   , ACTION_MODES)
+@assign_text(['ScrollCharLeft'], ACTION_MODES)
+class ViScrollCharLeft(ViOperatorDef):
+    def init(self):
+        self.scroll_into_view = True
+        self.updates_xpos     = True
+        self.command          = 'nv_scroll_char_left'
+@assign(seqs.SEQ['zl'], ACTION_MODES)
+@assign(seqs.Z_RIGHT  , ACTION_MODES)
+@assign_text(['ScrollCharRight'], ACTION_MODES)
+class ViScrollCharRight(ViOperatorDef):
+    def init(self):
+        self.scroll_into_view = True
+        self.updates_xpos     = True
+        self.command          = 'nv_scroll_char_right'
+@assign(seqs.SEQ['z⇧h'], ACTION_MODES)
+@assign_text(['ScrollHalfScreenLeft'], ACTION_MODES)
+class ViScrollHalfScreenLeft(ViOperatorDef):
+    def init(self):
+        self.scroll_into_view = True
+        self.updates_xpos     = True
+        self.command          = 'nv_scroll_half_screen_left'
+@assign(seqs.SEQ['z⇧l'], ACTION_MODES)
+@assign_text(['ScrollHalfScreenRight'], ACTION_MODES)
+class ViScrollHalfScreenRight(ViOperatorDef):
+    def init(self):
+        self.scroll_into_view = True
+        self.updates_xpos     = True
+        self.command          = 'nv_scroll_half_screen_right'
+
+@assign(seqs.SEQ['zg'], ACTION_MODES)
+@assign_text(['AddSpellWord'], ACTION_MODES)
+class ViAddSpellWord(ViOperatorDef):
+    def init(self):
+        self.scroll_into_view = True
+        self.updates_xpos     = True
+        self.command          = 'nv_add_spell_word'
+@assign(seqs.ZUG      , ACTION_MODES)
+@assign(seqs.ZUW      , ACTION_MODES)
+@assign_text(['RemoveSpellWord'], ACTION_MODES)
+class ViRemoveSpellWord(ViOperatorDef):
+    def init(self):
+        self.scroll_into_view = True
+        self.updates_xpos     = True
+        self.command          = 'nv_remove_spell_word'
+@assign(seqs.Z_EQUAL  , ACTION_MODES)
+@assign_text(['SelectSpellWord'], ACTION_MODES)
+class ViSelectSpellWord(ViOperatorDef):
+    def init(self):
+        self.scroll_into_view = True
+        self.updates_xpos     = True
+        self.command          = 'nv_select_spell_word'
+
+
+@assign(seqs.SEQ['zc' ], ACTION_MODES)
+@assign(seqs.SEQ['z⇧c'], ACTION_MODES)
+@assign_text(['Fold'], ACTION_MODES)
+class ViFold(ViOperatorDef):
+    def init(self):
+        self.scroll_into_view = True
+        self.updates_xpos     = True
+        self.command          = 'nv_fold'
+@assign(seqs.SEQ['zo' ], ACTION_MODES)
+@assign(seqs.SEQ['z⇧o'], ACTION_MODES)
+@assign_text(['Unfold'], ACTION_MODES)
+class ViUnfold(ViOperatorDef):
+    def init(self):
+        self.scroll_into_view = True
+        self.updates_xpos     = True
+        self.command          = 'nv_unfold'
+@assign(seqs.SEQ['z⇧m'], ACTION_MODES)
+@assign_text(['FoldAll'], ACTION_MODES)
+class ViFoldAll(ViOperatorDef):
+    def init(self):
+        self.scroll_into_view = True
+        self.updates_xpos     = True
+        self.command          = 'nv_fold_all'
+@assign(seqs.SEQ['z⇧r'], ACTION_MODES)
+@assign_text(['UnfoldAll'], ACTION_MODES)
+class ViUnfoldAll(ViOperatorDef):
+    def init(self):
+        self.scroll_into_view = True
+        self.updates_xpos     = True
+        self.command          = 'nv_unfold_all'

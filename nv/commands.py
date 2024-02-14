@@ -128,8 +128,12 @@ __all__ = [
     'nv_vi_move_sentence_prev'   ,'nv_vi_move_sentence_next'   ,
     'nv_move_change_prev'        ,'nv_move_change_next'        ,
     'nv_move_misspelling_prev'   ,'nv_move_misspelling_next'   ,
+    'nv_scroll_char_left'        ,'nv_scroll_char_right'       ,
+    'nv_scroll_half_screen_left' ,'nv_scroll_half_screen_right' ,
     'nv_vi_move_to_bol','nv_vi_move_to_soft_bol','nv_vi_move_to_hard_bol',
     'nv_vi_jump_back','nv_vi_jump_forward',
+    'nv_add_spell_word','nv_remove_spell_word','nv_select_spell_word',
+    'nv_fold','nv_unfold','nv_fold_all','nv_unfold_all',
     'nv_vi_left_brace' ,'nv_vi_left_square_bracket',
     'nv_vi_right_brace','nv_vi_right_square_bracket',
     'nv_target_prev','nv_target_next',
@@ -1828,29 +1832,65 @@ class nv_vi_zz(TextCommand):
         adjust_selection_if_first_non_blank(self.view, mode, first_non_blank, selection)
 
 
-class nv_vi_z(TextCommand):
+class nv_scroll_char_left        (TextCommand):
+    def run(self,                      edit,         count, **kwargs):
+        scroll_horizontally(self.view, edit, amount=-count                  )
+class nv_scroll_char_right       (TextCommand):
+    def run(self,                      edit,         count, **kwargs):
+        scroll_horizontally(self.view, edit, amount= count                  )
+class nv_scroll_half_screen_left (TextCommand):
+    def run(self,                      edit,         count, **kwargs):
+        scroll_horizontally(self.view, edit, amount=-count, half_screen=True)
+class nv_scroll_half_screen_right(TextCommand):
+    def run(self,                      edit,         count, **kwargs):
+        scroll_horizontally(self.view, edit, amount= count, half_screen=True)
 
+class nv_add_spell_word    (TextCommand):
+    def run(self, edit,          count, **kwargs):
+        spell_file_add_word   (self.view, kwargs.get('mode'), count)
+class nv_remove_spell_word (TextCommand):
+    def run(self, edit,          count, **kwargs):
+        spell_file_remove_word(self.view, kwargs.get('mode'), count)
+class nv_select_spell_word(TextCommand):
+    def run(self, edit,          count, **kwargs):
+        spell_select          (self.view                           )
+
+class nv_fold      (TextCommand):
+    def run(self, edit,          count, **kwargs):
+        fold(self.view)
+class nv_unfold    (TextCommand):
+    def run(self, edit,          count, **kwargs):
+        unfold(self.view)
+class nv_fold_all  (TextCommand):
+    def run(self, edit,          count, **kwargs):
+        fold_all(self.view)
+class nv_unfold_all(TextCommand):
+    def run(self, edit,          count, **kwargs):
+        unfold_all(self.view)
+
+
+class nv_vi_z(TextCommand):
     def run(self, edit, action, count, **kwargs):
-        if action in ('c', 'C'):
+        if   action in ('c', 'C'):
             fold(self.view)
-        elif action == 'g':
-            spell_file_add_word(self.view, kwargs.get('mode'), count)
-        elif action in ('ug', 'uw'):
-            spell_file_remove_word(self.view, kwargs.get('mode'), count)
-        elif action in ('h', '<left>'):
-            scroll_horizontally(self.view, edit, amount=-count)
-        elif action in ('l', '<right>'):
-            scroll_horizontally(self.view, edit, amount=count)
         elif action in ('o', 'O'):
             unfold(self.view)
-        elif action == 'H':
-            scroll_horizontally(self.view, edit, amount=-count, half_screen=True)
-        elif action == 'L':
-            scroll_horizontally(self.view, edit, amount=count, half_screen=True)
         elif action == 'M':
             fold_all(self.view)
         elif action == 'R':
             unfold_all(self.view)
+        elif action in ('h', '<left>'):
+            scroll_horizontally(self.view, edit, amount=-count)
+        elif action in ('l', '<right>'):
+            scroll_horizontally(self.view, edit, amount= count)
+        elif action == 'H':
+            scroll_horizontally(self.view, edit, amount=-count, half_screen=True)
+        elif action == 'L':
+            scroll_horizontally(self.view, edit, amount= count, half_screen=True)
+        elif action == 'g':
+            spell_file_add_word(self.view, kwargs.get('mode'), count)
+        elif action in ('ug', 'uw'):
+            spell_file_remove_word(self.view, kwargs.get('mode'), count)
         elif action == '=':
             spell_select(self.view)
         else:

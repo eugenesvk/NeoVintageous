@@ -978,10 +978,10 @@ class ViRestoreVisualSelections(ViOperatorDef):
 
 
 @assign(seqs.SEQ['gx'], ACTION_MODES)
-@assign_text(['NetrwGx'], ACTION_MODES)
+@assign_text(['OpenURL'], ACTION_MODES)
 class ViNetrwGx(ViOperatorDef):
     def init(self):
-        self.command = 'nv_vi_gx'
+        self.command = 'nv_vi_open_url'
 
 
 @assign(seqs.SEQ['⎈o'], ACTION_MODES)

@@ -117,7 +117,7 @@ __all__ = [
     'nv_vi_case_invert_char','nv_vi_case_invert_char_vis','nv_vi_case_invert_line',
     'nv_vi_case_upper_char' ,'nv_vi_case_upper_char_vis' ,'nv_vi_case_upper_line',
     'nv_vi_gv',
-    'nv_vi_gx',
+    'nv_vi_open_url',
     'nv_vi_move_char_left'       ,'nv_vi_move_char_right'      ,
     'nv_vi_move_word_prev'       ,'nv_vi_move_word_next'       ,
     'nv_vi_move_wordend_prev'    ,'nv_vi_move_wordend_next'    ,
@@ -2038,11 +2038,9 @@ class nv_vi_gv(TextCommand):
             _do_cmd(enter_visual_block_mode)
 
 
-class nv_vi_gx(TextCommand):
-
+class nv_vi_open_url(TextCommand):
     def run(self, edit, mode=None, count=None, register=None, **kwargs):
-        url = extract_url(self.view)
-        if url:
+        if (url := extract_url(self.view)):
             webbrowser.open_new_tab(url)
 
 

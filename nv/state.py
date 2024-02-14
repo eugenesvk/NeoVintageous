@@ -100,13 +100,10 @@ def update_status_line(view) -> None:
     mode_enum = mode_names_rev.get(mode_txt,None) # Mode.Insert
     if mode_enum in vim.CFGM and vim.CFGM[mode_enum] is not None:
         mode_name = vim.CFGM[mode_enum]
-        # _log.key("mode_name %s if, txt=%s",mode_name,mode_txt)
     else:
         mode_name = mode_to_name(mode_txt)
-        # _log.key("mode_name %s else, txt=%s",mode_name,mode_txt)
     if mode_name:
         view.set_status(vim.CFG['idmode'], f"{vim.CFG['prefix']}{mode_name}{vim.CFG['suffix']}")
-        # _log.key("set ‘idmode’ status to ‘%s’ (with pre/suffix)",mode_name)
 
     seq_txt = get_sequence(view)
     seq_icon = get_seq_icon(view)

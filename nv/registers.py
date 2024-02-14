@@ -365,7 +365,6 @@ def _list_values_to_str(values: list) -> list:
 
 
 def registers_set(view, key: str, value: list, linewise: bool = False) -> None:
-    print(f"registers_set ‘{key}’=‘{value}’")
     try:
         if key.isupper():
             _append(view, key, value, linewise)

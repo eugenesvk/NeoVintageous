@@ -126,7 +126,8 @@ __all__ = [
     'nv_vi_move_line_up'         ,'nv_vi_move_line_down'       ,
     'nv_vi_move_screen_line_up'  ,'nv_vi_move_screen_line_down','nv_vi_move_line_back',
     'nv_vi_move_sentence_prev'   ,'nv_vi_move_sentence_next'   ,
-    'nv_move_change_prev'        ,'nv_move_change_next',
+    'nv_move_change_prev'        ,'nv_move_change_next'        ,
+    'nv_move_misspelling_prev'   ,'nv_move_misspelling_next'   ,
     'nv_vi_move_to_bol','nv_vi_move_to_soft_bol','nv_vi_move_to_hard_bol',
     'nv_vi_jump_back','nv_vi_jump_forward',
     'nv_vi_left_brace' ,'nv_vi_left_square_bracket',
@@ -3851,6 +3852,15 @@ class nv_move_change_next(TextCommand):
         goto = GotoView(self.view, mode, count)
         goto.next_change()
 
+
+class nv_move_misspelling_prev(TextCommand):
+    def run(self, edit,         mode, count=1, **kwargs):
+        goto = GotoView(self.view, mode, count)
+        goto.prev_mispelled_word()
+class nv_move_misspelling_next(TextCommand):
+    def run(self, edit,         mode, count=1, **kwargs):
+        goto = GotoView(self.view, mode, count)
+        goto.next_mispelled_word()
 
 class nv_vi_left_square_bracket(TextCommand):
     def run(self, edit, action, mode, count=1, **kwargs):

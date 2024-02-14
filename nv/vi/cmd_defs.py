@@ -1575,27 +1575,19 @@ class ViForwardToStartOfChange(ViMotionDef):
 
 
 @assign(seqs.SEQ['[s'], ACTION_MODES)
-@assign_text(['PrevMisppelledWord'], ACTION_MODES)
+@assign_text(['MoveMisspellingPrev','PrevMisppelledWord'], ACTION_MODES)
 class ViPrevMisppelledWord(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
-        self.updates_xpos = True
-        self.command = 'nv_vi_left_square_bracket'
-        self.command_args = {
-            'action': 's',
-        }
-
-
+        self.updates_xpos     = True
+        self.command          = 'nv_move_misspelling_prev'
 @assign(seqs.SEQ[']s'], ACTION_MODES)
-@assign_text(['NextMispelledWord'], ACTION_MODES)
+@assign_text(['MoveMisspellingNext','NextMispelledWord'], ACTION_MODES)
 class ViNextMispelledWord(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
-        self.updates_xpos = True
-        self.command = 'nv_vi_right_square_bracket'
-        self.command_args = {
-            'action': 's',
-        }
+        self.updates_xpos     = True
+        self.command          = 'nv_move_misspelling_next'
 
 
 @assign_text(['GotoTargetPrev'], MOTION_MODES, icon="🢔🎯")

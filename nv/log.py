@@ -3,11 +3,13 @@ import logging
 DEFAULT_LOG_LEVEL = logging.WARNING
 TFMT = '{t.minute:2}:{t.second:2}.{t.microsecond}'
 
-filter_levelname_dict = {'ERROR':'❗','WARNING':'⚠️','INFO':"ⓘ",'KEY':'⌨️','KEYT':'⌨️T','CFG':'Ⓒ'}
+filter_levelname_dict = {'ERROR':'❗','WARNING':'⚠️','INFO':"ⓘ",'KEY':'⌨️','KEYY':'⌨️','KEYT':'⌨️T','KEYTT':'⌨️T','CFG':'Ⓒ'}
 
 def add_module_logger_levels():
   addLoggingLevel('KEYT', DEFAULT_LOG_LEVEL - 20)
+  addLoggingLevel('KEYYT', DEFAULT_LOG_LEVEL - 20)
   addLoggingLevel('KEY', DEFAULT_LOG_LEVEL - 20)
+  addLoggingLevel('KEYY', DEFAULT_LOG_LEVEL - 20)
   addLoggingLevel('MAP', DEFAULT_LOG_LEVEL - 20)
   addLoggingLevel('SET', DEFAULT_LOG_LEVEL - 20)
   addLoggingLevel('CFG', DEFAULT_LOG_LEVEL - 20)

@@ -247,21 +247,20 @@ class FeedKeyHandler():
     def _collect_input(self) -> bool:
         motion = get_motion(self.view)
         action = get_action(self.view)
+        _log.keyy("_collect_input mot‘%s’ act‘%s’", motion, action)
 
         if must_collect_input(self.view, motion, action):
             if motion and motion.accept_input:
                 motion.accept(self.key)
-                set_motion(self.view, motion)  # Processed motion needs to reserialised and stored.
+                set_motion   (self.view, motion)  # Processed motion needs to reserialised and stored
             else:
                 action.accept(self.key)
-                set_action(self.view, action)  # Processed action needs to reserialised and stored.
+                set_action   (self.view, action)  # Processed action needs to reserialised and stored
 
             if self.do_eval and is_runnable(self.view):
-                evaluate_state(self.view)
+                evaluate_state    (self.view)
                 reset_command_data(self.view)
-
             return True
-
         return False
 
     def _handle_count(self) -> bool:
@@ -347,8 +346,10 @@ class FeedKeyHandler():
         if isinstance(cmd, CommandNotFound): # TODO We shouldn't need to try resolve the command again. The resolver should handle commands correctly the first time. The reason this logic is still needed is because we might be looking at a command like 'dd', which currently doesn't resolve properly. The first 'd' is mapped for NORMAL mode, but 'dd' is not mapped in OPERATOR PENDING mode, so we get a missing command, and here we try to fix that (user mappings are excluded, since they've already been given a chance to evaluate).
             if get_mode(self.view) == OPERATOR_PENDING:
                 cmd = mappings_resolve(self.view, sequence=to_bare_command_name(get_sequence(self.view)),mode=NORMAL, check_user_mappings=False)
+                _log.keyy(" Ⓞ seq‘%s’ barecmd‘%s’ cmd‘%s’",get_sequence(self.view),to_bare_command_name(get_sequence(self.view)), cmd)
             else:
                 cmd = mappings_resolve(self.view, sequence=to_bare_command_name(get_sequence(self.view)))
+                _log.keyy("notⓄ seq‘%s’ barecmd‘%s’ cmd‘%s’",get_sequence(self.view),to_bare_command_name(get_sequence(self.view)), cmd)
             if self._handle_command_not_found(cmd):
                 if _L:
                     self._dbg_seq += f" ↩− cmd=NotFound×2/2"

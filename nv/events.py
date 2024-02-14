@@ -81,6 +81,11 @@ def _winaltkeys(view, operator: int, operand: str, match_all: bool) -> bool:
         return True #_is_command_mode(view)
 
 
+import re
+re_flags = 0
+re_flags |= re.MULTILINE | re.IGNORECASE
+alt_f_p = r"m-f\d"
+re_alt_f = re.compile(alt_f_p, flags=re_flags)
 def _handle_key(view, operator: int, operand: str, match_all: bool) -> bool:
     handle_keys = get_setting(view, 'handle_keys')
     if handle_keys:
@@ -93,11 +98,12 @@ def _handle_key(view, operator: int, operand: str, match_all: bool) -> bool:
                     return bool(handle_keys[f"{cur_mode_char}_{operand}"])
                 except KeyError:
                     pass
-    if 'c-' in operand.lower()\
-    or 'd-' in operand.lower(): # by default ignore all ⎈ or ◆ combos
-        return False
-    else:
-        return True # and handle everything else
+    for i in ['c-','d-']: # by default ignore all ⎈ or ◆ combos
+        if i in operand.lower():
+            return False
+    if re_alt_f.search(operand): # by default ignore all ⎇F№ combos
+            return False
+    return True # and handle everything else
 
 
 _OVERLAY_CONTROL_ELEMENTS = (

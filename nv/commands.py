@@ -76,8 +76,7 @@ __all__ = [
     'nv_vi_big_o',
     'nv_vi_big_s',
     'nv_vi_big_x',
-    'nv_vi_big_z_big_q',
-    'nv_vi_big_z_big_z',
+    'nv_vi_close_file','nv_vi_close_file_no_save',
     'nv_change_char',
     'nv_vi_change_line',
     'nv_vi_ctrl_b',
@@ -1568,16 +1567,12 @@ class nv_vi_big_x(TextCommand):
         enter_normal_mode(self.view, mode)
 
 
-class nv_vi_big_z_big_q(WindowCommand):
-
+class nv_vi_close_file(WindowCommand):
     def run(self, mode=None, count=None, register=None):
-        do_ex_command(self.window, 'quit', {'forceit': True})
-
-
-class nv_vi_big_z_big_z(WindowCommand):
-
+        do_ex_command(self.window,'wq'                   )
+class nv_vi_close_file_no_save(WindowCommand):
     def run(self, mode=None, count=None, register=None):
-        do_ex_command(self.window, 'wq')
+        do_ex_command(self.window,'quit',{'forceit':True})
 
 
 class nv_vi_paste(TextCommand):

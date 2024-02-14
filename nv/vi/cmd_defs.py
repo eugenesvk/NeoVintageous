@@ -1191,20 +1191,18 @@ class ViShowFileStatus(ViOperatorDef):
         self.command = 'nv_vi_ctrl_g'
 
 
-@assign(seqs.SEQ['⇧z⇧q'], (NORMAL,))
-@assign_text(['ExitEditor'], (NORMAL,))
-class ViExitEditor(ViOperatorDef):
-    def init(self):
-        self.scroll_into_view = True
-        self.command = 'nv_vi_big_z_big_q'
-
-
 @assign(seqs.SEQ['⇧z⇧z'], (NORMAL,))
 @assign_text(['CloseFile'], (NORMAL,))
 class ViCloseFile(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_big_z_big_z'
+        self.command          = 'nv_vi_close_file'
+@assign(seqs.SEQ['⇧z⇧q'], (NORMAL,))
+@assign_text(['CloseFileNoSave'], (NORMAL,))
+class ViExitEditor(ViOperatorDef):
+    def init(self):
+        self.scroll_into_view = True
+        self.command          = 'nv_vi_close_file_no_save'
 
 
 @assign(seqs.SEQ['g⇧d'], ACTION_MODES)

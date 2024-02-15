@@ -133,34 +133,22 @@ class StCommandPalette(ViOperatorDef):
         })
 
 
-@register(seqs.SEQ['F2'], ACTION_MODES)
-@register_text(['StNextBookmark'], ACTION_MODES)
-class StNextBookmark(ViOperatorDef):
+@register(seqs.SEQ['⇧F3'], ACTION_MODES)
+@register_text(['StFindPrev'], ACTION_MODES)
+class StFindPrev(ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.builtin = True
-        self.command = 'next_bookmark'
-
-
+        self.builtin          = True
+        self.command          = 'find_prev'
 @register(seqs.SEQ['F3'], ACTION_MODES)
 @register_text(['StFindNext'], ACTION_MODES)
 class StFindNext(ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.builtin = True
-        self.command = 'find_next'
-
-
-@register(seqs.SEQ['F4'], ACTION_MODES)
-@register_text(['StNextResult'], ACTION_MODES)
-class StNextResult(ViOperatorDef):
-    def init(self):
-        self.updates_xpos = True
-        self.scroll_into_view = True
-        self.builtin = True
-        self.command = 'next_result'
+        self.builtin          = True
+        self.command          = 'find_next'
 
 
 @register(seqs.SEQ['F6'], ACTION_MODES)
@@ -217,16 +205,6 @@ class StGotoDefinition(ViOperatorDef):
         self.command = 'goto_definition'
 
 
-@register(seqs.SEQ['⎈F2'], ACTION_MODES)
-@register_text(['StToggleBookmark'], ACTION_MODES)
-class StToggleBookmark(ViOperatorDef):
-    def init(self):
-        self.updates_xpos = True
-        self.scroll_into_view = True
-        self.builtin = True
-        self.command = 'toggle_bookmark'
-
-
 @register(seqs.SEQ['⎈F12'], ACTION_MODES)
 @register_text(['StGotoSymbol'], ACTION_MODES)
 class StGotoSymbol(ViOperatorDef):
@@ -241,24 +219,22 @@ class StGotoSymbol(ViOperatorDef):
         }
 
 
-@register(seqs.SEQ['⇧F2'], ACTION_MODES)
-@register_text(['StPrevBookmark'], ACTION_MODES)
-class StPrevBookmark(ViOperatorDef):
-    def init(self):
-        self.updates_xpos = True
-        self.scroll_into_view = True
-        self.builtin = True
-        self.command = 'prev_bookmark'
-
-
 @register(seqs.SEQ['⇧F4'], ACTION_MODES)
-@register_text(['StPrevResult'], ACTION_MODES)
+@register_text(['StResultPrev','StPrevResult'], ACTION_MODES)
 class StPrevResult(ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.builtin = True
-        self.command = 'prev_result'
+        self.builtin          = True
+        self.command          = 'prev_result'
+@register(seqs.SEQ['F4'], ACTION_MODES)
+@register_text(['StResultNext','StNextResult'], ACTION_MODES)
+class StNextResult(ViOperatorDef):
+    def init(self):
+        self.updates_xpos     = True
+        self.scroll_into_view = True
+        self.builtin          = True
+        self.command          = 'next_result'
 
 
 @register(seqs.SEQ['⇧F11'], ACTION_MODES)
@@ -271,14 +247,38 @@ class StToggleDistractionFree(ViOperatorDef):
         self.command = 'toggle_distraction_free'
 
 
+@register(seqs.SEQ['⇧F2'], ACTION_MODES)
+@register_text(['StPrevBookmark'], ACTION_MODES)
+class StPrevBookmark(ViOperatorDef):
+    def init(self):
+        self.updates_xpos     = True
+        self.scroll_into_view = True
+        self.builtin          = True
+        self.command          = 'prev_bookmark'
+@register(seqs.SEQ['F2'], ACTION_MODES)
+@register_text(['StNextBookmark'], ACTION_MODES)
+class StNextBookmark(ViOperatorDef):
+    def init(self):
+        self.updates_xpos     = True
+        self.scroll_into_view = True
+        self.builtin          = True
+        self.command          = 'next_bookmark'
+@register(seqs.SEQ['⎈F2'], ACTION_MODES)
+@register_text(['StToggleBookmark'], ACTION_MODES)
+class StToggleBookmark(ViOperatorDef):
+    def init(self):
+        self.updates_xpos     = True
+        self.scroll_into_view = True
+        self.builtin          = True
+        self.command          = 'toggle_bookmark'
 @register(seqs.SEQ['⇧⎈F2'], ACTION_MODES)
 @register_text(['StClearBookmarks'], ACTION_MODES)
 class StClearBookmarks(ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.builtin = True
-        self.command = 'clear_bookmarks'
+        self.builtin          = True
+        self.command          = 'clear_bookmarks'
 
 
 @register(seqs.SEQ['⇧⎈F12'], ACTION_MODES)

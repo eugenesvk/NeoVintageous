@@ -2003,7 +2003,7 @@ class ViSearchForward(ViMotionDef):
         self.updates_xpos = True
         self.input_parser = InputParser(
             InputParser.PANEL,
-            command='nv_vi_slash',
+            command='nv_vi_search_forward',
             param='pattern'
         )
 
@@ -2021,7 +2021,7 @@ class ViSearchForward(ViMotionDef):
 
     def translate(self, view):
         if self.accept_input:
-            return translate_motion(view, 'nv_vi_slash')
+            return translate_motion(view, 'nv_vi_search_forward')
 
         # We'll end up here, for example, when repeating via '.'.
         return ViSearchForwardImpl(term=self.inp[:-4]).translate(view)
@@ -2035,7 +2035,7 @@ class ViSearchForwardImpl(ViMotionDef):
         self.updates_xpos = True
 
     def translate(self, view):
-        return translate_motion(view, 'nv_vi_slash_impl', {
+        return translate_motion(view, 'nv_vi_search_forward_impl', {
             'pattern': self.inp,
         })
 

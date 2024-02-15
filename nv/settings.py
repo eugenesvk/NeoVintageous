@@ -223,7 +223,7 @@ def get_last_search_pattern(view) -> str:
 
 # Supports repeating the last search commands. For example the command "n".
 def get_last_search_pattern_command(view) -> str:
-    return get_session_value('last_search_pattern_command', 'nv_vi_slash')
+    return get_session_value('last_search_pattern_command', 'nv_vi_search_forward')
 
 
 def set_last_search_pattern(view, pattern: str, command: str) -> None:

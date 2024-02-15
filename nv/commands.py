@@ -157,8 +157,7 @@ __all__ = [
     'nv_vi_select_k',
     'nv_vi_select_text_object',
     'nv_vi_shift_enter',
-    'nv_vi_slash',
-    'nv_vi_slash_impl',
+    'nv_vi_search_forward','nv_vi_search_forward_impl',
     'nv_vi_star',
     'nv_vi_u',
     'nv_vi_flip_selection',
@@ -2481,13 +2480,13 @@ class nv_vi_reverse_find_in_line(TextCommand):
         regions_transformer(self.view, f)
 
 
-class nv_vi_slash(TextCommand):
+class nv_vi_search_forward(TextCommand):
 
-    def run(self, edit, pattern=''):
+    def run(self, edit, pattern='' ):
         CmdlineSearch(self.view, forward=True).run(pattern)
 
 
-class nv_vi_slash_impl(TextCommand):
+class nv_vi_search_forward_impl(TextCommand):
     def run(self, edit, pattern, mode=None, count=1, save=True):
         if not pattern:
             pattern = get_last_search_pattern(self.view)
@@ -2496,7 +2495,7 @@ class nv_vi_slash_impl(TextCommand):
                 return
 
         if save:
-            set_last_search_pattern(self.view, pattern, 'nv_vi_slash')
+            set_last_search_pattern(self.view, pattern, 'nv_vi_search_forward')
 
         sel = self.view.sel()[0]
         pattern, flags = process_search_pattern(self.view, pattern)
@@ -3641,8 +3640,8 @@ class nv_vi_question_mark(TextCommand):
 class nv_vi_repeat_buffer_search(TextCommand):
 
     commands = {
-        'nv_vi_slash': ['nv_vi_slash_impl', 'nv_vi_question_mark_impl'],
-        'nv_vi_question_mark': ['nv_vi_question_mark_impl', 'nv_vi_slash_impl'],
+        'nv_vi_search_forward': ['nv_vi_search_forward_impl', 'nv_vi_question_mark_impl'],
+        'nv_vi_question_mark': ['nv_vi_question_mark_impl', 'nv_vi_search_forward_impl'],
         'nv_vi_star': ['nv_vi_star', 'nv_vi_octothorp'],
         'nv_vi_octothorp': ['nv_vi_octothorp', 'nv_vi_star'],
     }

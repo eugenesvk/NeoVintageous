@@ -2101,37 +2101,37 @@ class Viz(ViOperatorDef):
 
 @assign(seqs.SEQ['zh'], ACTION_MODES)
 @assign(seqs.Z_LEFT   , ACTION_MODES)
-@assign_text(['ScrollCharLeft'], ACTION_MODES)
-class ViScrollCharLeft(ViOperatorDef):
+@assign_text(['ScrollCharLeft'], ACTION_MODES, icon='◀')
+class ViScrollCharLeft        (ViMotionDef):
     def init(self):
         self.scroll_into_view = True
         self.updates_xpos     = True
         self.command          = 'nv_scroll_char_left'
 @assign(seqs.SEQ['zl'], ACTION_MODES)
 @assign(seqs.Z_RIGHT  , ACTION_MODES)
-@assign_text(['ScrollCharRight'], ACTION_MODES)
-class ViScrollCharRight(ViOperatorDef):
+@assign_text(['ScrollCharRight'], ACTION_MODES, icon='▶')
+class ViScrollCharRight      (ViMotionDef):
     def init(self):
         self.scroll_into_view = True
         self.updates_xpos     = True
         self.command          = 'nv_scroll_char_right'
 @assign(seqs.SEQ['z⇧h'], ACTION_MODES)
-@assign_text(['ScrollHalfScreenLeft'], ACTION_MODES)
-class ViScrollHalfScreenLeft(ViOperatorDef):
+@assign_text(['ScrollHalfScreenLeft'], ACTION_MODES, icon='🢔½🗔')
+class ViScrollHalfScreenLeft (ViMotionDef):
     def init(self):
         self.scroll_into_view = True
         self.updates_xpos     = True
         self.command          = 'nv_scroll_half_screen_left'
 @assign(seqs.SEQ['z⇧l'], ACTION_MODES)
-@assign_text(['ScrollHalfScreenRight'], ACTION_MODES)
-class ViScrollHalfScreenRight(ViOperatorDef):
+@assign_text(['ScrollHalfScreenRight'], ACTION_MODES, icon='½🗔🢖')
+class ViScrollHalfScreenRight(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
         self.updates_xpos     = True
         self.command          = 'nv_scroll_half_screen_right'
 
 @assign(seqs.SEQ['zg'], ACTION_MODES)
-@assign_text(['AddSpellWord'], ACTION_MODES)
+@assign_text(['AddSpellWord'], ACTION_MODES, icon='⇝⊕')
 class ViAddSpellWord(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -2139,14 +2139,14 @@ class ViAddSpellWord(ViOperatorDef):
         self.command          = 'nv_add_spell_word'
 @assign(seqs.ZUG      , ACTION_MODES)
 @assign(seqs.ZUW      , ACTION_MODES)
-@assign_text(['RemoveSpellWord'], ACTION_MODES)
+@assign_text(['RemoveSpellWord'], ACTION_MODES, icon='⇝⊖')
 class ViRemoveSpellWord(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
         self.updates_xpos     = True
         self.command          = 'nv_remove_spell_word'
 @assign(seqs.Z_EQUAL  , ACTION_MODES)
-@assign_text(['SelectSpellWord'], ACTION_MODES)
+@assign_text(['SelectSpellWord'], ACTION_MODES, icon='⇝☰')
 class ViSelectSpellWord(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True

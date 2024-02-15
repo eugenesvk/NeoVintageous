@@ -1643,13 +1643,25 @@ class ViGotoClosingParen(ViMotionDef):
 @assign_text(['Percent'], MOTION_MODES)
 class ViPercent(ViMotionDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-
     def translate(self, view):
-        return translate_motion(view, 'nv_vi_percent', {
-            'count': get_count(view, default=0)
-        })
+        return translate_motion(view,'nv_vi_percent'
+            ,{'count':get_count(view,default=0)})
+@assign_text(['MoveToBracketMatch'], MOTION_MODES)
+class ViMatchBracket(ViMotionDef):
+    def init(self):
+        self.updates_xpos     = True
+        self.scroll_into_view = True
+        self.command          = 'nv_vi_move_to_bracket_match'
+@assign_text(['MoveToFilePercent'], MOTION_MODES)
+class ViMoveToFilePercent(ViMotionDef):
+    def init(self):
+        self.updates_xpos     = True
+        self.scroll_into_view = True
+    def translate(self, view):
+        return translate_motion(view,'nv_vi_move_to_file_percent'
+            ,{'count':get_count(view,default=0)})
 
 
 @assign(seqs.SEQ['⧵'], MOTION_MODES)

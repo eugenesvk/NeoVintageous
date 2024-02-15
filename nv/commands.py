@@ -143,7 +143,7 @@ __all__ = [
     'nv_vi_o',
     'nv_vi_octothorp',
     'nv_vi_paste',
-    'nv_vi_percent',
+    'nv_vi_percent','nv_vi_move_to_bracket_match','nv_vi_move_to_file_percent',
     'nv_vi_toggle_macro_record',
     'nv_vi_question_mark','nv_vi_question_mark_impl',
     'nv_vi_quote',
@@ -3007,49 +3007,55 @@ class nv_vi_left_brace(TextCommand):
 
 
 class nv_vi_percent(TextCommand):
-
     def run(self, edit, mode=None, count=None):
-        if count:
-            # {count}% Go to {count} percentage in the file, on the first non-blank
-            # in the line linewise. To compute the new line number this formula is
-            # used: ({count} * number-of-lines + 99) / 100
-            row = self.view.rowcol(self.view.size())[0] * (count / 100)
-
-            def f(view, s):
-                return Region(view.text_point(row, 0))
-
-            regions_transformer(self.view, f)
-            show_if_not_visible(self.view)
+        if count: # Go to {count} percentage in the file, on the first non-blank in the line linewise. To compute the new line number this formula is used: ({count} * number-of-lines + 99) / 100
+            self.view.run_command('nv_vi_move_to_file_percent' ,{'mode':mode,'count':count})
         else:
-            def f(view, s):
-                if mode == NORMAL:
-                    target = find_next_item_match_pt(view, s)
-                    if target is not None:
-                        resolve_normal_target(s, target)
-                elif mode == VISUAL:
-                    target = find_next_item_match_pt(view, s)
-                    if target is not None:
-                        resolve_visual_target(s, target)
-                elif mode == VISUAL_LINE:
-                    if s.a > s.b:
-                        target = find_next_item_match_pt(view, Region(s.b, self.view.line(s.b).end()))
+            self.view.run_command('nv_vi_move_to_bracket_match',{'mode':mode,'count':count})
+
+class nv_vi_move_to_file_percent(TextCommand):
+    def run(self, edit, mode=None, count=None):
+        if not count: # Go to {count} percentage in the file, on the first non-blank in the line linewise. To compute the new line number this formula is used: ({count} * number-of-lines + 99) / 100
+            return
+        row = self.view.rowcol(self.view.size())[0] * (count / 100)
+        def f(view, s):
+            return Region(view.text_point(row, 0))
+        regions_transformer(self.view, f)
+        show_if_not_visible(self.view)
+
+
+class nv_vi_move_to_bracket_match(TextCommand):
+    def run(self, edit, mode=None, count=None):
+        def f(view, s):
+            if   mode == NORMAL:
+                target = find_next_item_match_pt(view, s)
+                if target is not None:
+                    resolve_normal_target(s, target)
+            elif mode == INSERT:
+                target = find_next_item_match_pt(view, s)
+                if target is not None:
+                    resolve_normal_target(s, target)
+            elif mode == VISUAL:
+                target = find_next_item_match_pt(view, s)
+                if target is not None:
+                    resolve_visual_target(s, target)
+            elif mode == VISUAL_LINE:
+                if s.a > s.b:
+                    target = find_next_item_match_pt(view, Region(s.b, self.view.line(s.b).end()))
+                else:
+                    target = find_next_item_match_pt(view, Region(s.a,                s.b - 1))
+                if target is not None:
+                    resolve_visual_line_target(view, s, target)
+            elif mode == INTERNAL_NORMAL:
+                found = find_next_item_match_pt(view, s)
+                if found is not None:
+                    if found < s.a:
+                        s.a += 1
+                        s.b = found
                     else:
-                        target = find_next_item_match_pt(view, Region(s.a, s.b - 1))
-
-                    if target is not None:
-                        resolve_visual_line_target(view, s, target)
-                elif mode == INTERNAL_NORMAL:
-                    found = find_next_item_match_pt(view, s)
-                    if found is not None:
-                        if found < s.a:
-                            s.a += 1
-                            s.b = found
-                        else:
-                            s.b = found + 1
-
-                return s
-
-            regions_transformer(self.view, f)
+                        s.b = found + 1
+            return s
+        regions_transformer(self.view, f)
 
 
 class nv_vi_big_h(TextCommand):

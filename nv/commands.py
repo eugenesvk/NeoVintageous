@@ -2481,8 +2481,7 @@ class nv_vi_reverse_find_in_line(TextCommand):
 
 
 class nv_vi_search_forward(TextCommand):
-
-    def run(self, edit, pattern='' ):
+    def run(self, edit, pattern='', mode=None, count=None, register=None):
         CmdlineSearch(self.view, forward=True).run(pattern)
 
 

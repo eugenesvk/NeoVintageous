@@ -1,6 +1,6 @@
 import logging
 
-from NeoVintageous.nv.settings import get_mode, get_sequence, set_interactive, set_mode, set_repeat_data, get_register, get_capture_register
+from NeoVintageous.nv.settings import get_mode, get_sequence, set_interactive, set_mode, set_repeat_data, get_register, get_capture_register, get_count, get_action_count,  get_motion_count
 from NeoVintageous.nv.state    import evaluate_state, get_action, get_motion, is_runnable, must_collect_input, reset_command_data
 from NeoVintageous.nv.ui       import ui_bell
 from NeoVintageous.nv.utils    import gluing_undo_groups, translate_char
@@ -65,7 +65,7 @@ class ProcessCmdTextHandler():
                 setReg = True
                 if not get_register(self.view) == '"': # don't clean reg/seq if register non-standard? #todo: test workaround for register cleared up when it shouldn't in nnoremap X dd
                     setReg = False
-                _log.keyt("    ~break, get_action exists mot‘%s’ act‘%s’ reg‘%s’%s, reset state, reg_%s",get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view),setReg)
+                _log.keyt("    ~break, get_action exists mot‘%s’⋅#%s act‘%s’⋅#%s reg‘%s’%s, reset state, reg_%s m%s ⋅#%s",get_motion(self.view),get_motion_count(self.view), get_action(self.view),get_action_count(self.view), get_register(self.view),get_capture_register(self.view),setReg, get_mode(self.view), get_count(self.view))
                 reset_command_data(self.view,setReg=setReg)
                 if  get_mode(self.view) == OPERATOR_PENDING:
                     set_mode(self.view, NORMAL)

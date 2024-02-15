@@ -4,7 +4,7 @@ from datetime import datetime
 
 from NeoVintageous.nv.mappings import IncompleteMapping, Mapping, mappings_can_resolve, mappings_can_resolve_text, mappings_resolve, mappings_resolve_text
 from NeoVintageous.nv.mappings_handler import evaluate_mapping, evaluate_mapping_text
-from NeoVintageous.nv.settings import append_sequence, append_seq_icon, get_action_count, get_capture_register, get_mode, get_motion_count, get_partial_sequence, get_partial_text, get_sequence, get_setting, is_interactive, set_action_count, set_capture_register, set_mode, set_motion_count, set_partial_sequence, set_partial_text, set_register
+from NeoVintageous.nv.settings import append_sequence, append_seq_icon, get_count, get_action_count, get_capture_register, get_mode, get_motion_count, get_partial_sequence, get_partial_text, get_sequence, get_setting, is_interactive, set_action_count, set_capture_register, set_mode, set_motion_count, set_partial_sequence, set_partial_text, set_register
 from NeoVintageous.nv.state import evaluate_state, get_action, get_motion, init_view, is_runnable, must_collect_input, reset_command_data, set_action, set_motion, update_status_line
 from NeoVintageous.nv.ui import ui_bell
 from NeoVintageous.nv.vi.cmd_base import CommandNotFound, ViCommandDefBase, ViMotionDef, ViOperatorDef
@@ -59,7 +59,7 @@ class FeedTextCmdHandler():
     def _collect_input(self) -> bool: # TextCmd
         motion = get_motion(self.view)
         action = get_action(self.view)
-        _log.keyt("mot‘%s’ act‘%s’", motion, action)
+        _log.keyt("mot‘%s’⋅#%s act‘%s’⋅#%s ⋅#%s", motion, get_motion_count(self.view), action, get_action_count(self.view), get_count(self.view))
 
         if must_collect_input(self.view, motion, action):
             if motion and\

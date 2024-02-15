@@ -66,15 +66,15 @@ class CommentaryBlock(ViOperatorDef):
 
 class nv_commentary_command(TextCommand):
     def run(self, edit, action, **kwargs):
-        if action == 'c':
-            _do_c(self.view, edit, **kwargs)
+        if   action == 'c':
+            _comment_motion(self.view, edit, **kwargs)
         elif action == 'cc':
-            _do_cc(self.view, edit, **kwargs)
+            _comment_line  (self.view, edit, **kwargs)
         elif action == 'C':
-            _do_C(self.view, edit, **kwargs)
+            _comment_block (self.view, edit, **kwargs)
 
 
-def _do_c(view, edit, mode, count=1, register=None, motion=None):
+def _comment_motion(view, edit, mode, count=1, register=None, motion=None):
     def f(view, s):
         return Region(s.begin())
 
@@ -98,7 +98,7 @@ def _do_c(view, edit, mode, count=1, register=None, motion=None):
     enter_normal_mode(view, mode)
 
 
-def _do_cc(view, edit, mode: str, count: int = 1, register=None) -> None:
+def _comment_line(view, edit, mode: str, count: int = 1, register=None) -> None:
     def f(view, s):
         if mode == INTERNAL_NORMAL:
             view.run_command('toggle_comment')
@@ -143,7 +143,7 @@ def _do_cc(view, edit, mode: str, count: int = 1, register=None) -> None:
     set_selection(view, pt)
 
 
-def _do_C(view, edit, mode: str, count: int = 1, register=None, motion=None) -> None:
+def _comment_block(view, edit, mode: str, count: int = 1, register=None, motion=None) -> None:
     def f(view, s):
         return Region(s.begin())
 

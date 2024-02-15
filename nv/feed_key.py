@@ -106,7 +106,7 @@ class FeedTextCmdHandler():
         cmd  = self.cmd
         if isinstance(cmd, IncompleteMapping):
             if _L:
-                self.dbg += f" ↩+ ¦{cmd}¦cmd=IncompleteMapping"
+                self.dbg += f" ↩+ ¦¦cmd=IncompleteMapping"
             return True
         if isinstance(cmd, ViOpenNameSpace  ):
             if _L:
@@ -327,7 +327,7 @@ class FeedKeyHandler():
         cmd  = cmdS
         if isinstance(cmd, IncompleteMapping):
             if _L:
-                self._dbg_seq += f" ↩ ¦{cmd}¦cmd=IncompleteMapping"
+                self._dbg_seq += f" ↩ ¦¦cmd=IncompleteMapping"
             return
         if isinstance(cmd, ViOpenNameSpace):
             if _L:
@@ -386,7 +386,7 @@ class FeedKeyHandler():
         cmd  = cmdT
         if isinstance(cmd, IncompleteMapping):
             if _L:
-                self._dbg_txt += f" ↩+ ¦{cmd}¦cmd=IncompleteMapping"
+                self._dbg_txt += f" ↩+ ¦¦cmd=IncompleteMapping"
             return True
         if isinstance(cmd, ViOpenNameSpace  ):
             if _L:

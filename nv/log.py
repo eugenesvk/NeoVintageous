@@ -21,10 +21,7 @@ formatter = logging.Formatter('NV%(levelname)-1s_%(filename)10s:%(lineno)-3d %(m
 stream_handler.setFormatter(formatter)
 
 def filter_levelname(s:str):
-  for old,new in filter_levelname_dict.items():
-    if s == old:
-      return new
-  return s
+  return filter_levelname_dict.get(s,s)
 
 old_factory = logging.getLogRecordFactory()
 def record_factory(*args, **kwargs):

@@ -32,6 +32,7 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
    + :beetle: falsy user settings treated as missing instead of being saved as value false values
    + :beetle: `ViGotoSymbolInFile` using deprecated APIs to get symbol position
    + :beetle: avoid dumping settings loaded from KDL to Preferences file: stop saving settings in the Preferences.sublime-settings unless they already exist there
+   + :beetle: error running search command with mode/count arg. Happens when e.g. `map m /` and press `dm` the `/` search command receives `motion_args` dictionary with `mode`/`count` keys, which its function signature lacks
   - __Changed__
    + text object labels are removed with an explicit no value (`l=null` or `l=""` instead of the old `"l"`), while that syntax is repurposed: a pair as an argument is parsed using self (`"‘’"` is the same as `‘="‘’"` and `’="‘’"`)
 

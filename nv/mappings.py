@@ -110,12 +110,15 @@ def _has_partial_matches_text(view, mode: str, lhs: str) -> bool:
             if map_lhs.startswith(lhs):
                 if lhs == '<':
                     if map_lhs.startswith('<lt>'):
+                        _log.map("  @_has_partial_matches_text <lt %s ¦%s¦map_lhs ¦%s¦lhs |%s¦map_rhs",mode,map_lhs,lhs,map_rhs)
                         return True
                     elif re_key_non_lt.match(map_lhs):
                         continue
                     else:
+                        _log.map("  @_has_partial_matches_text <  %s ¦%s¦map_lhs ¦%s¦lhs |%s¦map_rhs",mode,map_lhs,lhs,map_rhs)
                         return True
                 else:
+                    _log.map("  @_has_partial_matches_text else %s ¦%s¦map_lhs ¦%s¦lhs |%s¦map_rhs",mode,map_lhs,lhs,map_rhs)
                     return True
         else:
             file_type = get_file_type(view)
@@ -388,12 +391,17 @@ def mappings_can_resolve(view, key: str) -> bool:
     return False
 
 def mappings_can_resolve_text(view, key: str) -> bool:
-    mode = get_mode                (view)
+    _log.map("  @mappings_can_resolve_text ¦%s¦key",key)
+    mode = get_mode             (view)
     cmd  = ''.join(get_partial_text(view)) + key
-    if _find_full_match_text(view, mode, cmd):
+    _log.map("  @get_partial_text+key ¦%s¦cmd",cmd)
+
+    if _find_full_match_text    (view, mode, cmd):
+        _log.map("  @get_partial_text+key ¦_find_full_match_text")
         return True
-    # if _has_partial_matches(view, mode, cmd): # todo not needed?
-        # return True
+    if _has_partial_matches_text(view, mode, cmd):
+        _log.map("  @get_partial_text+key ¦_has_partial_matches_text")
+        return True
     return False
 
 
@@ -483,17 +491,20 @@ def mappings_resolve_text(view, text_command:str = None, mode: str = None, check
     → Mapping |  CommandNotFound
     """
     cmd,cmdU,cmdT = '','',''
+    _log.map("  TXT mappings_resolve_text ¦%s¦text_command ¦%s¦mode ¦%s¦usr",text_command,mode,check_user_mappings)
     cmdIn = text_command if text_command else ''
     cmdTpart = get_partial_text(view) # We usually need to look at the partial sequence, but some commands do weird things, like ys, which isn't a namespace but behaves as such
     cmdTxt = cmdIn or ''.join(cmdTpart)
-    _log.map("  TXT ¦%s¦in ¦%s¦part",cmdIn,cmdTpart)
+    _log.map("  TXT ¦%s¦in ¦%s¦part ¦%s¦usr",cmdIn,cmdTpart,check_user_mappings)
     if check_user_mappings:
         cmdU = _text_cmd_to_mapping(view, cmdTxt)
         if     not cmdU:
             if not cmdIn:
                 if _has_partial_matches_text(view, get_mode(view), cmdTxt):
-                    _log.debug("→IncompleteMapping no cmdU/cmdTxt, but partial match for ‘%s’cmdTxt",cmdTxt)
+                    _log.map("→IncompleteMapping no cmdU/cmdIn, but partial match for ‘%s’cmdTxt",cmdTxt)
                     return IncompleteMapping()
+        else:
+            _log.map("  TXT ¦%s¦cmdU",cmdU)
     cmd = cmdU if cmdU else (cmdT:=_text_to_command(view, cmdTxt))
     _log.map(' @mapResT %s ‹‘%s’=‘%s’› (%s usr%s cmd: ‘%s’in ‘%s’usr ‘%s’T¦‘%s’Tpart ‘%s’cmd ‘%s’cmd_cls)'
         ,cmd.__class__.__name__

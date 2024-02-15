@@ -151,8 +151,8 @@ class UnimpairedMoveDown(ViOperatorDef):
 
 
 @register(seqs.SEQ['[t'], (NORMAL,))
-@register_text(['UnimpairedTabprevious'], (NORMAL,))
-class UnimpairedTabprevious(ViOperatorDef):
+@register_text(['UnimpairedTabpPevious'], (NORMAL,))
+class UnimpairedTabPrevious(ViOperatorDef):
     def init(self):
         self.command = 'nv_unimpaired'
         self.command_args = {
@@ -161,8 +161,8 @@ class UnimpairedTabprevious(ViOperatorDef):
 
 
 @register(seqs.SEQ[']t'], (NORMAL,))
-@register_text(['UnimpairedTabnext'],seqs.SEQ[']t'], (NORMAL,))
-class UnimpairedTabnext(ViOperatorDef):
+@register_text(['UnimpairedTabNext'],seqs.SEQ[']t'], (NORMAL,))
+class UnimpairedTabNext(ViOperatorDef):
     def init(self):
         self.command = 'nv_unimpaired'
         self.command_args = {
@@ -171,8 +171,8 @@ class UnimpairedTabnext(ViOperatorDef):
 
 
 @register(seqs.SEQ['[⇧t'], (NORMAL,))
-@register_text(['UnimpairedTabfirst'], (NORMAL,))
-class UnimpairedTabfirst(ViOperatorDef):
+@register_text(['UnimpairedTabFirst'], (NORMAL,))
+class UnimpairedTabFirst(ViOperatorDef):
     def init(self):
         self.command = 'nv_unimpaired'
         self.command_args = {
@@ -181,8 +181,8 @@ class UnimpairedTabfirst(ViOperatorDef):
 
 
 @register(seqs.SEQ[']⇧t'], (NORMAL,))
-@register_text(['UnimpairedTablast'],seqs.SEQ[']⇧t'], (NORMAL,))
-class UnimpairedTablast(ViOperatorDef):
+@register_text(['UnimpairedTabLast'],seqs.SEQ[']⇧t'], (NORMAL,))
+class UnimpairedTabLast(ViOperatorDef):
     def init(self):
         self.command = 'nv_unimpaired'
         self.command_args = {

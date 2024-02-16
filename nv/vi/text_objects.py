@@ -123,7 +123,7 @@ def reload_with_user_data_kdl() -> None:
     global CFG
     if hasattr(cfgU,'kdl') and (cfg := cfgU.kdl.get('textobject',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
         _log.debug("@text_objects: Parsing config")
-        replaced = [] # keep track of added values with the same label so as not to remove tha label as instructed by a later config
+        replaced = [] # keep track of added values with the same label so as not to remove that label as instructed by a later config
         for node in cfg.nodes: # bracket "b" "B" d="()" ...
             tag_val = node.name
             tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
@@ -131,11 +131,11 @@ def reload_with_user_data_kdl() -> None:
             cfg_key = val
             if tag:
                 _log.warn("node ‘%s’ has unrecognized tag, skipping",node.name)
-                return
+                continue
             if      val not in to_names_rev\
                 and val not in DEF:
                 _log.warn("node ‘%s’ has unrecognized name, skipping",node.name)
-                return
+                continue
 
             if cfg_key == 'seekforward': # ⎀a(B) don't sub ⎀a(b) if false
                 if (args := node.args):

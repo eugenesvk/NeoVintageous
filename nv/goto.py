@@ -419,12 +419,14 @@ def jump_to_mark(view, mode: str, mark: str, to_non_blank: bool = False) -> None
 
     if to_non_blank:
         def f(view, s):
-            if mode == NORMAL:
-                resolve_normal_target(s, next_non_blank(view, view.line(target.b).a))
+            if   mode == NORMAL:
+                resolve_normal_target     (      s, next_non_blank(view,view.line(target.b).a))
+            elif mode == INSERT:
+                resolve_normal_target     (      s, next_non_blank(view,view.line(target.b).a))
             elif mode == VISUAL:
-                resolve_visual_target(s, next_non_blank(view, view.line(target.b).a))
+                resolve_visual_target     (      s, next_non_blank(view,view.line(target.b).a))
             elif mode == VISUAL_LINE:
-                resolve_visual_line_target(view, s, next_non_blank(view, view.line(target.b).a))
+                resolve_visual_line_target(view, s, next_non_blank(view,view.line(target.b).a))
             elif mode == INTERNAL_NORMAL:
                 if s.a < target.a:
                     s = Region(view.full_line(s.b).a, view.line(target.b).b)
@@ -434,10 +436,12 @@ def jump_to_mark(view, mode: str, mark: str, to_non_blank: bool = False) -> None
             return s
     else:
         def f(view, s):
-            if mode == NORMAL:
-                resolve_normal_target(s, target.b)
+            if   mode == NORMAL:
+                resolve_normal_target     (      s, target.b)
+            elif mode == INSERT:
+                resolve_normal_target     (      s, target.b)
             elif mode == VISUAL:
-                resolve_visual_target(s, target.b)
+                resolve_visual_target     (      s, target.b)
             elif mode == VISUAL_LINE:
                 resolve_visual_line_target(view, s, target.b)
             elif mode == INTERNAL_NORMAL:

@@ -117,7 +117,7 @@ def reload_with_user_data_kdl() -> None:
                     tag_val = args[0] #(t)‘’ if (t) exists (though shouldn't)
                     (tag,val) = get_tag_val_warn(tag_val=tag_val,logger=_log,node_name=cfg_key)
                     if val == 'clear':
-                        CFG[cfg_key] = dict() # clear all existing aliases
+                        CFG[cfg_key].clear() # clear all existing aliases
                         _log.debug('CFG arg cleared @%s ‘%s’={}',cfg.name,cfg_key)
                     else:
                         _log.warn("node ‘%s’ has unrecognized value in argument ‘%s’, expecting one of: %s"
@@ -139,13 +139,13 @@ def reload_with_user_data_kdl() -> None:
                                 ,      node.name,                               tag_val)
                         else:
                             val = clean_name(tag_val)
-                        if val in CFG['coercion']:
+                        if val in DEF['coercion']:
                             CFG[    cfg_key][key] = val # mixedcase
                             _log.debug('CFG set to arg @%s ‘%s’=‘%s’'
                                 ,                   cfg_key,key,val)
                         else:
                             _log.warn("node ‘%s’ has unrecognized value in argument ‘%s’, expecting one of: %s"
-                                ,       node.name,                              tag_val,' '.join(CFG['coercion'].keys()))
+                                ,       node.name,                              tag_val,' '.join(DEF['coercion'].keys()))
                     elif not args:
                         _log.warn("node ‘%s’ is missing arguments in its child ‘%s’"
                             ,           cfg_key ,                          node.name)
@@ -161,13 +161,13 @@ def reload_with_user_data_kdl() -> None:
                     else:
                         val = clean_name(tag_val)
                     # val = tag_val.value if hasattr(tag_val,'value') else tag_val
-                    if  val in CFG['coercion']:
+                    if  val in DEF['coercion']:
                         CFG[    cfg_key][key] = val # mixedcase
                         _log.debug('CFG set to prop @%s %s=%s'
                             ,                   cfg_key,key,val)
                     else:
                         _log.warn("node ‘%s’ has unrecognized value in property ‘%s=%s’, expecting one of: %s"
-                            ,       node.name,                                  key,tag_val,' '.join(CFG['coercion'].keys()))
+                            ,       node.name,                                  key,tag_val,' '.join(DEF['coercion'].keys()))
                 # elif not node.props:
                     # _log.warn("node ‘%s’ is missing missing key=value properties",cfg_key)
     else:

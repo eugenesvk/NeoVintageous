@@ -1414,13 +1414,18 @@ class ViMoveScreenUp(ViMotionDef):
 @assign_text(['GotoExactMarkXpos'], MOTION_MODES, icon='☰🖈')
 class ViGotoExactMarkXpos(RequireOneCharMixin, ViMotionDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-
     def translate(self, view):
-        return translate_motion(view, 'nv_vi_backtick', {
-            'character': self.inp
-        })
+        return translate_motion(view,'nv_vi_jump_to_mark'           ,{'character':self.inp})
+@assign(seqs.SEQ["'"], MOTION_MODES)
+@assign_text(['GotoMark'], MOTION_MODES, icon='☰🖈𝕒')
+class ViGotoMark(RequireOneCharMixin, ViMotionDef):
+    def init(self):
+        self.updates_xpos     = True
+        self.scroll_into_view = True
+    def translate(self, view):
+        return translate_motion(view, 'nv_vi_jump_to_mark_non_blank',{'character':self.inp})
 
 
 @assign(seqs.SEQ['$'], MOTION_MODES)
@@ -1517,19 +1522,6 @@ class ViRepeatCharSearchForward(ViMotionDef):
             'inclusive': inclusive,
             'skipping': skipping,
             'save': False
-        })
-
-
-@assign(seqs.SEQ["'"], MOTION_MODES)
-@assign_text(['GotoMark'], MOTION_MODES)
-class ViGotoMark(RequireOneCharMixin, ViMotionDef):
-    def init(self):
-        self.updates_xpos = True
-        self.scroll_into_view = True
-
-    def translate(self, view):
-        return translate_motion(view, 'nv_vi_quote', {
-            'character': self.inp
         })
 
 

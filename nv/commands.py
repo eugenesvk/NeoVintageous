@@ -62,7 +62,7 @@ __all__ = [
     'nv_run_cmds',
     'nv_vi_a',
     'nv_vi_at',
-    'nv_vi_backtick',
+    'nv_vi_jump_to_mark','nv_vi_jump_to_mark_non_blank',
     'nv_vi_move_column',
     'nv_vi_big_a',
     'nv_vi_big_c',
@@ -146,7 +146,6 @@ __all__ = [
     'nv_vi_percent','nv_vi_move_to_bracket_match','nv_vi_move_to_file_percent',
     'nv_vi_toggle_macro_record',
     'nv_vi_question_mark','nv_vi_question_mark_impl',
-    'nv_vi_quote',
     'nv_vi_r',
     'nv_vi_repeat_buffer_search',
     'nv_vi_reverse_find_in_line',
@@ -1207,16 +1206,12 @@ class nv_vi_m(TextCommand):
             ui_bell()
 
 
-class nv_vi_quote(TextCommand):
-
-    def run(self, edit, mode=None, count=1, character=None):
-        jump_to_mark(self.view, mode, character, to_non_blank=True)
-
-
-class nv_vi_backtick(TextCommand):
-
+class nv_vi_jump_to_mark(TextCommand):
     def run(self, edit, mode=None, count=1, character=None):
         jump_to_mark(self.view, mode, character)
+class nv_vi_jump_to_mark_non_blank(TextCommand):
+    def run(self, edit, mode=None, count=1, character=None):
+        jump_to_mark(self.view, mode, character, to_non_blank=True)
 
 
 class nv_vi_big_d(TextCommand):

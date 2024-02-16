@@ -15,7 +15,6 @@ from NeoVintageous.nv.utils import get_insertion_point_at_b
 def set_mark(view, name: str) -> None:
     if not _is_writable(name):
         raise KeyError()
-
     if name.isupper():
         if not view.file_name():
             return
@@ -53,8 +52,8 @@ def get_mark(view, name: str):
         if marks:
             if name.isupper():
                 return view, marks[0]
-
-            return marks[0]
+            else:
+                return       marks[0]
 
 
 def get_marks(view) -> OrderedDict:

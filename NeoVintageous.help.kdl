@@ -245,6 +245,20 @@ plugin {
       t  	"Title Case"
     }; /-alias m="mixedcase" // prop=val format is also allowed
   }
+  unimpaired { // Use custom aliases in UnImpaired plugin
+    option "clear"/*clear all default aliases*/ { // ._-␠ and CaSe are ignored in alias names
+    v null;//clear a specific alias
+    a "menu"; t "sidebar"; m "minimap"; e "statusbar";
+    w "wrap"      	; //word_wrap
+    l "list"      	; //draw_white_space
+    h "hlsearch"  	; //highlight found search results
+    c "cursorline"	; /-u "cursorcolumn";
+    n "number"    	; r "relativenumber"; //line_numbers relative_line_numbers
+    s "spell"     	; //spell_check
+    i "ignorecase"	;
+    /-v "virtualedit"; /-d "diff"; /-x "crosshairs"; /-b "background"; //not implemented
+    }; /-option m="menu" // prop=val format is also allowed
+  }
   surround { // Use custom brackets in Surround plugin
     punctuation_marks\/* add to default (){}[]<>*/
       ‘="‘’" “="“”" ’="‘’" ”="“”" \

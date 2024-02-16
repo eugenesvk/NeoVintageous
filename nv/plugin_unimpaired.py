@@ -9,9 +9,118 @@ from NeoVintageous.nv.vi       import seqs
 from NeoVintageous.nv.vi.cmd_base import ViOperatorDef, translate_action
 from NeoVintageous.nv.modes    import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.window   import window_buffer_control, window_tab_control
+from NeoVintageous.nv.cfg_parse import clean_name, get_tag_val_warn
 
+from NeoVintageous.nv.rc import cfgU
+
+import logging
+from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
+_log = logging.getLogger(__name__)
+_log.setLevel(DEFAULT_LOG_LEVEL)
 
 __all__ = ['nv_unimpaired_command']
+
+
+DEF = {
+    'option' : { # aliases are mapped to _OPTIONS
+        'a': 'menu',  # non standard
+        't': 'sidebar',  # non standard
+        'm': 'minimap',  # non standard
+        'e': 'statusbar',  # non standard
+        'w': 'wrap', # word_wrap
+        'h': 'hlsearch', # highlight found search results
+        'l': 'list', # draw_white_space
+        'b': 'background',
+        'c': 'cursorline',
+        'u': 'cursorcolumn',
+        'n': 'number', # line_numbers
+        'r': 'relativenumber', # relative_line_numbers
+        's': 'spell',
+        'i': 'ignorecase',
+        'd': 'diff',
+        'v': 'virtualedit',
+        'x': 'crosshairs'
+    },
+}
+import copy
+CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
+
+
+def reload_with_user_data_kdl() -> None:
+    if hasattr(cfgU,'kdl') and (nest := cfgU.kdl.get('plugin'  ,None))\
+        and                    (cfg  :=     nest.get('unimpaired',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
+        global CFG
+        _log.debug("@plugin unimpaired: Parsing config")
+        for node_parent in cfg.nodes: # 'alias'
+            # 0. Parse node       args: clear
+            # 1. Parse node child args: {m menu;}
+            # 2. Parse node properties:  m=menu
+
+            if (cfg_key:=node_parent.name) == 'option':
+                # _log.debug(f"@plugin unimpaired: Parsing config {cfg_key}")
+                if (args := node_parent.args): # 0. clear
+                    tag_val = args[0] #(t)‘’ if (t) exists (though shouldn't)
+                    (tag,val) = get_tag_val_warn(tag_val=tag_val,logger=_log,node_name=cfg_key)
+                    if val == 'clear':
+                        CFG[cfg_key].clear() # clear all existing aliases
+                        _log.debug('CFG arg cleared @%s ‘%s’={}',cfg.name,cfg_key)
+                    else:
+                        _log.warn("node ‘%s’ has unrecognized value in argument ‘%s’, expecting one of: %s"
+                            ,       node.name,                              tag_val,'clear')
+                if len(args) > 1:
+                    _log.warn("node ‘%s’ has extra arguments, only the 1st was used ‘%s’"
+                        ,        cfg_key,                                {', '.join(args)})
+
+                for node in node_parent.nodes: # 1. m menu key_node value_arg pairs
+                    key = node.name
+                    if (args := node.args):
+                        tag_val = args[0] #(t)‘’ if (t) exists (though shouldn't)
+                        # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
+                        if hasattr(tag_val,'value'):
+                            val = clean_name(tag_val.value) # ignore tag
+                            _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
+                                ,      node.name,                               tag_val)
+                        else:
+                            val = clean_name(tag_val)
+                        if  val == None:
+                            CFG[cfg_key].pop(key,None)
+                        elif val in _OPTIONS:
+                            CFG[cfg_key][key] = val # menu
+                            _log.debug('CFG set to arg @%s ‘%s’=‘%s’'
+                                ,                   cfg_key,key,val)
+                        else:
+                            _log.warn("node ‘%s’ has unrecognized value in argument ‘%s’, expecting one of: null %s"
+                                ,       node.name,                              tag_val,' '.join(_OPTIONS.keys()))
+                    elif not args:
+                        _log.warn("node ‘%s’ is missing arguments in its child ‘%s’"
+                            ,           cfg_key ,                          node.name)
+                    if len(args) > 1:
+                        _log.warn("node ‘%s’ has extra arguments in its child ‘%s’, only the 1st was used ‘%s’"
+                            ,           cfg_key ,                         node.name   ,       {', '.join(args)})
+                node = node_parent
+
+                for (key,tag_val) in node.props.items(): # 2. m=menu key=value pairs
+                    if hasattr(tag_val,'value'): #‘=(t)‘’ if (t) exists (though shouldn't)
+                        val = clean_name(tag_val.value) # ignore tag
+                        _log.warn("node ‘%s’ has unrecognized tag  property ‘%s=%s’"
+                            ,       node.name,                              key,tag_val)
+                    else:
+                        val = clean_name(tag_val)
+                    # val = tag_val.value if hasattr(tag_val,'value') else tag_val
+                    if  val == None:
+                        CFG[cfg_key].pop(key,None)
+                    elif val in _OPTIONS:
+                        CFG[cfg_key][key] = val # menu
+                        _log.debug('CFG set to prop @%s %s=%s'
+                            ,                   cfg_key,key,val)
+                    else:
+                        _log.warn("node ‘%s’ has unrecognized value in property ‘%s=%s’, expecting one of: null %s"
+                            ,       node.name,                                  key,tag_val,' '.join(_OPTIONS.keys()))
+                # elif not node.props:
+                    # _log.warn("node ‘%s’ is missing missing key=value properties",cfg_key)
+    else:
+        CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
+
 
 
 @register(seqs.SEQ['[l'], (NORMAL, VISUAL))
@@ -364,31 +473,9 @@ _OPTIONS = {
 }
 
 
-# These aliases are mapped to _OPTIONS.
-_OPTION_ALIASES = {
-    'a': 'menu',  # non standard i.e. not in the original Unimpaired plugin
-    'b': 'background',
-    'c': 'cursorline',
-    'd': 'diff',
-    'e': 'statusbar',  # non standard i.e. not in the original Unimpaired plugin
-    'h': 'hlsearch',
-    'i': 'ignorecase',
-    'l': 'list',
-    'm': 'minimap',  # non standard i.e. not in the original Unimpaired plugin
-    'n': 'number',
-    'r': 'relativenumber',
-    's': 'spell',
-    't': 'sidebar',  # non standard i.e. not in the original Unimpaired plugin
-    'u': 'cursorcolumn',
-    'v': 'virtualedit',
-    'w': 'wrap',
-    'x': 'crosshairs'
-}
-
-
 def _toggle_option(view, key, value=None) -> None:
-    if key in _OPTION_ALIASES:
-        key = _OPTION_ALIASES[key]
+    if key in CFG['option']:
+        key = CFG['option'][key]
 
     if key not in _OPTIONS:
         raise ValueError('unknown option')

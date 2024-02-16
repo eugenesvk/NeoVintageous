@@ -608,7 +608,7 @@ class cfgU(metaclass=Singleton):
 
         # Split config into per-section/per-plugin group
         cfg_group  = ['keymap','event','status','edit','keybind','general','rc','textobject','mark']
-        cfg_nest   = {'plugin'   :['surround','abolish']
+        cfg_nest   = {'plugin'   :['surround','abolish','unimpaired']
             ,         'indicator':['ls','registers','count']}
         # Set config dictionaries to emtpy
         for g in cfg_group:
@@ -681,6 +681,8 @@ def _import_plugins_with_user_data_kdl():
     plugin_surround.reload_with_user_data_kdl()
     from NeoVintageous.nv import plugin_abolish
     plugin_abolish.reload_with_user_data_kdl()
+    from NeoVintageous.nv import plugin_unimpaired
+    plugin_unimpaired.reload_with_user_data_kdl()
     from NeoVintageous.nv import vim
     vim.reload_with_user_data_kdl()
     # from NeoVintageous.nv import state # all needed config values are taken from nv.vim

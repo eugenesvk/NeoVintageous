@@ -1,15 +1,63 @@
 from collections import OrderedDict
-from string import ascii_letters
-from string import ascii_lowercase
+from string import ascii_letters, ascii_lowercase
 
-from sublime import HIDDEN
-from sublime import PERSISTENT
-from sublime import Region
+from sublime import HIDDEN, PERSISTENT, Region
 
 from NeoVintageous.nv.jumplist import jumplist_back
-from NeoVintageous.nv.session import get_session_value
+from NeoVintageous.nv.session  import get_session_value
 from NeoVintageous.nv.settings import get_setting
-from NeoVintageous.nv.utils import get_insertion_point_at_b
+from NeoVintageous.nv.utils    import get_insertion_point_at_b
+
+from NeoVintageous.nv.rc import cfgU
+
+import logging
+from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
+_log = logging.getLogger(__name__)
+_log.setLevel(DEFAULT_LOG_LEVEL)
+if _log.hasHandlers(): # clear existing handlers, including sublime's
+    logging.getLogger(__name__).handlers.clear()
+    # _log.addHandler(stream_handler)
+# _L = True if _log.isEnabledFor(logging.KEY) else False
+
+
+DEF = {
+    'back' : ['\'','`']
+    }
+import copy
+CFG =  copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
+
+
+def reload_with_user_data_kdl() -> None:
+    global CFG
+    if hasattr(cfgU,'kdl') and (cfg := cfgU.kdl.get('mark',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
+        _log.debug("@marks: Parsing config")
+        for node in cfg.nodes: # back "'" "`"
+            tag_val = node.name
+            tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
+            val = tag_val.value if hasattr(tag_val,'value') else tag_val
+            cfg_key = val
+            if tag:
+                _log.warn("node ‘%s’ has unrecognized tag, skipping",node.name)
+                continue
+            if cfg_key == 'back': # "'" "`"
+                CFG['back'] = list() # reset defaults
+                for arg in node.args:     # Parse arguments
+                    tag = arg.tag   if hasattr(arg,'tag'  ) else ''
+                    val = arg.value if hasattr(arg,'value') else arg
+                    # if tag:
+                        # _log.debug("node ‘%s’ has unrecognized tag in argument %s",node.name,arg)
+                    if not isinstance(val, str):
+                        _log.warn("node ‘%s’ has unrecognized argument ‘%s’, expected a string, not ‘%s’",node.name,arg,type(val))
+                        continue
+                    if len(val) > 1:
+                        _log.warn("node ‘%s’ has unrecognized argument ‘%s’, expected a single symbol, got length ‘%s’",node.name,arg,len(val))
+                        continue
+                    CFG['back'].append(val)
+            else:
+                _log.warn("node ‘%s’ has unrecognized name, skipping",node.name)
+                continue
+    else:
+        CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
 
 
 def set_mark(view, name: str) -> None:
@@ -35,13 +83,13 @@ def get_mark(view, name: str):
     if not _is_readable(name):
         raise KeyError()
 
-    if name in ('\'', '`'):
+    if name in CFG['back']:
         marks_view, marks = jumplist_back(view)
         if len(marks) > 0:
             if marks_view != view:
                 return marks_view, marks[0]
-
-            return marks[0]
+            else:
+                return             marks[0]
     else:
         if name.isupper():
             view = _get_uppercase_mark_view(view, name)

@@ -202,6 +202,9 @@ indicator { // Set various indicator format
     template  	r#"<body id="nv_motion_count"><span>{prefix}{count}</span></body>"# //|<body id="nv_motion_count"><span>{prefix}{count}</span></body>| Full HTML popup template replacement that will receive two variables: prefix and count
   }; /-count prefix="⌗" // prop=val format is also allowed
 }
+mark { // Set various marks options
+  back "'" "`" // marks that signal to go back to the previous selection
+}
 text_object { // Set various text object options
   steady_cursor true/*←apply to all functions*/ /*override for a function→*/caselowerchar=true caselowerline=true
     // Don't move ⎀cursor to the text object borders when a given command acts on it, e.g., "lower case within a word" command in ‘LOWER⎀case’ will result in:

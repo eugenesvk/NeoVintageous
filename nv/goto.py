@@ -14,6 +14,7 @@ from NeoVintageous.nv.utils           import next_non_blank, regions_transform_t
 from NeoVintageous.nv.vi              import text_objects # to get uptodate CFG?
 from NeoVintageous.nv.vi.text_objects import find_next_lone_bracket, find_prev_lone_bracket
 from NeoVintageous.nv.vim             import EOF
+from NeoVintageous.nv                 import marks # to get uptodate CFG?
 from NeoVintageous.nv.modes           import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.vim             import enter_normal_mode, status_message
 
@@ -413,7 +414,7 @@ class GotoView():
 
 
 def jump_to_mark(view, mode: str, mark: str, to_non_blank: bool = False) -> None:
-    if int(version()) >= 4082 and mark in ("'", '`'):
+    if int(version()) >= 4082 and mark in marks.CFG['back']:
         view.run_command('jump_back')
         return
 

@@ -1,193 +1,129 @@
 # A port of https://github.com/tpope/vim-unimpaired.
-
 from sublime_plugin import TextCommand
 
-from NeoVintageous.nv.options import set_option
-from NeoVintageous.nv.options import set_window_ui_element_visible
-from NeoVintageous.nv.options import toggle_option
-from NeoVintageous.nv.plugin import register, register_text
-from NeoVintageous.nv.polyfill import set_selection
-from NeoVintageous.nv.polyfill import view_find
-from NeoVintageous.nv.polyfill import view_rfind
-from NeoVintageous.nv.utils import InputParser
-from NeoVintageous.nv.utils import regions_transformer
-from NeoVintageous.nv.utils import resolve_normal_target
-from NeoVintageous.nv.utils import resolve_visual_line_target
-from NeoVintageous.nv.utils import resolve_visual_target
-from NeoVintageous.nv.utils import translate_char
-from NeoVintageous.nv.vi import seqs
-from NeoVintageous.nv.vi.cmd_base import ViOperatorDef
-from NeoVintageous.nv.vi.cmd_base import translate_action
-from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
-from NeoVintageous.nv.window import window_buffer_control
-from NeoVintageous.nv.window import window_tab_control
+from NeoVintageous.nv.options  import set_option, set_window_ui_element_visible, toggle_option
+from NeoVintageous.nv.plugin   import register, register_text
+from NeoVintageous.nv.polyfill import set_selection, view_find, view_rfind
+from NeoVintageous.nv.utils    import InputParser, regions_transformer, resolve_normal_target, resolve_visual_line_target, resolve_visual_target, translate_char
+from NeoVintageous.nv.vi       import seqs
+from NeoVintageous.nv.vi.cmd_base import ViOperatorDef, translate_action
+from NeoVintageous.nv.modes    import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
+from NeoVintageous.nv.window   import window_buffer_control, window_tab_control
 
 
 __all__ = ['nv_unimpaired_command']
 
 
 @register(seqs.SEQ['[l'], (NORMAL, VISUAL))
-@register_text(['UnimpairedContextPrevious'], (NORMAL, VISUAL))
-class UnimpairedContextPrevious(ViOperatorDef):
+@register_text(['UnimpairedContextPrev'], (NORMAL, VISUAL))
+class UnimpairedContextPrev(ViOperatorDef):
     def init(self):
-        self.command = 'nv_unimpaired'
-        self.command_args = {
-            'action': 'context_previous'
-        }
-
-
+        self.command      = 'nv_unimpaired'
+        self.command_args = {'action':'context_previous'}
 @register(seqs.SEQ[']l'], (NORMAL, VISUAL))
 @register_text(['UnimpairedContextNext'],seqs.SEQ[']l'], (NORMAL, VISUAL))
 class UnimpairedContextNext(ViOperatorDef):
     def init(self):
-        self.command = 'nv_unimpaired'
-        self.command_args = {
-            'action': 'context_next'
-        }
+        self.command     	= 'nv_unimpaired'
+        self.command_args	= {'action':'context_next'}
 
 
 @register(seqs.SEQ['[n'], (NORMAL, VISUAL, VISUAL_LINE))
 @register_text(['UnimpairedGotoPrevConflictMarker'], (NORMAL, VISUAL, VISUAL_LINE))
 class UnimpairedGotoPrevConflictMarker(ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
-        self.scroll_into_view = True
-        self.command = 'nv_unimpaired'
-        self.command_args = {
-            'action': 'goto_prev_conflict_marker'
-        }
-
-
+        self.updates_xpos    	= True
+        self.scroll_into_view	= True
+        self.command         	= 'nv_unimpaired'
+        self.command_args    	= {'action':'goto_prev_conflict_marker'}
 @register(seqs.SEQ[']n'], (NORMAL, VISUAL, VISUAL_LINE))
 @register_text(['UnimpairedGotoNextConflictMarker'],seqs.SEQ[']n'], (NORMAL, VISUAL, VISUAL_LINE))
 class UnimpairedGotoNextConflictMarker(ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
-        self.scroll_into_view = True
-        self.command = 'nv_unimpaired'
-        self.command_args = {
-            'action': 'goto_next_conflict_marker'
-        }
+        self.updates_xpos    	= True
+        self.scroll_into_view	= True
+        self.command         	= 'nv_unimpaired'
+        self.command_args    	= {'action':'goto_next_conflict_marker'}
 
 
 @register(seqs.SEQ['[␠'], (NORMAL,))
 @register_text(['UnimpairedBlankUp'], (NORMAL,))
 class UnimpairedBlankUp(ViOperatorDef):
     def init(self):
-        self.command = 'nv_unimpaired'
-        self.command_args = {
-            'action': 'blank_up'
-        }
-
-
+        self.command     	= 'nv_unimpaired'
+        self.command_args	= {'action':'blank_up'}
 @register(seqs.SEQ[']␠'], (NORMAL,))
 @register_text(['UnimpairedBlankDown'],seqs.SEQ[']␠'], (NORMAL,))
 class UnimpairedBlankDown(ViOperatorDef):
     def init(self):
-        self.command = 'nv_unimpaired'
-        self.command_args = {
-            'action': 'blank_down'
-        }
+        self.command     	= 'nv_unimpaired'
+        self.command_args	= {'action':'blank_down'}
 
 
 @register(seqs.SEQ['[b'], (NORMAL,))
-@register_text(['UnimpairedBprevious'], (NORMAL,))
-class UnimpairedBprevious(ViOperatorDef):
+@register_text(['UnimpairedBufPrev'], (NORMAL,))
+class UnimpairedBufPrev(ViOperatorDef):
     def init(self):
-        self.command = 'nv_unimpaired'
-        self.command_args = {
-            'action': 'bprevious'
-        }
-
-
+        self.command     	= 'nv_unimpaired'
+        self.command_args	= {'action':'bprevious'}
 @register(seqs.SEQ[']b'], (NORMAL,))
-@register_text(['UnimpairedBnext'],seqs.SEQ[']b'], (NORMAL,))
-class UnimpairedBnext(ViOperatorDef):
+@register_text(['UnimpairedBufNext'],seqs.SEQ[']b'], (NORMAL,))
+class UnimpairedBufNext(ViOperatorDef):
     def init(self):
-        self.command = 'nv_unimpaired'
-        self.command_args = {
-            'action': 'bnext'
-        }
-
-
+        self.command     	= 'nv_unimpaired'
+        self.command_args	= {'action':'bnext'}
 @register(seqs.SEQ['[⇧b'], (NORMAL,))
-@register_text(['UnimpairedBfirst'], (NORMAL,))
-class UnimpairedBfirst(ViOperatorDef):
+@register_text(['UnimpairedBufFirst'], (NORMAL,))
+class UnimpairedBufFirst(ViOperatorDef):
     def init(self):
-        self.command = 'nv_unimpaired'
-        self.command_args = {
-            'action': 'bfirst'
-        }
-
-
+        self.command     	= 'nv_unimpaired'
+        self.command_args	= {'action':'bfirst'}
 @register(seqs.SEQ[']⇧b'], (NORMAL,))
-@register_text(['UnimpairedBlast'],seqs.SEQ[']⇧b'], (NORMAL,))
-class UnimpairedBlast(ViOperatorDef):
+@register_text(['UnimpairedBufLast'],seqs.SEQ[']⇧b'], (NORMAL,))
+class UnimpairedBufLast(ViOperatorDef):
     def init(self):
-        self.command = 'nv_unimpaired'
-        self.command_args = {
-            'action': 'blast'
-        }
+        self.command     	= 'nv_unimpaired'
+        self.command_args	= {'action':'blast'}
+
+
+@register(seqs.SEQ['[t'], (NORMAL,))
+@register_text(['UnimpairedTabpPevious'], (NORMAL,))
+class UnimpairedTabPrev(ViOperatorDef):
+    def init(self):
+        self.command     	= 'nv_unimpaired'
+        self.command_args	= {'action':'tabprevious'}
+@register(seqs.SEQ[']t'], (NORMAL,))
+@register_text(['UnimpairedTabNext'],seqs.SEQ[']t'], (NORMAL,))
+class UnimpairedTabNext(ViOperatorDef):
+    def init(self):
+        self.command     	= 'nv_unimpaired'
+        self.command_args	= {'action':'tabnext'}
+@register(seqs.SEQ['[⇧t'], (NORMAL,))
+@register_text(['UnimpairedTabFirst'], (NORMAL,))
+class UnimpairedTabFirst(ViOperatorDef):
+    def init(self):
+        self.command     	= 'nv_unimpaired'
+        self.command_args	= {'action':'tabfirst'}
+@register(seqs.SEQ[']⇧t'], (NORMAL,))
+@register_text(['UnimpairedTabLast'],seqs.SEQ[']⇧t'], (NORMAL,))
+class UnimpairedTabLast(ViOperatorDef):
+    def init(self):
+        self.command     	= 'nv_unimpaired'
+        self.command_args	= {'action':'tablast'}
 
 
 @register(seqs.SEQ['[e'], (NORMAL,))
 @register_text(['UnimpairedMoveUp'], (NORMAL,))
 class UnimpairedMoveUp(ViOperatorDef):
     def init(self):
-        self.command = 'nv_unimpaired'
-        self.command_args = {
-            'action': 'move_up'
-        }
-
-
+        self.command     	= 'nv_unimpaired'
+        self.command_args	= {'action':'move_up'}
 @register(seqs.SEQ[']e'], (NORMAL,))
 @register_text(['UnimpairedMoveDown'],seqs.SEQ[']e'], (NORMAL,))
 class UnimpairedMoveDown(ViOperatorDef):
     def init(self):
-        self.command = 'nv_unimpaired'
-        self.command_args = {
-            'action': 'move_down'
-        }
-
-
-@register(seqs.SEQ['[t'], (NORMAL,))
-@register_text(['UnimpairedTabpPevious'], (NORMAL,))
-class UnimpairedTabPrevious(ViOperatorDef):
-    def init(self):
-        self.command = 'nv_unimpaired'
-        self.command_args = {
-            'action': 'tabprevious'
-        }
-
-
-@register(seqs.SEQ[']t'], (NORMAL,))
-@register_text(['UnimpairedTabNext'],seqs.SEQ[']t'], (NORMAL,))
-class UnimpairedTabNext(ViOperatorDef):
-    def init(self):
-        self.command = 'nv_unimpaired'
-        self.command_args = {
-            'action': 'tabnext'
-        }
-
-
-@register(seqs.SEQ['[⇧t'], (NORMAL,))
-@register_text(['UnimpairedTabFirst'], (NORMAL,))
-class UnimpairedTabFirst(ViOperatorDef):
-    def init(self):
-        self.command = 'nv_unimpaired'
-        self.command_args = {
-            'action': 'tabfirst'
-        }
-
-
-@register(seqs.SEQ[']⇧t'], (NORMAL,))
-@register_text(['UnimpairedTabLast'],seqs.SEQ[']⇧t'], (NORMAL,))
-class UnimpairedTabLast(ViOperatorDef):
-    def init(self):
-        self.command = 'nv_unimpaired'
-        self.command_args = {
-            'action': 'tablast'
-        }
+        self.command     	= 'nv_unimpaired'
+        self.command_args	= {'action':'move_down'}
 
 
 class OptionMixin(ViOperatorDef):

@@ -1,4 +1,5 @@
 # A port of https://github.com/tpope/vim-unimpaired.
+import re
 from sublime_plugin import TextCommand
 
 from NeoVintageous.nv.options  import set_option, set_window_ui_element_visible, toggle_option
@@ -274,6 +275,24 @@ class UnimpairedToggleOn(OptionMixin):
             'name': self.inp
         })
 
+@register_text(['UnimpairedToggleOnSpace'], (NORMAL,))
+class UnimpairedToggleOnSpace(OptionMixin):
+    def translate(self, view):
+        return translate_action(view,'nv_unimpaired',{
+            'action':'enable_option',
+            'name'  :'whitespace',
+            'opt'   :self.inp})
+from NeoVintageous.nv.vi.cmd_base import RequireOneCharMixin, ViOperatorDef, translate_action
+@register_text(['UnimpairedToggleOnSpaces'], (NORMAL,))
+class UnimpairedToggleOnSpaces(RequireOneCharMixin, ViOperatorDef):
+    def init(self):
+        self.scroll_into_view = True
+        self.updates_xpos     = True
+    def translate(self, view):
+        return translate_action(view,'nv_unimpaired',{
+            'action':'enable_option',
+            'name'  :'whitespace',
+            'opt'   :self.inp})
 
 @register(seqs.SEQ[']o'], (NORMAL,))
 @register_text(['UnimpairedToggleOff'],seqs.SEQ[']o'], (NORMAL,))
@@ -421,7 +440,12 @@ def _do_toggle_option(view, name: str, flag: bool = None) -> None:
     else:
         set_option(view, name, flag)
 
-
+re_flags = 0
+re_flags |= re.MULTILINE | re.IGNORECASE
+re_sps = re.compile(r"\s+", flags=re_flags)
+def _whitespace_option(view, value:str) -> None:
+    s2l = re_sps.split(value)
+    set_option(view, 'whitespace', s2l)
 def _list_option(view, flag: bool) -> None:
     _do_toggle_option(view, 'list', flag)
 
@@ -464,6 +488,7 @@ _OPTIONS = {
     'hlsearch': _hlsearch_option,
     'ignorecase': _ignorecase_option,
     'list': _list_option,
+    'whitespace': _whitespace_option,
     'menu': _menu_option,  # non standard i.e. not in the original Unimpaired plugin
     'minimap': _minimap_option,  # non standard i.e. not in the original Unimpaired plugin
     'number': 'line_numbers',
@@ -493,6 +518,7 @@ def _toggle_option(view, key, value=None) -> None:
         for opt in option:
             _set_bool_option(view, opt   , value)
     elif callable(option):
+        print(f"doing callable {option} val={value}")
         option              (view,         value)
     else:
         raise ValueError('unknown option type')
@@ -523,7 +549,12 @@ class nv_unimpaired_command(TextCommand):
         elif action == 'toggle_option':
             _toggle_option            (self.view         , kwargs.get('name')       )
         elif action == 'enable_option':
-            _toggle_option            (self.view         , kwargs.get('name'), True )
+            if (_opt := kwargs.get('opt',None)):
+                print(f"toggling option ¦{kwargs.get('name')}¦ with existing opt=¦{_opt}¦")
+                _toggle_option        (self.view         , kwargs.get('name'), _opt )
+            else:
+                print(f"toggling option ¦{kwargs.get('name')}¦ without existing opt")
+                _toggle_option        (self.view         , kwargs.get('name'), True )
         elif action == 'disable_option':
             _toggle_option            (self.view         , kwargs.get('name'), False)
         else:

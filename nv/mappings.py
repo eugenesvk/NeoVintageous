@@ -57,37 +57,90 @@ class IncompleteMapping:
     pass
 
 
+re_flags = 0
+re_flags |= re.MULTILINE | re.IGNORECASE
+key_non_lt = r"^<[^<>]+>"
+re_key_non_lt = re.compile(key_non_lt, flags=re_flags)
 def _has_partial_matches(view, mode: str, lhs: str) -> bool:
     for map_lhs, map_rhs in _mappings[mode].items():
         if isinstance(map_rhs, str):
             if map_lhs.startswith(lhs):
-                return True
+                if   lhs == '<lt>':
+                    return True
+                elif lhs == '<':
+                    if   map_lhs.startswith('<lt>'):
+                        return True
+                    elif re_key_non_lt.match(map_lhs):
+                        continue
+                    else:
+                        return True
+                else:
+                    return True
         else:
             file_type = get_file_type(view)
             if file_type and file_type in map_rhs:
                 if map_lhs.startswith(lhs):
-                    return True
+                    if lhs == '<':
+                        if map_lhs.startswith('<lt>'):
+                            return True
+                        elif re_key_non_lt.match(map_lhs):
+                            continue
+                        else:
+                            return True
+                    else:
+                        return True
             elif '' in map_rhs:
                 if map_lhs.startswith(lhs):
-                    return True
+                    if lhs == '<':
+                        if map_lhs.startswith('<lt>'):
+                            return True
+                        elif re_key_non_lt.match(map_lhs):
+                            continue
+                        else:
+                            return True
+                    else:
+                        return True
 
     return False
-
 
 def _has_partial_matches_text(view, mode: str, lhs: str) -> bool:
     for map_lhs, map_rhs in _mappings_text[mode].items():
         if isinstance(map_rhs, str ) or\
            isinstance(map_rhs, list): #bb ['movetoeol']
             if map_lhs.startswith(lhs):
-                return True
+                if lhs == '<':
+                    if map_lhs.startswith('<lt>'):
+                        return True
+                    elif re_key_non_lt.match(map_lhs):
+                        continue
+                    else:
+                        return True
+                else:
+                    return True
         else:
             file_type = get_file_type(view)
             if file_type and file_type in map_rhs:
                 if map_lhs.startswith(lhs):
-                    return True
+                    if lhs == '<':
+                        if map_lhs.startswith('<lt>'):
+                            return True
+                        elif re_key_non_lt.match(map_lhs):
+                            continue
+                        else:
+                            return True
+                    else:
+                        return True
             elif '' in map_rhs:
                 if map_lhs.startswith(lhs):
-                    return True
+                    if lhs == '<':
+                        if map_lhs.startswith('<lt>'):
+                            return True
+                        elif re_key_non_lt.match(map_lhs):
+                            continue
+                        else:
+                            return True
+                    else:
+                        return True
 
     return False
 

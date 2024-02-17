@@ -484,44 +484,44 @@ def _toggle_option(view, key, value=None) -> None:
     if not option:
         raise ValueError('option is not implemented')
 
-    if isinstance(option, str):
-        _set_bool_option(view, option, value)
+    if   isinstance(option, str  ):
+        _set_bool_option    (view, option, value)
     elif isinstance(option, tuple):
         for opt in option:
-            _set_bool_option(view, opt, value)
+            _set_bool_option(view, opt   , value)
     elif callable(option):
-        option(view, value)
+        option              (view,         value)
     else:
         raise ValueError('unknown option type')
 
 
 class nv_unimpaired_command(TextCommand):
     def run(self, edit, action, mode=None, count=1, register=None, **kwargs):
-        if action == 'move_down':
-            _move_down(self.view, count)
+        if   action == 'move_down':
+            _move_down                (self.view         ,             count)
         elif action == 'move_up':
-            _move_up(self.view, count)
+            _move_up                  (self.view         ,             count)
         elif action == 'blank_down':
-            _blank_down(self.view, edit, count)
+            _blank_down               (self.view         , edit,       count)
         elif action == 'blank_up':
-            _blank_up(self.view, edit, count)
+            _blank_up                 (self.view         , edit,       count)
         elif action in ('bnext', 'bprevious', 'bfirst', 'blast'):
-            window_buffer_control(self.view.window(), action[1:], count)
+            window_buffer_control     (self.view.window(), action[1:], count)
         elif action in ('tabnext', 'tabprevious', 'tabfirst', 'tablast'):
-            window_tab_control(self.view.window(), action[3:], count)
+            window_tab_control        (self.view.window(), action[3:], count)
         elif action == 'goto_next_conflict_marker':
-            _goto_next_conflict_marker(self.view, mode, count)
+            _goto_next_conflict_marker(self.view         , mode,       count)
         elif action == 'goto_prev_conflict_marker':
-            _goto_prev_conflict_marker(self.view, mode, count)
+            _goto_prev_conflict_marker(self.view         , mode,       count)
         elif action == 'context_next':
-            _context_next(self.view.window(), count)
+            _context_next             (self.view.window(),             count)
         elif action == 'context_previous':
-            _context_previous(self.view.window(), count)
+            _context_previous         (self.view.window(),             count)
         elif action == 'toggle_option':
-            _toggle_option(self.view, kwargs.get('name'))
+            _toggle_option            (self.view         , kwargs.get('name')       )
         elif action == 'enable_option':
-            _toggle_option(self.view, kwargs.get('name'), True)
+            _toggle_option            (self.view         , kwargs.get('name'), True )
         elif action == 'disable_option':
-            _toggle_option(self.view, kwargs.get('name'), False)
+            _toggle_option            (self.view         , kwargs.get('name'), False)
         else:
             raise ValueError('unknown action')

@@ -275,15 +275,15 @@ def mappings_add_text(mode:str, key:str, cmd:Union[str,list], prop:dict={}) -> N
     _log.map(" map+txt ¦%s¦ ‹¦%s ≈ %s¦⟶¦%s¦› @file¦%s¦ oldcmd¦%s¦"
       ,                mode, key,key_norm,cmd,prop.get('file',''),old_cmd_ftype)
     if (file_types := prop.get('file')):
+        if not old_cmd_ftype:
+            _mappings_text[mode][key_norm]            = {}
+        elif (isinstance(old_cmd_ftype,str ) or\
+              isinstance(old_cmd_ftype,list)):
+            _mappings_text[mode][key_norm]            = {'':old_cmd_ftype}
         for file_type in file_types:
-            if not old_cmd_ftype:
-                _mappings_text[mode][key_norm]            = {}
-            elif (isinstance(old_cmd_ftype,str ) or\
-                  isinstance(old_cmd_ftype,list)):
-                _mappings_text[mode][key_norm]            = {'':old_cmd_ftype}
             _mappings_text    [mode][key_norm][file_type] = cmd
         return
-    if           (isinstance(old_cmd_ftype,dict)): # don't overwrite existing filetype commands
+    if       (isinstance(old_cmd_ftype,dict)): # don't overwrite existing filetype commands
         _mappings_text        [mode][key_norm][''       ] = cmd
     else:                                          # ok to overwrite old commands
         _mappings_text        [mode][key_norm]            = cmd

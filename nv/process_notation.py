@@ -81,7 +81,7 @@ class ProcessCmdTextHandler():
 
         if must_collect_input(self.view, get_motion(self.view), get_action(self.view)): # State is requesting more input, so this is the last command in the sequence and it needs more input
             if self.cont:
-                _log.keyt("  ↩− _collect→feed_key ‘%s’¦‘%s’ lead‘%s’ mot‘%s’ act‘%s’ reg‘%s’%s nv_feed_text_cmd(HFeedTextCmd) doEval→True @TXT",key_cont,keys,leading_motions,get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view))
+                _log.keyt("  ↩− _collect→feed_text lead‘%s’ mot‘%s’ act‘%s’ reg‘%s’%s nv_feed_text_cmd(HFeedTextCmd) doEval→True @TXT",leading_motions,get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view))
                 self.window.run_command('nv_feed_text_cmd',{'text_cmd':text_cmd,'do_eval':True,'count':count})
             else:
                 _log.keyt("  ↩− _collect_input")

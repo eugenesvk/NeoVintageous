@@ -417,7 +417,7 @@ def mappings_resolve_text(view, text_command:str = None, mode: str = None, check
         if     not cmdU:
             if not cmdIn:
                 if _has_partial_matches_text(view, get_mode(view), cmdTxt):
-                    _log.debug("→IncompleteMapping no cmdU/cmdTxt, but partial match for ‘%s’cmdin",cmdIn)
+                    _log.debug("→IncompleteMapping no cmdU/cmdTxt, but partial match for ‘%s’cmdTxt",cmdTxt)
                     return IncompleteMapping()
     cmd = cmdU if cmdU else (cmdT:=_text_to_command(view, cmdTxt))
     _log.map(' @mapResT ‹‘%s’=‘%s’› (%s usr%s cmd: ‘%s’in ‘%s’usr ‘%s’T¦‘%s’Tpart ‘%s’cmd ‘%s’cmd_cls)'

@@ -163,7 +163,7 @@ _keybind_prop = {
     'desc':['d','des','desc','description','inf','info'],
     'icon':['i','icn','icon','img','image'],
     'type':['t','type'],
-    'file':['ft','file','filetype'],
+    'file':['ft','filetype'],
     'defk':['defk','default_key','≝k'],
     'defc':['defc','default_cmd','≝c'],
     }
@@ -518,7 +518,7 @@ def _parse_keybind_kdl(keybind:kdl.Node, gmodes:Mode=Mode(0), var_d:dict={}):
         val = tag_val.value if hasattr(tag_val,'value') else tag_val
         for dkey,key_abbrev in _keybind_prop.items():
             if dkey == 'file':
-                if pkey in key_abbrev: # ['ft','file','filetype']
+                if pkey in key_abbrev: # ['ft','filetype']
                     prop[dkey] = []
                     prop[dkey].extend(re_filetype.split(val))
             else:

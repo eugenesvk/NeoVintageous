@@ -112,8 +112,8 @@ def _find_full_match_text(view, mode: str, lhs: str):
         if isinstance(rhs, (str, list)):
             return rhs
         try:
-            return _mappings_text[mode][lhs][get_file_type(view)]
-        except KeyError:
+            return     _mappings_text[mode][lhs][get_file_type(view)]
+        except     KeyError:
             try:
                 return _mappings_text[mode][lhs]['']
             except KeyError:

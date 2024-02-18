@@ -1556,14 +1556,14 @@ class ViBackwardToStartOfChange(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
         self.updates_xpos     = True
-        self.command          = 'move_change_prev'
+        self.command          = 'nv_move_change_prev'
 @assign(seqs.SEQ[']c'], ACTION_MODES)
 @assign_text(['MoveChangeNext','ForwardToStartOfChange'], ACTION_MODES)
 class ViForwardToStartOfChange(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
         self.updates_xpos     = True
-        self.command          = 'move_change_next'
+        self.command          = 'nv_move_change_next'
 
 
 @assign(seqs.SEQ['[s'], ACTION_MODES)

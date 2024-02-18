@@ -3887,11 +3887,11 @@ class nv_target_next(TextCommand):
 
 
 class nv_move_change_prev(TextCommand):
-    def run(self, edit, action, mode, count=1, **kwargs):
+    def run(self, edit,         mode, count=1, **kwargs):
         goto = GotoView(self.view, mode, count)
         goto.prev_change()
 class nv_move_change_next(TextCommand):
-    def run(self, edit, action, mode, count=1, **kwargs):
+    def run(self, edit,         mode, count=1, **kwargs):
         goto = GotoView(self.view, mode, count)
         goto.next_change()
 

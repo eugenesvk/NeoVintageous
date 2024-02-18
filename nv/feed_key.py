@@ -282,14 +282,14 @@ class FeedKeyHandler():
 
     def _handle(self) -> None:
         if _L:
-          self._dbg_seq, self._dbg_txt = '',''
-          # _log.key("  @_h ⌨️%s %s #%s Eval=%s usrMap=%s",self.key,self.mode,self.repeat_count,self.do_eval,self.check_user_mappings) # ⏰%s,TFMT.format(t=datetime.now()))
+            self._dbg_seq, self._dbg_txt = '',''
+            # _log.key("  @_h ⌨️%s %s #%s Eval=%s usrMap=%s",self.key,self.mode,self.repeat_count,self.do_eval,self.check_user_mappings) # ⏰%s,TFMT.format(t=datetime.now()))
         # If the user has defined a mapping that starts with a number i.e. count then the count handler has to be skipped otherwise it won't resolve. See https://github.com/NeoVintageous/NeoVintageous/issues/434
         can_resolve_txt = mappings_can_resolve_text(self.view, self.key)
         can_resolve_seq = mappings_can_resolve     (self.view, self.key)
         if _L:
-          self._dbg_txt += f"{'✓' if can_resolve_txt else '✗'}TXT ⌨️{self.key}"
-          self._dbg_seq += f"{'✓' if can_resolve_seq else '✗'}SEQ ⌨️{self.key}"
+            self._dbg_txt += f"{'✓' if can_resolve_txt else '✗'}TXT ⌨️{self.key}"
+            self._dbg_seq += f"{'✓' if can_resolve_seq else '✗'}SEQ ⌨️{self.key}"
         if not can_resolve_txt and not can_resolve_seq:
             if self._handle_count():
                 if _L:

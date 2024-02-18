@@ -9,7 +9,7 @@ import sublime
 import sublime_plugin
 
 import NeoVintageous.dep.json5kit as json5kit # noqa: F401,F403
-from NeoVintageous.dep.json5kit     	import Json5Node, Json5Array, Json5String, Json5Object # noqa: F401,F403
+from NeoVintageous.dep.json5kit     	import Json5File, Json5Node, Json5Array, Json5String, Json5Object # noqa: F401,F403
 from NeoVintageous.nv.layout_convert	import lyt, LayoutConverter
 from NeoVintageous.plugin import PACKAGE_NAME
 
@@ -24,6 +24,49 @@ def isJstr(key, strVal) -> bool:
   return True if (type(key.value) == Json5String and (key.value.value) == strVal) else False
 def isJStrInArr(val, key, strVal) -> bool:
   return True if (isinstance(val, Json5Array) and isJstr(key, strVal)) else False
+keys_esc = {'\\':'\\\\','\"':'\\\"'}
+keys_special = {
+  " "  : "<space>" ,
+  "<"  : "<lt>"    ,
+  "\\" : "<bslash>",
+  "|"  : "<bar>"   ,
+}
+def replace_characters(keymap_tree:Json5File, lyt_from:lyt, lyt_to:lyt) -> None:
+  # Replace catch-all character feeder with a list of per-key maps to control i18n layout handling
+    # ↓{"keys":["<character>"],"command":"nv_feed_key",                     "context":[{"key":"vi_command_mode_aware"}]}
+    #  {"keys":["A"          ],"command":"nv_feed_key","args":{{"key":"A"}},"context":[{"key":"vi_command_mode_aware"}]}
+    #            ↑ converted to "Ф" or left as "A" in the next step depending on user command
+  lyt_converter = LayoutConverter()
+  isAlias       = lyt_converter.isAlias
+  layout_str    = lyt_converter.layout_str
+  string_from   = layout_str[lyt_from  ]['low'] + layout_str[lyt_from ]['upp']
+  string_to     = layout_str[lyt_to    ]['low'] + layout_str[lyt_to   ]['upp']
+  keys_from = string_to # new from keys will be nonQWERTY
+  keys_to   = string_to if isAlias else string_from # if no alias, map to the same physical keys as QWERTY
+
+  char2char_s = '[\n'
+  for i,key_from in enumerate(keys_from):
+    key_to   = keys_special.get(keys_to[i],keys_to[i])
+    key_from = keys_esc.get(key_from,key_from)
+    key_to   = keys_esc.get(key_to  ,key_to  )
+    _log.debug("¦{%s}¦=¦{%s}¦",key_from,key_to)
+    char2char_s += f'''{{"keys":["{key_from}" \t],"command":"nv_feed_key"\t,"args":{{"key":"{key_to}"}}\t,"context":[{{"key":"vi_command_mode_aware"}}]}},\n'''
+  char2char_s += ']'
+  char2char = json5kit.parse(char2char_s)
+  rep_list = char2char.value.members
+
+  if isinstance(keymap_tree.value,Json5Array):
+    for i,keybind in enumerate(src_list := keymap_tree.value.members): # {"keys":["a"]...
+      for val in keybind.values:
+        if   isinstance(         val            ,Json5Array ): # ["a"]
+          if isinstance((arr0 := val.members[0]),Json5String): #  "a"
+            if (arr0v := arr0.value).lower() == "<character>":
+              result_list = src_list[:i] + rep_list + src_list[i+1:]
+              keymap_tree.value.members = result_list
+              break
+  else:
+    raise ValueError('Invalid keymap type, expected ‘Json5Array’, got ‘%s’',type(sin0.value))
+
 def convertKeymapLayout(keymap, lyt_from, lyt_to):
   lyt_converter	= LayoutConverter()
   isAlias      	= lyt_converter.isAlias
@@ -96,6 +139,7 @@ def convertKeymapLayout(keymap, lyt_from, lyt_to):
         node = keyComboTransformer().visit(node)
       return node
 
+  replace_characters(keymap_tree, lyt_from, lyt_to)
   DictTransformer().visit(keymap_tree)
 
   return keymap_tree.to_source()

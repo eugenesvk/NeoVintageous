@@ -160,7 +160,11 @@ def _find_full_match(view, mode: str, lhs: str):
                 pass
 
 def _find_full_match_text(view, mode: str, lhs: str):
-    rhs = _mappings_text[mode].get(lhs)
+    rhs     = _mappings_text[mode].get(lhs)
+    if not rhs\
+       and lhs == '<':
+        lhs     = '<lt>'
+        rhs = _mappings_text[mode].get(lhs)
     if rhs:
         if isinstance(rhs, (str, list)):
             return rhs

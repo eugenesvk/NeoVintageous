@@ -12,6 +12,7 @@ import NeoVintageous.dep.json5kit as json5kit # noqa: F401,F403
 from NeoVintageous.dep.json5kit     	import Json5File, Json5Node, Json5Array, Json5String, Json5Object # noqa: F401,F403
 from NeoVintageous.nv.layout_convert	import lyt, LayoutConverter
 from NeoVintageous.plugin import PACKAGE_NAME
+from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL, TFMT, addLoggingLevel, stream_handler
 
 __all__ = [
   'NvUserKeymap',
@@ -19,6 +20,14 @@ __all__ = [
   'NvOldCfgKeymapKdl',
   'NvOldCfgKdl',
 ]
+
+import logging
+_log = logging.getLogger(__name__)
+_log.setLevel(DEFAULT_LOG_LEVEL)
+if _log.hasHandlers(): # clear existing handlers, including sublime's
+    logging.getLogger(__name__).handlers.clear()
+    # _log.addHandler(stream_handler)
+_L = True if _log.isEnabledFor(logging.CFG) else False
 
 def isJstr(key, strVal) -> bool:
   return True if (type(key.value) == Json5String and (key.value.value) == strVal) else False

@@ -50,7 +50,9 @@ def convertKeymapLayout(keymap, lyt_from, lyt_to):
   class keyComboTransformer(json5kit.Json5Transformer):
     def visit_String(self, node):
       key_combo_raw = node.value  # 'ctrl + a ' or '<M-q>' for target NV keys
-      if   (reM := re.match(reSingleKey, key_combo_raw)):
+      if key_combo_raw == '<character>':
+        node = node.replace(json.dumps('', ensure_ascii=False))
+      elif (reM := re.match(reSingleKey, key_combo_raw)):
         if (keycap := reM.group('keycap')):
           keycap_new   	= (lyt_converter.convert(keycap, lyt_from, lyt_to)).replace('\\','\\\\')
           key_combo_new	= re.sub(reSingleKey, fr"\g<pre>{keycap_new}\g<pos>",key_combo_raw)

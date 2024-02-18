@@ -203,24 +203,11 @@ def clean_views() -> None:
         for view in window.views():
             clean_view(view)
 
-
-def clean_view(view) -> None:
-
-    # Reset mode, caret, state, etc. In the case of plugin errors this clean
-    # routine prevents the normal functioning of editor becoming unusable e.g.
-    # the cursor getting stuck in a block shape or the mode getting stuck.
-
+def clean_view(view) -> None: # Reset mode, caret, state, etc. In the case of plugin errors this clean routine prevents the normal functioning of editor becoming unusable e.g. the cursor getting stuck in a block shape or the mode getting stuck
     try:
         settings = view.settings()
-
-        if settings.has('command_mode'):
-            settings.erase('command_mode')
-
-        if settings.has('inverse_caret_state'):
-            settings.erase('inverse_caret_state')
-
-        if settings.has('vintage'):
-            settings.erase('vintage')
-
+        for cfg in ['command_mode','inverse_caret_state','vintage']:
+            if  settings.has  (cfg):
+                settings.erase(cfg)
     except Exception:  # pragma: no cover
         traceback.print_exc()

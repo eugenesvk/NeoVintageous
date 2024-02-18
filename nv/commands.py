@@ -126,6 +126,7 @@ __all__ = [
     'nv_vi_move_line_up'         ,'nv_vi_move_line_down'       ,
     'nv_vi_move_screen_line_up'  ,'nv_vi_move_screen_line_down','nv_vi_move_line_back',
     'nv_vi_move_sentence_prev'   ,'nv_vi_move_sentence_next'   ,
+    'nv_vi_move_paragraph_prev'  ,'nv_vi_move_paragraph_next'  ,
     'nv_move_change_prev'        ,'nv_move_change_next'        ,
     'nv_move_misspelling_prev'   ,'nv_move_misspelling_next'   ,
     'nv_scroll_char_left'        ,'nv_scroll_char_right'       ,
@@ -134,8 +135,7 @@ __all__ = [
     'nv_vi_jump_back','nv_vi_jump_forward',
     'nv_add_spell_word','nv_remove_spell_word','nv_select_spell_word',
     'nv_fold','nv_unfold','nv_fold_all','nv_unfold_all',
-    'nv_vi_left_brace' ,'nv_vi_left_square_bracket',
-    'nv_vi_right_brace','nv_vi_right_square_bracket',
+    'nv_vi_left_square_bracket','nv_vi_right_square_bracket',
     'nv_target_prev','nv_target_next',
     'nv_vi_less_than','nv_vi_less_than_less_than',
     'nv_vi_m',
@@ -2953,12 +2953,14 @@ class nv_vi_move_wordend_next(TextCommand):
         regions_transformer(self.view, f)
 
 
-class nv_vi_right_brace(TextCommand):
+class nv_vi_move_paragraph_next(TextCommand):
     def run(self, edit, mode=None, count=1):
         def f(view, s):
             target = next_paragraph_start(view, get_insertion_point_at_b(s), count)
 
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -2977,12 +2979,14 @@ class nv_vi_right_brace(TextCommand):
         regions_transformer(self.view, f)
 
 
-class nv_vi_left_brace(TextCommand):
+class nv_vi_move_paragraph_prev(TextCommand):
     def run(self, edit, mode=None, count=1):
         def f(view, s):
             target = prev_paragraph_start(view, get_insertion_point_at_b(s), count)
 
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)

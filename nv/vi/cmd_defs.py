@@ -1491,9 +1491,9 @@ class ViMoveByScreenLineUp(ViMotionDef):
 @assign_text(['MoveByBlockUp'], MOTION_MODES, icon='🢔¶')
 class ViMoveByBlockUp(ViMotionDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.command = 'nv_vi_left_brace'
+        self.command          = 'nv_vi_move_paragraph_prev'
 
 
 @assign(seqs.SEQ[";"], MOTION_MODES)
@@ -1529,9 +1529,9 @@ class ViRepeatCharSearchForward(ViMotionDef):
 @assign_text(['MoveByBlockDown'], MOTION_MODES, icon='¶🢖')
 class ViMoveByBlockDown(ViMotionDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.command = 'nv_vi_right_brace'
+        self.command          = 'nv_vi_move_paragraph_next'
 
 
 @assign(seqs.SEQ['⇧9'], MOTION_MODES)

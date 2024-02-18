@@ -192,7 +192,10 @@ class KeySequenceTokenizer():
         if c in seqs.NAMED_KEY_ALIASES:
             return '<' + seqs.NAMED_KEY_ALIASES[c] + '>'
         elif c == '<':
-            return self._expand_vars(self._long_key_name())
+            if len(self.source) == 1:
+                return c
+            else:
+                return self._expand_vars(self._long_key_name())
         else:
             return c
 

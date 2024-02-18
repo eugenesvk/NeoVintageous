@@ -2506,7 +2506,9 @@ class nv_vi_search_forward_impl(TextCommand):
             return status_message('E486: Pattern not found: %s', pattern)
 
         def f(view, s):
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -2625,7 +2627,7 @@ class nv_vi_move_line_down(TextCommand):
         def f(view, s):
             nonlocal xpos
 
-            if mode == NORMAL:
+            if   mode == NORMAL or mode == INSERT:
                 current_row = view.rowcol(s.b)[0]
                 target_row = min(current_row + count, view.rowcol(view.size())[0])
                 invisible_rows = folded_rows(view, view.line(s.b).b + 1)
@@ -2784,7 +2786,9 @@ class nv_vi_gg(TextCommand):
             return next_non_blank(view, 0)
 
         def f(view, s):
-            if mode == NORMAL:
+            if  mode == NORMAL:
+                resolve_normal_target(s, t(view))
+            elif mode == INSERT:
                 resolve_normal_target(s, t(view))
             elif mode == VISUAL:
                 resolve_visual_target(s, t(view))
@@ -2813,7 +2817,9 @@ class nv_vi_big_g(TextCommand):
             return get_linewise_non_blank_target(view, target)
 
         def f(view, s):
-            if mode == NORMAL:
+            if  mode == NORMAL:
+                resolve_normal_target(s, t(view))
+            elif mode == INSERT:
                 resolve_normal_target(s, t(view))
             elif mode == VISUAL:
                 resolve_visual_target(s, t(view))
@@ -2851,7 +2857,9 @@ class nv_vi_dollar(TextCommand):
         def f(view, s):
             target = _get_target(view, get_insertion_point_at_b(s), count)
 
-            if mode == NORMAL:
+            if  mode == NORMAL:
+                resolve_normal_target(s, target if view.line(target).empty() else (target - 1))
+            elif mode == INSERT:
                 resolve_normal_target(s, target if view.line(target).empty() else (target - 1))
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -3058,7 +3066,9 @@ class nv_vi_move_to_bracket_match(TextCommand):
 class nv_vi_big_h(TextCommand):
     def run(self, edit, mode=None, count=None):
         def f(view, s):
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -3076,7 +3086,9 @@ class nv_vi_big_h(TextCommand):
 class nv_vi_big_l(TextCommand):
     def run(self, edit, mode=None, count=None):
         def f(view, s):
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -3094,7 +3106,9 @@ class nv_vi_big_l(TextCommand):
 class nv_vi_big_m(TextCommand):
     def run(self, edit, mode=None, count=None):
         def f(view, s):
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -3125,7 +3139,9 @@ class nv_vi_star(TextCommand):
             )
 
             if match:
-                if mode == NORMAL:
+                if   mode == NORMAL:
+                    resolve_normal_target(s, match.begin())
+                elif mode == INSERT:
                     resolve_normal_target(s, match.begin())
                 elif mode == VISUAL:
                     resolve_visual_target(s, match.begin())
@@ -3169,7 +3185,9 @@ class nv_vi_octothorp(TextCommand):
             )
 
             if match:
-                if mode == NORMAL:
+                if   mode == NORMAL:
+                    resolve_normal_target(s, match.begin())
+                elif mode == INSERT:
                     resolve_normal_target(s, match.begin())
                 elif mode == VISUAL:
                     resolve_visual_target(s, match.begin())
@@ -3260,7 +3278,9 @@ class nv_vi_move_to_hard_bol(TextCommand):
         def f(view, s):
             target = _get_target(view, get_insertion_point_at_b(s), count)
 
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -3292,7 +3312,9 @@ class nv_vi_move_to_soft_bol(TextCommand):
         def f(view, s):
             target = _get_target(view, get_insertion_point_at_b(s), count)
 
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -3318,7 +3340,9 @@ class nv_vi_move_to_bol(TextCommand):
         def f(view, s):
             target = _get_target(view, get_insertion_point_at_b(s), count)
 
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -3335,6 +3359,9 @@ class nv_vi_move_screen_line_down(TextCommand):
         if   mode == NORMAL:
             for i in range(count):
                 self.view.run_command('move',{'by':'lines','forward':True,'extend':False})
+        elif mode == INSERT:
+            for i in range(count):
+                self.view.run_command('move',{'by':'lines','forward':True,'extend':False})
         elif mode == VISUAL:
             for i in range(count):
                 self.view.run_command('move',{'by':'lines','forward':True,'extend':True })
@@ -3347,7 +3374,10 @@ class nv_vi_move_screen_line_down(TextCommand):
 
 class nv_vi_move_screen_line_up(TextCommand):
     def run(self, edit, mode=None, count=1):
-        if mode == NORMAL:
+        if   mode == NORMAL:
+            for i in range(count):
+                self.view.run_command('move',{'by':'lines','forward':False,'extend':False})
+        elif mode == INSERT:
             for i in range(count):
                 self.view.run_command('move',{'by':'lines','forward':False,'extend':False})
         elif mode == VISUAL:
@@ -3381,7 +3411,9 @@ class nv_vi_g__(TextCommand):
         def f(view, s):
             target = _get_target(view, get_insertion_point_at_b(s), count)
 
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -3407,7 +3439,9 @@ class nv_vi_ctrl_u(TextCommand):
             return
 
         def f(view, s):
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -3431,7 +3465,9 @@ class nv_vi_ctrl_u(TextCommand):
 class nv_vi_ctrl_d(TextCommand):
     def run(self, edit, mode=None, count=0):
         def f(view, s):
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -3472,7 +3508,9 @@ class nv_vi_move_column(TextCommand):
         def f(view, s):
             target = _get_target(view, get_insertion_point_at_b(s), count)
 
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -3613,7 +3651,9 @@ class nv_vi_question_mark_impl(TextCommand):
             return status_message('E486: Pattern not found: %s', pattern)
 
         def f(view, s):
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -3730,7 +3770,9 @@ class nv_vi_move_bigwordend_next(TextCommand):
 
 class nv_vi_ctrl_f(TextCommand):
     def run(self, edit, mode=None, count=1):
-        if mode == NORMAL:
+        if   mode == NORMAL:
+            self.view.run_command('move', {'by': 'pages', 'forward': True})
+        elif mode == INSERT:
             self.view.run_command('move', {'by': 'pages', 'forward': True})
         elif mode == VISUAL:
             self.view.run_command('move', {'by': 'pages', 'forward': True, 'extend': True})
@@ -3751,7 +3793,9 @@ class nv_vi_ctrl_f(TextCommand):
 
 class nv_vi_ctrl_b(TextCommand):
     def run(self, edit, mode=None, count=1):
-        if mode == NORMAL:
+        if   mode == NORMAL:
+            self.view.run_command('move', {'by': 'pages', 'forward': False})
+        elif mode == INSERT:
             self.view.run_command('move', {'by': 'pages', 'forward': False})
         elif mode == VISUAL:
             self.view.run_command('move', {'by': 'pages', 'forward': False, 'extend': True})
@@ -3777,7 +3821,9 @@ class nv_vi_enter(TextCommand):
         def f(view, s):
             target = next_non_blank(view, get_insertion_point_at_b(s))
 
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -3796,7 +3842,9 @@ class nv_vi_move_line_back(TextCommand):
         def f(view, s):
             target = next_non_blank(view, get_insertion_point_at_b(s))
 
-            if mode == NORMAL:
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
                 resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
@@ -3827,11 +3875,13 @@ class nv_vi_go_to_symbol(TextCommand):
     def run(self, edit, mode=None, count=1, register=None, globally=False):
         def f(view, s):
             if mode == NORMAL:
-                return Region(location)
+                return Region(         location)
+            elif mode == INSERT:
+                return Region(         location)
             elif mode == VISUAL:
                 return Region(s.a + 1, location)
             elif mode == INTERNAL_NORMAL:
-                return Region(s.a, location)
+                return Region(s.a    , location)
 
             return s
 

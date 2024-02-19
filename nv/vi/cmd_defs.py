@@ -1357,9 +1357,9 @@ class ViGotoScreenBottom(ViMotionDef):
 @assign_text(['GotoScreenMiddle'], MOTION_MODES)
 class ViGotoScreenMiddle(ViMotionDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.command = 'nv_vi_big_m'
+        self.command          = 'nv_vi_move_screen_middle'
 
 
 @assign(seqs.SEQ['⎈d'], MOTION_MODES)

@@ -72,7 +72,7 @@ __all__ = [
     'nv_vi_big_i',
     'nv_vi_big_j',
     'nv_vi_big_l',
-    'nv_vi_big_m',
+    'nv_vi_move_screen_middle',
     'nv_vi_big_o',
     'nv_vi_big_s',
     'nv_vi_big_x',
@@ -3103,7 +3103,7 @@ class nv_vi_big_l(TextCommand):
         regions_transformer(self.view, f)
 
 
-class nv_vi_big_m(TextCommand):
+class nv_vi_move_screen_middle(TextCommand):
     def run(self, edit, mode=None, count=None):
         def f(view, s):
             if   mode == NORMAL:

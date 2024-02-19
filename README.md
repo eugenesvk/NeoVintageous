@@ -104,6 +104,8 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
     + :sparkles: allow user to set values of various indicators:
       + for `ls` command, e.g., replace `+` modified file mark with `🖉` similar to how a modified tab is marked
       + for `registers` command, e.g., replace `l` for linewise with `━`
+    + :sparkles: add a `MoveHalfScreenHorizontally` command to move to the visual line's middle (helful with wrapped lines)
+    + enabled a bunch of command to work in Insert mode (this limitation should be part of keybindings, not command functions)
 
 ## About NeoVintageous
 
@@ -1131,6 +1133,9 @@ Pre-release versions might contain experimental features or changes that are sti
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md).
+
+## Known issues
+  - `MoveHalfScreenHorizontally` command (move to the visual line's middle) moves to the middle of the previous visual line `aaa` when using <kbd>Home</kbd> to visually position cursor like this ![visline2](./doc/img/visline_middle.png) since in Sublime this has the same text coordinates as the end of visual line 1:
 
 ## Credits
 

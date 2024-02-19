@@ -26,7 +26,7 @@ from NeoVintageous.nv.paste            import pad_visual_block_paste_contents, r
 from NeoVintageous.nv.polyfill         import reveal_side_bar, set_selection, spell_select, split_by_newlines, toggle_side_bar
 from NeoVintageous.nv.process_notation import ProcessNotationHandler, ProcessCmdTextHandler
 from NeoVintageous.nv.rc               import open_rc, open_config_file_kdl, reload_rc
-from NeoVintageous.nv.registers        import get_alternate_file_register, registers_get_for_paste, registers_op_change, registers_op_delete, registers_op_yank
+from NeoVintageous.nv.registers        import get_alternate_file_register, registers_get_for_paste, registers_op_change, registers_op_delete, registers_op_yank, _reset
 from NeoVintageous.nv.search           import add_search_highlighting, clear_search_highlighting, find_search_occurrences, find_word_search_occurrences, get_search_occurrences, process_search_pattern, process_word_search_pattern
 from NeoVintageous.nv.settings         import get_glue_until_normal_mode, get_last_search_pattern, get_last_search_pattern_command, get_mode, get_normal_insert_count, get_repeat_data, get_sequence, get_setting, get_xpos, is_processing_notation, set_glue_until_normal_mode, set_last_char_search, set_last_search_pattern, set_mode, set_normal_insert_count, set_repeat_data, set_reset_during_init, set_xpos, toggle_ctrl_keys, toggle_super_keys, get_config, get_capture_register, get_register
 from NeoVintageous.nv.state            import reset_command_data
@@ -138,6 +138,7 @@ __all__ = [
     'nv_vi_left_square_bracket','nv_vi_right_square_bracket',
     'nv_target_prev','nv_target_next',
     'nv_vi_less_than','nv_vi_less_than_less_than',
+    'nv_vi_clear_registers',
     'nv_vi_m',
     'nv_vi_modify_numbers',
     'nv_vi_o',
@@ -3994,3 +3995,8 @@ class nv_vi_right_square_bracket(TextCommand):
             goto.next_target(**kwargs)
         else:
             raise ValueError('unknown action')
+
+
+class nv_vi_clear_registers(TextCommand):
+    def run(self, edit, **kwargs):
+        _reset()

@@ -1847,6 +1847,11 @@ class ViOpenRegister(ViMotionDef):
     def translate(self, view):
         return {}
 
+@assign_text(['ClearRegisters'], MOTION_MODES, icon="ᵡ®")
+class ViClearRegisters(ViMotionDef):
+    def init(self):
+        self.command = 'nv_vi_clear_registers'
+
 
 @assign(seqs.CTRL_HOME, MOTION_MODES)
 @assign(seqs.SEQ['gg'], MOTION_MODES)

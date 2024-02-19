@@ -1044,9 +1044,7 @@ class ViOpenMacrosForRepeating(RequireOneCharMixin, ViOperatorDef):
         self.scroll_into_view = True
 
     def translate(self, view):
-        return translate_action(view, 'nv_vi_at', {
-            'name': self.inp
-        })
+        return translate_action(view,'nv_vi_repeat_macro',{'name':self.inp})
 
 
 @assign(seqs.SEQ['q'], ACTION_MODES)

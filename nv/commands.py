@@ -61,7 +61,7 @@ __all__ = [
     'nv_process_notation','nv_process_cmd_text',
     'nv_run_cmds',
     'nv_vi_a',
-    'nv_vi_at',
+    'nv_vi_repeat_macro',
     'nv_vi_jump_to_mark','nv_vi_jump_to_mark_non_blank',
     'nv_vi_move_column',
     'nv_vi_big_a',
@@ -2107,7 +2107,7 @@ class nv_vi_toggle_macro_record(TextCommand):
             macros.start_recording   (name)
 
 
-class nv_vi_at(TextCommand):
+class nv_vi_repeat_macro(TextCommand):
 
     def run(self, edit, name, mode=None, count=1, register=None):
         if name == '@':

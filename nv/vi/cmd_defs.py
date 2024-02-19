@@ -2090,9 +2090,16 @@ class ViInsertLineWithCommonPrefix(ViOperatorDef):
 @assign_text(['MoveHalfScreenHorizontally'], MOTION_MODES)
 class ViMoveHalfScreenHorizontally(ViMotionDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.command = 'nv_vi_gm'
+        self.command          = 'nv_vi_move_visline_middle'
+@assign(seqs.SEQ['g⇧m'], MOTION_MODES)
+@assign_text(['MoveHalfLineHorizontally'], MOTION_MODES)
+class ViMoveHalfLineHorizontally(ViMotionDef):
+    def init(self):
+        self.updates_xpos     = True
+        self.scroll_into_view = True
+        self.command          = 'nv_vi_move_line_middle'
 
 
 @assign_text(['Viz'], ACTION_MODES)

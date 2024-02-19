@@ -106,7 +106,7 @@ __all__ = [
     'nv_vi_g_big_t',
     'nv_vi_ga',
     'nv_vi_gg',
-    'nv_vi_gm',
+    'nv_vi_move_line_middle','nv_vi_move_visline_middle',
     'nv_vi_go_to_symbol',
     'nv_vi_goto_changelist',
     'nv_vi_gq',
@@ -3908,21 +3908,36 @@ class nv_vi_go_to_symbol(TextCommand):
             regions_transformer(self.view, f)
 
 
-class nv_vi_gm(TextCommand):
+class nv_vi_move_visline_middle(TextCommand):
+    def run(self, edit, mode=None, count=1):
+        layout_ful_w = self.view.layout_extent()[0]
+        def f(view, s):
+            line = view.line(s.b)
+            if line.empty():
+                return s
+            s_beg_lyt_pt      = view.text_to_layout(s.a)
+            s_end_lyt_pt      = view.text_to_layout(s.b)
+            s_line_beg_lyt_pt = (0           ,s_end_lyt_pt[1]) # line where selection ends
+            s_line_end_lyt_pt = (layout_ful_w,s_end_lyt_pt[1])
+            s_line_beg_txt_pt = view.layout_to_text(s_line_beg_lyt_pt)
+            s_line_end_txt_pt = view.layout_to_text(s_line_end_lyt_pt)
+            # s_line_beg_str    = view.substr        (s_line_beg_txt_pt)
+            # s_line_end_str    = view.substr        (s_line_end_txt_pt)
+            mid_txt_pt = (s_line_beg_txt_pt + s_line_end_txt_pt)//2
+            return Region(mid_txt_pt)
+        regions_transformer(self.view, f)
+
+
+class nv_vi_move_line_middle(TextCommand):
     def run(self, edit, mode=None, count=1):
         def f(view, s):
             line = view.line(s.b)
             if line.empty():
                 return s
-
-            mid_pt = line.size() // 2
+            mid_pt    = line.size() // 2
             row_start = view.text_point(row_at(view, s.b), 0)
 
             return Region(min(row_start + mid_pt, line.b - 1))
-
-        if mode != NORMAL:
-            return ui_bell()
-
         regions_transformer(self.view, f)
 
 

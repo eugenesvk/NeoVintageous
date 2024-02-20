@@ -1134,9 +1134,6 @@ Pre-release versions might contain experimental features or changes that are sti
 
 See [CHANGELOG.md](CHANGELOG.md).
 
-## Known issues
-  - `MoveHalfScreenHorizontally` command (move to the visual line's middle) moves to the middle of the previous visual line `aaa` when using <kbd>Home</kbd> to visually position cursor like this ![visline2](./doc/img/visline_middle.png) since in Sublime this has the same text coordinates as the end of visual line 1:
-
 ## Credits
 
 NeoVintageous is a fork of the discontinued Vintageous plugin.

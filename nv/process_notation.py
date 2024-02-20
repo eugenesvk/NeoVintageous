@@ -1,6 +1,6 @@
 import logging
 
-from NeoVintageous.nv.settings import get_mode, get_sequence, set_interactive, set_mode, set_repeat_data, get_register, get_capture_register, get_count, get_action_count,  get_motion_count
+from NeoVintageous.nv.settings import get_mode, get_sequence, get_partial_sequence, set_interactive, set_mode, set_repeat_data, get_register, get_capture_register, get_count, get_action_count,  get_motion_count
 from NeoVintageous.nv.state    import evaluate_state, get_action, get_motion, is_runnable, must_collect_input, reset_command_data
 from NeoVintageous.nv.ui       import ui_bell
 from NeoVintageous.nv.utils    import gluing_undo_groups, translate_char
@@ -54,7 +54,7 @@ class ProcessCmdTextHandler():
         cmd_reg = {} # store i,key that set the register so that we can skip it in iter² (!but index should be adjusted for leading_motions that modifies keys)
         if not self.cont and\
            not get_action(self.view): # 1st command or no action, so execute it
-            _log.keyt("  ‘%s’ lead‘%s’ mot‘%s’ act‘%s’ reg‘%s’%s nv_feed_text_cmd(HFeedTextCmd) doEval→False @TXT",text_cmd,leading_motions,get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view))
+            _log.keyt("  ‘%s’ lead‘%s’ mot‘%s’ act‘%s’ reg‘%s’%s seq‘%s’ seqP‘%s’ nv_feed_text_cmd(HFeedTextCmd) doEval→False @TXT",text_cmd,leading_motions,get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view),get_sequence(self.view),get_partial_sequence(self.view))
             _reg_pre = get_capture_register(self.view)
             self.window.run_command('nv_feed_text_cmd',{'text_cmd':text_cmd,'do_eval':False,'count':count})
             if not _reg_pre == get_capture_register(self.view):
@@ -65,7 +65,7 @@ class ProcessCmdTextHandler():
                 setReg = True
                 if not get_register(self.view) == '"': # don't clean reg/seq if register non-standard? #todo: test workaround for register cleared up when it shouldn't in nnoremap X dd
                     setReg = False
-                _log.keyt("    ~break, get_action exists mot‘%s’⋅#%s act‘%s’⋅#%s reg‘%s’%s, reset state, reg_%s m%s ⋅#%s",get_motion(self.view),get_motion_count(self.view), get_action(self.view),get_action_count(self.view), get_register(self.view),get_capture_register(self.view),setReg, get_mode(self.view), get_count(self.view))
+                _log.keyt("    ~break, get_action exists mot‘%s’⋅#%s act‘%s’⋅#%s reg‘%s’%s, reset state, reg_%s m%s ⋅#%s seq‘%s’ seqP‘%s’",get_motion(self.view),get_motion_count(self.view), get_action(self.view),get_action_count(self.view), get_register(self.view),get_capture_register(self.view),setReg, get_mode(self.view), get_count(self.view),get_sequence(self.view),get_partial_sequence(self.view))
                 reset_command_data(self.view,setReg=setReg)
                 if  get_mode(self.view) == OPERATOR_PENDING:
                     set_mode(self.view, NORMAL)
@@ -81,7 +81,7 @@ class ProcessCmdTextHandler():
 
         if must_collect_input(self.view, get_motion(self.view), get_action(self.view)): # State is requesting more input, so this is the last command in the sequence and it needs more input
             if self.cont:
-                _log.keyt("  ↩− _collect→feed_text lead‘%s’ mot‘%s’ act‘%s’ reg‘%s’%s nv_feed_text_cmd(HFeedTextCmd) doEval→True @TXT",leading_motions,get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view))
+                _log.keyt("  ↩− _collect→feed_text lead‘%s’ mot‘%s’ act‘%s’ reg‘%s’%s seq‘%s’ seqP‘%s’ nv_feed_text_cmd(HFeedTextCmd) doEval→True @TXT",leading_motions,get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view),get_sequence(self.view),get_partial_sequence(self.view))
                 self.window.run_command('nv_feed_text_cmd',{'text_cmd':text_cmd,'do_eval':True,'count':count})
             else:
                 _log.keyt("  ↩− _collect_input")
@@ -106,7 +106,7 @@ class ProcessCmdTextHandler():
                 try:
                     if   get_mode(self.view) in (INSERT, REPLACE):
                         _log.keyt("  key sequence notation handler would insert chars here, but we still do commands!")
-                    _log.keyt("  ²—‘%s’ lead‘%s’ mot‘%s’ act‘%s’ reg‘%s’%s nv_feed_text_cmd(HFeedTextCmd) doEval→None @TXT",text_cmd,leading_motions,get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view))
+                    _log.keyt("  ²—‘%s’ lead‘%s’ mot‘%s’ act‘%s’ reg‘%s’%s seq‘%s’ seqP‘%s’ nv_feed_text_cmd(HFeedTextCmd) doEval→None @TXT",text_cmd,leading_motions,get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view),get_sequence(self.view),get_partial_sequence(self.view))
                     if 0 in cmd_reg and cmd_reg[0] == text_cmd:
                         _log.key("    ‘%s’ #%s (%s) set the register, skip it!",text_cmd,0,0)
                     else:

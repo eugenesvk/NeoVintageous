@@ -31,8 +31,12 @@ class FeedTextCmdHandler():
         self.do_eval  = do_eval
         self.mode     = get_mode(self.view)
         if _L:
-            _log.keyt('\n—————T⌨️%s %s #%s Eval=%s'
-            ,text_cmd,self.mode,count,do_eval) # ⏰%s,TFMT.format(t=datetime.now()))
+            seq  = get_sequence        (view)
+            seqP = get_partial_sequence(view)
+            #txt  = get_text            (view)
+            txtP = get_partial_text    (view)
+            _log.keyt('\n—————T⌨️%s %s #%s Eval=%s seq‘%s’‘%s’ txtP‘%s’'
+            ,text_cmd,self.mode,count,do_eval,seq,seqP,txtP ) # ⏰%s,TFMT.format(t=datetime.now()))
     def handle(self) -> None: # TextCmd
         self   ._handle_bad_selection()
         if self._handle_register():
@@ -193,8 +197,12 @@ class FeedKeyHandler():
         self.check_user_mappings = check_user_mappings
         self.mode                = get_mode(self.view)
         if _L:
-            _log.key('\n—————⌨️%s %s #%s Eval=%s usrMap=%s'
-            ,key,self.mode,repeat_count,do_eval,check_user_mappings) # ⏰%s,TFMT.format(t=datetime.now()))
+            seq  = get_sequence        (view)
+            seqP = get_partial_sequence(view)
+            #txt  = get_text            (view)
+            txtP = get_partial_text    (view)
+            _log.key('\n—————⌨️%s %s #%s Eval=%s usrMap=%s seq‘%s’‘%s’ txtP‘%s’'
+            ,key,self.mode,repeat_count,do_eval,check_user_mappings,seq,seqP,txtP) # ⏰%s,TFMT.format(t=datetime.now()))
 
     def handle(self) -> None:
         self   ._handle_bad_selection()

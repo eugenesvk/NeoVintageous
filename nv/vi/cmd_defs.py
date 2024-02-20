@@ -1851,6 +1851,10 @@ class ViOpenRegister(ViMotionDef):
 class ViClearRegisters(ViMotionDef):
     def init(self):
         self.command = 'nv_vi_clear_registers'
+@assign_text(['ClearRegister'], ACTION_MODES, icon='ᵡ®?')
+class ViClearRegister(RequireOneCharMixin, ViOperatorDef):
+    def translate(self, view):
+        return translate_action(view,'nv_vi_clear_register',{'register':self.inp})
 
 
 @assign(seqs.CTRL_HOME, MOTION_MODES)

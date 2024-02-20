@@ -4037,4 +4037,10 @@ class nv_vi_right_square_bracket(TextCommand):
 
 class nv_vi_clear_registers(TextCommand):
     def run(self, edit, **kwargs):
+        registers_op_delete(self.view, register="\"")
+        registers_op_delete(self.view, register="*" )
+        registers_op_delete(self.view, register="+" )
         _reset()
+class nv_vi_clear_register(TextCommand):
+    def run(self, edit, mode=None, count=1, register=None, motion=None):
+        registers_op_delete(self.view, register=register)

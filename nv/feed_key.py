@@ -35,7 +35,7 @@ class FeedTextCmdHandler():
             seqP = get_partial_sequence(view)
             #txt  = get_text            (view)
             txtP = get_partial_text    (view)
-            _log.keyt('\n—————T⌨️%s %s #%s Eval=%s seq‘%s’‘%s’ txtP‘%s’'
+            _log.keyt('\n—————T⌨️%s %s #%s Eval=%s             seq‘%s’ P‘%s’ txtP‘%s’'
             ,text_cmd,self.mode,count,do_eval,seq,seqP,txtP ) # ⏰%s,TFMT.format(t=datetime.now()))
     def handle(self) -> None: # TextCmd
         self   ._handle_bad_selection()

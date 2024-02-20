@@ -201,7 +201,7 @@ class FeedKeyHandler():
             seqP = get_partial_sequence(view)
             #txt  = get_text            (view)
             txtP = get_partial_text    (view)
-            _log.key('\n—————⌨️%s %s #%s Eval=%s usrMap=%s seq‘%s’‘%s’ txtP‘%s’'
+            _log.key('\n—————⌨️%s %s #%s Eval=%s usrMap=%s seq‘%s’P‘%s’ txtP‘%s’'
             ,key,self.mode,repeat_count,do_eval,check_user_mappings,seq,seqP,txtP) # ⏰%s,TFMT.format(t=datetime.now()))
 
     def handle(self) -> None:

@@ -2105,8 +2105,15 @@ class ViMoveHalfLineHorizontally(ViMotionDef):
         self.command          = 'nv_vi_move_line_middle'
 
 
-@assign_text(['Viz'], ACTION_MODES)
-class Viz(ViOperatorDef):
+@assign_text(['VizMotion'], ACTION_MODES)
+class VizMotion(ViMotionDef):
+    def init(self):
+        self.scroll_into_view = True
+        self.updates_xpos     = True
+    def translate(self, view):
+        return translate_motion(view, 'nv_vi_z', {'action':get_partial_sequence(view)[1:],})
+@assign_text(['VizAction'], ACTION_MODES)
+class VizAction(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
         self.updates_xpos     = True

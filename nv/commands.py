@@ -3913,13 +3913,20 @@ class nv_vi_move_visline_middle(TextCommand):
     def run(self, edit, mode=None, count=1):
         layout_ful_w = self.view.layout_extent()[0]
         def f(view, s):
-            line = view.line(s.b)
-            if line.empty():
+            line_with_caret = view.line(s.b)
+            if line_with_caret.empty():
                 return s
+            l_beg_txt_pt = line_with_caret.begin()
+            s_xpos       = s.xpos
+            s_beg_txt_pt = s.a
+            y_1 = 0 # add an extra visual line if caret@line's end is drawn at the beginning of the next visual line
+            if (s_xpos       == 0) and\
+               (s_beg_txt_pt  > l_beg_txt_pt):  # cursor @ at the beginning of a visual line, but not at the beginning of a physical line
+                y_1 = int(view.line_height())
             s_beg_lyt_pt      = view.text_to_layout(s.a)
             s_end_lyt_pt      = view.text_to_layout(s.b)
-            s_line_beg_lyt_pt = (0           ,s_end_lyt_pt[1]) # line where selection ends
-            s_line_end_lyt_pt = (layout_ful_w,s_end_lyt_pt[1])
+            s_line_beg_lyt_pt = (0           ,s_end_lyt_pt[1] + y_1) # line where selection ends
+            s_line_end_lyt_pt = (layout_ful_w,s_end_lyt_pt[1] + y_1)
             s_line_beg_txt_pt = view.layout_to_text(s_line_beg_lyt_pt)
             s_line_end_txt_pt = view.layout_to_text(s_line_end_lyt_pt)
             # s_line_beg_str    = view.substr        (s_line_beg_txt_pt)

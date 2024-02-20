@@ -83,6 +83,7 @@ class FeedTextCmdHandler():
         _log.keyt('+seq‘%s’ status icon‘%s’'
             ,self.text_cmd,         icon)
         append_sequence         (self.view,         self.text_cmd)
+        append_seq_icon         (self.view, icon or self.text_cmd)
         update_status_line      (self.view)
     def _append_text    (self) -> None: # TextCmd
         _log.keyt('+txt‘%s’',self.text_cmd)

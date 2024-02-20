@@ -111,7 +111,7 @@ def _handle_rhs_text(view, rhs: Union[str, list]) -> None: # find a key that is 
             _log.debug(" redirect text command with ‘:’ command to _hRHS as ‘%s’",text_cmd)
             _handle_rhs(win,     text_cmd)
         else:
-            if len(text_cmd) == 1:
+            if len(text_cmd) == 0:
                 if (mode == OPERATOR_PENDING): # ToDO: is this needed?
                     seq = get_sequence(view)[:-len(get_partial_sequence(view))] + text_cmd
                 else:

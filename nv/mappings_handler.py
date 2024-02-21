@@ -45,12 +45,19 @@ def evaluate_mapping_text(view, mapping: Mapping) -> None:
             if el == txt[-1]:
                 del  txt[-1]
         rhs = txt + mapping.rhs
-    _log.key(' evalMapT ‹‘%s’=%s‘%s’←‘%s’› m%s'
+    _log.key(' evalMapT ‹‘%s’=%s‘%s’←‘%s’› m%s seq‘%s’ P‘%s’→seq‘’ %s%s txt‘%s’ P‘%s’'
         ,mapping.lhs
         ,('Ⓞ'        if m_txt == OPERATOR_PENDING else '')
         ,rhs
         ,mapping.rhs if m_txt == OPERATOR_PENDING else '_'
-        ,m_txt)
+        ,m_txt
+        ,get_sequence(view)
+        ,get_partial_sequence(view)
+        ,'str'  if isinstance(mapping.rhs, str ) else ''
+        ,'list' if isinstance(mapping.rhs, list) else ''
+        ,get_text        (view)
+        ,get_partial_text(view)
+        )
 
     reg    = get_register    (view)
     acount = get_action_count(view)
@@ -104,6 +111,7 @@ def _handle_rhs_text(view, rhs: Union[str, list]) -> None: # find a key that is 
         mode = get_mode(view)
         cont = (i > 0) # pass to Hprocess notation as a continuation (like in a key sequence)
         _log.key(" —%s¦%s— ‘%s’cmd_t @ _hRHS_text m%s",i+1,_c,text_cmd,mode)
+        _log.key(" seq‘%s’ P‘%s’",get_sequence(view),get_partial_sequence(view))
         if text_cmd.startswith('"command"'):
             _log.debug(" redirect Sublime's text ‘\"command\"’ to _hRHS as ‘:%s’",text_cmd)
             _handle_rhs(win, ':'+text_cmd)

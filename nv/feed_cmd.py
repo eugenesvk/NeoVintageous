@@ -287,6 +287,7 @@ class FeedTextCmdHandler():
     def _handle_command(self, command:ViCommandDefBase, do_eval:bool) -> None:
         """ Raises ValueError if too many motions|actions, or unexpected command type"""
         _is_runnable = is_runnable(self.view)
+        _log.keyt('_handle command start run=%s',_is_runnable)
 
         if   isinstance(command, ViMotionDef):
             if _is_runnable:
@@ -303,6 +304,7 @@ class FeedTextCmdHandler():
         else:
             raise ValueError('unexpected command type')
 
+        _log.keyt('_handle command preint')
         if is_interactive(self.view):
             if command.accept_input and command.input_parser and command.input_parser.is_panel():
                 command.input_parser.run_command(self.view.window())
@@ -310,13 +312,16 @@ class FeedTextCmdHandler():
         if get_mode(self.view) == OPERATOR_PENDING:
             set_partial_sequence(self.view, '')
             set_partial_text    (self.view, [])
+        _log.keyt('_handle command do_eval %s', do_eval)
         if do_eval:
             evaluate_state      (self.view)
+        _log.keyt('_handle command do_eval %s post', do_eval)
 
     def _handle_command_not_found(self, command) -> bool:
         if isinstance(command, CommandNotFound):
             if  get_mode(self.view) == OPERATOR_PENDING:
                 set_mode(self.view, NORMAL)
+            _log.keyt('_h cmd not found, reset_command_data')
             reset_command_data(self.view)
             ui_bell()
             return True

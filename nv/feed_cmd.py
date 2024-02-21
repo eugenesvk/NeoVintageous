@@ -19,7 +19,7 @@ _log.setLevel(DEFAULT_LOG_LEVEL)
 if _log.hasHandlers(): # clear existing handlers, including sublime's
     logging.getLogger(__name__).handlers.clear()
     # _log.addHandler(stream_handler)
-_L = True if _log.isEnabledFor(logging.KEY) else False
+_L = True if _log.isEnabledFor(logging.KEYT) else False
 
 
 class FeedTextCmdHandler():
@@ -42,12 +42,20 @@ class FeedTextCmdHandler():
         self   ._handle_bad_selection()
 
 
-        # ↓ since text command is not available yet, but handling register returns, it invokes _append_sequence inside
-        if self._handle_register():
+
+        _reg = get_capture_register(self.view)
+        if _reg:
+            _log.keyt('append with reg=%s seq‘%s’',get_capture_register(self.view),get_sequence(self.view))
+            _log.keyt('h_reg with reg=%s', f'{_reg}↩+' if _reg else f'{_reg}')
+            hreg = self._handle_register()
             return
+        _log.keyt('h_reg with reg=%s', f'{_reg}↩+' if _reg else f'{_reg}')
+        _log.keyt('collect input with reg %s', get_capture_register(self.view))
         if self._collect_input():
             return
+        _log.keyt(f'handle @ key m‘{get_mode(self.view)}’ seq‘{get_sequence(self.view)}’')
         self   ._handle()
+        _log.keyt(f'handle @ key m‘{get_mode(self.view)}’ seq‘{get_sequence(self.view)}’ POS')
     def _handle_bad_selection(self) -> None: # TextCmd
         if _is_selection_malformed              (self.view, self.mode):
             self.mode = _fix_malformed_selection(self.view, self.mode)
@@ -71,10 +79,10 @@ class FeedTextCmdHandler():
 
 
     def _append_sequence(self) -> None: # TextCmd
-        _log.keyt('‘%s’ icon status ‘%s’'
-            ,self.text_cmd,self.cmd.icon)
-        append_sequence         (self.view,                  self.text_cmd)
-        append_seq_icon         (self.view, self.cmd.icon or self.text_cmd)
+        icon = self.cmd.icon if hasattr(self,'cmd') else ''
+        _log.keyt('+seq‘%s’ status icon‘%s’'
+            ,self.text_cmd,         icon)
+        append_sequence         (self.view,         self.text_cmd)
         update_status_line      (self.view)
     def _append_text    (self) -> None: # TextCmd
         _log.keyt('+txt‘%s’',self.text_cmd)
@@ -164,6 +172,7 @@ class FeedTextCmdHandler():
 
 
         self.cmd = cmd
+        _log.keyt('append with reg=%s seq‘%s’',get_capture_register(self.view),get_sequence(self.view))
         self   ._append_sequence() # status bar vim-seq sequence
         self   ._append_text    ()
         if (isCmdHandled := self._handle_cmd()):
@@ -292,12 +301,14 @@ class FeedTextCmdHandler():
         if   isinstance(command, ViMotionDef):
             if _is_runnable:
                 raise ValueError('too many motions')
+            _log.keyt('_handle_command set mot‘%s’',command)
             set_motion  (self.view, command)
             if  get_mode(self.view) == OPERATOR_PENDING:
                 set_mode(self.view, NORMAL)
         elif isinstance(command, ViOperatorDef):
             if _is_runnable:
                 raise ValueError('too many actions')
+            _log.keyt('_handle_command set act‘%s’',command)
             set_action  (self.view, command)
             if command.motion_required and not is_visual_mode(get_mode(self.view)):
                 set_mode(self.view, OPERATOR_PENDING)
@@ -310,6 +321,7 @@ class FeedTextCmdHandler():
                 command.input_parser.run_command(self.view.window())
 
         if get_mode(self.view) == OPERATOR_PENDING:
+            _log.keyt('_handle command seqP‘’ txtP‘’')
             set_partial_sequence(self.view, '')
             set_partial_text    (self.view, [])
         _log.keyt('_handle command do_eval %s', do_eval)

@@ -9,7 +9,7 @@ from NeoVintageous.nv import plugin
 from NeoVintageous.nv.macros import add_macro_step
 from NeoVintageous.nv.polyfill import run_window_command
 from NeoVintageous.nv.session import get_session_view_value, set_session_view_value
-from NeoVintageous.nv.settings import get_glue_until_normal_mode, get_mode, get_reset_during_init, get_sequence, get_seq_icon, get_setting, is_interactive, is_processing_notation, set_action_count, set_capture_register, set_mode, set_motion_count, set_partial_sequence, set_partial_text, set_register, set_repeat_data, set_reset_during_init, set_sequence, set_seq_icon
+from NeoVintageous.nv.settings import get_glue_until_normal_mode, get_mode, get_reset_during_init, get_sequence, get_seq_icon, get_setting, is_interactive, is_processing_notation, set_action_count, set_capture_register, set_mode, set_motion_count, set_partial_sequence, set_text, set_partial_text, set_register, set_repeat_data, set_reset_during_init, set_sequence, set_seq_icon
 from NeoVintageous.nv.utils import get_visual_block_sel_b
 from NeoVintageous.nv.utils import get_visual_repeat_data, is_view, save_previous_selection, update_xpos
 from NeoVintageous.nv.vi import cmd_defs
@@ -246,9 +246,10 @@ def reset_command_data(view,setReg:bool=True) -> None:
     set_action_count    (view, ''            )
     set_motion_count    (view, ''            )
     set_sequence        (view, ''            )
+    set_text            (view, []            )
     set_seq_icon        (view, ''            )
     set_partial_sequence(view, ''            )
-    set_partial_text    (view, ''            )
+    set_partial_text    (view, []            )
     if setReg:
         set_register    (view, '"'           )
     set_capture_register(view, False         )

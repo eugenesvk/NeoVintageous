@@ -42,7 +42,7 @@ class FeedTextCmdHandler():
         self   ._handle_bad_selection()
 
 
-
+        # ↓ since text command is not available yet, but handling register returns, it invokes _append_sequence inside
         if self._handle_register():
             return
         if self._collect_input():
@@ -81,7 +81,9 @@ class FeedTextCmdHandler():
         append_text             (self.view,         self.text_cmd)
     def _handle_register(self) -> bool: # TextCmd
         if get_capture_register (self.view):
-            # set_register        (self.view, self.text_cmd)
+            self._append_sequence() # status bar vim-seq sequence
+            self._append_text    ()
+            set_register        (self.view, self.text_cmd)
             set_partial_sequence(self.view, '')
             set_partial_text    (self.view, [])
             return True

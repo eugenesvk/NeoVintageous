@@ -282,16 +282,14 @@ def set_interactive(view, value: bool) -> None:
 # name. Such is the case of `gD`, for example.
 def get_partial_sequence(view) -> str:
     return get_session_view_value(view, 'partial_sequence', '')
-
-def get_partial_text(view) -> str:
-    return get_session_view_value(view, 'partial_text', '')
+def get_partial_text    (view) -> list:
+    return get_session_view_value(view, 'partial_text'    , [])
 
 
 def set_partial_sequence(view, value: str) -> None:
     set_session_view_value(view, 'partial_sequence', value)
-
-def set_partial_text(view, value: str) -> None:
-    set_session_view_value(view, 'partial_text', value)
+def set_partial_text    (view, value:list) -> None:
+    set_session_view_value(view, 'partial_text'    , value)
 
 
 # Indicate whether nv_process_notation is running.
@@ -382,18 +380,27 @@ def set_reset_during_init(view, value: bool) -> None:
     _set_private(view.window(), 'reset_during_init', value)
 
 
+def get_text    (view) -> list:
+    return get_session_view_value(view, 'text'    , [])
 def get_sequence(view) -> str:
     return get_session_view_value(view, 'sequence', '')
 def get_seq_icon(view) -> str:
     return get_session_view_value(view, 'seq_icon', '')
 
 
+def set_text    (view, value:list) -> None:
+    set_session_view_value(view, 'text'    , value)
 def set_sequence(view, value: str) -> None:
     set_session_view_value(view, 'sequence', value)
 def set_seq_icon(view, value: str) -> None:
     set_session_view_value(view, 'seq_icon', value)
 
 
+def append_text    (view, value:list) -> None:
+    if   isinstance(value,str):
+        set_text(view, get_text    (view) + [value])
+    elif isinstance(value,list):
+        set_text(view, get_text    (view) +  value)
 def append_sequence(view, value: str) -> None:
     set_sequence(view, get_sequence(view) + value)
 def append_seq_icon(view, value: str) -> None:

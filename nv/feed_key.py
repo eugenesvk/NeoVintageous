@@ -80,7 +80,7 @@ class FeedKeyHandler():
         if get_capture_register (self.view):
             set_register        (self.view, self.key)
             set_partial_sequence(self.view, '')
-            set_partial_text    (self.view, '')
+            set_partial_text    (self.view, [])
             return True
         return False
     def _collect_input(self) -> bool:
@@ -141,8 +141,8 @@ class FeedKeyHandler():
 
         _part_txt = get_partial_text    (self.view)
         _part_seq = get_partial_sequence(self.view)
-        set_partial_text                (self.view, _part_txt + self.key)
-        set_partial_sequence            (self.view, _part_seq + self.key)
+        set_partial_text                (self.view, _part_txt + [self.key])
+        set_partial_sequence            (self.view, _part_seq +  self.key)
 
         cmdT = mappings_resolve_text(self.view, check_user_mappings=self.check_user_mappings)
         cmdS = mappings_resolve     (self.view, check_user_mappings=self.check_user_mappings)
@@ -299,7 +299,7 @@ class FeedKeyHandler():
 
         if get_mode(self.view) == OPERATOR_PENDING:
             set_partial_sequence(self.view, '')
-            set_partial_text    (self.view, '')
+            set_partial_text    (self.view, [])
         if do_eval:
             evaluate_state      (self.view)
 

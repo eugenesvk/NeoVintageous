@@ -371,8 +371,8 @@ def mappings_can_resolve(view, key: str) -> bool:
     return False
 
 def mappings_can_resolve_text(view, key: str) -> bool:
-    mode = get_mode         (view)
-    cmd  = get_partial_text (view) + key
+    mode = get_mode                (view)
+    cmd  = ''.join(get_partial_text(view)) + key
     if _find_full_match_text(view, mode, cmd):
         return True
     # if _has_partial_matches(view, mode, cmd): # todo not needed?
@@ -467,7 +467,7 @@ def mappings_resolve_text(view, text_command:str = None, mode: str = None, check
     cmd,cmdU,cmdT = '','',''
     cmdIn = text_command if text_command else ''
     cmdTpart = get_partial_text(view) # We usually need to look at the partial sequence, but some commands do weird things, like ys, which isn't a namespace but behaves as such
-    cmdTxt = cmdIn or cmdTpart
+    cmdTxt = cmdIn or ''.join(cmdTpart)
     _log.map("  TXT ¦%s¦in ¦%s¦part",cmdIn,cmdTpart)
     if check_user_mappings:
         cmdU = _text_cmd_to_mapping(view, cmdTxt)

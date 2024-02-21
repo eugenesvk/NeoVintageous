@@ -2,7 +2,7 @@ from typing import Union
 
 from NeoVintageous.nv.ex_cmds import do_ex_user_cmdline
 from NeoVintageous.nv.mappings import Mapping
-from NeoVintageous.nv.settings import get_action_count, get_mode, get_motion_count, get_partial_sequence, get_partial_text, get_register, get_sequence, set_action_count, set_motion_count, set_register
+from NeoVintageous.nv.settings import get_action_count, get_mode, get_motion_count, get_partial_sequence, get_text, get_partial_text, get_register, get_sequence, set_action_count, set_motion_count, set_register
 from NeoVintageous.nv.state import reset_command_data
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 
@@ -37,12 +37,14 @@ def evaluate_mapping(view, mapping: Mapping) -> None:
     # _log.key(" evalMap m%s end", get_mode(view))
 
 def evaluate_mapping_text(view, mapping: Mapping) -> None:
-    rhs = mapping.rhs
+    rhs = [mapping.rhs] if isinstance(mapping.rhs, str) else mapping.rhs
     if ((m_txt := get_mode(view)) == OPERATOR_PENDING):
-        if   isinstance(rhs, str ):
-            rhs =  get_sequence(view)[:-len(get_partial_sequence(view))]  + mapping.rhs
-        elif isinstance(rhs, list):
-            rhs = [get_sequence(view)[:-len(get_partial_sequence(view))]] + mapping.rhs
+        txt  = get_text        (view) # [openregister  2  copychar]
+        txtP = get_partial_text(view) # [f]
+        for el in reversed(txtP):
+            if el == txt[-1]:
+                del  txt[-1]
+        rhs = txt + mapping.rhs
     _log.key(' evalMapT ‹‘%s’=%s‘%s’←‘%s’› m%s'
         ,mapping.lhs
         ,('Ⓞ'        if m_txt == OPERATOR_PENDING else '')

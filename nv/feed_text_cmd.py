@@ -96,13 +96,17 @@ class FeedTextCmdHandler():
         if must_collect_input(self.view, motion, action):
             if motion and\
                motion.accept_input:
-                _log.warn('must collect input for a motion, but this is a text command, not a key')
-                # motion.accept(self.key)
-                # set_motion   (self.view, motion)  # Processed motion needs to reserialised and stored
+                if len(key := self.text_cmd) == 1:
+                    motion.accept(key)
+                    set_motion   (self.view, motion)  # Processed motion needs to reserialised and stored
+                else:
+                    _log.warn('must collect input for a motion, but this is a long text command ‘%s’, not a key',key)
             else:
-                _log.warn('must collect input for an action, but this is a text command, not a key')
-                # action.accept(self.key)
-                # set_action   (self.view, action)  # Processed action needs to reserialised and stored
+                if len(key := self.text_cmd) == 1:
+                    action.accept(key)
+                    set_action   (self.view, action)  # Processed action needs to reserialised and stored
+                else:
+                    _log.warn('must collect input for an action, but this is a long text command ‘%s’, not a key',key)
 
             if self.do_eval and is_runnable(self.view):
                 _log.keyt('doeval on a runnable, reset_command_data')

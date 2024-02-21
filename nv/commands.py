@@ -15,7 +15,7 @@ from NeoVintageous.nv.cmdline_search   import CmdlineSearch
 from NeoVintageous.nv.ex.completions   import insert_best_cmdline_completion, on_change_cmdline_completion_prefix, reset_cmdline_completion_state
 from NeoVintageous.nv.ex_cmds          import do_ex_cmd_edit_wrap, do_ex_cmdline, do_ex_command
 from NeoVintageous.nv.feed_key         import FeedKeyHandler
-from NeoVintageous.nv.feed_text_cmd    import FeedTextCmdHandler
+from NeoVintageous.nv.feed_cmd         import FeedTextCmdHandler
 from NeoVintageous.nv.goto             import GotoView, get_linewise_non_blank_target, jump_to_mark
 from NeoVintageous.nv.history          import history_update
 from NeoVintageous.nv.history          import next_cmdline_history

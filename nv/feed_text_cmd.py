@@ -76,11 +76,14 @@ class FeedTextCmdHandler():
         append_sequence         (self.view,                  self.text_cmd)
         append_seq_icon         (self.view, self.cmd.icon or self.text_cmd)
         update_status_line      (self.view)
+    def _append_text    (self) -> None: # TextCmd
+        _log.keyt('+txt‘%s’',self.text_cmd)
+        append_text             (self.view,         self.text_cmd)
     def _handle_register(self) -> bool: # TextCmd
         if get_capture_register (self.view):
             # set_register        (self.view, self.text_cmd)
             set_partial_sequence(self.view, '')
-            set_partial_text    (self.view, '')
+            set_partial_text    (self.view, [])
             return True
         return False
     def _collect_input(self) -> bool: # TextCmd
@@ -156,6 +159,7 @@ class FeedTextCmdHandler():
 
         self.cmd = cmd
         self   ._append_sequence() # status bar vim-seq sequence
+        self   ._append_text    ()
         if (isCmdHandled := self._handle_cmd()):
             if _L:
                 _log.keyt('%s',self.dbg)
@@ -299,7 +303,7 @@ class FeedTextCmdHandler():
 
         if get_mode(self.view) == OPERATOR_PENDING:
             set_partial_sequence(self.view, '')
-            set_partial_text    (self.view, '')
+            set_partial_text    (self.view, [])
         if do_eval:
             evaluate_state      (self.view)
 

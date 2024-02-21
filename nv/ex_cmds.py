@@ -721,13 +721,12 @@ def ex_registers(window, view, **kwargs) -> None:
 
                 multiple_values.append(part_value)
 
-            # ^V indicates a visual block or multiple selection
-            items.append('  {}   {}   {}'.format(
-                type, name, truncate('^V'.join(multiple_values), 120)))
+            items.append('{} {}  {}'.format(
+                        type,name,truncate('^V'.join(multiple_values), 120))) # ^V indicates a visual block or multiple selection
 
     items.sort()
     output = CmdlineOutput(window)
-    output.write('Type Name Content\n')
+    output.write('T Nm Content\n')
     output.write("\n".join(items))
     output.show()
 

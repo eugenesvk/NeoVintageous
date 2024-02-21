@@ -29,7 +29,7 @@ from NeoVintageous.nv.rc               import open_rc, open_config_file_kdl, rel
 from NeoVintageous.nv.registers        import get_alternate_file_register, registers_get_for_paste, registers_op_change, registers_op_delete, registers_op_yank, _reset
 from NeoVintageous.nv.search           import add_search_highlighting, clear_search_highlighting, find_search_occurrences, find_word_search_occurrences, get_search_occurrences, process_search_pattern, process_word_search_pattern
 from NeoVintageous.nv.settings         import get_glue_until_normal_mode, get_last_search_pattern, get_last_search_pattern_command, get_mode, get_normal_insert_count, get_repeat_data, get_sequence, get_partial_sequence, get_partial_text, get_partial_sequence, get_setting, get_xpos, is_processing_notation, set_glue_until_normal_mode, set_last_char_search, set_last_search_pattern, set_mode, set_normal_insert_count, set_repeat_data, set_reset_during_init, set_xpos, toggle_ctrl_keys, toggle_super_keys, get_config, get_capture_register, get_register, get_action_count,  get_motion_count
-from NeoVintageous.nv.state            import reset_command_data, update_status_line, get_action, get_motion, is_runnable
+from NeoVintageous.nv.state            import reset_command_data, update_status_line, get_action, get_motion
 from NeoVintageous.nv.ui               import ui_bell, ui_highlight_yank, ui_highlight_yank_clear
 from NeoVintageous.nv.utils            import VisualBlockSelection, adjust_selection_if_first_non_blank, calculate_xpos, extract_file_name, extract_url, find_next_num, find_symbol, fix_eol_cursor, fixup_eof, fold, fold_all, folded_rows, get_indentation, get_insertion_point_at_a, get_insertion_point_at_b, get_option_scroll, get_previous_selection, get_scroll_down_target_pt, get_scroll_up_target_pt, get_string_under_cursor, hide_panel, highest_visible_pt, highlow_visible_rows, is_help_view, is_insert_mode, is_linewise_operation, is_not_insert_mode, is_view, lowest_visible_pt, new_inclusive_region, next_blank, next_non_blank, next_non_folded_pt, prev_blank, prev_non_blank, prev_non_ws, previous_non_folded_pt, regions_transform_extend_to_line_count, regions_transform_to_first_non_blank, regions_transformer, regions_transformer_indexed, regions_transformer_reversed, replace_line, requires_motion, resolve_internal_normal_target, resolve_normal_target, resolve_visual_block_begin, resolve_visual_block_reverse, resolve_visual_block_target, resolve_visual_line_target, resolve_visual_target, restore_visual_repeat_data, row_at, save_previous_selection, scroll_horizontally, scroll_viewport_position, sel_observer, sel_to_lines, should_motion_apply_op_transformer, show_ascii, show_if_not_visible, spell_file_add_word, spell_file_remove_word, translate_char, unfold, unfold_all, update_xpos
 from NeoVintageous.nv.vi.search        import find_in_range, find_wrapping, reverse_find_wrapping, reverse_search
@@ -262,10 +262,9 @@ class nv_feed_text_cmd(WindowCommand):
                 mot_c = get_motion_count(view)
                 act   = get_action      (view)
                 act_c = get_action_count(view)
-                is_run = is_runnable(view)
                 count_ = count or '_'
-                _log.keyt('\n\n—⌨️T——\nHFeed ‘%s’      #%s eval=%s             reg‘%s’ C‘%s’ seq‘%s’ P‘%s’ txtP‘%s’ mot‘%s’⋅%s act‘%s’⋅%s run‘%s’'
-                ,                             text_cmd,count_,do_eval,         reg, regC,    seq, seqP,    txtP,    mot,  mot_c,act,act_c,is_run)
+                _log.keyt('\n\n—⌨️T——\nHFeed ‘%s’      #%s eval=%s             reg‘%s’ C‘%s’ seq‘%s’ P‘%s’ txtP‘%s’ mot‘%s’⋅%s act‘%s’⋅%s'
+                ,                             text_cmd,count_,do_eval,         reg, regC,    seq, seqP,    txtP,    mot,  mot_c,act,act_c)
             FeedTextCmdHandler(self.window.active_view(),text_cmd=text_cmd,count=count,do_eval=do_eval).handle()
         except Exception as e:
             print('NeoVintageous: An error occurred:')
@@ -296,10 +295,9 @@ class nv_feed_key(WindowCommand):
                 mot_c = get_motion_count(view)
                 act   = get_action      (view)
                 act_c = get_action_count(view)
-                is_run = is_runnable(view)
-                _log.key('\n\n—⌨️———\nHFeed ‘%s’¦‘%s’ #%s eval=%s usrMap=%s reg‘%s’ C‘%s’ seq‘%s’ P‘%s’ txtP‘%s’ mot‘%s’⋅%s act‘%s’⋅%s run‘%s’'
+                _log.key('\n\n—⌨️———\nHFeed ‘%s’¦‘%s’ #%s eval=%s usrMap=%s reg‘%s’ C‘%s’ seq‘%s’ P‘%s’ txtP‘%s’ mot‘%s’⋅%s act‘%s’⋅%s'
                 ,                         key,char,count_,do_eval,check_user_mappings
-                ,                                                            reg,  regC,   seq, seqP,    txtP,    mot,  mot_c,act,act_c,is_run)
+                ,                                                            reg,  regC,   seq, seqP,    txtP,    mot,  mot_c,act,act_c)
             FeedKeyHandler(self.window.active_view(),key,repeat_count,do_eval,check_user_mappings).handle()
         except Exception as e:
             print('NeoVintageous: An error occurred:')

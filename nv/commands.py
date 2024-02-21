@@ -139,7 +139,7 @@ __all__ = [
     'nv_vi_left_square_bracket','nv_vi_right_square_bracket',
     'nv_target_prev','nv_target_next',
     'nv_vi_less_than','nv_vi_less_than_less_than',
-    'nv_vi_clear_registers',
+    'nv_vi_clear_registers','nv_vi_clear_register',
     'nv_vi_m',
     'nv_vi_modify_numbers',
     'nv_vi_o',

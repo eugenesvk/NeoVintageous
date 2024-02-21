@@ -100,10 +100,11 @@ class FeedKeyHandler():
     def _collect_input(self) -> bool:
         motion = get_motion(self.view)
         action = get_action(self.view)
-        _log.keyy("_collect_input mot‘%s’ act‘%s’", motion, action)
+        _log.keyt("mot‘%s’⋅#%s act‘%s’⋅#%s ⋅#%s must‘%s’", motion, get_motion_count(self.view), action, get_action_count(self.view), get_count(self.view), must_collect_input(self.view, motion, action))
 
         if must_collect_input(self.view, motion, action):
-            if motion and motion.accept_input:
+            if motion and\
+               motion.accept_input:
                 _log.key('_collect_input set mot‘%s’',motion)
                 motion.accept(self.key)
                 set_motion   (self.view, motion)  # Processed motion needs to reserialised and stored

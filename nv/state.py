@@ -256,34 +256,25 @@ def reset_command_data(view,setReg:bool=True) -> None:
 
 
 def is_runnable(view) -> bool:
-    # Returns:
-    #   True if motion and/or action is in a runnable state, False otherwise.
-    # Raises:
-    #   ValueError: Invlid mode.
+    """→ True if motion and/or action is in a runnable state, False otherwise
+    ValueError: Invalid mode
+    """
     action = get_action(view)
     motion = get_motion(view)
-
     if must_collect_input(view, motion, action):
         return False
-
     mode = get_mode(view)
-
     if action and motion:
         if mode != NORMAL:
             raise ValueError('invalid mode')
-
         return True
-
     if (action and (not action.motion_required or is_visual_mode(mode))):
         if mode == OPERATOR_PENDING:
             raise ValueError('action has invalid mode')
-
         return True
-
     if motion:
         if mode == OPERATOR_PENDING:
             raise ValueError('motion has invalid mode')
-
         return True
 
     return False

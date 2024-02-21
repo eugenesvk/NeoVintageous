@@ -78,6 +78,8 @@ class FeedKeyHandler():
         update_status_line      (self.view)
     def _handle_register(self) -> bool:
         if get_capture_register (self.view):
+
+
             set_register        (self.view, self.key)
             set_partial_sequence(self.view, '')
             set_partial_text    (self.view, [])

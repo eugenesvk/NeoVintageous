@@ -99,18 +99,20 @@ class FeedTextCmdHandler():
     def _collect_input(self) -> bool: # TextCmd
         motion = get_motion(self.view)
         action = get_action(self.view)
-        _log.keyyt("mot‘%s’⋅#%s act‘%s’⋅#%s ⋅#%s", motion, get_motion_count(self.view), action, get_action_count(self.view), get_count(self.view))
+        _log.keyt("mot‘%s’⋅#%s act‘%s’⋅#%s ⋅#%s must‘%s’", motion, get_motion_count(self.view), action, get_action_count(self.view), get_count(self.view), must_collect_input(self.view, motion, action))
 
         if must_collect_input(self.view, motion, action):
             if motion and\
                motion.accept_input:
                 if len(key := self.text_cmd) == 1:
+                    _log.keyt('_collect_input set mot‘%s’',motion)
                     motion.accept(key)
                     set_motion   (self.view, motion)  # Processed motion needs to reserialised and stored
                 else:
                     _log.warn('must collect input for a motion, but this is a long text command ‘%s’, not a key',key)
             else:
                 if len(key := self.text_cmd) == 1:
+                    _log.key('_collect_input set act‘%s’',action)
                     action.accept(key)
                     set_action   (self.view, action)  # Processed action needs to reserialised and stored
                 else:

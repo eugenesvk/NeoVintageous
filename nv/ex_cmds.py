@@ -117,8 +117,11 @@ def ex_browse(window, view, **kwargs) -> None:
     })
 
 
-def ex_buffer(window, index: int = None, **kwargs) -> None:
+def ex_buffer(window, index=None, **kwargs) -> None:
     if index is None:
+        return
+    if is_alternate_file_register(index):
+        open_alternate_file(window)
         return
 
     index = int(index)
@@ -186,8 +189,8 @@ def reload_with_user_data_kdl() -> None:
 
 def ex_buffers(window, **kwargs) -> None:
     def _format_buffer_line(view) -> str:
-        path = view.file_name()
-        if path:
+        file_name = view.file_name()
+        if file_name:
             parent, leaf = os.path.split(path)
             path = os.path.join(os.path.basename(parent), leaf)
         else:
@@ -198,7 +201,7 @@ def ex_buffers(window, **kwargs) -> None:
         current_indicator = CFG['current'] if view.id() == window.active_view().id() else ' '
         readonly_indicator = CFG['read_only'] if is_view_read_only(view) else ' '
         modified_indicator = CFG['modified'] if view.is_dirty() else ' '
-
+        alternate_indicator = CFG['alternate'] if file_name and file_name == get_alternate_file_register() else ' '
 
         group = window.get_view_index(view)[0]
         active_group_view = window.active_view_in_group(group)
@@ -210,7 +213,7 @@ def ex_buffers(window, **kwargs) -> None:
 
         return '%5d %s%s%s%s %-30s %s' % (
             view.id(),
-            current_indicator,
+            current_indicator if current_indicator.strip() else alternate_indicator,
             visibility_indicator,
             readonly_indicator,
             modified_indicator,

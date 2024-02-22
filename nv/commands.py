@@ -28,7 +28,7 @@ from NeoVintageous.nv.polyfill         import reveal_side_bar, set_selection, sp
 from NeoVintageous.nv.process_notation import ProcessNotationHandler
 from NeoVintageous.nv.process_text_cmd import ProcessCmdTextHandler
 from NeoVintageous.nv.rc               import open_rc, open_config_file_kdl, reload_rc
-from NeoVintageous.nv.registers        import get_alternate_file_register, registers_get_for_paste, registers_op_change, registers_op_delete, registers_op_yank, _reset
+from NeoVintageous.nv.registers        import registers_get_for_paste, registers_op_change, registers_op_delete, registers_op_yank, _reset
 from NeoVintageous.nv.search           import add_search_highlighting, clear_search_highlighting, find_search_occurrences, find_word_search_occurrences, get_search_occurrences, process_search_pattern, process_word_search_pattern
 from NeoVintageous.nv.settings         import get_glue_until_normal_mode, get_last_search_pattern, get_last_search_pattern_command, get_mode, get_normal_insert_count, get_repeat_data, get_sequence, get_partial_sequence, get_partial_text, get_partial_sequence, get_setting, get_xpos, is_processing_notation, set_glue_until_normal_mode, set_last_char_search, set_last_search_pattern, set_mode, set_normal_insert_count, set_repeat_data, set_reset_during_init, set_xpos, toggle_ctrl_keys, toggle_super_keys, get_config, get_capture_register, get_register, get_action_count,  get_motion_count
 from NeoVintageous.nv.state            import reset_command_data, update_status_line, get_action, get_motion
@@ -41,7 +41,7 @@ from NeoVintageous.nv.vi.units         import big_word_ends, big_word_starts, in
 from NeoVintageous.nv.vim              import EOF
 from NeoVintageous.nv.modes            import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.vim              import clean_views, enter_insert_mode, enter_normal_mode, enter_visual_block_mode, enter_visual_line_mode, enter_visual_mode, is_visual_mode, reset_status_line, run_motion, status_message
-from NeoVintageous.nv.window           import window_control, window_open_file, window_tab_control
+from NeoVintageous.nv.window           import window_control, window_open_file, window_tab_control, open_alternate_file
 
 from NeoVintageous.nv.rc import cfgU
 
@@ -305,7 +305,7 @@ class nv_feed_key(WindowCommand):
             print('NeoVintageous: An error occurred:')
             _log.exception(e)
             clean_views()
-        _log.info('key evt finished in %s ms','{:.2f}'.format((time.time() - start_time)*1000))
+        _log.info('key evt finished in %s ms','{:.1f}'.format((time.time() - start_time)*1000))
 
 
 class nv_process_notation(WindowCommand):
@@ -1779,12 +1779,7 @@ class nv_vi_go_to_file(TextCommand):
 class nv_vi_ctrl_hat(WindowCommand):
 
     def run(self, mode=None, count=None, register=None, **kwargs):
-        alternate_file = get_alternate_file_register()
-        if not alternate_file:
-            ui_bell('E23: No alternate file')
-            return
-
-        self.window.open_file(alternate_file)
+        open_alternate_file(self.window)
 
 
 class nv_vi_ctrl_right_square_bracket(WindowCommand):

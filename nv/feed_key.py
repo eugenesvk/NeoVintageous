@@ -10,6 +10,7 @@ from NeoVintageous.nv.ui import ui_bell
 from NeoVintageous.nv.vi.cmd_base import CommandNotFound, ViCommandDefBase, ViMotionDef, ViOperatorDef
 from NeoVintageous.nv.vi.cmd_defs import ViOpenNameSpace, ViOpenRegister
 from NeoVintageous.nv.vi.keys import resolve_keypad_count, to_bare_command_name
+from NeoVintageous.nv.vi.seqs import ESC
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.vim import enter_normal_mode, is_visual_mode
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL, TFMT, addLoggingLevel, stream_handler
@@ -52,7 +53,7 @@ class FeedKeyHandler():
         if _is_selection_malformed(self.view, self.mode):
             self.mode = _fix_malformed_selection(self.view, self.mode)
     def _handle_escape(self) -> bool:
-        if self.key.lower() == '<esc>':
+        if self.key.lower() == ESC:
             should_hide_auto_complete_on_escape = (
                 self.mode == INSERT and
                 self.view.is_auto_complete_visible() and

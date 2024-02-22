@@ -1,7 +1,5 @@
 # Changelog
 
-All notable changes are documented in this file using the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
-
 [unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.9.1342...HEAD
 ## [Unreleased]
   <!-- - __Added__ -->
@@ -167,6 +165,19 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
    + :beetle: invalid register error for non-latin macros
    + :beetle: keypad numbers not working as count prefix
    + :beetle: 1-symbol keys like `⇟` in named key aliases not recognized
+
+## 1.35.0 - Unreleased
+
+### Added
+
+- New documentation site, to check it out, visit [neovintageous.github.io](https://neovintageous.github.io).
+- Edit the alternate buffer `:b#` (alias `CTRL-^` or `CTRL-6`) [#993](https://github.com/NeoVintageous/NeoVintageous/issues/993)
+- Add alternate buffer indicator (`#`) for `:ls`
+
+### Fixed
+
+-  z scroll commands do not accept count [#1007](https://github.com/NeoVintageous/NeoVintageous/issues/1007)
+- `gx` should work on localhost and with ports
 
 ## 1.34.2 - 2024-02-05
 

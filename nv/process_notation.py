@@ -6,6 +6,7 @@ from NeoVintageous.nv.ui       import ui_bell
 from NeoVintageous.nv.utils    import gluing_undo_groups, translate_char
 from NeoVintageous.nv.vi.keys  import tokenize_keys, map_cmd2textcmd
 from NeoVintageous.nv.modes    import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
+from NeoVintageous.nv.vi.seqs  import ESC
 from NeoVintageous.nv.vim      import enter_normal_mode, run_motion
 from NeoVintageous.nv.vi.cmd_base import CommandNotFound, ViCommandDefBase, ViMotionDef, ViOperatorDef
 from NeoVintageous.nv.vi.cmd_defs import ViRedo,ViUndo,ViRepeat
@@ -125,7 +126,7 @@ class ProcessNotationHandler():
                         keys_iter = tokenize_keys(keys)
                         key_count = '_'
                     for i,key in enumerate(keys_iter):
-                        if key.lower() == '<esc>':
+                        if key.lower() == ESC:
                             _log.key("⎋")
                             enter_normal_mode(self.window) # XXX: We should pass a mode here?
                             continue

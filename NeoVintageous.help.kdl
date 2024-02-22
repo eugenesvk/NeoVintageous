@@ -182,6 +182,7 @@ indicator { // Set various indicator format
   ls { // Set values for ‘ls’ command indicators |default|
     current    	"•"	//|%|        	The buffer in the current window
     modified   	"🖉"	//|+|        	Modified buffer
+    alternate  	"⎌"	//|#|        	Alternate buffer
     read_only  	"👓"	//|=|        	Readonly buffer
     active     	"👁"	//|a|        	Active   buffer: loaded and visible
     hidden     	" "	//|h|        	Hidden   buffer: loaded but invisible

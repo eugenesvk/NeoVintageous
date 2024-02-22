@@ -126,7 +126,7 @@ class ProcessNotationHandler():
                         keys_iter = tokenize_keys(keys)
                         key_count = '_'
                     for i,key in enumerate(keys_iter):
-                        if key.lower() == ESC:
+                        if key.lower() in ESC:
                             _log.key("⎋")
                             enter_normal_mode(self.window) # XXX: We should pass a mode here?
                             continue

@@ -53,7 +53,7 @@ class FeedKeyHandler():
         if _is_selection_malformed(self.view, self.mode):
             self.mode = _fix_malformed_selection(self.view, self.mode)
     def _handle_escape(self) -> bool:
-        if self.key.lower() == ESC:
+        if self.key.lower() in ESC:
             should_hide_auto_complete_on_escape = (
                 self.mode == INSERT and
                 self.view.is_auto_complete_visible() and

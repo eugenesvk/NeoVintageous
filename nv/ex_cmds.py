@@ -13,74 +13,26 @@ from sublime import Region
 from sublime import set_timeout, version
 from sublime import yes_no_cancel_dialog
 
-from NeoVintageous.nv.rc import cfgU
-from NeoVintageous.nv import shell
-from NeoVintageous.nv import variables
-from NeoVintageous.nv.cmdline import CmdlineOutput
-from NeoVintageous.nv.ex.nodes import RangeNode
-from NeoVintageous.nv.ex.parser import parse_command_line
-from NeoVintageous.nv.ex.parser import resolve_address
-from NeoVintageous.nv.goto import GotoView
-from NeoVintageous.nv.goto import goto_help_subject
-from NeoVintageous.nv.history import history
-from NeoVintageous.nv.mappings import mappings_add
-from NeoVintageous.nv.mappings import mappings_remove
-from NeoVintageous.nv.marks import del_mark
-from NeoVintageous.nv.marks import del_marks
-from NeoVintageous.nv.marks import get_marks
-from NeoVintageous.nv.options import get_option
-from NeoVintageous.nv.options import set_option
-from NeoVintageous.nv.options import toggle_option
-from NeoVintageous.nv.polyfill import has_dirty_buffers
-from NeoVintageous.nv.polyfill import has_newline_at_eof
-from NeoVintageous.nv.polyfill import is_file_read_only
-from NeoVintageous.nv.polyfill import is_view_read_only
-from NeoVintageous.nv.polyfill import reload_syntax
-from NeoVintageous.nv.polyfill import set_selection
-from NeoVintageous.nv.polyfill import spell_add
-from NeoVintageous.nv.polyfill import spell_undo
-from NeoVintageous.nv.polyfill import truncate
-from NeoVintageous.nv.polyfill import view_find_all_in_range
-from NeoVintageous.nv.polyfill import view_to_region
-from NeoVintageous.nv.registers import registers_get_all
-from NeoVintageous.nv.registers import registers_set
-from NeoVintageous.nv.search import clear_search_highlighting
-from NeoVintageous.nv.search import is_smartcase_pattern
-from NeoVintageous.nv.settings import get_cmdline_cwd
-from NeoVintageous.nv.settings import get_ex_global_last_pattern
-from NeoVintageous.nv.settings import get_ex_shell_last_command
-from NeoVintageous.nv.settings import get_last_substitute_search_pattern
-from NeoVintageous.nv.settings import get_last_substitute_string
-from NeoVintageous.nv.settings import get_mode
-from NeoVintageous.nv.settings import get_setting
-from NeoVintageous.nv.settings import reset_setting
-from NeoVintageous.nv.settings import set_cmdline_cwd
-from NeoVintageous.nv.settings import set_ex_global_last_pattern
-from NeoVintageous.nv.settings import set_ex_shell_last_command
-from NeoVintageous.nv.settings import set_last_substitute_search_pattern
-from NeoVintageous.nv.settings import set_last_substitute_string
-from NeoVintageous.nv.settings import set_setting
-from NeoVintageous.nv.ui import ui_bell
-from NeoVintageous.nv.utils import adding_regions
-from NeoVintageous.nv.utils import current_working_directory
-from NeoVintageous.nv.utils import expand_path
-from NeoVintageous.nv.utils import expand_to_realpath
-from NeoVintageous.nv.utils import get_line_count
-from NeoVintageous.nv.utils import glue_undo_groups
-from NeoVintageous.nv.utils import next_non_blank
-from NeoVintageous.nv.utils import regions_transformer
-from NeoVintageous.nv.utils import row_at
-from NeoVintageous.nv.utils import save_view
-from NeoVintageous.nv.utils import show_ascii
-from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
-from NeoVintageous.nv.vim import enter_normal_mode
-from NeoVintageous.nv.vim import status_message
-from NeoVintageous.nv.window import vnew
-from NeoVintageous.nv.window import window_buffer_control
-from NeoVintageous.nv.window import window_control
-from NeoVintageous.nv.window import window_quit_view
-from NeoVintageous.nv.window import window_quit_views
-from NeoVintageous.nv.window import window_tab_control
+from NeoVintageous.nv.rc        import cfgU
+from NeoVintageous.nv           import shell, variables
+from NeoVintageous.nv.cmdline   import CmdlineOutput
+from NeoVintageous.nv.ex.nodes  import RangeNode
+from NeoVintageous.nv.ex.parser import parse_command_line, resolve_address
+from NeoVintageous.nv.goto      import GotoView, goto_help_subject
+from NeoVintageous.nv.history   import history
+from NeoVintageous.nv.mappings  import mappings_add, mappings_remove
+from NeoVintageous.nv.marks     import del_mark, del_marks, get_marks
+from NeoVintageous.nv.options   import get_option, set_option, toggle_option
+from NeoVintageous.nv.polyfill  import has_dirty_buffers, has_newline_at_eof, is_file_read_only, is_view_read_only, reload_syntax, set_selection, spell_add, spell_undo, truncate, view_find_all_in_range, view_to_region
+from NeoVintageous.nv.registers import get_alternate_file_register, is_alternate_file_register, registers_get_all, registers_set
+from NeoVintageous.nv.search    import clear_search_highlighting
+from NeoVintageous.nv.search    import is_smartcase_pattern
+from NeoVintageous.nv.settings  import get_cmdline_cwd, get_ex_global_last_pattern, get_ex_shell_last_command, get_last_substitute_search_pattern, get_last_substitute_string, get_mode, get_setting, reset_setting, set_cmdline_cwd, set_ex_global_last_pattern, set_ex_shell_last_command, set_last_substitute_search_pattern, set_last_substitute_string, set_setting
+from NeoVintageous.nv.ui        import ui_bell
+from NeoVintageous.nv.utils     import adding_regions, current_working_directory, expand_path, expand_to_realpath, get_line_count, glue_undo_groups, next_non_blank, regions_transformer, row_at, save_view, show_ascii
+from NeoVintageous.nv.modes     import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
+from NeoVintageous.nv.vim       import enter_normal_mode, status_message
+from NeoVintageous.nv.window    import open_alternate_file, vnew, window_buffer_control, window_control, window_quit_view, window_quit_views, window_tab_control
 
 import NeoVintageous.dep.kdl as kdl
 import NeoVintageous.nv.cfg_parse

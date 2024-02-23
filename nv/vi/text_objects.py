@@ -100,6 +100,17 @@ PAIRS = {
     'i' 	: (None          	, TO.Indent    ), # {not in Vim}
     'l' 	: (None          	, TO.Line      ),
 }  # type: dict
+PAIRS_LONG = { # add full names so that internal APIs do not depend on user abbreviations
+    'paragraph'	: (None	, TO.Paragraph ),
+    'sentence' 	: (None	, TO.Sentence  ),
+    'tag'      	: (None	, TO.Tag       ),
+    'bigword'  	: (None	, TO.BigWord   ),
+    'word'     	: (None	, TO.Word      ),
+    'bigindent'	: (None	, TO.BigIndent ), # {not in Vim}
+    'indent'   	: (None	, TO.Indent    ), # {not in Vim}
+    'line'     	: (None	, TO.Line      ),
+}  # type: dict
+PAIRS.update(PAIRS_LONG)
 # for q in quote_sym:
     # PAIRS[q] = ((q,q),TO.Quote)
 DEF = {'pairs':PAIRS
@@ -186,8 +197,10 @@ def reload_with_user_data_kdl() -> None:
                     # _log.debug("node ‘%s’ has unrecognized tag in argument %s",node.name,arg)
                 if   val == 'clear':
                     lbl_remove = []
-                    for lbl,(sep,txt_obj) in CFG['pairs'].items():
-                        if lbl not in replaced and txt_obj == text_obj:
+                    for lbl,(sep,txt_obj) in CFG['pairs'].items(): # clear default labels that are ...
+                        if     lbl not in replaced   \
+                           and lbl not in PAIRS_LONG \
+                           and txt_obj == text_obj: # not replaced by user config and are not long names (LINE)
                             lbl_remove.append(lbl)
                     for lbl in lbl_remove:
                         _log.debug(f"clearing CFG ‘{cfg_key}’ pair: {CFG['pairs'].get(lbl,None)}")

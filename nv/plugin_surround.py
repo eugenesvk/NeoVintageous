@@ -93,7 +93,7 @@ class Surroundyss(Surroundys):
                     'mode': INTERNAL_NORMAL,
                     'count': 1,
                     'inclusive': False,
-                    'text_object': 'l'
+                    'text_object': 'line'
                 }
             },
             'replacement': self.inp

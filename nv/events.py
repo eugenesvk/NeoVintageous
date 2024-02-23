@@ -50,6 +50,10 @@ def _is_insert_mode(view, operator: int, operand: bool, match_all: bool) -> bool
         operand,
         match_all
     )
+def _is_insert_mode_real(view, operator: int, operand: bool, match_all: bool) -> bool:
+    return _check_query_context_value(((get_session_view_value(view,'mode')==INSERT) and is_view(view)),operator,operand,match_all)
+def _is_normal_mode     (view, operator: int, operand: bool, match_all: bool) -> bool:
+    return _check_query_context_value(((get_session_view_value(view,'mode')==NORMAL) and is_view(view)),operator,operand,match_all)
 
 
 def _command_or_insert(view, operator: int, operand: bool, match_all: bool) -> bool:
@@ -123,6 +127,8 @@ _query_contexts = {
     'nv_winaltkeys'         : _winaltkeys,
     'vi_command_mode_aware' : _is_command_mode,
     'vi_insert_mode_aware'  : _is_insert_mode,
+    'Ⓝ'                     : _is_normal_mode,
+    'ⓘ'                     : _is_insert_mode_real,
 }  # type: dict
 
 

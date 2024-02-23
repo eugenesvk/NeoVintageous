@@ -286,6 +286,17 @@ def reload_with_user_data_kdl() -> None:
                 # _log.debug(f"@plugin surround: Parsing config {cfg_key}")
                 if node_parent.get('clear',None):
                     CFG[cfg_key].clear()
+                for arg in node_parent.args:          # Parse arguments, only 'clear' is valid, ignore others
+                    tag = arg.tag   if hasattr(arg,'tag'  ) else ''
+                    val = arg.value if hasattr(arg,'value') else arg
+                    # if tag:
+                        # _log.debug("node ‘%s’ has unrecognized tag in argument %s",node.name,arg)
+                    if   val == 'clear':
+                        CFG[cfg_key].clear()
+                        break
+                    else:
+                        # _log.error("node ‘%s’ has unparseable argument %s\n  expecting a ‘clear’, other values are set as properties or child nodes",node.name,arg)
+                        continue
                 for node in node_parent.nodes: # 1. d (  key_node value_arg pairs
                     key = node.name
                     if key == 'clear':

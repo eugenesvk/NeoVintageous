@@ -12,6 +12,7 @@ def add_module_logger_levels():
   addLoggingLevel('KEY', DEFAULT_LOG_LEVEL - 20)
   addLoggingLevel('KEYY', DEFAULT_LOG_LEVEL - 20)
   addLoggingLevel('MAP', DEFAULT_LOG_LEVEL - 20)
+  addLoggingLevel('MAPP', DEFAULT_LOG_LEVEL - 12)
   addLoggingLevel('SET', DEFAULT_LOG_LEVEL - 20)
   addLoggingLevel('CFG', DEFAULT_LOG_LEVEL - 20)
   addLoggingLevel('T', DEFAULT_LOG_LEVEL - 20)

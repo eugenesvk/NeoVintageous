@@ -329,7 +329,7 @@ def mappings_add_text(mode:str, key:str, cmd:Union[str,list], prop:dict={}) -> N
     #           mode_normal     W        MoveByBigWords       {file:['txt','rs']}
     key_norm = _normalise_lhs(key)
     old_cmd_ftype = _mappings_text[mode].get(key_norm)
-    _log.map(" map+txt ¦%s¦ ‹¦%s ≈ %s¦⟶¦%s¦› @file¦%s¦ oldcmd¦%s¦"
+    _log.mapp(" map+txt ¦%s¦ ‹¦%s ≈ %s¦⟶¦%s¦› @file¦%s¦ oldcmd¦%s¦"
       ,                mode, key,key_norm,cmd,prop.get('file',''),old_cmd_ftype)
     if (file_types := prop.get('file')):
         if not old_cmd_ftype:

@@ -3,13 +3,10 @@ import logging
 
 from sublime import active_window
 
-from NeoVintageous.nv.polyfill import toggle_preference
-from NeoVintageous.nv.session import get_session_value
-from NeoVintageous.nv.session import get_session_view_value
-from NeoVintageous.nv.session import set_session_value
-from NeoVintageous.nv.session import set_session_view_value
-from NeoVintageous.nv.vim import DIRECTION_DOWN
-from NeoVintageous.nv.modes import UNKNOWN
+from NeoVintageous.nv.polyfill    import toggle_preference
+from NeoVintageous.nv.session     import get_session_value, get_session_view_value, set_session_value, set_session_view_value
+from NeoVintageous.nv.vim         import DIRECTION_DOWN
+from NeoVintageous.nv.modes       import UNKNOWN
 from NeoVintageous.nv.events_user import on_mode_change
 
 from NeoVintageous.nv.log import addLoggingLevel, stream_handler

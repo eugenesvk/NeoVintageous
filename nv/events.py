@@ -3,20 +3,15 @@ from sublime import OP_NOT_EQUAL
 from sublime import version
 from sublime_plugin import EventListener
 
-from NeoVintageous.nv.modeline import do_modeline
-from NeoVintageous.nv.options import get_option
+from NeoVintageous.nv.modeline  import do_modeline
+from NeoVintageous.nv.options   import get_option
 from NeoVintageous.nv.registers import set_alternate_file_register
-from NeoVintageous.nv.session import session_on_close
-from NeoVintageous.nv.session import session_on_exit
-from NeoVintageous.nv.settings import get_mode
-from NeoVintageous.nv.settings import get_setting
-from NeoVintageous.nv.state import init_view
-from NeoVintageous.nv.utils import fix_eol_cursor
-from NeoVintageous.nv.utils import is_view
-from NeoVintageous.nv.utils import update_xpos
-from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
-from NeoVintageous.nv.vim import enter_normal_mode
-from NeoVintageous.nv.vim import mode_to_char
+from NeoVintageous.nv.session   import session_on_close, session_on_exit, get_session_value, get_session_view_value
+from NeoVintageous.nv.settings  import get_mode, get_setting
+from NeoVintageous.nv.state     import init_view
+from NeoVintageous.nv.utils     import fix_eol_cursor, is_view, update_xpos
+from NeoVintageous.nv.modes     import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
+from NeoVintageous.nv.vim       import enter_normal_mode, mode_to_char
 
 __all__ = ['NeoVintageousEvents']
 

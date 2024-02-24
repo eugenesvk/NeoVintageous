@@ -677,6 +677,8 @@ class cfgU(metaclass=Singleton):
         _import_plugins_with_user_data_kdl() # reset plugin defaults
 
 def _import_plugins_with_user_data_kdl():
+    from NeoVintageous.nv.vi import text_objects
+    text_objects.reload_with_user_data_kdl()
     from NeoVintageous.nv import plugin_surround
     plugin_surround.reload_with_user_data_kdl()
     from NeoVintageous.nv import plugin_abolish
@@ -695,8 +697,6 @@ def _import_plugins_with_user_data_kdl():
     events_user.reload_with_user_data_kdl()
     from NeoVintageous.nv import state
     state.reload_with_user_data_kdl()
-    from NeoVintageous.nv.vi import text_objects
-    text_objects.reload_with_user_data_kdl()
     from NeoVintageous.nv import marks
     marks.reload_with_user_data_kdl()
 

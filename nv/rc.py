@@ -656,7 +656,7 @@ class cfgU(metaclass=Singleton):
         for (keybind,var_d) in cfgU.kdl['keybind']:
             _parse_keybinds_kdl(keybinds=keybind,var_d=var_d)
 
-        _import_plugins_with_user_data_kdl()
+        # _import_plugins_with_user_data_kdl()
 
     @staticmethod
     def unload_kdl():

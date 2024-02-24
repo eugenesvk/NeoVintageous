@@ -609,7 +609,7 @@ class cfgU(metaclass=Singleton):
         # Split config into per-section/per-plugin group
         cfg_group  = ['keymap','event','status','edit','keybind','general','rc','textobject','mark']
         cfg_nest   = {'plugin'   :['surround','abolish','unimpaired']
-            ,         'indicator':['ls','registers','count']}
+            ,         'indicator':['ls','registers','count','macro']}
         # Set config dictionaries to emtpy
         for g in cfg_group:
             cfgU.kdl          [g] = None
@@ -699,6 +699,8 @@ def _import_plugins_with_user_data_kdl():
     state.reload_with_user_data_kdl()
     from NeoVintageous.nv import marks
     marks.reload_with_user_data_kdl()
+    from NeoVintageous.nv import macros
+    macros.reload_with_user_data_kdl()
 
 from NeoVintageous.nv.cfg_parse import parse_kdl_config
 # def load_cfgU() -> None:

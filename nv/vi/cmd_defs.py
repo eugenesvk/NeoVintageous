@@ -1804,13 +1804,13 @@ class ViRepeatSearchBackward(ViMotionDef):
         }
 
 
-@assign(seqs.SEQ["*"], MOTION_MODES)
+@assign(seqs.SEQ['*'], MOTION_MODES)
 @assign_text(['FindWord'], MOTION_MODES)
 class ViFindWord(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
-        self.updates_xpos = True
-        self.command = 'nv_vi_star'
+        self.updates_xpos     = True
+        self.command          = 'nv_vi_find_word'
 
 
 @assign(seqs.SEQ['#'], MOTION_MODES)
@@ -1818,8 +1818,8 @@ class ViFindWord(ViMotionDef):
 class ViReverseFindWord(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
-        self.updates_xpos = True
-        self.command = 'nv_vi_octothorp'
+        self.updates_xpos     = True
+        self.command          = 'nv_vi_find_word_rev'
 
 
 @assign(seqs.SEQ['⇧z'], MOTION_MODES)

@@ -141,7 +141,6 @@ __all__ = [
     'nv_vi_m',
     'nv_vi_modify_numbers',
     'nv_vi_o',
-    'nv_vi_octothorp',
     'nv_vi_paste',
     'nv_vi_percent','nv_vi_move_to_bracket_match','nv_vi_move_to_file_percent',
     'nv_vi_toggle_macro_record',
@@ -157,7 +156,7 @@ __all__ = [
     'nv_vi_select_text_object',
     'nv_vi_shift_enter',
     'nv_vi_search_forward','nv_vi_search_forward_impl',
-    'nv_vi_star',
+    'nv_vi_find_word'     ,'nv_vi_find_word_rev'      ,
     'nv_vi_u',
     'nv_vi_flip_selection',
     'nv_vi_x',
@@ -3151,16 +3150,15 @@ class nv_vi_move_screen_middle(TextCommand):
         regions_transformer(self.view, f)
 
 
-class nv_vi_star(TextCommand):
+class nv_vi_find_word(TextCommand):
     def run(self, edit, mode=None, count=1, pattern=None, save=True):
         def f(view, s):
-            match = find_wrapping(
-                view,
-                term=pattern,
-                start=view.word(s.end()).end(),
-                end=view.size(),
-                flags=flags,
-                times=count
+            match = find_wrapping(view,
+                term  = pattern,
+                start = view.word(s.end()).end(),
+                end   = view.size(),
+                flags = flags,
+                times = count
             )
 
             if match:
@@ -3192,21 +3190,20 @@ class nv_vi_star(TextCommand):
         add_search_highlighting(self.view, find_word_search_occurrences(self.view, pattern, flags))
 
         if save:
-            set_last_search_pattern(self.view, word, 'nv_vi_star')
+            set_last_search_pattern(self.view, word, 'nv_vi_find_word')
 
         show_if_not_visible(self.view)
 
 
-class nv_vi_octothorp(TextCommand):
+class nv_vi_find_word_rev(TextCommand):
     def run(self, edit, mode=None, count=1, pattern=None, save=True):
         def f(view, s):
-            match = reverse_find_wrapping(
-                view,
-                term=pattern,
-                start=0,
-                end=(s.b if s.a > s.b else s.a),
-                flags=flags,
-                times=count
+            match = reverse_find_wrapping(view,
+                term  = pattern,
+                start = 0,
+                end   = (s.b if s.a > s.b else s.a),
+                flags = flags,
+                times = count
             )
 
             if match:
@@ -3239,7 +3236,7 @@ class nv_vi_octothorp(TextCommand):
         add_search_highlighting(self.view, find_word_search_occurrences(self.view, pattern, flags))
 
         if save:
-            set_last_search_pattern(self.view, word, 'nv_vi_octothorp')
+            set_last_search_pattern(self.view, word, 'nv_vi_find_word_rev')
 
         show_if_not_visible(self.view)
 
@@ -3705,8 +3702,8 @@ class nv_vi_repeat_buffer_search(TextCommand):
     commands = {
         'nv_vi_search_forward': ['nv_vi_search_forward_impl', 'nv_vi_question_mark_impl'],
         'nv_vi_question_mark': ['nv_vi_question_mark_impl', 'nv_vi_search_forward_impl'],
-        'nv_vi_star': ['nv_vi_star', 'nv_vi_octothorp'],
-        'nv_vi_octothorp': ['nv_vi_octothorp', 'nv_vi_star'],
+        'nv_vi_find_word'    : ['nv_vi_find_word'    , 'nv_vi_find_word_rev'],
+        'nv_vi_find_word_rev': ['nv_vi_find_word_rev', 'nv_vi_find_word'    ],
     }
 
     def run(self, edit, mode=None, count=1, reverse=False):

@@ -27,12 +27,12 @@ __all__ = ['nv_surround_command']
 
 class nv_surround_command(TextCommand):
     def run(self, edit, action, **kwargs):
-        if action == 'cs':
+        if   action == 'replace':
             _do_replace(self.view, edit, **kwargs)
-        elif action == 'ds':
-            _do_delete(self.view, edit, **kwargs)
-        elif action == 'ys':
-            _do_add(self.view, edit, **kwargs)
+        elif action == 'delete':
+            _do_delete (self.view, edit, **kwargs)
+        elif action == 'add':
+            _do_add    (self.view, edit, **kwargs)
 
 
 @register(seqs.SEQ['ys'], (NORMAL,))
@@ -67,10 +67,7 @@ class Surroundys(ViOperatorDef):
         return True
 
     def translate(self, view):
-        return translate_action(view, 'nv_surround', {
-            'action': 'ys',
-            'replacement': self.inp
-        })
+        return translate_action(view,'nv_surround',{'action':'add','replacement':self.inp})
 
 
 @register(seqs.YSS, (NORMAL,))
@@ -130,10 +127,7 @@ class Surroundds(ViOperatorDef):
         return True
 
     def translate(self, view):
-        return translate_action(view, 'nv_surround', {
-            'action': 'ds',
-            'target': self.inp
-        })
+        return translate_action(view,'nv_surround',{'action':'delete','target':self.inp})
 
 
 @register(seqs.SEQ['cs'], (NORMAL, OPERATOR_PENDING))
@@ -167,11 +161,8 @@ class Surroundcs(ViOperatorDef):
         return True
 
     def translate(self, view):
-        return translate_action(view, 'nv_surround', {
-            'action': 'cs',
-            'target': self.inp[0],
-            'replacement': self.inp[1:]
-        })
+        return translate_action(view,'nv_surround',{'action':'replace','target':self.inp[0]
+            ,'replacement':self.inp[1:]})
 
 DEF = {
     'punctuationmarks' : {

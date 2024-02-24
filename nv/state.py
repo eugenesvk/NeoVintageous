@@ -228,7 +228,7 @@ def set_motion(view, value) -> None:
     set_session_view_value(view, 'motion', serialized)
 
 
-def reset_command_data(view,setReg:bool=True) -> None:
+def reset_command_data(view,setReg:bool=True,setACount:bool=True) -> None:
     # Resets all temp data needed to build a command or partial command.
     motion = get_motion(view)
     action = get_action(view)
@@ -243,7 +243,8 @@ def reset_command_data(view,setReg:bool=True) -> None:
     set_action          (view, None          )
     motion and motion.reset()
     set_motion          (view, None          )
-    set_action_count    (view, ''            )
+    if setACount:
+      set_action_count  (view, ''            )
     set_motion_count    (view, ''            )
     set_sequence        (view, ''            )
     set_text            (view, []            )

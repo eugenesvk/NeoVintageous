@@ -77,7 +77,7 @@ class ProcessNotationHandler():
                 if not get_register(self.view) == '"': # don't clean reg/seq if register non-standard? #todo: test workaround for register cleared up when it shouldn't in nnoremap X dd
                     setReg = False
                 _log.key("    break, get_action exists mot‘%s’ act‘%s’ reg‘%s’%s, reset state, reg_%s",get_motion(self.view),get_action(self.view),get_register(self.view),get_capture_register(self.view),setReg)
-                reset_command_data(self.view,setReg=setReg)
+                reset_command_data(self.view,setReg=setReg,setACount=False)
                 if  get_mode(self.view) == OPERATOR_PENDING:
                     set_mode(self.view, NORMAL)
                 break

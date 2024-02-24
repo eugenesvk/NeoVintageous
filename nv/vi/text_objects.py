@@ -503,10 +503,10 @@ def _get_text_object_quote(view, s: Region, inclusive: bool, count: int, delims:
     else:
         retReg = Region(prev_quote.a + 1, next_quote.b - 1)
 
-    contains_any_cursor = False
-    for sel in view.sel():
-        if retReg.contains(sel):
-            contains_any_cursor = True
+    if not (contains_any_cursor := retReg.contains(s)):
+        for sel in view.sel():
+            if retReg.contains(sel):
+                contains_any_cursor = True
     if not seek_forward and not contains_any_cursor: # if quotes don't cover cursor, do nothing unless seek forward is enabled
         return s
 

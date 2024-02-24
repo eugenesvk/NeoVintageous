@@ -82,15 +82,15 @@ __all__ = [
     'nv_vi_ctrl_d',
     'nv_vi_ctrl_e',
     'nv_vi_ctrl_f',
-    'nv_vi_ctrl_g',
-    'nv_vi_ctrl_hat',
+    'nv_vi_file_status',
+    'nv_vi_goto_file_alt',
     'nv_vi_ctrl_r',
     'nv_vi_ctrl_right_square_bracket',
     'nv_vi_ctrl_u',
     'nv_vi_window_control',
     'nv_vi_delete_word',
     'nv_vi_complete_line',
-    'nv_vi_ctrl_y',
+    'nv_vi_scroll_up',
     'nv_vi_delete_char',
     'nv_vi_delete_line',
     'nv_vi_dollar',
@@ -1773,8 +1773,7 @@ class nv_vi_go_to_file(TextCommand):
                 return
 
 
-class nv_vi_ctrl_hat(WindowCommand):
-
+class nv_vi_goto_file_alt(WindowCommand):
     def run(self, mode=None, count=None, register=None, **kwargs):
         open_alternate_file(self.window)
 
@@ -2109,13 +2108,12 @@ class nv_vi_ctrl_e(TextCommand):
         self.view.run_command('scroll_lines', {'amount': -count})
 
 
-class nv_vi_ctrl_g(WindowCommand):
-
+class nv_vi_file_status(WindowCommand):
     def run(self, **kwargs):
         do_ex_command(self.window, 'file')
 
 
-class nv_vi_ctrl_y(TextCommand):
+class nv_vi_scroll_up(TextCommand):
 
     def run(self, edit, mode=None, count=1):
         self.view.run_command('scroll_lines', {'amount': count})

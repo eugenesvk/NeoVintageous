@@ -691,7 +691,7 @@ class ViMoveCurrentWindowToVeryBottom(ViOperatorDef):
 class ViGotoAlternateFile(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_hat'
+        self.command          = 'nv_vi_goto_file_alt'
 
 
 @assign(seqs.CTRL_W_BIG_L, ACTION_MODES)
@@ -1016,7 +1016,7 @@ class ViRepeat(ViOperatorDef):
 @assign_text(['ScrollByLinesUp'], ACTION_MODES)
 class ViScrollByLinesUp(ViMotionDef):
     def init(self):
-        self.command = 'nv_vi_ctrl_y'
+        self.command = 'nv_vi_scroll_up'
 
 
 @assign(seqs.SEQ['⇧u'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
@@ -1186,7 +1186,7 @@ class ViEnterCommandLineMode(ViOperatorDef):
 class ViShowFileStatus(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.command = 'nv_vi_ctrl_g'
+        self.command          = 'nv_vi_file_status'
 
 
 @assign(seqs.SEQ['⇧z⇧z'], (NORMAL,))

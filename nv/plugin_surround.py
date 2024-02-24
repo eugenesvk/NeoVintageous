@@ -444,7 +444,7 @@ def _resolve_target_aliases(target: str) -> str:
 # ({[  wraps the text and appends space to the inside
 #    < is different, used for tags
 def _expand_replacements(target: str) -> tuple:
-    if (pad := CFG['function'].get(target[0],None)): # Function replacement
+    if (pad := CFG['function'].get(target[0],None)) is not None: # Function replacement
         return (target[1:].strip() + '('+pad, pad+')')
     if target.lower().startswith('<c-f>'):
         return ('(' + target[5:].strip() + ' ', ')')

@@ -1,11 +1,9 @@
 from collections import deque
-from string import ascii_lowercase
-from string import digits
+from string import ascii_lowercase, digits
 import itertools
 import traceback
 
-from sublime import get_clipboard
-from sublime import set_clipboard
+from sublime import get_clipboard, set_clipboard
 
 from NeoVintageous.nv.rc import cfgU
 

@@ -1036,7 +1036,7 @@ class ViScrollByLinesDown(ViMotionDef):
         self.command = 'nv_vi_ctrl_e'
 
 
-@assign(seqs.SEQ['at'], ACTION_MODES)
+@assign(seqs.SEQ['⇧2'], ACTION_MODES)
 @assign_text(['OpenMacrosForRepeating'], ACTION_MODES)
 class ViOpenMacrosForRepeating(RequireOneCharMixin, ViOperatorDef):
     def init(self):

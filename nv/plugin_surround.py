@@ -393,6 +393,7 @@ def reload_with_user_data_kdl() -> None:
                         ,          cfg_key,                               ', '.join(args))
         VALID_TARGETS += "".join(((val:=CFG['punctuationmarks'][k])[0]+val[1]) for k in CFG['punctuationmarks']) # add marks
         VALID_TARGETS += "".join(       CFG['punctuationalias'].keys()) # add aliases
+        VALID_TARGETS  = set(VALID_TARGETS) # leave unique values
     else: # reset config to defaults
         CFG = copy.deepcopy(DEF)
         VALID_TARGETS = copy.deepcopy(VALID_TARGETS_DEF)

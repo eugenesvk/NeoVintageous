@@ -286,7 +286,7 @@ def reload_with_user_data_kdl() -> None:
                         # _log.debug("node ‘%s’ has unrecognized tag in argument %s",node.name,arg)
                     if   val == 'clear':
                         CFG[cfg_key].clear()
-                        break
+                        break # only 'clear' is valid, ignore others
                     else:
                         # _log.error("node ‘%s’ has unparseable argument %s\n  expecting a ‘clear’, other values are set as properties or child nodes",node.name,arg)
                         continue

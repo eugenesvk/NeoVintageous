@@ -12,7 +12,8 @@ from NeoVintageous.nv.utils           import InputParser, translate_char
 from NeoVintageous.nv.vi              import seqs
 from NeoVintageous.nv.vi.cmd_base     import ViOperatorDef, translate_action
 from NeoVintageous.nv.vi.search       import reverse_search
-from NeoVintageous.nv.vi.text_objects import get_text_object_region
+from NeoVintageous.nv.vi              import text_objects
+from NeoVintageous.nv.vi.text_objects import get_text_object_region, TO
 from NeoVintageous.nv.modes           import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.vim             import enter_normal_mode, run_motion
 

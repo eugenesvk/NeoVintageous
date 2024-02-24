@@ -146,7 +146,7 @@ __all__ = [
     'nv_vi_percent','nv_vi_move_to_bracket_match','nv_vi_move_to_file_percent',
     'nv_vi_toggle_macro_record',
     'nv_vi_question_mark','nv_vi_question_mark_impl',
-    'nv_vi_r',
+    'nv_vi_replace_char',
     'nv_vi_repeat_buffer_search',
     'nv_vi_reverse_find_in_line',
     'nv_vi_s',
@@ -1396,19 +1396,19 @@ class nv_vi_x(TextCommand):
         enter_normal_mode(self.view, mode)
 
 
-class nv_vi_r(TextCommand):
+class nv_vi_replace_char(TextCommand):
 
     def run(self, edit, mode=None, count=1, register=None, char=None):
         def f(view, s):
             if mode == INTERNAL_NORMAL:
                 region = Region(s.a, s.b + count)
-                text = make_replacement_text(view, char, region)
+                text   = make_replacement_text(view, char, region)
                 view.replace(edit, region, text)
 
                 if char == '\n':
                     return Region(s.b + 1)
                 else:
-                    return Region(s.b)
+                    return Region(s.b    )
 
             elif mode in (VISUAL, VISUAL_LINE, VISUAL_BLOCK):
                 ends_in_newline = (view.substr(s.end() - 1) == '\n')
@@ -1423,7 +1423,7 @@ class nv_vi_r(TextCommand):
                 if char == '\n':
                     return Region(s.begin() + 1)
                 else:
-                    return Region(s.begin())
+                    return Region(s.begin()    )
 
         def make_replacement_text(view, char: str, r: Region) -> str:
             frags = split_by_newlines(view, r)

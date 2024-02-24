@@ -1885,13 +1885,10 @@ class ViGotoEof(ViMotionDef):
 class ViReplaceCharacters(RequireOneCharMixin, ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
-        self.updates_xpos = True
-        self.repeatable = True
-
+        self.updates_xpos     = True
+        self.repeatable       = True
     def translate(self, view):
-        return translate_action(view, 'nv_vi_r', {
-            'char': self.inp
-        })
+        return translate_action(view, 'nv_vi_replace_char',{'char':self.inp})
 
 
 @assign(seqs.SEQ['m'], ACTION_MODES)

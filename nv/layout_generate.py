@@ -210,11 +210,11 @@ class NvDefaultKeymapKdl(ApplicationCommand):
 
   def run(self, **kwargs):
     # Regular keybinds
-    from NeoVintageous.nv.vi.keys import mappings # [mode_normal][<C-x>]=<ViDecrement>
     from NeoVintageous.nv.vi.keys import map_cmd2textcmd
+    from NeoVintageous.nv.vi.keys import mappings as kbDef # [m][<C-x>]=<ViDecrement>
     map_key2cmd_modes = {} # {<C-w>:{'ViDelete':[mode_insert,mode_normal]}}
-    for     i, mode    in enumerate(mappings):  # generate map_key2cmd_modes
-      mode_d = mappings[mode] # [<C-x>]=<ViDecrement>
+    for     i, mode    in enumerate(kbDef):  # generate map_key2cmd_modes
+      mode_d = kbDef[mode] # [<C-x>]=<ViDecrement>
       for j, keybind in enumerate(mode_d): # <C-x>
         cmd = mode_d[keybind] # <ViDecrement>
         T = type(cmd) # <class 'NeoVintageous.nv.vi.cmd_defs.ViDecrement'>
@@ -243,11 +243,11 @@ class NvDefaultKeymapKdl(ApplicationCommand):
 
 
     # Plugins' keybinds
-    from NeoVintageous.nv.plugin import mappings # [mode_normal][<C-n>]=<MultipleCursorsStart>
     from NeoVintageous.nv.plugin import map_cmd2textcmd # '...MultipleCursorsStart' = ['MultipleCursorsStart']
+    from NeoVintageous.nv.plugin import mappings as kbPlug # [m][<C-n>]=<MultipleCursorsStart>
     map_key2cmd_modes = {} # {<C-n>:{'MultipleCursorsStart':[mode_normal,mode_visual]}}
-    for     i, mode    in enumerate(mappings):  # generate map_key2cmd_modes
-      mode_d = mappings[mode] # [<C-n>]=<MultipleCursorsStart>
+    for     i, mode    in enumerate(kbPlug):  # generate map_key2cmd_modes
+      mode_d = kbPlug[mode] # [<C-n>]=<MultipleCursorsStart>
       for j, keybind in enumerate(mode_d): # <C-n>
         cmd = mode_d[keybind] # <MultipleCursorsStart>
         T = type(cmd) # <class 'NeoVintageous.nv.plugin_multiple_cursors.MultipleCursorsStart'>

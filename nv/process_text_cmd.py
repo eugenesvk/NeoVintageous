@@ -41,8 +41,8 @@ class ProcessCmdTextHandler():
         count    = self.count
         cont     = self.cont
         initial_mode = get_mode(self.view)
-        _log.keyt('processing cmd txt ‘%s’ #%s act=‘%s’'
-            ,                   text_cmd,count,get_action(self.view))
+        _log.keyt('processing cmd txt ‘%s’ #%s act=‘%s’ seq‘%s’ seqP‘%s’'
+            ,                   text_cmd,count,get_action(self.view),get_sequence(self.view),get_partial_sequence(self.view))
 
         set_interactive(self.view, False) # Disable interactive prompts. For example, supress interactive input collecting for the command-line and search: :ls<CR> and /foo<CR>
         leading_motions = [] # run any motions coming before the first action. We don't keep these in the undo stack, but they will still be repeated via '.'. This ensures that undoing will leave the caret where the  first editing action started. For example, 'lldl' would skip 'll' in the undo history, but store the full sequence for '.' to use

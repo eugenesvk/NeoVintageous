@@ -51,7 +51,7 @@ class Surroundys(ViOperatorDef):
     def accept_input(self) -> bool:
         if not self.inp:
             return True
-        if self.inp[0] in ('f', 'F') or self.inp.lower().startswith('<c-f>'): # Function
+        if self.inp[0] in CFG['function'] or self.inp.lower().startswith('<c-f>'): # Function
             return self.inp[-1] != '\n'
         (_,target_to) = text_objects.CFG['pairs'].get(self.inp[0],(None,None))
         if target_to == TO.Tag or self.inp[0] == '<': # Tag
@@ -174,6 +174,10 @@ DEF = {
         'B': '}',
         'r': ']',
         'a': '>',
+    },
+    'function' : {
+        'f':  '',
+        'F': ' ',
     },
     'appendspacetochars' : '({[',
     'steadycursor' : dict(),
@@ -322,6 +326,23 @@ def reload_with_user_data_kdl() -> None:
                 # if not node.props:
                     # _log.warn(f"node ‘{cfg_key}’ is missing key=value properties")
 
+            if (cfg_key:=node_parent.name) == 'function':
+                for arg in node_parent.args:          # Parse arguments
+                    tag = arg.tag   if hasattr(arg,'tag'  ) else ''
+                    val = arg.value if hasattr(arg,'value') else arg
+                    if   val == 'clear':
+                        CFG[cfg_key].clear()
+                    else:
+                        if not len(val) == 1:
+                            _log.error("node ‘%s’ has an invalid argument %s\n  expected a single character, got length ‘%s’",node_parent.name,arg,len(val))
+                            continue
+                        if   tag.lower() in  ['␠','␣','s','sp','space']:
+                            CFG[cfg_key][val] = ' '
+                        elif tag:
+                            _log.warn("node ‘%s’ has an argument %s with an invalid tag %s\n  valid tags are ‘%s’",node_parent.name,arg,tag,'␠ ␣ s sp space')
+                        else:
+                            CFG[cfg_key][val] = ''
+
             if (cfg_key:=node_parent.name) == 'steadycursor':
                 _log.debug("@plugin surround: Parsing config ‘%s’",cfg_key)
                 for node in node_parent.nodes: # 1. add true  key_node value_arg pairs
@@ -423,11 +444,8 @@ def _resolve_target_aliases(target: str) -> str:
 # ({[  wraps the text and appends space to the inside
 #    < is different, used for tags
 def _expand_replacements(target: str) -> tuple:
-    # Function replacement
-    if target[0] == 'f':
-        return (target[1:].strip() + '(', ')')
-    if target[0] == 'F':
-        return (target[1:].strip() + '( ', ' )')
+    if (pad := CFG['function'].get(target[0],None)): # Function replacement
+        return (target[1:].strip() + '('+pad, pad+')')
     if target.lower().startswith('<c-f>'):
         return ('(' + target[5:].strip() + ' ', ')')
 

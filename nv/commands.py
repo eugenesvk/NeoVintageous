@@ -1434,8 +1434,8 @@ class nv_vi_replace_char(TextCommand):
             return '\n'.join(new_frags)
 
         char = translate_char(char)
-        regions_transformer(self.view, f)
-        enter_normal_mode(self.view, mode)
+        regions_transformer(self.view, f   )
+        enter_normal_mode  (self.view, mode)
 
 
 class nv_vi_less_than_less_than(TextCommand):

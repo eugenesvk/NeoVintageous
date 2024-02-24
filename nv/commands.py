@@ -2882,7 +2882,7 @@ class nv_vi_dollar(TextCommand):
         def f(view, s):
             target = _get_target(view, get_insertion_point_at_b(s), count)
 
-            if  mode == NORMAL:
+            if   mode == NORMAL:
                 resolve_normal_target(s, target if view.line(target).empty() else (target - 1))
             elif mode == INSERT:
                 resolve_normal_target(s, target if view.line(target).empty() else (target - 1))

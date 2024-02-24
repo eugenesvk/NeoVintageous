@@ -190,6 +190,13 @@ DEF = {
 }
 for key in (_STEADY_CURSOR_KEY := ['add','replace','delete']):
     DEF['steadycursor'][key] = True
+DEF['punctuationmarksopen'] = set()
+for _,mark_pair in DEF['punctuationmarks'    ].items(): # add opening brackets
+    pair_open = mark_pair[0]
+    (_,target_to) = text_objects.CFG['pairs'].get(pair_open,(None,None))
+    if target_to == TO.Bracket:
+        DEF           ['punctuationmarksopen'].add(pair_open)
+
 VALID_TARGETS_DEF  = 'ra@' # Delete targets
 VALID_TARGETS_DEF += '\'"`b()B{}[]<>t.,-_;:#~*\\/|+=&$' # targets for plugin github.com/wellle/targets.vim
 #IilpsWw plugin targets excluded
@@ -394,6 +401,12 @@ def reload_with_user_data_kdl() -> None:
         VALID_TARGETS += "".join(((val:=CFG['punctuationmarks'][k])[0]+val[1]) for k in CFG['punctuationmarks']) # add marks
         VALID_TARGETS += "".join(       CFG['punctuationalias'].keys()) # add aliases
         VALID_TARGETS  = set(VALID_TARGETS) # leave unique values
+        for _,mark_pair in CFG['punctuationmarks'    ].items(): # add opening brackets
+            pair_open = mark_pair[0]
+            (_,target_to) = text_objects.CFG['pairs'].get(pair_open,(None,None))
+            if target_to ==TO.Bracket:
+                CFG           ['punctuationmarksopen'].add(pair_open)
+
     else: # reset config to defaults
         CFG = copy.deepcopy(DEF)
         VALID_TARGETS = copy.deepcopy(VALID_TARGETS_DEF)
@@ -553,9 +566,7 @@ def _do_delete(view, edit, mode: str, target: str, count=None, register=None) ->
     if target not in VALID_TARGETS:
         return
 
-    # Trim contained whitespace for opening punctuation mark targets.
-    should_trim_contained_whitespace = True if target in '({[<' else False
-
+    should_trim_contained_whitespace = True if target in CFG['punctuationmarksopen'] else False # Trim contained whitespace for opening punctuation mark targets.
     # Targets.
     target_open, target_close = _expand_targets(target) # 'a' or '>' to a tuple of (< , >)
 

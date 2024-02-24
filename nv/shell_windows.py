@@ -82,7 +82,10 @@ def _get_startup_info():
 
 
 def _get_encoding() -> str:
-    return str(ctypes.windll.kernel32.GetOEMCP())
+    if ((enc := ctypes.windll.kernel32.GetOEMCP()) == 65001):
+        return 'UTF-8'
+    else:
+        return str(enc)
 
 
 # TODO Review Do newlines really need to converted on Windows?

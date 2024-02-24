@@ -276,6 +276,8 @@ plugin {
       j="{" k="\"" l="'"\
       r="‹" t="«" y="`'" o="〔" p="␌"\
       z="⸨" n="【" m="「" " "="〈" .="⟪"; /-punctuation_alias {clear; d "(";} //key val child node format also works
+    function "clear"/*clear defaults f F*/\
+      "a" (␠)"s" // tags  ␠ ␣ s sp space   add spaces between () and arguments
     "append space to chars" ")}]" // "({["
     steady_cursor add=true delete=true replace=true // don't 'move' ⎀cursor to the changed punctuation:
       // surround-word add of ‘(’ in  ‘text_⎀surr’  results in ‘(text_⎀surr)’

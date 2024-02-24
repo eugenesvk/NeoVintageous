@@ -6,18 +6,15 @@ import logging
 from sublime import Region
 from sublime_plugin import TextCommand
 
-from NeoVintageous.nv.plugin import register, register_text
-from NeoVintageous.nv.polyfill import view_find
-from NeoVintageous.nv.utils import InputParser
-from NeoVintageous.nv.utils import translate_char
-from NeoVintageous.nv.vi import seqs
-from NeoVintageous.nv.vi.cmd_base import ViOperatorDef
-from NeoVintageous.nv.vi.cmd_base import translate_action
-from NeoVintageous.nv.vi.search import reverse_search
+from NeoVintageous.nv.plugin          import register, register_text
+from NeoVintageous.nv.polyfill        import view_find
+from NeoVintageous.nv.utils           import InputParser, translate_char
+from NeoVintageous.nv.vi              import seqs
+from NeoVintageous.nv.vi.cmd_base     import ViOperatorDef, translate_action
+from NeoVintageous.nv.vi.search       import reverse_search
 from NeoVintageous.nv.vi.text_objects import get_text_object_region
-from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
-from NeoVintageous.nv.vim import enter_normal_mode
-from NeoVintageous.nv.vim import run_motion
+from NeoVintageous.nv.modes           import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
+from NeoVintageous.nv.vim             import enter_normal_mode, run_motion
 
 from NeoVintageous.nv.rc import cfgU
 

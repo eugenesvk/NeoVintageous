@@ -111,6 +111,7 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
       `{"keys":["alt+x"],"command":"delete_word","context":[{"key":"ⓘ"}]},` 
     + :sparkles: support for count to the screen top/bottom movement commands, e.g., can move to line 5 from the visible top
     + :sparkles: support for user config of the macros recording indicator, e.g., short visible `🔴w` instead of the long gray `recording @w`
+    + :sparkles: search command for an unbounded string under cursor matches <kbd>g</kbd><kbd>#</kbd>/<kbd>*</kbd> vim commands
 
 ## Settings
 

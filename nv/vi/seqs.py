@@ -198,6 +198,10 @@ SEQ['⇧z⇧z']	= ['ZZ']
 SEQ['⇧[']	= ['{']
 SEQ['⇧9']	= ['(']
 
+# g mode
+SEQ['g⇧3'] = ['g#']
+SEQ['g⇧8'] = ['g*']
+
 # Control chars
 TAB      	= ['⭾','↹','<tab>']                 	# TAB
 BACKSPACE	= ['␈','⌫','<bs>']                  	# BACKSPACE

@@ -1804,15 +1804,6 @@ class ViRepeatSearchBackward(ViMotionDef):
         }
 
 
-@assign(seqs.SEQ['*'], MOTION_MODES)
-@assign_text(['FindWord'], MOTION_MODES)
-class ViFindWord(ViMotionDef):
-    def init(self):
-        self.scroll_into_view = True
-        self.updates_xpos     = True
-        self.command          = 'nv_vi_find_word'
-
-
 @assign(seqs.SEQ['#'], MOTION_MODES)
 @assign_text(['ReverseFindWord'], MOTION_MODES)
 class ViReverseFindWord(ViMotionDef):
@@ -1820,6 +1811,29 @@ class ViReverseFindWord(ViMotionDef):
         self.scroll_into_view = True
         self.updates_xpos     = True
         self.command          = 'nv_vi_find_word_rev'
+@assign(seqs.SEQ['*'], MOTION_MODES)
+@assign_text(['FindWord'], MOTION_MODES)
+class ViFindWord(ViMotionDef):
+    def init(self):
+        self.scroll_into_view = True
+        self.updates_xpos     = True
+        self.command          = 'nv_vi_find_word'
+@assign(seqs.SEQ['g⇧3'], MOTION_MODES)
+@assign_text(['ReverseFindStr'], MOTION_MODES)
+class ViReverseFindStr(ViMotionDef):
+    def init(self):
+        self.scroll_into_view = True
+        self.updates_xpos     = True
+        self.command          = 'nv_vi_find_word_rev'
+        self.command_args     = {'word_bound':False}
+@assign(seqs.SEQ['g⇧8'], MOTION_MODES)
+@assign_text(['FindStr'], MOTION_MODES)
+class ViFindStr(ViMotionDef):
+    def init(self):
+        self.scroll_into_view = True
+        self.updates_xpos     = True
+        self.command          = 'nv_vi_find_word'
+        self.command_args     = {'word_bound':False}
 
 
 @assign(seqs.SEQ['⇧z'], MOTION_MODES)

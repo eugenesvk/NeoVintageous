@@ -145,12 +145,16 @@ def process_search_pattern(view, pattern: str) -> tuple:
 
 def process_word_search_pattern(view, pattern: str) -> tuple:
     flags = 0
-
     if get_option(view, 'ignorecase'):
         flags |= IGNORECASE
-
     pattern = r'\b{0}\b'.format(re.escape(pattern))
+    return pattern, flags
 
+def process_str_search_pattern(view, pattern: str) -> tuple:
+    flags = 0
+    if get_option(view, 'ignorecase'):
+        flags |= IGNORECASE
+    pattern = r'{0}'.format(re.escape(pattern))
     return pattern, flags
 
 

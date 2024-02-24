@@ -29,7 +29,7 @@ from NeoVintageous.nv.process_notation import ProcessNotationHandler
 from NeoVintageous.nv.process_text_cmd import ProcessCmdTextHandler
 from NeoVintageous.nv.rc               import open_rc, open_config_file_kdl, reload_rc
 from NeoVintageous.nv.registers        import registers_get_for_paste, registers_op_change, registers_op_delete, registers_op_yank, _reset
-from NeoVintageous.nv.search           import add_search_highlighting, clear_search_highlighting, find_search_occurrences, find_word_search_occurrences, get_search_occurrences, process_search_pattern, process_word_search_pattern
+from NeoVintageous.nv.search           import add_search_highlighting, clear_search_highlighting, find_search_occurrences, find_word_search_occurrences, get_search_occurrences, process_search_pattern, process_word_search_pattern, process_str_search_pattern
 from NeoVintageous.nv.settings         import get_glue_until_normal_mode, get_last_search_pattern, get_last_search_pattern_command, get_mode, get_normal_insert_count, get_repeat_data, get_sequence, get_partial_sequence, get_partial_text, get_partial_sequence, get_setting, get_xpos, is_processing_notation, set_glue_until_normal_mode, set_last_char_search, set_last_search_pattern, set_mode, set_normal_insert_count, set_repeat_data, set_reset_during_init, set_xpos, toggle_ctrl_keys, toggle_super_keys, get_config, get_capture_register, get_register, get_action_count,  get_motion_count
 from NeoVintageous.nv.state            import reset_command_data, update_status_line, get_action, get_motion
 from NeoVintageous.nv.ui               import ui_bell, ui_highlight_yank, ui_highlight_yank_clear
@@ -3151,7 +3151,7 @@ class nv_vi_move_screen_middle(TextCommand):
 
 
 class nv_vi_find_word(TextCommand):
-    def run(self, edit, mode=None, count=1, pattern=None, save=True):
+    def run(self, edit, mode=None, count=1, pattern=None, save=True, word_bound=True):
         def f(view, s):
             match = find_wrapping(view,
                 term  = pattern,
@@ -3182,9 +3182,12 @@ class nv_vi_find_word(TextCommand):
         if len(set([self.view.substr(self.view.word(sel.end())) for sel in self.view.sel()])) != 1:
             return
 
-        pattern, flags = process_word_search_pattern(self.view, word)
+        if word_bound:
+            pattern, flags = process_word_search_pattern(self.view, word)
+        else:
+            pattern, flags = process_str_search_pattern (self.view, word)
 
-        with jumplist_updater(self.view):
+        with jumplist_updater  (self.view):
             regions_transformer(self.view, f)
 
         add_search_highlighting(self.view, find_word_search_occurrences(self.view, pattern, flags))
@@ -3196,7 +3199,7 @@ class nv_vi_find_word(TextCommand):
 
 
 class nv_vi_find_word_rev(TextCommand):
-    def run(self, edit, mode=None, count=1, pattern=None, save=True):
+    def run(self, edit, mode=None, count=1, pattern=None, save=True, word_bound=True):
         def f(view, s):
             match = reverse_find_wrapping(view,
                 term  = pattern,
@@ -3228,9 +3231,12 @@ class nv_vi_find_word_rev(TextCommand):
         if len(set([self.view.substr(self.view.word(sel.end())) for sel in self.view.sel()])) != 1:
             return
 
-        pattern, flags = process_word_search_pattern(self.view, word)
+        if word_bound:
+            pattern, flags = process_word_search_pattern(self.view, word)
+        else:
+            pattern, flags = process_str_search_pattern (self.view, word)
 
-        with jumplist_updater(self.view):
+        with jumplist_updater  (self.view):
             regions_transformer(self.view, f)
 
         add_search_highlighting(self.view, find_word_search_occurrences(self.view, pattern, flags))

@@ -554,7 +554,8 @@ def _do_delete(view, edit, mode: str, target: str, count=None, register=None) ->
         return
     if len(target) != 1:
         return
-    if target in 'wWsp': # 'word WORD sentence paragraph' have nothing to delete, so noop
+    (_,target_to) = text_objects.CFG['pairs'].get(target,(None,None))
+    if target_to and target_to in [TO.Word,TO.BigWord,TO.Sentence,TO.Paragraph]: # nothing to delete, so noop
         return
     if target not in VALID_TARGETS:
         return

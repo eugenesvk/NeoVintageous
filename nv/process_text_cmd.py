@@ -75,14 +75,14 @@ class ProcessCmdTextHandler():
                 setReg = True
                 if not get_register(self.view) == '"': # don't clean reg/seq if register non-standard? #todo: test workaround for register cleared up when it shouldn't in nnoremap X dd
                     setReg = False
-                _log.keyt("    ~break, get_action exists mot‘%s’⋅#%s act‘%s’⋅#%s reg‘%s’%s, reset state, reg_%s m%s ⋅#%s seq‘%s’ seqP‘%s’",get_motion(self.view),get_motion_count(self.view), get_action(self.view),get_action_count(self.view), get_register(self.view),get_capture_register(self.view),setReg, get_mode(self.view), get_count(self.view),get_sequence(self.view),get_partial_sequence(self.view))
+                _log.keyt("    ~break, get_action exists mot‘%s’⋅#%s act‘%s’⋅#%s reg‘%s’%s, reset state seq‘’, reg_%s m%s ⋅#%s seq‘%s’ seqP‘%s’",get_motion(self.view),get_motion_count(self.view), get_action(self.view),get_action_count(self.view), get_register(self.view),get_capture_register(self.view),setReg, get_mode(self.view), get_count(self.view),get_sequence(self.view),get_partial_sequence(self.view))
                 reset_command_data(self.view,setReg=setReg,setACount=False)
                 if  get_mode(self.view) == OPERATOR_PENDING:
                     set_mode(self.view, NORMAL)
                 # break
             elif is_runnable(self.view): # Run any primed motion
                 leading_motions.append(get_sequence(self.view))
-                _log.keyt("    running primed motion ‘%s’",leading_motions)
+                _log.keyt("    running primed motion ‘%s’, reset state seq‘’",leading_motions)
                 evaluate_state    (self.view)
                 reset_command_data(self.view)
             else:
@@ -158,6 +158,7 @@ class ProcessCmdTextHandler():
         if (action and motion): # We have a parser an a motion that can collect data. Collect data interactively.
             motion_data = motion.translate(self.view) or None
             if motion_data is None:
+                _log.keyt("    running motion ‘%s’, reset state seq‘’",motion_data)
                 reset_command_data(self.view)
                 ui_bell()
                 return

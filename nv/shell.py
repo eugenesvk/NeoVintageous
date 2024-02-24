@@ -6,12 +6,12 @@ from sublime import Region
 
 from NeoVintageous.nv.polyfill import set_selection
 
-if sys.platform.startswith('win') and platform() == 'windows':
+if   sys.platform.startswith('win'   ) and platform() == 'windows':
     from NeoVintageous.nv import shell_windows as _shell
-elif sys.platform.startswith('linux') and platform() == 'linux':
-    from NeoVintageous.nv import shell_linux as _shell
-elif sys.platform.startswith('darwin') and platform() == 'osx':
-    from NeoVintageous.nv import shell_osx as _shell
+elif sys.platform.startswith('linux' ) and platform() == 'linux'  :
+    from NeoVintageous.nv import shell_linux   as _shell
+elif sys.platform.startswith('darwin') and platform() == 'osx'    :
+    from NeoVintageous.nv import shell_osx     as _shell
 else:
     raise ImportError('no os specific module found')
 

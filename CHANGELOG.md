@@ -28,6 +28,7 @@
    + `GotoTargetPrev`/`GotoTargetNext` commands to allow using the brackets as arguments instead of as names<br/>
      `(Ⓝ)gdd" "GotoTargetPrev" "‹"`<br/>
      `(Ⓝ)gdd" "GotoTargetPrevWhateverThatBracketIsNamed"`
+   + surround: option to customize function prefix (`f` `F`)
   - __Fixed__
    + :beetle: falsy user settings treated as missing instead of being saved as value false values
    + :beetle: `ViGotoSymbolInFile` using deprecated APIs to get symbol position

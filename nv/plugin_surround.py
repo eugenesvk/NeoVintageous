@@ -36,7 +36,7 @@ class nv_surround_command(TextCommand):
 
 
 @register(seqs.SEQ['ys'], (NORMAL,))
-@register_text(['Surroundys'], (NORMAL,))
+@register_text(['SurroundAdd','Surroundys'], (NORMAL,))
 class Surroundys(ViOperatorDef):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -95,7 +95,7 @@ class Surroundyss(Surroundys):
 
 
 @register(seqs.SEQ['⇧s'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK))
-@register_text(['SurroundAdd','SurroundS'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK), icon='')
+@register_text(['SurroundAddVis','SurroundS'], (VISUAL, VISUAL_LINE, VISUAL_BLOCK), icon='')
 class SurroundS(Surroundys):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

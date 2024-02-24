@@ -29,6 +29,7 @@
      `(Ⓝ)gdd" "GotoTargetPrev" "‹"`<br/>
      `(Ⓝ)gdd" "GotoTargetPrevWhateverThatBracketIsNamed"`
    + surround: option to customize function prefix (`f` `F`)
+   + support for count to the screen top/bottom movement commands, e.g., can move to line 5 from the visible top
   - __Fixed__
    + :beetle: falsy user settings treated as missing instead of being saved as value false values
    + :beetle: `ViGotoSymbolInFile` using deprecated APIs to get symbol position

@@ -68,7 +68,6 @@ __all__ = [
     'nv_vi_big_a',
     'nv_vi_big_c',
     'nv_vi_big_d',
-    'nv_vi_big_g',
     'nv_vi_big_h',
     'nv_vi_big_i',
     'nv_vi_big_j',
@@ -106,7 +105,7 @@ __all__ = [
     'nv_vi_g_big_h',
     'nv_vi_g_big_t',
     'nv_vi_ga',
-    'nv_vi_gg',
+    'nv_vi_goto_line_or_bof','nv_vi_goto_line_or_eof',
     'nv_vi_move_line_middle','nv_vi_move_visline_middle',
     'nv_vi_go_to_symbol',
     'nv_vi_goto_changelist',
@@ -2803,7 +2802,7 @@ class nv_vi_move_line_up(TextCommand):
         regions_transformer(self.view, f)
 
 
-class nv_vi_gg(TextCommand):
+class nv_vi_goto_line_or_bof(TextCommand):
     def run(self, edit, mode=None, count=None):
         if count:
             GotoView(self.view, mode, count).line()
@@ -2813,12 +2812,12 @@ class nv_vi_gg(TextCommand):
             return next_non_blank(view, 0)
 
         def f(view, s):
-            if  mode == NORMAL:
-                resolve_normal_target(s, t(view))
+            if   mode == NORMAL:
+                resolve_normal_target     (      s, t(view))
             elif mode == INSERT:
-                resolve_normal_target(s, t(view))
+                resolve_normal_target     (      s, t(view))
             elif mode == VISUAL:
-                resolve_visual_target(s, t(view))
+                resolve_visual_target     (      s, t(view))
             elif mode == VISUAL_LINE:
                 resolve_visual_line_target(view, s, 0)
             elif mode == INTERNAL_NORMAL:
@@ -2834,7 +2833,7 @@ class nv_vi_gg(TextCommand):
             regions_transformer(self.view, f)
 
 
-class nv_vi_big_g(TextCommand):
+class nv_vi_goto_line_or_eof(TextCommand):
     def run(self, edit, mode=None, count=None):
         if count:
             GotoView(self.view, mode, count).line()
@@ -2844,12 +2843,12 @@ class nv_vi_big_g(TextCommand):
             return get_linewise_non_blank_target(view, target)
 
         def f(view, s):
-            if  mode == NORMAL:
-                resolve_normal_target(s, t(view))
+            if   mode == NORMAL:
+                resolve_normal_target     (      s, t(view))
             elif mode == INSERT:
-                resolve_normal_target(s, t(view))
+                resolve_normal_target     (      s, t(view))
             elif mode == VISUAL:
-                resolve_visual_target(s, t(view))
+                resolve_visual_target     (      s, t(view))
             elif mode == VISUAL_LINE:
                 resolve_visual_line_target(view, s, target)
             elif mode == INTERNAL_NORMAL:

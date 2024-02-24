@@ -1863,12 +1863,10 @@ class ViClearRegister(RequireOneCharMixin, ViOperatorDef):
 class ViGotoBof(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
-        self.updates_xpos = True
+        self.updates_xpos     = True
 
     def translate(self, view):
-        return translate_motion(view, 'nv_vi_gg', {
-            'count': get_count(view, default=0)
-        })
+        return translate_motion(view,'nv_vi_goto_line_or_bof',{'count':get_count(view,default=0)})
 
 
 @assign(seqs.SEQ['⇧g'], MOTION_MODES)
@@ -1876,12 +1874,10 @@ class ViGotoBof(ViMotionDef):
 class ViGotoEof(ViMotionDef):
     def init(self):
         self.scroll_into_view = True
-        self.updates_xpos = True
+        self.updates_xpos     = True
 
     def translate(self, view):
-        return translate_motion(view, 'nv_vi_big_g', {
-            'count': get_count(view, default=0)
-        })
+        return translate_motion(view, 'nv_vi_goto_line_or_eof',{'count':get_count(view,default=0)})
 
 
 @assign(seqs.SEQ['r'], ACTION_MODES)

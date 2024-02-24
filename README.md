@@ -109,6 +109,7 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
     + enabled a bunch of command to work in Insert mode (this limitation should be part of keybindings, not command functions)
     + :sparkles: use `Ⓝ` `ⓘ` icons as mode limits on Sublime Text native keybinds (defined in `.sublime-keymap` files), e.g., to delete a word with <kbd>Alt</kbd><kbd>X</kbd>, but only in Insert mode:<br/>
       `{"keys":["alt+x"],"command":"delete_word","context":[{"key":"ⓘ"}]},` 
+    + :sparkles: support for count to the screen top/bottom movement commands, e.g., can move to line 5 from the visible top
 
 ## Settings
 

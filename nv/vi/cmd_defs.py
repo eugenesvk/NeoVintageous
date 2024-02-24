@@ -1316,9 +1316,18 @@ class ViMoveByBigWordEnds(ViMotionDef):
 @assign_text(['GotoScreenTop'], MOTION_MODES)
 class ViGotoScreenTop(ViMotionDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.command = 'nv_vi_big_h'
+    def translate(self, view):
+        return translate_motion(view, 'nv_vi_goto_screen_top',{'count':get_count(view,default=0)})
+@assign(seqs.SEQ['⇧l'], MOTION_MODES)
+@assign_text(['GotoScreenBottom'], MOTION_MODES)
+class ViGotoScreenBottom(ViMotionDef):
+    def init(self):
+        self.updates_xpos     = True
+        self.scroll_into_view = True
+    def translate(self, view):
+        return translate_motion(view, 'nv_vi_goto_screen_bottom',{'count':get_count(view,default=0)})
 
 
 @assign(seqs.G_SEMICOLON, MOTION_MODES)
@@ -1340,15 +1349,6 @@ class ViGotoNewerChange(ViMotionDef):
         self.updates_xpos = True
         self.scroll_into_view = True
         self.command = 'nv_vi_goto_changelist'
-
-
-@assign(seqs.SEQ['⇧l'], MOTION_MODES)
-@assign_text(['GotoScreenBottom'], MOTION_MODES)
-class ViGotoScreenBottom(ViMotionDef):
-    def init(self):
-        self.updates_xpos = True
-        self.scroll_into_view = True
-        self.command = 'nv_vi_big_l'
 
 
 @assign(seqs.SEQ['⇧m'], MOTION_MODES)

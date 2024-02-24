@@ -68,10 +68,9 @@ __all__ = [
     'nv_vi_big_a',
     'nv_vi_big_c',
     'nv_vi_big_d',
-    'nv_vi_big_h',
+    'nv_vi_goto_screen_top','nv_vi_goto_screen_bottom',
     'nv_vi_big_i',
     'nv_vi_big_j',
-    'nv_vi_big_l',
     'nv_vi_move_screen_middle',
     'nv_vi_big_o',
     'nv_vi_big_s',
@@ -3089,44 +3088,44 @@ class nv_vi_move_to_bracket_match(TextCommand):
         regions_transformer(self.view, f)
 
 
-class nv_vi_big_h(TextCommand):
-    def run(self, edit, mode=None, count=None):
+class nv_vi_goto_screen_top(TextCommand):
+    def run(self, edit, mode=None, count=0):
         def f(view, s):
             if   mode == NORMAL:
-                resolve_normal_target(s, target)
+                resolve_normal_target         (      s, target)
             elif mode == INSERT:
-                resolve_normal_target(s, target)
+                resolve_normal_target         (      s, target)
             elif mode == VISUAL:
-                resolve_visual_target(s, target)
+                resolve_visual_target         (      s, target)
             elif mode == VISUAL_LINE:
-                resolve_visual_line_target(view, s, target)
+                resolve_visual_line_target    (view, s, target)
             elif mode == INTERNAL_NORMAL:
                 resolve_internal_normal_target(view, s, target, linewise=True)
 
             return s
 
-        target = next_non_blank(self.view, highest_visible_pt(self.view))
-        regions_transformer(self.view, f)
+        target = next_non_blank(self.view, highest_visible_pt(self.view,count=count))
+        regions_transformer    (self.view, f)
 
 
-class nv_vi_big_l(TextCommand):
-    def run(self, edit, mode=None, count=None):
+class nv_vi_goto_screen_bottom(TextCommand):
+    def run(self, edit, mode=None, count=0):
         def f(view, s):
             if   mode == NORMAL:
-                resolve_normal_target(s, target)
+                resolve_normal_target         (      s, target)
             elif mode == INSERT:
-                resolve_normal_target(s, target)
+                resolve_normal_target         (      s, target)
             elif mode == VISUAL:
-                resolve_visual_target(s, target)
+                resolve_visual_target         (      s, target)
             elif mode == VISUAL_LINE:
-                resolve_visual_line_target(view, s, target)
+                resolve_visual_line_target    (view, s, target)
             elif mode == INTERNAL_NORMAL:
                 resolve_internal_normal_target(view, s, target, linewise=True)
 
             return s
 
-        target = next_non_blank(self.view, lowest_visible_pt(self.view))
-        regions_transformer(self.view, f)
+        target = next_non_blank(self.view, lowest_visible_pt(self.view,count=count))
+        regions_transformer    (self.view, f)
 
 
 class nv_vi_move_screen_middle(TextCommand):

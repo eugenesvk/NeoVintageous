@@ -505,28 +505,23 @@ def fix_eol_cursor(view, mode: str) -> None:
         regions_transformer(view, f)
 
 
-def highlow_visible_rows(view) -> tuple:
-    visible_region = view.visible_region()
-    highest_visible_row = view.rowcol(visible_region.a)[0]
-    lowest_visible_row = view.rowcol(visible_region.b - 1)[0]
+def highlow_visible_rows(view,count=0) -> tuple:
+    visible_region      = view.visible_region()
+    highest_visible_row = view.rowcol(visible_region.a    )[0] + count
+    lowest_visible_row  = view.rowcol(visible_region.b - 1)[0] - count
 
-    # To avoid scrolling when we move to the highest visible row, we need to
-    # check if the row is fully visible or only partially visible. If the row is
-    # only partially visible we will move to next one.
+    # To avoid scrolling when we move to the highest visible row, we need to check if the row is fully visible or only partially visible. If the row is only partially visible we will move to next one.
+    line_height     = view.line_height      ()
+    view_position   = view.viewport_position()
+    viewport_extent = view.viewport_extent  ()
 
-    line_height = view.line_height()
-    view_position = view.viewport_position()
-    viewport_extent = view.viewport_extent()
-
-    # The extent y position needs an additional "1.0" to its height. It's not
-    # clear why Sublime needs to add it, but it always adds it.
-
+    # The extent y position needs an additional "1.0" to its height. It's not clear why Sublime needs to add it, but it always adds it.
     highest_position = (highest_visible_row * line_height) + 1.0
-    if highest_position < view_position[1]:
+    if  highest_position < view_position[1]:
         highest_visible_row += 1
 
     lowest_position = ((lowest_visible_row + 1) * line_height) + 1.0
-    if lowest_position > (view_position[1] + viewport_extent[1]):
+    if  lowest_position > (view_position[1] + viewport_extent[1]):
         lowest_visible_row -= 1
 
     context_lines = get_option(view, 'scrolloff')
@@ -534,12 +529,10 @@ def highlow_visible_rows(view) -> tuple:
     return (highest_visible_row + context_lines, lowest_visible_row - context_lines)
 
 
-def highest_visible_pt(view) -> int:
-    return view.text_point(highlow_visible_rows(view)[0], 0)
-
-
-def lowest_visible_pt(view) -> int:
-    return view.text_point(highlow_visible_rows(view)[1], 0)
+def highest_visible_pt(view, count=0) -> int:
+    return view.text_point(highlow_visible_rows(view,count)[0], 0)
+def lowest_visible_pt (view, count=0) -> int:
+    return view.text_point(highlow_visible_rows(view,count)[1], 0)
 
 
 # Note: the edit object is required for this to work properly

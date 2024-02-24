@@ -41,29 +41,23 @@ class Surroundys(ViOperatorDef):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.scroll_into_view = True
-        self.updates_xpos = True
-        self.repeatable = True
-        self.motion_required = True
-        self.input_parser = InputParser(InputParser.AFTER_MOTION)
+        self.updates_xpos     = True
+        self.repeatable       = True
+        self.motion_required  = True
+        self.input_parser     = InputParser(InputParser.AFTER_MOTION)
 
     @property
     def accept_input(self) -> bool:
         if not self.inp:
             return True
-
-        # Function
-        if self.inp[0] in ('f', 'F') or self.inp.lower().startswith('<c-f>'):
+        if self.inp[0] in ('f', 'F') or self.inp.lower().startswith('<c-f>'): # Function
             return self.inp[-1] != '\n'
-
-        # Tag
-        if self.inp[0] in ('t', '<'):
+        if self.inp[0] in ('t', '<'): # Tag
             return _should_tag_accept_input(self.inp)
-
         return False
 
     def accept(self, key: str) -> bool:
         self.inp += translate_char(key)
-
         return True
 
     def translate(self, view):
@@ -535,13 +529,11 @@ def _do_replace(view, edit, mode: str, target: str, replacement: str, count=None
                     else:
                         replacement_a = replacement_open[:-1] + match.group(2) + '>'
 
-            # It's important that the regions are replaced in reverse because
-            # otherwise the buffer size would be reduced by the number of
-            # characters replaced and would result in an off-by-n bugs.
-            view.replace(edit, region_end, replacement_close)
-            view.replace(edit, region_begin, replacement_a)
+            # It's important that the regions are replaced in reverse because otherwise the buffer size would be reduced by the number of characters replaced and would result in an off-by-n bugs.
+            view.replace(edit, region_end  , replacement_close)
+            view.replace(edit, region_begin, replacement_a    )
             repl_count_end = len(replacement_close) - region_end.size()
-            repl_count_beg = len(replacement_a)     - region_begin.size()
+            repl_count_beg = len(replacement_a    ) - region_begin.size()
 
             return (Region(region_begin.begin()), (repl_count_beg,repl_count_end))
 
@@ -567,30 +559,27 @@ def _do_delete(view, edit, mode: str, target: str, count=None, register=None) ->
         return
 
     should_trim_contained_whitespace = True if target in CFG['punctuationmarksopen'] else False # Trim contained whitespace for opening punctuation mark targets.
-    # Targets.
-    target_open, target_close = _expand_targets(target) # 'a' or '>' to a tuple of (< , >)
+    target_open, target_close = _expand_targets(target) # Targets 'a' or '>' to a tuple of (< , >)
 
     def _f(view, s):
         if mode == INTERNAL_NORMAL:
             if target == 't': # a pair of HTML or XML tags
                 # TODO test dst works when cursor position is inside tag begin <a|bc>x -> dst -> |x
                 # TODO test dst works when cursor position is inside tag end   <abc>x</a|bc> -> dst -> |x
-                region_end = view.find('<\\/.*?>', s.b)
+                region_end   = view.find     (   '<\\/.*?>',              s.b)
                 region_begin = reverse_search(view, '<.*?>', start=0, end=s.b)
             else:
                 region_begin, region_end = _get_regions_for_target(view, s, target_open)
-                if should_trim_contained_whitespace and (region_begin and region_end):
-                    region_begin, region_end = _trim_regions(view, region_begin, region_end)
+                if should_trim_contained_whitespace and           (region_begin and region_end):
+                    region_begin, region_end = _trim_regions(view, region_begin,    region_end)
 
             if not (region_begin and region_end):
                 return (s, (0,0))
 
-            # It's important that the regions are replaced in reverse because
-            # otherwise the buffer size would be reduced by the number of
-            # characters replaced and would result in an off-by-one bug.
-            view.replace(edit, region_end, '')
-            view.replace(edit, region_begin, '')
-            del_count_end = -1 * region_end.size()
+            # It's important that the regions are replaced in reverse because otherwise the buffer size would be reduced by the number of characters replaced and would result in an off-by-one bug.
+            view.replace(edit,   region_end  , '')
+            view.replace(edit,   region_begin, '')
+            del_count_end = -1 * region_end  .size()
             del_count_beg = -1 * region_begin.size()
 
             return (Region(region_begin.begin()), (del_count_beg,del_count_end))

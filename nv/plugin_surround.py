@@ -621,7 +621,7 @@ def _get_regions_for_target(view, s: Region, target: str) -> tuple:
         return (None, None)
 
     begin = Region(text_object.begin(), text_object.begin() + 1)
-    end = Region(text_object.end(), text_object.end() - 1)
+    end   = Region(text_object.end  (), text_object.end  () - 1)
 
     return (begin, end)
 

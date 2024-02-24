@@ -52,7 +52,8 @@ class Surroundys(ViOperatorDef):
             return True
         if self.inp[0] in ('f', 'F') or self.inp.lower().startswith('<c-f>'): # Function
             return self.inp[-1] != '\n'
-        if self.inp[0] in ('t', '<'): # Tag
+        (_,target_to) = text_objects.CFG['pairs'].get(self.inp[0],(None,None))
+        if target_to == TO.Tag or self.inp[0] == '<': # Tag
             return _should_tag_accept_input(self.inp)
         return False
 
@@ -138,13 +139,11 @@ class Surroundcs(ViOperatorDef):
     def accept_input(self) -> bool:
         if not self.inp:
             return True
-
-        # Requires at least two characters, a target and a replacement.
-        if len(self.inp) < 2:
+        if len(self.inp) < 2: # Requires at least two characters, a target and a replacement.
             return True
 
-        # Tag
-        if self.inp[1] in ('t', '<'):
+        (_,target_to) = text_objects.CFG['pairs'].get(self.inp[1],(None,None))
+        if target_to == TO.Tag or self.inp[1] == '<': # Tag
             return _should_tag_accept_input(self.inp[1:])
 
         return False
@@ -432,7 +431,8 @@ def _expand_replacements(target: str) -> tuple:
         return ('(' + target[5:].strip() + ' ', ')')
 
     # Tag replacement
-    if target[0] in ('t', '<') and len(target) >= 3:
+    (_,target_to) = text_objects.CFG['pairs'].get(target[0],(None,None))
+    if target_to == TO.Tag or target[0] == '<' and len(target) >= 3:
         append = prefix = ''
 
         if target.lower().startswith('<c-t>'):
@@ -490,8 +490,9 @@ def _do_replace(view, edit, mode: str, target: str, replacement: str, count=None
     if len(target) != 1:
         return
     if len(replacement) >= 3: # Replacements must be 1 character long or at least 3 characters for tags
-        if replacement[ 0] not in ('t', '<') or\
-           replacement[-1] not in ('>', '\n'):
+        (_,target_to) = text_objects.CFG['pairs'].get(replacement[0],(None,None))
+        if (not replacement[ 0] ==  '<' and not target_to == TO.Tag) or \
+            not replacement[-1] in ('>','\n'):
             return
     elif len(replacement) != 1:
         return
@@ -504,7 +505,8 @@ def _do_replace(view, edit, mode: str, target: str, replacement: str, count=None
 
     def _f(view, s):
         if mode == INTERNAL_NORMAL:
-            if target == 't':
+            (_,target_to) = text_objects.CFG['pairs'].get(target,(None,None))
+            if target_to == TO.Tag:
                 target_tag_open, target_tag_close = ('<[^>]+>', '<\\/[^>]+>')
                 region_begin = None
                 region_end = view.find(target_tag_close, s.b)
@@ -518,10 +520,8 @@ def _do_replace(view, edit, mode: str, target: str, replacement: str, count=None
 
             replacement_a = replacement_open
 
-            # You may specify attributes here and they will be stripped from the
-            # closing tag. If replacing a tag, its attributes are kept in the
-            # new tag. End your input with > to discard the those attributes.
-            if target == 't' and replacement[-1] == '\n':
+            # You may specify attributes here and they will be stripped from the closing tag. If replacing a tag, its attributes are kept in the new tag. End your input with > to discard the those attributes.
+            if target_to == TO.Tag and replacement[-1] == '\n':
                 match = re.match('<([^ >]+)(.*)>', view.substr(region_begin))
                 if match:
                     if replacement_open[-1] == '\n':
@@ -563,7 +563,7 @@ def _do_delete(view, edit, mode: str, target: str, count=None, register=None) ->
 
     def _f(view, s):
         if mode == INTERNAL_NORMAL:
-            if target == 't': # a pair of HTML or XML tags
+            if target_to == TO.Tag: # a pair of HTML or XML tags
                 # TODO test dst works when cursor position is inside tag begin <a|bc>x -> dst -> |x
                 # TODO test dst works when cursor position is inside tag end   <abc>x</a|bc> -> dst -> |x
                 region_end   = view.find     (   '<\\/.*?>',              s.b)

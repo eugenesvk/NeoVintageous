@@ -21,8 +21,8 @@ def is_recording() -> bool:
 
 
 def start_recording(name: str) -> None:
-    _data['recording'] = True
-    _data['recording_steps'] = []
+    _data['recording'         ] = True
+    _data['recording_steps'   ] = []
     _data['recording_register'] = name
 
     set_status('vim-recording', 'recording @%s' % name)
@@ -43,8 +43,8 @@ def stop_recording() -> None:
 
         maybe_do_runtime_save_session()
 
-    _data['recording'] = False
-    _data['recording_steps'] = []
+    _data['recording'         ] = False
+    _data['recording_steps'   ] = []
     _data['recording_register'] = None
 
     erase_status('vim-recording')

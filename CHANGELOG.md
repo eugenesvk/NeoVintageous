@@ -30,6 +30,7 @@
      `(Ⓝ)gdd" "GotoTargetPrevWhateverThatBracketIsNamed"`
    + surround: option to customize function prefix (`f` `F`)
    + support for count to the screen top/bottom movement commands, e.g., can move to line 5 from the visible top
+   + support for user config of the macros recording indicator, e.g., short visible `🔴w` instead of the long gray `recording @w`
   - __Fixed__
    + :beetle: falsy user settings treated as missing instead of being saved as value false values
    + :beetle: `ViGotoSymbolInFile` using deprecated APIs to get symbol position

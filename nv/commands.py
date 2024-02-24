@@ -100,7 +100,7 @@ __all__ = [
     'nv_vi_equal_equal',
     'nv_vi_find_in_line',
     'nv_vi_go_to_file',
-    'nv_vi_g__',
+    'nv_vi_move_to_soft_eol',
     'nv_vi_g_big_h',
     'nv_vi_g_big_t',
     'nv_vi_ga',
@@ -3415,16 +3415,16 @@ class nv_vi_move_screen_line_up(TextCommand):
                 self.view.run_command('move',{'by':'lines','forward':False,'extend':True })
 
 
-class nv_vi_g__(TextCommand):
+class nv_vi_move_to_soft_eol(TextCommand):
     def run(self, edit, mode=None, count=1):
         def _get_target(view, start, count):
             current_row = view.rowcol(start)[0]
-            last_row = view.rowcol(view.size() - 1)[0]
-            target_row = current_row + (count - 1)
-            if target_row > last_row:
+            last_row    = view.rowcol(view.size() - 1)[0]
+            target_row  = current_row + (count - 1)
+            if  target_row > last_row:
                 target_row = last_row
 
-            line = view.line(view.text_point(target_row, 0))
+            line   = view.line(view.text_point(target_row, 0))
             target = prev_non_blank(view, line.b - 1) if line.size() else line.b
 
             return target

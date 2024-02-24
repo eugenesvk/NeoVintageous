@@ -1460,9 +1460,9 @@ class ViMoveBackOneLine(ViMotionDef):
 @assign_text(['MoveToSoftEol'], MOTION_MODES)
 class ViMoveToSoftEol(ViMotionDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.command = 'nv_vi_g__'
+        self.command          = 'nv_vi_move_to_soft_eol'
 
 
 @assign(seqs.G_DOWN, MOTION_MODES)

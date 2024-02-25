@@ -2130,18 +2130,13 @@ class nv_vi_toggle_macro_record(TextCommand):
 
 
 class nv_vi_repeat_macro(TextCommand):
-
     def run(self, edit, name, mode=None, count=1, register=None):
         if name == '@':
-            name = macros.get_last_used_register_name()
-            if not name:
+            if not (name := macros.get_last_used_register_name()):
                 return ui_bell('E748: No previously used register')
-
-        if not macros.is_readable(name):
-            return ui_bell("E354: Invalid register name: '" + name + "'")
-
-        cmds = macros.get_recorded(name)
-        if not cmds:
+        if     not          macros.is_readable (name):
+            return     ui_bell("E354: Invalid register name: '" + name + "'")
+        if     not (cmds := macros.get_recorded(name)):
             return
 
         macros.set_last_used_register_name(name)
@@ -2151,8 +2146,7 @@ class nv_vi_repeat_macro(TextCommand):
                 if 'xpos' in args:
                     update_xpos(self.view)
                     args['xpos'] = get_xpos(self.view)
-                elif args.get('motion'):
-                    motion = args.get('motion')
+                elif (motion := args.get('motion')):
                     if motion and 'motion_args' in motion and 'xpos' in motion['motion_args']:
                         update_xpos(self.view)
                         motion = args.get('motion')

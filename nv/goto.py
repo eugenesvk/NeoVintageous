@@ -416,6 +416,8 @@ class GotoView():
 def jump_to_mark(view, mode: str, mark: str, to_non_blank: bool = False) -> None:
     if int(version()) >= 4082 and mark in marks.CFG['back']:
         view.run_command('jump_back')
+        if to_non_blank:
+            view.run_command('nv_vi_move_to_bol',{'mode':mode})
         return
 
     if to_non_blank:

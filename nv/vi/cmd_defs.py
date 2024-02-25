@@ -104,37 +104,57 @@ class ViYankSelectByChars(ViOperatorDef):
         self.command = 'nv_vi_copy_char'
 
 
-@assign(seqs.SEQ['='], ACTION_MODES)
-@assign_text(['Reindent'], ACTION_MODES)
-class ViReindent(ViOperatorDef):
-    def init(self):
-        self.updates_xpos = True
-        self.scroll_into_view = True
-        self.motion_required = True
-        self.repeatable = True
-        self.command = 'nv_vi_equal'
-
-
-@assign(seqs.GREATER_THAN, ACTION_MODES)
-@assign_text(['Indent'], ACTION_MODES, icon='⇛')
-class ViIndent(ViOperatorDef):
-    def init(self):
-        self.updates_xpos = True
-        self.scroll_into_view = True
-        self.motion_required = True
-        self.repeatable = True
-        self.command = 'nv_vi_greater_than'
-
-
 @assign(seqs.LESS_THAN, ACTION_MODES)
 @assign_text(['Unindent'], ACTION_MODES, icon='⇚')
 class ViUnindent(ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.motion_required = True
-        self.repeatable = True
-        self.command = 'nv_vi_less_than'
+        self.motion_required  = True
+        self.repeatable       = True
+        self.command          = 'nv_vi_unindent'
+@assign(seqs.GREATER_THAN, ACTION_MODES)
+@assign_text(['Indent'], ACTION_MODES, icon='⇛')
+class ViIndent(ViOperatorDef):
+    def init(self):
+        self.updates_xpos     = True
+        self.scroll_into_view = True
+        self.motion_required  = True
+        self.repeatable       = True
+        self.command          = 'nv_vi_indent'
+@assign(seqs.SEQ['='], ACTION_MODES)
+@assign_text(['Reindent'], ACTION_MODES)
+class ViReindent(ViOperatorDef):
+    def init(self):
+        self.updates_xpos     = True
+        self.scroll_into_view = True
+        self.motion_required  = True
+        self.repeatable       = True
+        self.command          = 'nv_vi_reindent'
+@assign(seqs.LESS_THAN_LESS_THAN, ACTION_MODES)
+@assign_text(['UnindentLine'], ACTION_MODES)
+class ViUnindentLine(ViOperatorDef):
+    def init(self):
+        self.updates_xpos     = True
+        self.scroll_into_view = True
+        self.repeatable       = True
+        self.command          = 'nv_vi_unindent_line'
+@assign(seqs.GREATER_THAN_GREATER_THAN, ACTION_MODES)
+@assign_text(['IndentLine'], ACTION_MODES)
+class ViIndentLine(ViOperatorDef):
+    def init(self):
+        self.updates_xpos     = True
+        self.scroll_into_view = True
+        self.repeatable       = True
+        self.command          = 'nv_vi_indent_line'
+@assign(seqs.EQUAL_EQUAL, ACTION_MODES)
+@assign_text(['ReindentLine'], ACTION_MODES)
+class ViReindentLine(ViOperatorDef):
+    def init(self):
+        self.updates_xpos     = True
+        self.scroll_into_view = True
+        self.repeatable       = True
+        self.command          = 'nv_vi_reindent_line'
 
 
 @assign(seqs.SEQ['c'], ACTION_MODES)
@@ -252,16 +272,6 @@ class ViEnterReplaceMode(ViOperatorDef):
         self.command = 'nv_enter_replace_mode'
 
 
-@assign(seqs.GREATER_THAN_GREATER_THAN, ACTION_MODES)
-@assign_text(['IndentLine'], ACTION_MODES)
-class ViIndentLine(ViOperatorDef):
-    def init(self):
-        self.updates_xpos = True
-        self.scroll_into_view = True
-        self.repeatable = True
-        self.command = 'nv_vi_greater_than_greater_than'
-
-
 @assign(seqs.GUGU, ACTION_MODES)
 @assign(seqs.GUU, ACTION_MODES)
 @assign_text(['CaseLowerLine'], ACTION_MODES, icon="𝔸𝕒━")
@@ -282,26 +292,6 @@ class ViChangeToLowerCaseByChars(ViOperatorDef):
         self.motion_required  = True
         self.repeatable       = True
         self.command          = 'nv_vi_case_lower_char'
-
-
-@assign(seqs.EQUAL_EQUAL, ACTION_MODES)
-@assign_text(['ReindentLine'], ACTION_MODES)
-class ViReindentLine(ViOperatorDef):
-    def init(self):
-        self.updates_xpos = True
-        self.scroll_into_view = True
-        self.repeatable = True
-        self.command = 'nv_vi_equal_equal'
-
-
-@assign(seqs.LESS_THAN_LESS_THAN, ACTION_MODES)
-@assign_text(['UnindentLine'], ACTION_MODES)
-class ViUnindentLine(ViOperatorDef):
-    def init(self):
-        self.updates_xpos = True
-        self.scroll_into_view = True
-        self.repeatable = True
-        self.command = 'nv_vi_less_than_less_than'
 
 
 @assign(seqs.SEQ['yy'], ACTION_MODES)

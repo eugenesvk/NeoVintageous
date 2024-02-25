@@ -96,8 +96,6 @@ __all__ = [
     'nv_vi_dollar',
     'nv_vi_dot',
     'nv_vi_enter',
-    'nv_vi_equal',
-    'nv_vi_equal_equal',
     'nv_vi_find_in_line',
     'nv_vi_go_to_file',
     'nv_vi_move_to_soft_eol',
@@ -109,8 +107,6 @@ __all__ = [
     'nv_vi_go_to_symbol',
     'nv_vi_goto_changelist',
     'nv_vi_gq',
-    'nv_vi_greater_than',
-    'nv_vi_greater_than_greater_than',
     'nv_vi_gt',
     'nv_vi_case_lower_char' ,'nv_vi_case_lower_char_vis' ,'nv_vi_case_lower_line',
     'nv_vi_case_invert_char','nv_vi_case_invert_char_vis','nv_vi_case_invert_line',
@@ -132,11 +128,12 @@ __all__ = [
     'nv_scroll_half_screen_left' ,'nv_scroll_half_screen_right' ,
     'nv_vi_move_to_bol','nv_vi_move_to_soft_bol','nv_vi_move_to_hard_bol',
     'nv_vi_jump_back','nv_vi_jump_forward',
+    'nv_vi_unindent'             ,'nv_vi_indent'               ,'nv_vi_reindent',
+    'nv_vi_unindent_line'        ,'nv_vi_indent_line'          ,'nv_vi_reindent_line',
     'nv_add_spell_word','nv_remove_spell_word','nv_select_spell_word',
     'nv_fold','nv_unfold','nv_fold_all','nv_unfold_all',
     'nv_vi_left_square_bracket','nv_vi_right_square_bracket',
     'nv_target_prev','nv_target_next',
-    'nv_vi_less_than','nv_vi_less_than_less_than',
     'nv_vi_clear_registers','nv_vi_clear_register',
     'nv_vi_m',
     'nv_vi_modify_numbers',
@@ -1437,96 +1434,67 @@ class nv_vi_replace_char(TextCommand):
         enter_normal_mode  (self.view, mode)
 
 
-class nv_vi_less_than_less_than(TextCommand):
-
-    def run(self, edit, mode=None, count=1, register=None):
-        regions_transform_extend_to_line_count(self.view, count)
-        self.view.run_command('unindent')
+class nv_vi_unindent     (TextCommand):
+    def run(self, edit, mode=None, count=1, register=None, motion=None):
+        if motion:
+            run_motion(self.view, motion)
+        elif mode not in (VISUAL, VISUAL_LINE, VISUAL_BLOCK):
+            return ui_bell()
+        for i in range(count):
+            self.view.run_command('unindent')
+        if mode == VISUAL_BLOCK:
+            resolve_visual_block_begin      (self.view)
         regions_transform_to_first_non_blank(self.view)
-        enter_normal_mode(self.view, mode)
-
-
-class nv_vi_equal_equal(TextCommand):
-
-    def run(self, edit, mode=None, count=1, register=None):
-        regions_transform_extend_to_line_count(self.view, count)
-        self.view.run_command('reindent', {'force_indent': False})
-        regions_transform_to_first_non_blank(self.view)
-        enter_normal_mode(self.view, mode)
-
-
-class nv_vi_greater_than_greater_than(TextCommand):
-
-    def run(self, edit, mode=None, count=1, register=None):
-        regions_transform_extend_to_line_count(self.view, count)
-        self.view.run_command('indent')
-        regions_transform_to_first_non_blank(self.view)
-        enter_normal_mode(self.view, mode)
-
-
-class nv_vi_greater_than(TextCommand):
-
+        enter_normal_mode                   (self.view, mode)
+class nv_vi_indent       (TextCommand):
     def run(self, edit, mode=None, count=1, register=None, motion=None):
         if mode == VISUAL_BLOCK:
             def f(view, s):
                 self.view.insert(edit, s.begin(), get_indentation(view, count))
-
-                return Region(s.begin() + 1)
-
-            regions_transformer_reversed(self.view, f)
+                return Region(         s.begin() + 1)
+            regions_transformer_reversed        (self.view, f)
             regions_transform_to_first_non_blank(self.view)
-
-            # Restore only the first sel.
-            s = self.view.sel()[0]
-            set_selection(self.view, s.a + 1)
+            s = self.view.sel()[0] # Restore only the first sel
+            set_selection    (self.view, s.a + 1)
             enter_normal_mode(self.view, mode)
             return
-
         if motion:
             run_motion(self.view, motion)
         elif mode not in (VISUAL, VISUAL_LINE):
             return ui_bell()
-
         for i in range(count):
             self.view.run_command('indent')
-
         regions_transform_to_first_non_blank(self.view)
-        enter_normal_mode(self.view, mode)
-
-
-class nv_vi_less_than(TextCommand):
-
+        enter_normal_mode                   (self.view, mode)
+class nv_vi_reindent     (TextCommand):
     def run(self, edit, mode=None, count=1, register=None, motion=None):
         if motion:
             run_motion(self.view, motion)
         elif mode not in (VISUAL, VISUAL_LINE, VISUAL_BLOCK):
             return ui_bell()
-
-        for i in range(count):
-            self.view.run_command('unindent')
-
-        if mode == VISUAL_BLOCK:
-            resolve_visual_block_begin(self.view)
-
-        regions_transform_to_first_non_blank(self.view)
-        enter_normal_mode(self.view, mode)
-
-
-class nv_vi_equal(TextCommand):
-
-    def run(self, edit, mode=None, count=1, register=None, motion=None):
-        if motion:
-            run_motion(self.view, motion)
-        elif mode not in (VISUAL, VISUAL_LINE, VISUAL_BLOCK):
-            return ui_bell()
-
         self.view.run_command('reindent', {'force_indent': False})
-
         if mode == VISUAL_BLOCK:
-            resolve_visual_block_begin(self.view)
-
+            resolve_visual_block_begin      (self.view)
         regions_transform_to_first_non_blank(self.view)
-        enter_normal_mode(self.view, mode)
+        enter_normal_mode                   (self.view, mode)
+class nv_vi_unindent_line(TextCommand):
+    def run(self, edit, mode=None, count=1, register=None):
+        regions_transform_extend_to_line_count(self.view, count)
+        self.view.run_command('unindent')
+        regions_transform_to_first_non_blank  (self.view      )
+        enter_normal_mode                     (self.view, mode)
+class nv_vi_indent_line  (TextCommand):
+    def run(self, edit, mode=None, count=1, register=None):
+        regions_transform_extend_to_line_count(self.view, count)
+        self.view.run_command('indent')
+        regions_transform_to_first_non_blank  (self.view      )
+        enter_normal_mode                     (self.view, mode)
+class nv_vi_reindent_line(TextCommand):
+    def run(self, edit, mode=None, count=1, register=None):
+        regions_transform_extend_to_line_count(self.view, count)
+        self.view.run_command('reindent', {'force_indent': False})
+        regions_transform_to_first_non_blank  (self.view      )
+        enter_normal_mode                     (self.view, mode)
 
 
 class nv_vi_big_o(TextCommand):

@@ -242,14 +242,16 @@ def assign(seq: list, modes, *args, **kwargs):
     'mappings'         is a '{mode : {sequence : cmd}}' dict
       # [mode_normal][<insert>] = <ViEnterInsertMode>
       # [mode_normal][i       ] = <ViEnterInsertMode>
-    'mappings_reverse' is a '{mode : {cmd : sequence}}' dict (only 1st sequence is stored)
+    'mappings_reverse' is a '{mode : {cmd : sequence}}' dict (list of all sequences)
     """
     def inner(cls):
         for mode in modes:
             for seq_lng in seq:
                 mappings[mode][seq_lng] = cls(*args, **kwargs)
-                if (T := type(cls(*args, **kwargs))) not in mappings_reverse[mode]: # store only the first letter map
-                    mappings_reverse[mode][T] = seq_lng
+                if (T := type(cls(*args, **kwargs))) not in mappings_reverse[mode]: # store the first letter map
+                    mappings_reverse[mode][T] =     [seq_lng]
+                else: # and append others
+                    mappings_reverse[mode][T].append(seq_lng)
         return cls
     return inner
 

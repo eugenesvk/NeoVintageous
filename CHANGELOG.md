@@ -1,6 +1,6 @@
 # Changelog
 
-[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.9.1342...HEAD
+[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.91.1350...HEAD
 ## [Unreleased]
   <!-- - __Added__ -->
    <!-- + :sparkles: ??? -->
@@ -20,6 +20,9 @@
   <!-- - __Security__ -->
    <!-- + :lock: ??? -->
    <!-- vulnerabilities -->
+
+[0.91.1350]: https://github.com/eugenesvk/NeoVintageous/compare/0.91.1350...HEAD
+## [0.91.1350]
   - __Added__
    + support for rebinding Ctrl/Win/Alt key combos in Insert mode (they're still ignored by default unless explicitly enabled via the `handle_keys` config to not break all of the default Sublime Text's combos with these modifiers, also <kbd>Alt</kbd><kbd>F1</kbd>... function key combos are ignored by default)
    + support for text object pairs as targets for the goto command

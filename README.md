@@ -99,7 +99,14 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
     + :sparkles: surround: option to customize function prefix (`f` `F`)
     + :sparkles: abolish: allow users to configure case coercion aliases
     + :sparkles: abolish: option to maintain cursor position on case changes, e.g., converting `se⎀View⎀Sel_⎀Reverse` to upper case (⎀ denotes cursor position) will leave cursor at the same spot in the new `SE_⎀VIEW_⎀SEL_⎀REVERSE` while previously it moved it to the beginning of the word `SE_VIEW_SEL_REVERSE`
+    + :sparkles: marks: option to customize back aliases: `'` \`
+    + :sparkles: UnImpaired: option to customize option aliases
+    + `GotoTargetPrev`/`GotoTargetNext` commands to allow using the brackets as arguments instead of as names<br/>
+      `(Ⓝ)gdd" "GotoTargetPrev" "‹"` vs<br/>
+      `(Ⓝ)gdd" "GotoTargetPrevWhateverThatBracketIsNamed"`
   - and other changes:
+    + support for text object pairs as targets for the goto command
+    + support for rebinding Ctrl/Win/Alt key combos in Insert mode (they're still ignored by default unless explicitly enabled via the `handle_keys` config to not break all of the default Sublime Text's combos with these modifiers, also <kbd>Alt</kbd><kbd>F1</kbd>... function key combos are ignored by default)
     + :sparkles: show a popup with a count indicator<br/>before![before](./doc/img/count_popup_before.png) ![after](./doc/img/count_popup_after.png)after
     + :sparkles: nowrap alternative to tab switch Ex commands (`tabnextnowrap`/`tabpreviousnowrap`)
     + :sparkles: allow user to set values of various indicators:

@@ -39,6 +39,7 @@
    + :beetle: error running search command with mode/count arg. Happens when e.g. `map m /` and press `dm` the `/` search command receives `motion_args` dictionary with `mode`/`count` keys, which its function signature lacks
    + :beetle: unknown 65001 encoding error
    + :beetle: `ViOpenMacrosForRepeating` default key typo
+   + :beetle: jumps to \` and `'` marks being identical instead of `'` jumping to the first non-blank char a the previous position
   - __Changed__
    + text object labels are removed with an explicit no value (`l=null` or `l=""` instead of the old `"l"`), while that syntax is repurposed: a pair as an argument is parsed using self (`"‘’"` is the same as `‘="‘’"` and `’="‘’"`)
 

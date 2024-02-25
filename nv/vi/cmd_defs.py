@@ -262,7 +262,7 @@ class ViDeleteLine(ViOperatorDef):
 
 
 @assign(seqs.SEQ['⇧r'], ACTION_MODES)
-@assign_text(['EnterReplaceMode'], ACTION_MODES, icon='Ⓡ')
+@assign_text(['EnterReplaceMode','Ⓡ'], ACTION_MODES, icon='Ⓡ')
 class ViEnterReplaceMode(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -404,7 +404,7 @@ class ViJoinLinesNoSeparator(ViOperatorDef):
 
 
 @assign(seqs.SEQ['v'], ACTION_MODES)
-@assign_text(['EnterVisualMode'], ACTION_MODES, icon='ⓋⓋ')
+@assign_text(['EnterVisualMode','ⓋⓋ'], ACTION_MODES, icon='ⓋⓋ')
 class ViEnterVisualMode(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -950,7 +950,7 @@ class ViExchangeCurrentWindowWithNextOrPreviousNthWindow(ViOperatorDef):
 
 
 @assign(seqs.SEQ['⇧v'], ACTION_MODES)
-@assign_text(['EnterVisualLineMode'], ACTION_MODES, icon='━')
+@assign_text(['EnterVisualLineMode','━'], ACTION_MODES, icon='━')
 class ViEnterVisualLineMode(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -1051,7 +1051,7 @@ class ViToggleMacroRecorder(RequireOneCharMixin, ViOperatorDef):
 
 
 @assign(seqs.SEQ['⎈v'], ACTION_MODES)
-@assign_text(['EnterVisualBlockMode'], ACTION_MODES, icon='▋')
+@assign_text(['EnterVisualBlockMode','▋'], ACTION_MODES, icon='▋')
 class ViEnterVisualBlockMode(ViOperatorDef):
     def init(self):
         self.updates_xpos = True
@@ -1087,7 +1087,7 @@ class VigF(ViOperatorDef):
 
 @assign(seqs.SEQ['i'], (NORMAL, SELECT))
 @assign(seqs.SEQ['⎀'], (NORMAL, SELECT))
-@assign_text(['EnterInsertMode'], (NORMAL, SELECT), icon='ⓘ')
+@assign_text(['EnterInsertMode','ⓘ'], (NORMAL, SELECT), icon='ⓘ')
 class ViEnterInsertMode(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -1099,7 +1099,7 @@ class ViEnterInsertMode(ViOperatorDef):
 @assign(seqs.SEQ['⎋'], ACTION_MODES)
 @assign(seqs.SEQ['⎈c'], ACTION_MODES + (INSERT, SELECT))
 @assign(seqs.SEQ['⎈['], ACTION_MODES + (INSERT, SELECT))
-@assign_text(['EnterNormalMode'], ACTION_MODES + (INSERT, SELECT), icon='Ⓝ')
+@assign_text(['EnterNormalMode','Ⓝ'], ACTION_MODES + (INSERT, SELECT), icon='Ⓝ')
 class ViEnterNormalMode(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True
@@ -1164,7 +1164,7 @@ class ViInsertAtBol(ViOperatorDef):
 
 @assign(seqs.SEQ[':'], ACTION_MODES)
 @assign(seqs.CTRL_W_COLON, ACTION_MODES)
-@assign_text(['EnterCommandLineMode'], ACTION_MODES, icon='Ⓒ')
+@assign_text(['EnterCommandLineMode','Ⓒ'], ACTION_MODES, icon='Ⓒ')
 class ViEnterCommandLineMode(ViOperatorDef):
     def init(self):
         self.scroll_into_view = True

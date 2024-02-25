@@ -44,8 +44,10 @@ def register(seq: list, modes: tuple, *args, **kwargs):
         for mode in modes:
             for seq_lng in seq:
                 mappings[mode][seq_lng] = cls(*args, **kwargs)
-                if (T := type(cls(*args, **kwargs))) not in mappings_reverse[mode]: # store only the first letter map
-                    mappings_reverse[mode][T] = seq_lng
+                if (T := type(cls(*args, **kwargs))) not in mappings_reverse[mode]: # store the first letter map
+                    mappings_reverse[mode][T] =     [seq_lng]
+                else: # and append others
+                    mappings_reverse[mode][T].append(seq_lng)
                 classes[cls.__name__] = cls
         return cls
     return inner

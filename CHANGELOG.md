@@ -20,6 +20,8 @@
   <!-- - __Security__ -->
    <!-- + :lock: ??? -->
    <!-- vulnerabilities -->
+  - __Added__
+   + :sparkles: allow <kbd>⇧</kbd><kbd>⎇</kbd><kbd>KEY</kbd> to be bound in user config
 
 [0.91.1350]: https://github.com/eugenesvk/NeoVintageous/compare/0.91.1350...HEAD
 ## [0.91.1350]

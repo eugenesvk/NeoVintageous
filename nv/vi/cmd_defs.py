@@ -1503,7 +1503,7 @@ class ViMoveBySentenceUp(ViMotionDef):
         self.updates_xpos     = True
         self.scroll_into_view = True
         self.command          = 'nv_vi_move_sentence_prev'
-@assign(seqs.SEQ[")"], MOTION_MODES)
+@assign(seqs.SEQ['⇧0'], MOTION_MODES)
 @assign_text(['MoveBySentenceDown'], MOTION_MODES)
 class ViMoveBySentenceDown(ViMotionDef):
     def init(self):

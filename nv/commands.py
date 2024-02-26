@@ -1572,28 +1572,20 @@ class nv_vi_close_file_no_save(WindowCommand):
 
 
 class nv_vi_paste(TextCommand):
-
     def run(self, edit, before_cursor, mode=None, count=1, register=None, adjust_indent=False, adjust_cursor=False):
         contents, linewise = registers_get_for_paste(self.view, register, mode)
-        if not contents:
+        if not  contents:
             ui_bell('E353: Nothing in register ' + register)
             return
-
-        contents = resolve_paste_items_with_view_sel(self.view, contents)
-        if not contents:
+        if not (contents := resolve_paste_items_with_view_sel(self.view, contents)):
             ui_bell()
             return
-
         sels = list(self.view.sel())
+        sel_to_specific_pt = -1 # Some paste operations need to reposition the cursor to a specific point after the paste operation has been completed successfully.
 
-        # Some paste operations need to reposition the cursor to a specific
-        # point after the paste operation has been completed successfully.
-        sel_to_specific_pt = -1
-
-        # When there is one selection and many register contents the contents
-        # are pasted as a visual block. Selections are added to match the number
-        # of contents and adjusted with left-padded whitespace where neccessary.
-        if len(sels) == 1 and len(contents) > 1:
+        # When there is one selection and many register contents the contents are pasted as a visual block. Selections are added to match the number of contents and adjusted with left-padded whitespace where neccessary.
+        if      len(sels    ) == 1\
+            and len(contents)  > 1:
             sels, contents, before_cursor, sel_to_specific_pt = pad_visual_block_paste_contents(
                 self.view, sels, contents, before_cursor)
 
@@ -1601,39 +1593,28 @@ class nv_vi_paste(TextCommand):
 
         def _indent_text(view, text: str, sel: Region) -> str:
             indentation_level = view.indentation_level(get_insertion_point_at_b(sel))
-
-            return textwrap.indent(
-                textwrap.dedent(text),
-                get_indentation(view, indentation_level)
-            )
+            return textwrap.indent(textwrap.dedent(text),get_indentation(view, indentation_level))
 
         if mode == INTERNAL_NORMAL:
             self.view.sel().clear()
-
             for text, sel in contents:
                 if adjust_indent:
                     text = _indent_text(self.view, text, sel)
-                    if text[-1] != '\n':
-                        text += '\n'
-
+                    if  text[-1] != '\n':
+                        text     += '\n'
                     linewise = True
 
                 text *= count
 
-                # If register content is from a linewise operation, then the cursor
-                # is put on the first non-blank character of the first line of the
-                # content after the content is inserted.
-                if linewise:
-                    line = self.view.line(sel.a)
-                    row = self.view.rowcol(line.a)[0]
+                if linewise: # If register content is from a linewise operation, then the cursor is put on the first non-blank character of the first line of the content after the content is inserted.
+                    line = self.view.line  (sel .a)
+                    row  = self.view.rowcol(line.a)[0]
                     if before_cursor:
-                        pt = self.view.text_point(row, 0)
+                        pt = self.view.text_point(row    , 0)
                     else:
                         pt = self.view.text_point(row + 1, 0)
 
-                    # When the insertion point is at the EOF in linewise and the
-                    # EOF is not a newline then the text needs to be prefixed
-                    # with one, the selection point needs to be adjusted too.
+                    # When the insertion point is at the EOF in linewise and the EOF is not a newline then the text needs to be prefixed with one, the selection point needs to be adjusted too.
                     insertion_pt_at_eof = not before_cursor and line.size() > 0 and line.end() >= self.view.size()
                     if insertion_pt_at_eof:
                         text = '\n' + text
@@ -1643,56 +1624,40 @@ class nv_vi_paste(TextCommand):
                     if adjust_cursor:
                         pt += len(text) + 1
                     else:
-                        # The insertion point is at EOF; see above for details.
-                        if insertion_pt_at_eof:
+                        if insertion_pt_at_eof: # The insertion point is at EOF; see above for details.
                             pt += 1
-
                         pt = next_non_blank(self.view, pt)
 
                     self.view.sel().add(pt)
 
-                # If register is charactwise but contains a newline, then the cursor
-                # is put at the start of of the text pasted, otherwise the cursor is
-                # put on the last character of the text pasted.
-                else:
-                    # Paste before the cursor if the current line is empty.
-                    if before_cursor or self.view.line(sel.a).empty():
+                else: # If register is charactwise but contains a newline, then the cursor is put at the start of of the text pasted, otherwise the cursor is put on the last character of the text pasted.
+                    if before_cursor or self.view.line(sel.a).empty(): # Paste before the cursor if the current line is empty.
                         pt = sel.a
                     else:
                         pt = min(sel.a + 1, self.view.size())
-
                     self.view.insert(edit, pt, text)
-
                     if adjust_cursor:
                         pt += len(text)
                     elif '\n' not in text:
                         pt += len(text) - 1
 
                     self.view.sel().add(pt)
-
             enter_normal_mode(self.view, mode)
         elif mode in (VISUAL, VISUAL_LINE, SELECT):
             new_sels = []
             for text, sel in contents:
                 self.view.replace(edit, sel, text)
-
-                if mode == VISUAL:
+                if   mode == VISUAL:
                     if '\n' in text and not linewise:
                         new_sels.append(sel.begin())
-
                 elif mode == VISUAL_LINE:
                     new_sels.append(next_non_blank(self.view, sel.begin()))
-
                 enter_normal_mode(self.view, mode)
-
-                # If register content is linewise, then the cursor is put on the
-                # first non blank of the line.
+                # If register content is linewise, then the cursor is put on the first non blank of the line.
                 if linewise:
                     def f(view, s):
                         return Region(next_non_blank(view, view.line(s).a))
-
                     regions_transformer(self.view, f)
-
             if new_sels:
                 set_selection(self.view, new_sels)
 

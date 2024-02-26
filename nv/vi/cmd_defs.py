@@ -504,88 +504,62 @@ class ViReformatLinewise(ViOperatorDef):
         }
 
 
-@assign(seqs.SEQ['p'], ACTION_MODES + (SELECT,))
-@assign_text(['PasteAfter'], ACTION_MODES + (SELECT,))
-class ViPasteAfter(ViOperatorDef):
+@assign(seqs.SEQ['⇧p']                        , ACTION_MODES + (SELECT,))
+@assign_text(['PasteBefore']                  , ACTION_MODES + (SELECT,))
+class ViPasteBefore                  (ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.repeatable = True
-        self.command = 'nv_vi_paste'
-        self.command_args = {
-            'before_cursor': False
-        }
-
-
-@assign(seqs.SEQ['⇧p'], ACTION_MODES + (SELECT,))
-@assign_text(['PasteBefore'], ACTION_MODES + (SELECT,))
-class ViPasteBefore(ViOperatorDef):
+        self.repeatable       = True
+        self.command          = 'nv_vi_paste'
+        self.command_args     = {'before_cursor':True }
+@assign(seqs.SEQ['p']                         , ACTION_MODES + (SELECT,))
+@assign_text(['PasteAfter']                   , ACTION_MODES + (SELECT,))
+class ViPasteAfter                   (ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.repeatable = True
-        self.command = 'nv_vi_paste'
-        self.command_args = {
-            'before_cursor': True
-        }
-
-
-@assign(seqs.SEQ[']⇧p'], ACTION_MODES + (SELECT,))
-@assign(seqs.SEQ[']p'], ACTION_MODES + (SELECT,))
-@assign_text(['PasteAfterAndIndent'], ACTION_MODES + (SELECT,))
-class ViPasteAfterAndIndent(ViOperatorDef):
+        self.repeatable       = True
+        self.command          = 'nv_vi_paste'
+        self.command_args     = {'before_cursor':False}
+@assign(seqs.SEQ['[⇧p']                       , ACTION_MODES + (SELECT,))
+@assign(seqs.SEQ['[p']                        , ACTION_MODES + (SELECT,))
+@assign_text(['PasteBeforeAndIndent']         , ACTION_MODES + (SELECT,))
+class ViPasteBeforeAndIndent         (ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.repeatable = True
-        self.command = 'nv_vi_paste'
-        self.command_args = {
-            'before_cursor': False,
-            'adjust_indent': True
-        }
-
-
-@assign(seqs.SEQ['[⇧p'], ACTION_MODES + (SELECT,))
-@assign(seqs.SEQ['[p'], ACTION_MODES + (SELECT,))
-@assign_text(['PasteBeforeAndIndent'], ACTION_MODES + (SELECT,))
-class ViPasteBeforeAndIndent(ViOperatorDef):
+        self.repeatable       = True
+        self.command          = 'nv_vi_paste'
+        self.command_args     = {'before_cursor':True ,'adjust_indent':True}
+@assign(seqs.SEQ[']⇧p']                       , ACTION_MODES + (SELECT,))
+@assign(seqs.SEQ[']p']                        , ACTION_MODES + (SELECT,))
+@assign_text(['PasteAfterAndIndent']          , ACTION_MODES + (SELECT,))
+class ViPasteAfterAndIndent          (ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.repeatable = True
-        self.command = 'nv_vi_paste'
-        self.command_args = {
-            'before_cursor': True,
-            'adjust_indent': True
-        }
-
-
-@assign(seqs.SEQ['gp'], ACTION_MODES + (SELECT,))
-@assign_text(['PasteAfterWithAdjustedCursor'], ACTION_MODES + (SELECT,))
-class ViPasteAfterWithAdjustedCursor(ViOperatorDef):
-    def init(self):
-        self.updates_xpos = True
-        self.scroll_into_view = True
-        self.repeatable = True
-        self.command = 'nv_vi_paste'
-        self.command_args = {
-            'before_cursor': False,
-            'adjust_cursor': True
-        }
-
-
-@assign(seqs.SEQ['g⇧p'], ACTION_MODES + (SELECT,))
+        self.repeatable       = True
+        self.command          = 'nv_vi_paste'
+        self.command_args     = {'before_cursor':False,'adjust_indent':True}
+@assign(seqs.SEQ['g⇧p']                       , ACTION_MODES + (SELECT,))
 @assign_text(['PasteBeforeWithAdjustedCursor'], ACTION_MODES + (SELECT,))
 class ViPasteBeforeWithAdjustedCursor(ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-        self.repeatable = True
-        self.command = 'nv_vi_paste'
-        self.command_args = {
-            'before_cursor': True,
-            'adjust_cursor': True
-        }
+        self.repeatable       = True
+        self.command          = 'nv_vi_paste'
+        self.command_args     = {'before_cursor':True ,'adjust_cursor':True}
+@assign(seqs.SEQ['gp']                        , ACTION_MODES + (SELECT,))
+@assign_text(['PasteAfterWithAdjustedCursor'] , ACTION_MODES + (SELECT,))
+class ViPasteAfterWithAdjustedCursor(ViOperatorDef):
+    def init(self):
+        self.updates_xpos     = True
+        self.scroll_into_view = True
+        self.repeatable       = True
+        self.command          = 'nv_vi_paste'
+        self.command_args     = {'before_cursor':False,'adjust_cursor':True}
 
 
 @assign(seqs.SEQ['⇧x'], ACTION_MODES)

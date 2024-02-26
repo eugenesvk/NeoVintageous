@@ -692,60 +692,53 @@ def find_paragraph_text_object(view, s: Region, inclusive: bool = True, count: i
     return Region(begin, end)
 
 
-def find_sentences_forward(view, start, count: int = 1):
+def find_sentences_forward(view, start, count: int = 1, stop_nl:bool=False):
     def _find_sentence_forward(view, start: int):
         char = view.substr(start)
         if char == '\n':
             next_sentence = view.find('\\s+', start)
         else:
-            next_sentence = view.find('[\\.\\?\\!][\\)\\]"\']*\\s', start)
-
+            nl = '(\\n)|' if stop_nl else '' # stop at ␤ as text sentences don't have them
+            next_sentence = view.find(nl + '([\\.\\?\\!][\\)\\]"\']*\\s)', start)
         if next_sentence:
             return next_non_blank(view, next_sentence.b)
-
     start = start.b if isinstance(start, Region) else start
-
     new_start = start
     for i in range(count):
         next_sentence = _find_sentence_forward(view, new_start)
         if not next_sentence:
             break
-
         new_start = next_sentence
-
     if new_start != start:
         return Region(new_start)
 
 
-def find_sentences_backward(view, start_pt: int, count: int = 1) -> Region:
-    pt = prev_non_ws(view, start_pt)
-    sen = Region(pt)
+def find_sentences_backward(view, start_pt: int, count: int = 1, stop_nl:bool=False) -> Region:
+    """ stop_nl = stop at ␤ instead of jumping through a huge block just because there is no 'text sentence.'"""
+    pt   = prev_non_ws(view, start_pt)
+    sen  = Region(pt)
     prev = sen
     while True:
         sen = view.expand_by_class(sen, CLASS_LINE_END | CLASS_PUNCTUATION_END)
-        if sen.a <= 0 or view.substr(sen.begin() - 1) in ('.', '\n', '?', '!'):
-            if view.substr(sen.begin() - 1) == '.' and not view.substr(sen.begin()) == ' ':
+        if sen.a <= 0\
+            or         (view.substr(sen.begin()    ) == '\n' and stop_nl)\
+            or          view.substr(sen.begin() - 1) in ('.','\n','?','!'):
+            if          view.substr(sen.begin() - 1) == '.'\
+                and not view.substr(sen.begin()    ) == ' ':
                 continue
-
             if prev == sen:
                 break
-
             prev = sen
-
             if sen:
                 pt = next_non_blank(view, sen.a)
                 if pt < sen.b and pt != start_pt:
                     if view.substr(pt) == '\n':
-                        if pt + 1 != start_pt:
+                        if  pt +  1 != start_pt:
                             pt += 1
-
                     return Region(pt)
-
                 if pt > 0:
                     continue
-
             return sen
-
     return sen
 
 

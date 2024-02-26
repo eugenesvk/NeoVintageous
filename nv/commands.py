@@ -3531,10 +3531,10 @@ class nv_vi_goto_changelist(TextCommand):
 
 
 class nv_vi_move_sentence_prev(TextCommand):
-    def run(self, edit, mode=None, count=1):
+    def run(self, edit, mode=None, count=1, stop_nl:bool=False):
         def f(view, s):
             start = s.a if s.b >= s.a else s.b
-            previous_sentence = find_sentences_backward(view, start, count)
+            previous_sentence = find_sentences_backward(view, start, count, stop_nl)
             target = previous_sentence.a
 
             if   mode == NORMAL:
@@ -3553,9 +3553,9 @@ class nv_vi_move_sentence_prev(TextCommand):
         regions_transformer(self.view, f)
 
 class nv_vi_move_sentence_next(TextCommand):
-    def run(self, edit, mode=None, count=1):
+    def run(self, edit, mode=None, count=1, stop_nl:bool=False):
         def f(view, s):
-            next_sentence = find_sentences_forward(view, s, count)
+            next_sentence = find_sentences_forward(view, s, count, stop_nl)
             if next_sentence is None:
                 return s
 

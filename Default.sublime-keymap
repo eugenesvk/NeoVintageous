@@ -227,6 +227,7 @@
 
 {"keys":["ctrl+-"	],"command":"nv_feed_key"	,"args":{"key":"<C-->"}	,"context":[{"key":"nv_command_or_insert"},{"key":"setting.vintageous_use_ctrl_keys"},{"key":"nv_handle_key","operand":"<C-->"}]},
 {"keys":["ctrl+="	],"command":"nv_feed_key"	,"args":{"key":"<C-=>"}	,"context":[{"key":"nv_command_or_insert"},{"key":"setting.vintageous_use_ctrl_keys"},{"key":"nv_handle_key","operand":"<C-=>"}]},
+{"keys":["ctrl+,"	],"command":"nv_feed_key"	,"args":{"key":"<C-,>"}	,"context":[{"key":"nv_command_or_insert"},{"key":"setting.vintageous_use_ctrl_keys"},{"key":"nv_handle_key","operand":"<C-,>"}]},
 {"keys":["ctrl+."	],"command":"nv_feed_key"	,"args":{"key":"<C-.>"}	,"context":[{"key":"nv_command_or_insert"},{"key":"setting.vintageous_use_ctrl_keys"},{"key":"nv_handle_key","operand":"<C-.>"}]},
 {"keys":["ctrl+0"	],"command":"nv_feed_key"	,"args":{"key":"<C-0>"}	,"context":[{"key":"nv_command_or_insert"},{"key":"setting.vintageous_use_ctrl_keys"},{"key":"nv_handle_key","operand":"<C-0>"}]},
 {"keys":["ctrl+1"	],"command":"nv_feed_key"	,"args":{"key":"<C-1>"}	,"context":[{"key":"nv_command_or_insert"},{"key":"setting.vintageous_use_ctrl_keys"},{"key":"nv_handle_key","operand":"<C-1>"}]},
@@ -239,6 +240,7 @@
 {"keys":["ctrl+8"	],"command":"nv_feed_key"	,"args":{"key":"<C-8>"}	,"context":[{"key":"nv_command_or_insert"},{"key":"setting.vintageous_use_ctrl_keys"},{"key":"nv_handle_key","operand":"<C-8>"}]},
 {"keys":["ctrl+9"	],"command":"nv_feed_key"	,"args":{"key":"<C-9>"}	,"context":[{"key":"nv_command_or_insert"},{"key":"setting.vintageous_use_ctrl_keys"},{"key":"nv_handle_key","operand":"<C-9>"}]},
 {"keys":["ctrl+["	],"command":"nv_feed_key"	,"args":{"key":"<C-[>"}	,"context":[{"key":"nv_command_or_insert"},{"key":"setting.vintageous_use_ctrl_keys"},{"key":"nv_handle_key","operand":"<C-[>"}]},
+{"keys":["ctrl+\\"	],"command":"nv_feed_key"	,"args":{"key":"<C-\\>"}	,"context":[{"key":"nv_command_or_insert"},{"key":"setting.vintageous_use_ctrl_keys"},{"key":"nv_handle_key","operand":"<C-\\>"}]},
 {"keys":["ctrl+]"	],"command":"nv_feed_key"	,"args":{"key":"<C-]>"}	,"context":[{"key":"nv_command_or_insert"},{"key":"setting.vintageous_use_ctrl_keys"},{"key":"nv_handle_key","operand":"<C-]>"}]},
 {"keys":["ctrl+a"	],"command":"nv_feed_key"	,"args":{"key":"<C-a>"}	,"context":[{"key":"nv_command_or_insert"},{"key":"setting.vintageous_use_ctrl_keys"},{"key":"nv_handle_key","operand":"<C-a>"}]},
 {"keys":["ctrl+b"	],"command":"nv_feed_key"	,"args":{"key":"<C-b>"}	,"context":[{"key":"nv_command_or_insert"},{"key":"setting.vintageous_use_ctrl_keys"},{"key":"nv_handle_key","operand":"<C-b>"}]},

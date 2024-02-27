@@ -2872,13 +2872,15 @@ class nv_vi_move_word_next(TextCommand):
         regions_transformer(self.view, f)
 
 class nv_vi_move_wordend_prev(TextCommand):
-    def run(self, edit, mode=None, count=1):
+    def run(self, edit, mode=None, count=1, nosep:bool=False):
+        """nosep   jump to the prev word's end regardless of word separators, so ‘wordA, wordB⎀’ would stop at ‘B A’ instead of at ‘B , A’
+        """
         if mode == VISUAL_BLOCK:
-            resolve_visual_block_target(self.view, word_end_reverse, count)
+            resolve_visual_block_target(self.view, word_end_reverse, count, nosep=nosep)
             return
 
         def f(view, s):
-            target = word_end_reverse(view, get_insertion_point_at_b(s), count)
+            target = word_end_reverse(view, get_insertion_point_at_b(s), count, nosep=nosep)
 
             if   mode == NORMAL:
                 resolve_normal_target         (      s, target                )
@@ -2893,15 +2895,14 @@ class nv_vi_move_wordend_prev(TextCommand):
 
         regions_transformer(self.view, f)
 class nv_vi_move_wordend_next(TextCommand):
-    def run(self, edit, mode=None, count=1):
-        def _get_target(view, start, count):
-            # TODO Is the word_ends() function off-by-one?
-            return word_ends(view, start, count) - 1
-
+    def run(self, edit, mode=None, count=1, nosep:bool=False):
+        """nosep   jump to the next word's end regardless of word separators, so ‘wordA, wordB’ would stop at ‘A B’ instead of at ‘A , B’
+        """
+        def _get_target(view, start, count, nosep=nosep):
+            return word_ends(view, start, count, nosep=nosep) - 1 # TODO Is the word_ends() function off-by-one?
         if mode == VISUAL_BLOCK:
-            resolve_visual_block_target(self.view, _get_target, count)
+            resolve_visual_block_target(self.view, _get_target, count, nosep=nosep)
             return
-
         def f(view, s):
             target = _get_target(view, get_insertion_point_at_b(s), count)
 
@@ -2915,13 +2916,9 @@ class nv_vi_move_wordend_next(TextCommand):
                 if (not view.substr(view.line(s.a)).strip() and view.line(s.b) != view.line(target)):
                     if view.line(s.a).empty():
                         target += 1
-
                     s.a = view.line(s.a).a
-
                 s.b = target + 1
-
             return s
-
         regions_transformer(self.view, f)
 
 class nv_vi_move_bigword_prev(TextCommand):

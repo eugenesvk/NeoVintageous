@@ -78,14 +78,15 @@ def next_big_word_start(view, start: int, internal: bool = False) -> int:
     return pt
 
 
-def next_word_end(view, start: int, internal: bool = False) -> int:
+def next_word_end(view, start: int, internal: bool = False, nosep:bool = False) -> int:
     classes = _CLASS_VI_WORD_END if not internal else _CLASS_VI_INTERNAL_WORD_END
-    pt = view.find_by_class(start, forward=True, classes=classes)
+    pt     = view.find_by_class(start , forward=True, classes=classes              )
+    pt_p   = view.find_by_class(start , forward=True, classes=CLASS_PUNCTUATION_END)
+    if nosep and pt == pt_p: # we're at word's end before puncts, so skip them
+        pt = view.find_by_class(pt_p+1, forward=True, classes=classes              )
     if internal and at_eol(view, pt):
-        # Unreachable?
-        return pt
-
-    return pt
+        return pt # Unreachable?
+    return     pt
 
 
 def word_starts(view, start: int, count: int = 1, internal: bool = False) -> int:
@@ -140,23 +141,21 @@ def big_word_starts(view, start: int, count: int = 1, internal: bool = False) ->
     return pt
 
 
-def word_ends(view, start: int, count: int = 1, big: bool = False) -> int:
+def word_ends(view, start: int, count: int = 1, big: bool = False, nosep:bool=False) -> int:
     assert start >= 0 and count > 0, 'bad call'
-
     pt = start
     if not view.substr(start).isspace():
         pt = start + 1
-
     for i in range(count):
         if big:
             while True:
-                pt = next_word_end(view, pt)
-                if pt >= view.size() or view.substr(pt).isspace():
-                    if pt > view.size():
-                        pt = view.size()
+                pt = next_word_end(view, pt, nosep=nosep)
+                if      pt >= view.size() or view.substr(pt).isspace():
+                    if  pt >  view.size():
+                        pt  = view.size()
                     break
         else:
-            pt = next_word_end(view, pt)
+            pt     = next_word_end(view, pt, nosep=nosep)
 
     return pt
 

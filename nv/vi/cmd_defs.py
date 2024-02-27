@@ -1251,14 +1251,30 @@ class ViMoveByWordEndsBackward(ViMotionDef):
     def init(self):
         self.updates_xpos    	= True
         self.scroll_into_view	= True
-        self.command         	= 'nv_vi_move_wordend_prev'
+    def translate(self, view):
+        return translate_motion(view, 'nv_vi_move_wordend_prev',{'nosep':False})
 @assign(seqs.SEQ['e'], MOTION_MODES)
-@assign_text(['MoveByWordEnds'], MOTION_MODES, icon="W⭲")
+@assign_text(['MoveByWordEnds'], MOTION_MODES, icon="ω⭲")
 class ViMoveByWordEnds(ViMotionDef):
     def init(self):
         self.updates_xpos     = True
         self.scroll_into_view = True
-        self.command          = 'nv_vi_move_wordend_next'
+    def translate(self, view):
+        return translate_motion(view, 'nv_vi_move_wordend_next',{'nosep':False})
+@assign_text(['MoveByWordEndsBackwardNoSep'], MOTION_MODES, icon="⭰ω")
+class ViMoveByWordEndsBackwardNoSep(ViMotionDef):
+    def init(self):
+        self.updates_xpos       = True
+        self.scroll_into_view   = True
+    def translate(self, view):
+        return translate_motion(view, 'nv_vi_move_wordend_prev',{'nosep':True })
+@assign_text(['MoveByWordEndsNoSep'], MOTION_MODES, icon="ω⭲")
+class ViMoveByWordEndsNoSep(ViMotionDef):
+    def init(self):
+        self.updates_xpos     = True
+        self.scroll_into_view = True
+    def translate(self, view):
+        return translate_motion(view, 'nv_vi_move_wordend_next',{'nosep':True })
 
 @assign(seqs.SEQ['g⇧e'], MOTION_MODES)
 @assign_text(['MoveByBigWordEndsBackward'], MOTION_MODES, icon="⭰W")

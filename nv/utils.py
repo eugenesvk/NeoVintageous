@@ -1002,11 +1002,14 @@ class VisualBlockSelection():
         return vb
 
 
-def resolve_visual_block_target(view, target, count: int = 1) -> None:
+def resolve_visual_block_target(view, target, count: int = 1, nosep:bool=False) -> None:
     visual_block = VisualBlockSelection(view)
 
     if not isinstance(target, int):
-        target = target(view, visual_block.insertion_point_b(), count)
+        if nosep:
+            target = target(view, visual_block.insertion_point_b(), count, nosep=nosep)
+        else:
+            target = target(view, visual_block.insertion_point_b(), count)
 
     visual_block.transform_target(target)
 

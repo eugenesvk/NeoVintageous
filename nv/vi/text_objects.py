@@ -35,6 +35,7 @@ ANCHOR_NEXT_WORD_BOUNDARY    	= CLASS_WORD_START | CLASS_PUNCTUATION_START | CLA
 ANCHOR_PREVIOUS_WORD_BOUNDARY	= CLASS_WORD_END   | CLASS_PUNCTUATION_END   | CLASS_LINE_START
 WORD_REVERSE_STOPS           	= CLASS_WORD_START | CLASS_EMPTY_LINE        | CLASS_PUNCTUATION_START
 WORD_END_REVERSE_STOPS       	= CLASS_WORD_END   | CLASS_EMPTY_LINE        | CLASS_PUNCTUATION_END
+WORD_END_REVERSE_STOPS_NOSEP    = CLASS_WORD_END   | CLASS_EMPTY_LINE
 
 from enum import auto, Flag, IntFlag
 class TxtObj(Flag):
@@ -891,7 +892,7 @@ def big_word_reverse(view, pt: int, count: int = 1) -> int:
 
 
 # TODO: Move this to units.py.
-def word_end_reverse(view, pt: int, count: int = 1, big: bool = False) -> int:
+def word_end_reverse(view, pt: int, count: int = 1, big: bool = False, nosep:bool=False) -> int:
     t = pt
     for i in range(count):
         if big:
@@ -907,7 +908,10 @@ def word_end_reverse(view, pt: int, count: int = 1, big: bool = False) -> int:
             and     view.substr(t - 1).isalnum() and t > 0):
             pass
         else:
-            t = view.find_by_class(t, forward=False, classes=WORD_END_REVERSE_STOPS)
+            if nosep:
+                t = view.find_by_class(t, forward=False, classes=WORD_END_REVERSE_STOPS_NOSEP)
+            else:
+                t = view.find_by_class(t, forward=False, classes=WORD_END_REVERSE_STOPS      )
 
         if t == 0:
             break

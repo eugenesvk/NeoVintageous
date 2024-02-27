@@ -1,26 +1,18 @@
 import re
 
-from sublime import CLASS_LINE_END
-from sublime import CLASS_LINE_START
-from sublime import CLASS_PUNCTUATION_END
-from sublime import CLASS_PUNCTUATION_START
-from sublime import CLASS_WORD_END
-from sublime import CLASS_WORD_START
+from sublime import CLASS_LINE_END, CLASS_LINE_START, CLASS_PUNCTUATION_END, CLASS_PUNCTUATION_START, CLASS_WORD_END, CLASS_WORD_START
 from sublime import Region
 
-from NeoVintageous.nv.utils import last_row
-from NeoVintageous.nv.utils import next_non_blank
-from NeoVintageous.nv.utils import row_at
+from NeoVintageous.nv.utils import last_row, next_non_blank, row_at
 
 
 _WORD_PATTERN = re.compile('\\w')
 # Places at which regular words start (for Vim).
-_CLASS_VI_WORD_START = CLASS_WORD_START | CLASS_PUNCTUATION_START | CLASS_LINE_START
-# Places at which *sometimes* words start. Called 'internal' because it's a
-# notion Vim has; not obvious.
+_CLASS_VI_WORD_START          = CLASS_WORD_START | CLASS_PUNCTUATION_START | CLASS_LINE_START
+# Places at which *sometimes* words start. Called 'internal' because it's a notion Vim has; not obvious.
 _CLASS_VI_INTERNAL_WORD_START = CLASS_WORD_START | CLASS_PUNCTUATION_START | CLASS_LINE_END
-_CLASS_VI_WORD_END = CLASS_WORD_END | CLASS_PUNCTUATION_END
-_CLASS_VI_INTERNAL_WORD_END = CLASS_WORD_END | CLASS_PUNCTUATION_END
+_CLASS_VI_WORD_END            = CLASS_WORD_END   | CLASS_PUNCTUATION_END
+_CLASS_VI_INTERNAL_WORD_END   = CLASS_WORD_END   | CLASS_PUNCTUATION_END
 
 
 def at_eol(view, pt: int) -> bool:

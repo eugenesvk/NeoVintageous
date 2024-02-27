@@ -164,10 +164,10 @@ def _find_full_match_text(view, mode: str, lhs: str):
     if not rhs\
        and lhs == '<':
         lhs     = '<lt>'
-        rhs = _mappings_text[mode].get(lhs)
+        rhs =          _mappings_text[mode].get(lhs)
     if rhs:
         if isinstance(rhs, (str, list)):
-            return rhs
+            return     rhs
         try:
             return     _mappings_text[mode][lhs][get_file_type(view)]
         except     KeyError:

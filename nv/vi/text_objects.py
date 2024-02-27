@@ -895,16 +895,16 @@ def word_end_reverse(view, pt: int, count: int = 1, big: bool = False) -> int:
     t = pt
     for i in range(count):
         if big:
-            # Skip over punctuation characters.
-            while not ((view.substr(t - 1) in '\n\t ') or (t <= 0)):
+            while not ((view.substr(t - 1) in '\n\t ') or (t <= 0)): # Skip over punctuation characters.
                 t -= 1
-
-        # `ge` should stop at the previous word end if starting at a space
-        # immediately after a word.
-        if (i == 0 and view.substr(t).isspace() and not view.substr(t - 1).isspace()):
+        # `ge` should stop at the previous word end if starting at a space immediately after a word.
+        if (i == 0 and view.substr(t    ).isspace()\
+            and    not view.substr(t - 1).isspace()):
             continue
 
-        if (not view.substr(t).isalnum() and not view.substr(t).isspace() and view.substr(t - 1).isalnum() and t > 0):
+        if (    not view.substr(t    ).isalnum()\
+            and not view.substr(t    ).isspace()\
+            and     view.substr(t - 1).isalnum() and t > 0):
             pass
         else:
             t = view.find_by_class(t, forward=False, classes=WORD_END_REVERSE_STOPS)

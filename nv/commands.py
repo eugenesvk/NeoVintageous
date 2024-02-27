@@ -2881,11 +2881,11 @@ class nv_vi_move_wordend_prev(TextCommand):
             target = word_end_reverse(view, get_insertion_point_at_b(s), count)
 
             if   mode == NORMAL:
-                resolve_normal_target(s, target)
+                resolve_normal_target         (      s, target                )
             elif mode == INSERT:
-                resolve_normal_target(s, target)
+                resolve_normal_target         (      s, target                )
             elif mode == VISUAL:
-                resolve_visual_target(s, target)
+                resolve_visual_target         (      s, target                )
             elif mode == INTERNAL_NORMAL:
                 resolve_internal_normal_target(view, s, target, inclusive=True)
 

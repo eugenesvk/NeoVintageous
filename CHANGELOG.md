@@ -22,6 +22,9 @@
    <!-- vulnerabilities -->
   - __Added__
    + :sparkles: allow <kbd>⇧</kbd><kbd>⎇</kbd><kbd>KEY</kbd> to be bound in user config
+   + :sparkles: `MoveByWordEndsNoSep`,`MoveByWordEndsBackwardNoSep` command to move to word's end ignoring punctuation
+     old: `wordA, wordB` would stop at `A` `,` `B`
+     new: `wordA, wordB` would stop at `A`     `B`
 
 [0.91.1350]: https://github.com/eugenesvk/NeoVintageous/compare/0.91.1350...HEAD
 ## [0.91.1350]

@@ -345,6 +345,22 @@ def mappings_add_text(mode:str, key:str, cmd:Union[str,list], prop:dict={}) -> N
     else:                                          # ok to overwrite old commands
         _mappings_text        [mode][key_norm]            = cmd
 
+    if prop: # store User data (icons, descriptions, type) to our classes for later use in Status and Help
+        cmd_txt = ''
+        if isinstance(cmd,list) and len(cmd) == 1 and isinstance(cmd0 := cmd[0],str): # cmd can be None if null in kdl
+            cmd_txt = cmd0.lower()
+        if isinstance(cmd,str):
+            cmd_txt = cmd .lower()
+        if not cmd_txt:
+            return
+        cmd_cls = _text_to_command(view=None,text=cmd_txt)
+        if not isinstance(cmd_cls,CommandNotFound):
+            if _p := prop.get('desc',None):
+                cmd_cls.desc = _p
+            if _p := prop.get('icon',None):
+                cmd_cls.icon = _p
+            if _p := prop.get('type',None):
+                cmd_cls.type = _p
 
 def mappings_remove(mode: str, lhs: str) -> None:
     del _mappings[mode][_normalise_lhs(lhs)]
@@ -393,7 +409,7 @@ def _text_cmd_to_mapping(view, _text_cmd: str):
         return Mapping(_text_cmd, full_match)
 
 
-def _text_to_command(view, text: str):
+def _text_to_command(view, text:str):
     """ Convert textual command (MoveByLineCols) into command function (ViMoveByLineCols)
         ←  view	View	.
          text  	str 	Text command, eg, 'MoveByLineCols'
@@ -403,7 +419,8 @@ def _text_to_command(view, text: str):
     cmd_keys    =   keys.map_textcmd2cmd.get(text)
     _log.map(" cmd_text ‘%s’ → cmd_plugin ‘%s’ cmd_keys = ‘%s’"
         ,               text,       cmd_plugin,         cmd_keys)
-    if cmd_plugin and is_plugin_enabled(view, cmd_plugin):
+    if cmd_plugin\
+        and (not view or (view and is_plugin_enabled(view, cmd_plugin))):
         return cmd_plugin
     if cmd_keys:
         return cmd_keys

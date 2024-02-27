@@ -2825,6 +2825,27 @@ class nv_vi_dollar(TextCommand):
         regions_transformer(self.view, f)
 
 
+class nv_vi_move_word_prev(TextCommand):
+    def run(self, edit, mode=None, count=1):
+        if mode == VISUAL_BLOCK:
+            resolve_visual_block_target(self.view, word_reverse, count)
+            return
+
+        def f(view, s):
+            target = word_reverse(view, get_insertion_point_at_b(s), count)
+
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
+                resolve_normal_target(s, target)
+            elif mode == VISUAL:
+                resolve_visual_target(s, target)
+            elif mode == INTERNAL_NORMAL:
+                s.b = target
+
+            return s
+
+        regions_transformer(self.view, f)
 class nv_vi_move_word_next(TextCommand):
     def run(self, edit, mode=None, count=1):
         if mode == VISUAL_BLOCK:
@@ -2850,33 +2871,27 @@ class nv_vi_move_word_next(TextCommand):
 
         regions_transformer(self.view, f)
 
-
-class nv_vi_move_bigword_next(TextCommand):
+class nv_vi_move_wordend_prev(TextCommand):
     def run(self, edit, mode=None, count=1):
         if mode == VISUAL_BLOCK:
-            resolve_visual_block_target(self.view, big_word_starts, count)
+            resolve_visual_block_target(self.view, word_end_reverse, count)
             return
 
         def f(view, s):
-            target = big_word_starts(view, get_insertion_point_at_b(s), count, internal=(mode == INTERNAL_NORMAL))
+            target = word_end_reverse(view, get_insertion_point_at_b(s), count)
 
             if   mode == NORMAL:
-                resolve_normal_target(s, fixup_eof(view, target))
+                resolve_normal_target(s, target)
             elif mode == INSERT:
-                resolve_normal_target(s, fixup_eof(view, target))
+                resolve_normal_target(s, target)
             elif mode == VISUAL:
                 resolve_visual_target(s, target)
             elif mode == INTERNAL_NORMAL:
-                if (not view.substr(view.line(s.a)).strip() and view.line(s.b) != view.line(target)):
-                    s.a = view.line(s.a).a
-
-                s.b = target
+                resolve_internal_normal_target(view, s, target, inclusive=True)
 
             return s
 
         regions_transformer(self.view, f)
-
-
 class nv_vi_move_wordend_next(TextCommand):
     def run(self, edit, mode=None, count=1):
         def _get_target(view, start, count):
@@ -2909,6 +2924,99 @@ class nv_vi_move_wordend_next(TextCommand):
 
         regions_transformer(self.view, f)
 
+class nv_vi_move_bigword_prev(TextCommand):
+
+    def run(self, edit, mode=None, count=1):
+        if mode == VISUAL_BLOCK:
+            resolve_visual_block_target(self.view, big_word_reverse, count)
+            return
+
+        def f(view, s):
+            target = big_word_reverse(view, get_insertion_point_at_b(s), count)
+
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
+                resolve_normal_target(s, target)
+            elif mode == VISUAL:
+                resolve_visual_target(s, target)
+            elif mode == INTERNAL_NORMAL:
+                s.b = target
+
+            return s
+
+        regions_transformer(self.view, f)
+class nv_vi_move_bigword_next(TextCommand):
+    def run(self, edit, mode=None, count=1):
+        if mode == VISUAL_BLOCK:
+            resolve_visual_block_target(self.view, big_word_starts, count)
+            return
+
+        def f(view, s):
+            target = big_word_starts(view, get_insertion_point_at_b(s), count, internal=(mode == INTERNAL_NORMAL))
+
+            if   mode == NORMAL:
+                resolve_normal_target(s, fixup_eof(view, target))
+            elif mode == INSERT:
+                resolve_normal_target(s, fixup_eof(view, target))
+            elif mode == VISUAL:
+                resolve_visual_target(s, target)
+            elif mode == INTERNAL_NORMAL:
+                if (not view.substr(view.line(s.a)).strip() and view.line(s.b) != view.line(target)):
+                    s.a = view.line(s.a).a
+
+                s.b = target
+
+            return s
+
+        regions_transformer(self.view, f)
+
+class nv_vi_move_bigwordend_prev(TextCommand):
+    def run(self, edit, mode=None, count=1):
+        if mode == VISUAL_BLOCK:
+            resolve_visual_block_target(self.view, big_word_end_reverse, count)
+            return
+
+        def f(view, s):
+            target = big_word_end_reverse(view, get_insertion_point_at_b(s), count)
+
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
+                resolve_normal_target(s, target)
+            elif mode == VISUAL:
+                resolve_visual_target(s, target)
+            elif mode == INTERNAL_NORMAL:
+                resolve_internal_normal_target(view, s, target, inclusive=True)
+
+            return s
+
+        regions_transformer(self.view, f)
+class nv_vi_move_bigwordend_next(TextCommand):
+    def run(self, edit, mode=None, count=1):
+        def _get_target(view, start, count):
+            # TODO Is the big_word_ends() function off-by-one?
+            return big_word_ends(view, start, count) - 1
+
+        if mode == VISUAL_BLOCK:
+            resolve_visual_block_target(self.view, _get_target, count)
+            return
+
+        def f(view, s):
+            target = _get_target(view, get_insertion_point_at_b(s), count)
+
+            if   mode == NORMAL:
+                resolve_normal_target(s, target)
+            elif mode == INSERT:
+                resolve_normal_target(s, target)
+            elif mode == VISUAL:
+                resolve_visual_target(s, target)
+            elif mode == INTERNAL_NORMAL:
+                resolve_internal_normal_target(view, s, target, inclusive=True)
+
+            return s
+
+        regions_transformer(self.view, f)
 
 class nv_vi_move_paragraph_next(TextCommand):
     def run(self, edit, mode=None, count=1):
@@ -2934,8 +3042,6 @@ class nv_vi_move_paragraph_next(TextCommand):
             return s
 
         regions_transformer(self.view, f)
-
-
 class nv_vi_move_paragraph_prev(TextCommand):
     def run(self, edit, mode=None, count=1):
         def f(view, s):
@@ -3170,53 +3276,6 @@ class nv_vi_find_word_rev(TextCommand):
             set_last_search_pattern(self.view, word, 'nv_vi_find_word_rev')
 
         show_if_not_visible(self.view)
-
-
-class nv_vi_move_word_prev(TextCommand):
-    def run(self, edit, mode=None, count=1):
-        if mode == VISUAL_BLOCK:
-            resolve_visual_block_target(self.view, word_reverse, count)
-            return
-
-        def f(view, s):
-            target = word_reverse(view, get_insertion_point_at_b(s), count)
-
-            if   mode == NORMAL:
-                resolve_normal_target(s, target)
-            elif mode == INSERT:
-                resolve_normal_target(s, target)
-            elif mode == VISUAL:
-                resolve_visual_target(s, target)
-            elif mode == INTERNAL_NORMAL:
-                s.b = target
-
-            return s
-
-        regions_transformer(self.view, f)
-
-
-class nv_vi_move_bigword_prev(TextCommand):
-
-    def run(self, edit, mode=None, count=1):
-        if mode == VISUAL_BLOCK:
-            resolve_visual_block_target(self.view, big_word_reverse, count)
-            return
-
-        def f(view, s):
-            target = big_word_reverse(view, get_insertion_point_at_b(s), count)
-
-            if   mode == NORMAL:
-                resolve_normal_target(s, target)
-            elif mode == INSERT:
-                resolve_normal_target(s, target)
-            elif mode == VISUAL:
-                resolve_visual_target(s, target)
-            elif mode == INTERNAL_NORMAL:
-                s.b = target
-
-            return s
-
-        regions_transformer(self.view, f)
 
 
 class nv_vi_move_to_hard_bol(TextCommand):
@@ -3475,52 +3534,6 @@ class nv_vi_move_column(TextCommand):
         regions_transformer(self.view, f)
 
 
-class nv_vi_move_wordend_prev(TextCommand):
-    def run(self, edit, mode=None, count=1):
-        if mode == VISUAL_BLOCK:
-            resolve_visual_block_target(self.view, word_end_reverse, count)
-            return
-
-        def f(view, s):
-            target = word_end_reverse(view, get_insertion_point_at_b(s), count)
-
-            if   mode == NORMAL:
-                resolve_normal_target(s, target)
-            elif mode == INSERT:
-                resolve_normal_target(s, target)
-            elif mode == VISUAL:
-                resolve_visual_target(s, target)
-            elif mode == INTERNAL_NORMAL:
-                resolve_internal_normal_target(view, s, target, inclusive=True)
-
-            return s
-
-        regions_transformer(self.view, f)
-
-
-class nv_vi_move_bigwordend_prev(TextCommand):
-    def run(self, edit, mode=None, count=1):
-        if mode == VISUAL_BLOCK:
-            resolve_visual_block_target(self.view, big_word_end_reverse, count)
-            return
-
-        def f(view, s):
-            target = big_word_end_reverse(view, get_insertion_point_at_b(s), count)
-
-            if   mode == NORMAL:
-                resolve_normal_target(s, target)
-            elif mode == INSERT:
-                resolve_normal_target(s, target)
-            elif mode == VISUAL:
-                resolve_visual_target(s, target)
-            elif mode == INTERNAL_NORMAL:
-                resolve_internal_normal_target(view, s, target, inclusive=True)
-
-            return s
-
-        regions_transformer(self.view, f)
-
-
 class nv_vi_goto_changelist(TextCommand):
     def run(self, edit, mode=None, count=1, forward=True):
         goto = GotoView(self.view, mode, count)
@@ -3692,33 +3705,6 @@ class nv_vi_search(TextCommand):
                 if not sel.empty():
                     enter_visual_mode(self.view, mode)
                     break
-
-
-class nv_vi_move_bigwordend_next(TextCommand):
-    def run(self, edit, mode=None, count=1):
-        def _get_target(view, start, count):
-            # TODO Is the big_word_ends() function off-by-one?
-            return big_word_ends(view, start, count) - 1
-
-        if mode == VISUAL_BLOCK:
-            resolve_visual_block_target(self.view, _get_target, count)
-            return
-
-        def f(view, s):
-            target = _get_target(view, get_insertion_point_at_b(s), count)
-
-            if   mode == NORMAL:
-                resolve_normal_target(s, target)
-            elif mode == INSERT:
-                resolve_normal_target(s, target)
-            elif mode == VISUAL:
-                resolve_visual_target(s, target)
-            elif mode == INTERNAL_NORMAL:
-                resolve_internal_normal_target(view, s, target, inclusive=True)
-
-            return s
-
-        regions_transformer(self.view, f)
 
 
 class nv_vi_ctrl_f(TextCommand):

@@ -25,6 +25,7 @@
    + :sparkles: `MoveByWordEndsNoSep`,`MoveByWordEndsBackwardNoSep` command to move to word's end ignoring punctuation
      old: `wordA, wordB` would stop at `A` `,` `B`
      new: `wordA, wordB` would stop at `A`     `B`
+   + :sparkles: <kbd>⎈</kbd><kbd>,</kbd>/<kbd>\\</kbd> to bindable commands
 
 [0.91.1350]: https://github.com/eugenesvk/NeoVintageous/compare/0.91.1350...HEAD
 ## [0.91.1350]

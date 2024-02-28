@@ -21,6 +21,8 @@
    <!-- + :lock: ??? -->
    <!-- vulnerabilities -->
   - __Added__
+   + :sparkles: use of user data (e.g., icons) set in the new KDL config to be used for showing status icons as well as Help (not implemented yet)<br/>
+     `z	"Indent" icon="⇛🄼"` would display `⇛🄼` icon in the status bar to indicate that it's expecting a motion for a command that will indent the motioned-over text
    + :sparkles: allow <kbd>⇧</kbd><kbd>⎇</kbd><kbd>KEY</kbd> to be bound in user config
    + :sparkles: `MoveByWordEndsNoSep`,`MoveByWordEndsBackwardNoSep` command to move to word's end ignoring punctuation
      old: `wordA, wordB` would stop at `A` `,` `B`

@@ -20,7 +20,7 @@ VISUAL_BLOCK    	= 'mode_visual_block'
 VISUAL_LINE     	= 'mode_visual_line'
 
 from enum import auto, Flag, IntFlag
-class Mode(Flag):
+class Mode(IntFlag):
   #↓ unique modes	          ↓ abbreviations
   Normal         	= auto(); N 	= Normal
   Insert         	= auto(); I 	= Insert

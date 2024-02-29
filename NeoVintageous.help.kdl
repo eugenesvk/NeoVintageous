@@ -157,8 +157,11 @@ event { /* Run cli commands on entering/leaving a mode by adding
   Event	: in enter     out exit leave
   OS   	: ⌘  🍏 m mac osx macos     🐧 l lin linux     🪟 🗔 ⊞ w win windows
   */              //↓ CaSe, ␠whitespace⭾, and _.separator- sensitive
-  (ⓘ)in   	 (mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓘ":1}"#
-  (ⓘ)out  	{(mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓘ":0}"#;} //child node format also works
+  (ⓘ)in 	 (mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓘ":1}"#
+  (ⓘ)out	{(mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓘ":0}"#;} //child node format also works
+  /-post_mode_message class="AutoHotkey" name="AutoHotkey.ahk" mid="nv_a61171a06fc94216a3433cf83cd16e35"; // Post messages to a window of this class and with this text in its name with this unique ID (target app must use the same id to receive the message)
+  /-(ⓘ)in 	 (win)"send_mode_message" internal=true; // run internal command
+  /-(ⓘ)out	{(win)"send mode message" internal=true;}
   /-(n)in 	{(mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓃ":1}"#;}
   /-(n)out	{(mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓃ":0}"#;}
 }

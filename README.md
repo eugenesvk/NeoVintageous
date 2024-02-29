@@ -90,7 +90,16 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
   - Support nicer configuration even in the old format:
     + :sparkles: support for raw Sublime Text commands in user config without having to convert their names or arguments (or just the command names by adding extra `:` prefix)
     + :sparkles: rudimentary foundations to support custom key symbols in user config, e.g., `noremap ⇟ w` to move by word with a <kbd>⇟</kbd>PageDown key
-  - a few other extensions:
+    + :sparkles: use `Ⓝ` `ⓘ` icons (instead of `vi_command_mode_aware`) as mode limits on Sublime Text native keybinds (defined in `.sublime-keymap` files), e.g., to delete a word with <kbd>Alt</kbd><kbd>X</kbd>, but only in Insert mode:<br/>
+      `{"keys":["alt+x"],"command":"delete_word","context":[{"key":"ⓘ"}]},` 
+  + Improved aesthetics:
+    + (user configurable) status icons for command indicators: if you use <kbd>r</kbd> to record a macro, it doesn't make sense to see `q` in the statusbar just because the default keybind is <kbd>q</kbd>. Instead you see a recording symbol ⏺ or can add your own in the `i="⏺"` keybind field
+    + :sparkles: show a popup with a count indicator<br/>before![before](./doc/img/count_popup_before.png) ![after](./doc/img/count_popup_after.png)after
+    + :sparkles: allow user to set values of various indicators:
+      + for `macros` recording, e.g., short bright `🔴w` instead of the long gray `recording @w`
+      + for `ls` command, e.g., replace `+` modified file mark with `🖉` similar to how a modified tab is marked
+      + for `registers` command, e.g., replace `l` for linewise with `━`
+  + Extended user configuration:
     + :sparkles: surround: allow users to configure marks, mark aliases, when to append an extra space
     + :sparkles: surround: option to not seek the next set brackets if current text isn't enclosed in one — `⎀a(b)` with surround  delete will result in:
       - `⎀a(b)` if `seek_forward` is `false` (default)
@@ -104,20 +113,14 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
     + `GotoTargetPrev`/`GotoTargetNext` commands to allow using the brackets as arguments instead of as names<br/>
       `(Ⓝ)gdd" "GotoTargetPrev" "‹"` vs<br/>
       `(Ⓝ)gdd" "GotoTargetPrevWhateverThatBracketIsNamed"`
+    + More keybinds:
+      + support for rebinding Ctrl/Win/Alt key combos in Insert mode (they're still ignored by default unless explicitly enabled via the `handle_keys` config to not break all of the default Sublime Text's combos with these modifiers, also <kbd>Alt</kbd><kbd>F1</kbd>... function key combos are ignored by default)
   - and other changes:
     + support for text object pairs as targets for the goto command
-    + support for rebinding Ctrl/Win/Alt key combos in Insert mode (they're still ignored by default unless explicitly enabled via the `handle_keys` config to not break all of the default Sublime Text's combos with these modifiers, also <kbd>Alt</kbd><kbd>F1</kbd>... function key combos are ignored by default)
-    + :sparkles: show a popup with a count indicator<br/>before![before](./doc/img/count_popup_before.png) ![after](./doc/img/count_popup_after.png)after
     + :sparkles: nowrap alternative to tab switch Ex commands (`tabnextnowrap`/`tabpreviousnowrap`)
-    + :sparkles: allow user to set values of various indicators:
-      + for `ls` command, e.g., replace `+` modified file mark with `🖉` similar to how a modified tab is marked
-      + for `registers` command, e.g., replace `l` for linewise with `━`
     + :sparkles: add a `MoveHalfScreenHorizontally` command to move to the visual line's middle (helful with wrapped lines)
     + enabled a bunch of command to work in Insert mode (this limitation should be part of keybindings, not command functions)
-    + :sparkles: use `Ⓝ` `ⓘ` icons as mode limits on Sublime Text native keybinds (defined in `.sublime-keymap` files), e.g., to delete a word with <kbd>Alt</kbd><kbd>X</kbd>, but only in Insert mode:<br/>
-      `{"keys":["alt+x"],"command":"delete_word","context":[{"key":"ⓘ"}]},` 
     + :sparkles: support for count to the screen top/bottom movement commands, e.g., can move to line 5 from the visible top
-    + :sparkles: support for user config of the macros recording indicator, e.g., short visible `🔴w` instead of the long gray `recording @w`
     + :sparkles: search command for an unbounded string under cursor matches <kbd>g</kbd><kbd>#</kbd>/<kbd>*</kbd> vim commands
 
 ## Settings

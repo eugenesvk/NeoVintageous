@@ -123,8 +123,14 @@ def get_full_cmd(os,mode,evt) -> list:
 def on_mode_change  (view   , current_mode, new_mode) -> None:
   _log.debug("mode Δ %s ⟶ %s"
     ,      current_mode  ,  new_mode)
-  mode_old = mode_names_rev.get(current_mode,None)
-  mode_new = mode_names_rev.get(new_mode    ,None)
+  if current_mode == INTERNAL_NORMAL:
+    mode_old = mode_names_rev.get(NORMAL      , None)
+  else:
+    mode_old = mode_names_rev.get(current_mode, None)
+  if new_mode     == INTERNAL_NORMAL:
+    mode_new = mode_names_rev.get(NORMAL      , None)
+  else:
+    mode_new = mode_names_rev.get(new_mode    , None)
   if not (mode_old or mode_new):
     _log.error("mode Δ: couldn't match both mode names to modes (‘%s’|%s to ‘%s’|%s)"
       ,                                                current_mode,mode_old, new_mode,mode_new)

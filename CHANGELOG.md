@@ -28,6 +28,8 @@
      old: `wordA, wordB` would stop at `A` `,` `B`
      new: `wordA, wordB` would stop at `A`     `B`
    + :sparkles: <kbd>⎈</kbd><kbd>,</kbd>/<kbd>\\</kbd> to bindable commands
+   + :sparkles: support for sending a notification to AutoHotkey on Windows on mode changes
+     - requires Pywin32 dependency from the new [Package Control Libraries](https://github.com/packagecontrol/channel) channel, so may require adding the channel listed there
 
 [0.91.1350]: https://github.com/eugenesvk/NeoVintageous/compare/0.91.1350...HEAD
 ## [0.91.1350]

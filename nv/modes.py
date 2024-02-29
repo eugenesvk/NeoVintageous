@@ -24,11 +24,11 @@ class Mode(IntFlag):
   #↓ unique modes	          ↓ abbreviations
   Normal         	= auto(); N 	= Normal
   Insert         	= auto(); I 	= Insert
-  Command        	= auto(); C 	= Command
   Visual         	= auto(); VV	= Visual
   VisualBlock    	= auto(); VB	= VisualBlock
   VisualLine     	= auto(); VL	= VisualLine
   Select         	= auto(); S 	= Select
+  Command        	= auto(); C 	= Command
   OperatorPending	= auto(); O 	= OperatorPending
   Terminal       	= auto(); T 	= Terminal
   Replace        	= auto(); R 	= Replace

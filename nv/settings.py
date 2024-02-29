@@ -238,9 +238,9 @@ def get_mode(view) -> str:
 def set_mode(view, value: str) -> None:
     current_mode = get_mode(view)
     if not current_mode == value: # mode changes
-       set_session_view_value(view, f'is_{current_mode}', False) # unset old mode
-       set_session_view_value(view, f'is_{value}'       , True ) #   set new mode
-       on_mode_change(view, current_mode, value)
+        set_session_view_value(view, f'is_{current_mode}', False) # unset old mode
+        set_session_view_value(view, f'is_{value}'       , True ) #   set new mode
+        on_mode_change        (view, current_mode, value)
     set_session_view_value(view, 'mode', value)
 
 

@@ -1012,16 +1012,13 @@ class ViOpenMacrosForRepeating(RequireOneCharMixin, ViOperatorDef):
 
 
 @assign(seqs.SEQ['q'], ACTION_MODES)
-@assign_text(['ToggleMacroRecorder'], ACTION_MODES)
+@assign_text(['ToggleMacroRecorder'], ACTION_MODES, icon='⏺')
 class ViToggleMacroRecorder(RequireOneCharMixin, ViOperatorDef):
     def init(self):
-        self.updates_xpos = True
+        self.updates_xpos     = True
         self.scroll_into_view = True
-
     def translate(self, view):
-        return translate_action(view, 'nv_vi_toggle_macro_record', {
-            'name': self.inp
-        })
+        return translate_action(view, 'nv_vi_toggle_macro_record',{'name':self.inp})
 
 
 @assign(seqs.SEQ['⎈v'], ACTION_MODES)

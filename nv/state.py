@@ -19,6 +19,7 @@ from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PEN
 from NeoVintageous.nv.modes import Mode as M, mode_names, mode_names_rev, text_to_modes, text_to_mode_alone
 from NeoVintageous.nv     import vim # for always fresh config values, defaults + user
 from NeoVintageous.nv.vim import clean_view, enter_insert_mode, enter_normal_mode, enter_visual_mode, is_visual_mode, mode_to_name, reset_status_line, run_action, run_motion
+from NeoVintageous.nv.events_user import on_mode_change
 
 from NeoVintageous.nv.rc import cfgU
 
@@ -363,23 +364,20 @@ def _should_reset_mode(view, mode: str) -> bool:
 
 
 def init_view(view) -> None:
-    # If the view not a regular vim capable view (e.g. console, widget, panel),
-    # skip the state initialisation and perform a clean routine on the view.
-    # TODO is a clean routine really necessary on non-vim capable views?
-    if not is_view(view):
-        clean_view(view)
-        return
-
-    if not get_reset_during_init(view):
-        # Probably exiting from an input panel, like when using '/'. Don't reset
-        # the global state, as it may contain data needed to complete the
-        # command that's being built.
-        set_reset_during_init(view, True)
+    if not is_view(view): # If the view not a regular vim capable view (e.g. console, widget, panel), skip the state initialisation and perform a clean routine on the view.
+        clean_view(view) # TODO is a clean routine really necessary on non-vim capable views?
+        on_mode_change(view,None,M.Empty)
         return
 
     mode = get_mode(view)
+    if not get_reset_during_init(view): # Probably exiting from an input panel, like when using '/'. Don't reset the global state, as it may contain data needed to complete the command that's being built.
+        set_reset_during_init(view, True)
+        on_mode_change(view,None,mode)
+        return
+
 
     if not _should_reset_mode(view, mode):
+        on_mode_change(view,None,mode)
         return
 
     # Fix malformed selection: if we have no selections, add one.
@@ -408,3 +406,5 @@ def init_view(view) -> None:
         view.window().run_command('nv_enter_normal_mode', {'mode': mode, 'from_init': True})
 
     reset_command_data(view)
+    mode = get_mode(view)
+    on_mode_change(view,None,mode)

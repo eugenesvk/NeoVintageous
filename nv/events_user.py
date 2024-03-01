@@ -156,21 +156,7 @@ def get_full_cmd(os,mode,evt) -> list:
       if evt  in CFG[os][mode]:
         return   CFG[os][mode][evt]
 
-def on_mode_change  (view   , current_mode, new_mode) -> None:
-  _log.debug("mode Δ %s ⟶ %s"
-    ,      current_mode  ,  new_mode)
-  if current_mode == INTERNAL_NORMAL:
-    mode_old = mode_names_rev.get(NORMAL      , None)
-  else:
-    mode_old = mode_names_rev.get(current_mode, None)
-  if new_mode     == INTERNAL_NORMAL:
-    mode_new = mode_names_rev.get(NORMAL      , None)
-  else:
-    mode_new = mode_names_rev.get(new_mode    , None)
-  if not (mode_old or mode_new):
-    _log.error("mode Δ: couldn't match both mode names to modes (‘%s’|%s to ‘%s’|%s)"
-      ,                                                current_mode,mode_old, new_mode,mode_new)
-    return
+def execute_mode_change_cmd(view, current_mode, new_mode, mode_old, mode_new) -> None:
   if (cmd_l := get_full_cmd(PLATFORM,mode_old,'leave')):
     for full_cmd in cmd_l:
       if callable(full_cmd):
@@ -183,6 +169,29 @@ def on_mode_change  (view   , current_mode, new_mode) -> None:
         full_cmd   (          mode_old    , mode_new)
       else:
         run_command(full_cmd, current_mode, new_mode)
+
+def on_mode_change  (view   , current_mode, new_mode) -> None:
+  _log.debug("mode Δ %s ⟶ %s"
+    ,      current_mode  ,  new_mode)
+  if current_mode == INTERNAL_NORMAL:
+    mode_old = mode_names_rev.get(NORMAL      , None)
+  else:
+    mode_old = mode_names_rev.get(current_mode, None)
+  if new_mode     == INTERNAL_NORMAL:
+    mode_new = mode_names_rev.get(NORMAL      , None)
+  elif new_mode   == M.Empty: # e.g., moving to a console panel, signal it's not vim's mode
+    mode_new = new_mode
+  else:
+    mode_new = mode_names_rev.get(new_mode    , None)
+  if mode_old is None and mode_new is None:
+    _log.error("mode Δ: couldn't match both mode names to modes (‘%s’|%s to ‘%s’|%s)"
+      ,                                                current_mode,mode_old, new_mode,mode_new)
+    return
+  if mode_new == M.Empty: # "leave" all modes since this is not vim's view
+    for m_old in M_ANY:
+      execute_mode_change_cmd(view, current_mode, new_mode,    m_old, mode_new)
+  else:
+    execute_mode_change_cmd  (view, current_mode, new_mode, mode_old, mode_new)
 
 def run_command    (full_cmd, current_mode, new_mode) -> None:
   _log.debug("full_cmd = ‘%s’",full_cmd)

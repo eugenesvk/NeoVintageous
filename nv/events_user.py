@@ -188,6 +188,7 @@ def on_mode_change  (view   , current_mode, new_mode) -> None:
       ,                                                current_mode,mode_old, new_mode,mode_new)
     return
   if mode_new == M.Empty: # "leave" all modes since this is not vim's view
+    _log.debug("leaving all modes since new mode is not a vim's view?")
     for m_old in M_ANY:
       execute_mode_change_cmd(view, current_mode, new_mode,    m_old, mode_new)
   else:

@@ -1,6 +1,6 @@
 # Changelog
 
-[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.91.1350...HEAD
+[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.92.1350...HEAD
 ## [Unreleased]
   <!-- - __Added__ -->
    <!-- + :sparkles: ??? -->
@@ -20,6 +20,9 @@
   <!-- - __Security__ -->
    <!-- + :lock: ??? -->
    <!-- vulnerabilities -->
+
+[0.92.1350]: https://github.com/eugenesvk/NeoVintageous/compare/0.92.1350...HEAD
+## [0.92.1350]
   - __Added__
    + :sparkles: use of user data (e.g., icons) set in the new KDL config to be used for showing status icons as well as Help (not implemented yet)<br/>
      `z	"Indent" icon="⇛🄼"` would display `⇛🄼` icon in the status bar to indicate that it's expecting a motion for a command that will indent the motioned-over text

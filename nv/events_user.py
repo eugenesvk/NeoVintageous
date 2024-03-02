@@ -42,13 +42,15 @@ for       os in OS:
       DEF[os][mode][evt] = [] # empty list of command
 MESSAGE_TARGET = {'class':'AutoHotkey', 'name':'\\AutoHotkey.ahk', 'mid':'nv_a61171a06fc94216a3433cf83cd16e35'}
 DEF['postmodemessage'] = MESSAGE_TARGET
+cfg_updated = True
 
 import copy
 CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
 
 def reload_with_user_data_kdl() -> None:
   if hasattr(cfgU,'kdl') and (cfg := cfgU.kdl.get('event',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
-    global CFG
+    global CFG, cfg_updated
+    cfg_updated = True
     for node in cfg.nodes: # (ⓘ)in {(mac)"~/bin" "--var" r#"{"v":1}"#;} or post_mode_message class="AutoHotkey" name="AutoHotkey.ahk"
       if (cfg_key:=node.name) == 'postmodemessage':
         for (key,tag_val) in node.props.items(): # 1. class='AutoHotkey' name='AutoHotkey.ahk' pairs
@@ -249,6 +251,7 @@ if sys.platform.startswith('win') and PLATFORM == 'windows':
 
   from NeoVintageous.nv.modes import M_EVENT, M_ANY, Mode as M, text_to_modes, mode_names_rev,mode_clean_names_rev
   def post_mode_message(old, new):
+    global cfg_updated, ahkIDs
     if not _pywin:
       return
     if (old and not isinstance(old,M)) or (new and not isinstance(new,M)):
@@ -266,6 +269,10 @@ if sys.platform.startswith('win') and PLATFORM == 'windows':
     for ahkID in copy.deepcopy(ahkIDs): # check if window exists before running enum eveyr time, no need to waste
       if not win32gui.IsWindow(ahkID):
         ahkIDs.remove(ahkID)
+    if cfg_updated: # update winIDs when user config is updated
+      cfg_updated = False
+      ahkIDs = set()
+      win32gui.EnumWindows(cb_collect_winIDs, None) # Enumerate all windows and collect those with the specified class name/text
     if not ahkIDs:
       win32gui.EnumWindows(cb_collect_winIDs, None) # Enumerate all windows and collect those with the specified class name/text
     if not ahkIDs:

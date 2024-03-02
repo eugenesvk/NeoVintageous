@@ -10,7 +10,19 @@
 ## About this fork of NeoVintageous
 
 NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
-  - User events on mode change, e.g, set your "exit Insert mode" command to hold<kbd>i</kbd> to avoid typo-prone or inconvenient key sequences by setting an `isNVⓘ` to `1` variable via Karabiner Elements (macOS), and sending <kbd>⎋</kbd> when it's `1`
+  - User events on mode change
+    + set your "exit Insert mode" command to hold 🠿<kbd>i</kbd> to avoid typo-prone or inconvenient key sequences by setting an `isNVⓘ` variable to `1` via Karabiner Elements (macOS), and sending <kbd>⎋</kbd> when it's `1` on 🠿<kbd>i</kbd>
+    + alternatively (on Windows) set up a windows message listener in AutoHotkey and get message notifications on mode changes with the numeric code of the new mode
+      - requires manual installation of the Pywin32 dependency after adding [this repo](https://github.com/eugenesvk/Pywin32) to the Package Control (couldn't get the new [Package Control Libraries](https://github.com/packagecontrol/channel) channel with dependencies work for Pywin32)
+      - to get the numeric code of all modes, run in Sublime Text's console:
+      ```py
+      from NeoVintageous.nv.modes import M_EVENT, M_ANY, Mode as M, text_to_modes, mode_names_rev,mode_clean_names_rev
+      print(f"integer values for NeoVintageous modes")
+      for m in M_ANY:
+        print(f"{m} = {m+0}")
+      ```
+      - For a basic AutoHotkey example see [listen_WinMsg](./doc/listen_WinMsg.ahk)
+
   - Internationalization support of:
     + :sparkles: non-QWERTY/non-Latin layouts based on custom user `keymap` dictionary in `User/NeoVintageous.kdl` (see [example config](./NeoVintageous.help.kdl)). Requires manually running `NeoVintageous: Generate non-QWERTY keymap` command to convert default NeoVintageous keybinds to use this keymap
     + :sparkles: non-Latin keybinds, e.g., `noremap ц b` (or `(n)ц b`) to move back by word when a Cyrillic layout is on (does not work with modifier keys since Sublime Text doesn't report non-Latin keys in key combos, see [this ST issue](https://github.com/sublimehq/sublime_text/issues/5980))
@@ -115,6 +127,7 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
       `(Ⓝ)gdd" "GotoTargetPrevWhateverThatBracketIsNamed"`
     + More keybinds:
       + support for rebinding Ctrl/Win/Alt key combos in Insert mode (they're still ignored by default unless explicitly enabled via the `handle_keys` config to not break all of the default Sublime Text's combos with these modifiers, also <kbd>Alt</kbd><kbd>F1</kbd>... function key combos are ignored by default)
+     + <kbd>⎈</kbd><kbd>,</kbd>/<kbd>\\</kbd> are bindable
   - and other changes:
     + support for text object pairs as targets for the goto command
     + :sparkles: nowrap alternative to tab switch Ex commands (`tabnextnowrap`/`tabpreviousnowrap`)
@@ -122,6 +135,9 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
     + enabled a bunch of command to work in Insert mode (this limitation should be part of keybindings, not command functions)
     + :sparkles: support for count to the screen top/bottom movement commands, e.g., can move to line 5 from the visible top
     + :sparkles: search command for an unbounded string under cursor matches <kbd>g</kbd><kbd>#</kbd>/<kbd>*</kbd> vim commands
+    + `MoveByWordEndsNoSep`,`MoveByWordEndsBackwardNoSep` command to move to word's end ignoring punctuation
+      old: `wordA, wordB` would stop at `A` `,` `B`
+      new: `wordA, wordB` would stop at `A`     `B`
 
 ## Settings
 

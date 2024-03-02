@@ -220,6 +220,8 @@ if sys.platform.startswith('win') and PLATFORM == 'windows':
     _pywin = False
   except ModuleNotFoundError:
     _pywin = False
+  if not _pywin:
+    _log.error("‘PyWin32’ module couldn't be loaded, so can't send any messages!")
 
   import ctypes
   dll     = ctypes.windll
@@ -248,7 +250,6 @@ if sys.platform.startswith('win') and PLATFORM == 'windows':
   from NeoVintageous.nv.modes import M_EVENT, M_ANY, Mode as M, text_to_modes, mode_names_rev,mode_clean_names_rev
   def post_mode_message(old, new):
     if not _pywin:
-      _log.error("‘PyWin32’ module couldn't be loaded, so can't send any messages!")
       return
     if (old and not isinstance(old,M)) or (new and not isinstance(new,M)):
       _log.error("Mode change message parameters must be of type ‘Mode’, not old=‘%s’ new=‘%s’",type(old),type(new))

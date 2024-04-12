@@ -189,6 +189,14 @@
    + :beetle: keypad numbers not working as count prefix
    + :beetle: 1-symbol keys like `⇟` in named key aliases not recognized
 
+
+## 1.35.1 - Unreleased
+
+### Fixed
+
+- Modelines 'expandtab' inverted [#1016](https://github.com/NeoVintageous/NeoVintageous/issues/1016)
+- Settings documentation links [#1013](https://github.com/NeoVintageous/NeoVintageous/issues/1013)
+
 ## 1.35.0 - 2024-02-22
 
 ### Added

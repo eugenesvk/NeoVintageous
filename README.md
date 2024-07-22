@@ -37,9 +37,9 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
       - For a basic AutoHotkey example see [listen_WinMsg](./doc/listen_WinMsg.ahk)
 
   - Internationalization support of:
-    + :sparkles: non-QWERTY/non-Latin layouts based on custom user `keymap` dictionary in `User/NeoVintageous.kdl` (see [example config](./NeoVintageous.help.kdl)). Requires manually running `NeoVintageous: Generate non-QWERTY keymap` command to convert default NeoVintageous keybinds to use this keymap
-    + :sparkles: non-Latin keybinds, e.g., `noremap ц b` (or `(n)ц b`) to move back by word when a Cyrillic layout is on (does not work with modifier keys since Sublime Text doesn't report non-Latin keys in key combos, see [this ST issue](https://github.com/sublimehq/sublime_text/issues/5980))
-  - :sparkles: better configuration file format `NeoVintageous.kdl` (see [example](./NeoVintageous.help.kdl)) with:
+    + ✨ non-QWERTY/non-Latin layouts based on custom user `keymap` dictionary in `User/NeoVintageous.kdl` (see [example config](./NeoVintageous.help.kdl)). Requires manually running `NeoVintageous: Generate non-QWERTY keymap` command to convert default NeoVintageous keybinds to use this keymap
+    + ✨ non-Latin keybinds, e.g., `noremap ц b` (or `(n)ц b`) to move back by word when a Cyrillic layout is on (does not work with modifier keys since Sublime Text doesn't report non-Latin keys in key combos, see [this ST issue](https://github.com/sublimehq/sublime_text/issues/5980))
+  - ✨ better configuration file format `NeoVintageous.kdl` (see [example](./NeoVintageous.help.kdl)) with:
     + Fewer quotes (and in the future v2 version with even fewer quotes):
       ```
        plugin    {  surround    {  punctuation_marks    ‘="‘’"    “="“”"    ‹="‹›"   «="«»" ;};}
@@ -57,14 +57,14 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
       ```
     + Shorter general config option names without the `neovintageous_` prefix (`default_mode "normal"` instead of `"vintageous_default_mode" : "normal",`
     - BUT automatic reload on file change isn't supported, use `NeoVintageous: Reload config` command manually
-  + :sparkles: support for importing other config files
+  + ✨ support for importing other config files
     ```
     import (keybind)"NeoVintageous.key.kdl"
     /*↑import file name ↑ relative to this main config file or an absolute '/'-prefixed path since this calls pathlib's 'Path(main_config_folder, import_value)' docs.python.org/3/library/pathlib.html
     group values↑ in ‘keybind{}’, so the file itself can include only top-level ‘key command’ lines
     */
     ```
-  + :sparkles: human-readable format for setting keyboard shortcuts<br/>
+  + ✨ human-readable format for setting keyboard shortcuts<br/>
     `(nv)d "MoveByWordsBackward" // understandable command name`<br/>
     instead of `.neovintageousrc`'s<br/>
     `nnoremap d b` why do you need to remember that `b` moves by words backwards if you never use it?<br/>
@@ -113,28 +113,28 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
       // ! also, this doesn't work for nested arguments, those still require pasting the full json snippet
       ```
   - Support nicer configuration even in the old format:
-    + :sparkles: support for raw Sublime Text commands in user config without having to convert their names or arguments (or just the command names by adding extra `:` prefix)
-    + :sparkles: rudimentary foundations to support custom key symbols in user config, e.g., `noremap ⇟ w` to move by word with a <kbd>⇟</kbd>PageDown key
-    + :sparkles: use `Ⓝ` `ⓘ` icons (instead of `vi_command_mode_aware`) as mode limits on Sublime Text native keybinds (defined in `.sublime-keymap` files), e.g., to delete a word with <kbd>Alt</kbd><kbd>X</kbd>, but only in Insert mode:<br/>
+    + ✨ support for raw Sublime Text commands in user config without having to convert their names or arguments (or just the command names by adding extra `:` prefix)
+    + ✨ rudimentary foundations to support custom key symbols in user config, e.g., `noremap ⇟ w` to move by word with a <kbd>⇟</kbd>PageDown key
+    + ✨ use `Ⓝ` `ⓘ` icons (instead of `vi_command_mode_aware`) as mode limits on Sublime Text native keybinds (defined in `.sublime-keymap` files), e.g., to delete a word with <kbd>Alt</kbd><kbd>X</kbd>, but only in Insert mode:<br/>
       `{"keys":["alt+x"],"command":"delete_word","context":[{"key":"ⓘ"}]},` 
   + Improved aesthetics:
     + (user configurable) status icons for command indicators: if you use <kbd>r</kbd> to record a macro, it doesn't make sense to see `q` in the statusbar just because the default keybind is <kbd>q</kbd>. Instead you see a recording symbol ⏺ or can add your own in the `i="⏺"` keybind field
-    + :sparkles: show a popup with a count indicator<br/>before![before](./doc/img/count_popup_before.png) ![after](./doc/img/count_popup_after.png)after
-    + :sparkles: allow user to set values of various indicators:
+    + ✨ show a popup with a count indicator<br/>before![before](./doc/img/count_popup_before.png) ![after](./doc/img/count_popup_after.png)after
+    + ✨ allow user to set values of various indicators:
       + for `macros` recording, e.g., short bright `🔴w` instead of the long gray `recording @w`
       + for `ls` command, e.g., replace `+` modified file mark with `🖉` similar to how a modified tab is marked
       + for `registers` command, e.g., replace `l` for linewise with `━`
   + Extended user configuration:
-    + :sparkles: surround: allow users to configure marks, mark aliases, when to append an extra space
-    + :sparkles: surround: option to not seek the next set brackets if current text isn't enclosed in one — `⎀a(b)` with surround  delete will result in:
+    + ✨ surround: allow users to configure marks, mark aliases, when to append an extra space
+    + ✨ surround: option to not seek the next set brackets if current text isn't enclosed in one — `⎀a(b)` with surround  delete will result in:
       - `⎀a(b)` if `seek_forward` is `false` (default)
       - `⎀ab`   if `seek_forward` is `true`
-    + :sparkles: surround: option to maintain cursor position on text edits, e.g., adding `'` to `my_⎀word` (⎀ denotes cursor position) will leave cursor at the same spot in the new `'my_⎀word'` while previously it moved it to the first inserted punctuation `⎀'my_word'`
-    + :sparkles: surround: option to customize function prefix (`f` `F`)
-    + :sparkles: abolish: allow users to configure case coercion aliases
-    + :sparkles: abolish: option to maintain cursor position on case changes, e.g., converting `se⎀View⎀Sel_⎀Reverse` to upper case (⎀ denotes cursor position) will leave cursor at the same spot in the new `SE_⎀VIEW_⎀SEL_⎀REVERSE` while previously it moved it to the beginning of the word `SE_VIEW_SEL_REVERSE`
-    + :sparkles: marks: option to customize back aliases: `'` \`
-    + :sparkles: UnImpaired: option to customize option aliases
+    + ✨ surround: option to maintain cursor position on text edits, e.g., adding `'` to `my_⎀word` (⎀ denotes cursor position) will leave cursor at the same spot in the new `'my_⎀word'` while previously it moved it to the first inserted punctuation `⎀'my_word'`
+    + ✨ surround: option to customize function prefix (`f` `F`)
+    + ✨ abolish: allow users to configure case coercion aliases
+    + ✨ abolish: option to maintain cursor position on case changes, e.g., converting `se⎀View⎀Sel_⎀Reverse` to upper case (⎀ denotes cursor position) will leave cursor at the same spot in the new `SE_⎀VIEW_⎀SEL_⎀REVERSE` while previously it moved it to the beginning of the word `SE_VIEW_SEL_REVERSE`
+    + ✨ marks: option to customize back aliases: `'` \`
+    + ✨ UnImpaired: option to customize option aliases
     + `GotoTargetPrev`/`GotoTargetNext` commands to allow using the brackets as arguments instead of as names<br/>
       `(Ⓝ)gdd" "GotoTargetPrev" "‹"` vs<br/>
       `(Ⓝ)gdd" "GotoTargetPrevWhateverThatBracketIsNamed"`
@@ -143,11 +143,11 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
      + <kbd>⎈</kbd><kbd>,</kbd>/<kbd>\\</kbd> are bindable
   - and other changes:
     + support for text object pairs as targets for the goto command
-    + :sparkles: nowrap alternative to tab switch Ex commands (`tabnextnowrap`/`tabpreviousnowrap`)
-    + :sparkles: add a `MoveHalfScreenHorizontally` command to move to the visual line's middle (helful with wrapped lines)
+    + ✨ nowrap alternative to tab switch Ex commands (`tabnextnowrap`/`tabpreviousnowrap`)
+    + ✨ add a `MoveHalfScreenHorizontally` command to move to the visual line's middle (helful with wrapped lines)
     + enabled a bunch of command to work in Insert mode (this limitation should be part of keybindings, not command functions)
-    + :sparkles: support for count to the screen top/bottom movement commands, e.g., can move to line 5 from the visible top
-    + :sparkles: search command for an unbounded string under cursor matches <kbd>g</kbd><kbd>#</kbd>/<kbd>*</kbd> vim commands
+    + ✨ support for count to the screen top/bottom movement commands, e.g., can move to line 5 from the visible top
+    + ✨ search command for an unbounded string under cursor matches <kbd>g</kbd><kbd>#</kbd>/<kbd>*</kbd> vim commands
     + `MoveByWordEndsNoSep`,`MoveByWordEndsBackwardNoSep` command to move to word's end ignoring punctuation
       old: `wordA, wordB` would stop at `A` `,` `B`
       new: `wordA, wordB` would stop at `A`     `B`

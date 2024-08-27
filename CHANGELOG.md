@@ -190,6 +190,12 @@
    + :beetle: 1-symbol keys like `⇟` in named key aliases not recognized
 
 
+## 1.35.2 - 2024-08-27
+
+### Fixed
+
+- Modelines at the end of file are processed bottom-up
+
 ## 1.35.1 - 2024-04-12
 
 ### Fixed

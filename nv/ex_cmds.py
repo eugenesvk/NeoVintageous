@@ -661,23 +661,13 @@ def ex_registers(window, view, **kwargs) -> None:
     items = []
     for type, name, content in registers_get_all(view):
         if content:
-            multiple_values = []
+            selections = []
 
             for part in content:
-                lines = part.splitlines()
-                # ^J indicates a newline
-                part_value = '^J'.join(lines)
+                selections.append(part.replace('\n', '^J'))
 
-                # The splitlines function will remove any trailing newlines. We
-                # need to append one if splitlines() removed a trailing one.
-                if len(''.join(lines)) < len(content[0]):
-                    # ^J indicates a newline
-                    part_value += '^J'
-
-                multiple_values.append(part_value)
-
-            items.append('{} {}  {}'.format(
-                        type,name,truncate('^V'.join(multiple_values), 120))) # ^V indicates a visual block or multiple selection
+            formatted = truncate('^V'.join(selections), 120) # ^V indicates a visual block or multiple selection
+            items.append('  {}  "{}   {}'.format(type, name, formatted))
 
     items.sort()
     output = CmdlineOutput(window)

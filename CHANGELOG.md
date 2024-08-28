@@ -1,6 +1,6 @@
 # Changelog
 
-[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.92.1350...HEAD
+[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.92.1352...HEAD
 ## [Unreleased]
   <!-- - __Added__ -->
    <!-- + :sparkles: ??? -->
@@ -20,6 +20,11 @@
   <!-- - __Security__ -->
    <!-- + :lock: ??? -->
    <!-- vulnerabilities -->
+
+[0.92.1352]: https://github.com/eugenesvk/NeoVintageous/compare/0.92.1352...HEAD
+## [0.92.1352]
+  - __Changed__
+   + Updated to upstream release 1.35.2
 
 [0.92.1350]: https://github.com/eugenesvk/NeoVintageous/compare/0.92.1350...HEAD
 ## [0.92.1350]

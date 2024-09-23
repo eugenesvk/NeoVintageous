@@ -3755,7 +3755,7 @@ class nv_vi_enter(TextCommand):
         self.view.run_command('nv_vi_move_line_down', {'mode': mode, 'count': count})
 
         def f(view, s):
-            target = next_non_blank(view, get_insertion_point_at_b(s))
+            target = next_non_blank(view, view.line(get_insertion_point_at_b(s)).a)
 
             if   mode == NORMAL:
                 resolve_normal_target(s, target)
@@ -3776,7 +3776,7 @@ class nv_vi_move_line_back(TextCommand):
         self.view.run_command('nv_vi_move_line_up', {'mode': mode, 'count': count})
 
         def f(view, s):
-            target = next_non_blank(view, get_insertion_point_at_b(s))
+            target = next_non_blank(view, view.line(get_insertion_point_at_b(s)).a)
 
             if   mode == NORMAL:
                 resolve_normal_target(s, target)

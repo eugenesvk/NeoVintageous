@@ -205,6 +205,12 @@
    + :beetle: 1-symbol keys like `⇟` in named key aliases not recognized
 
 
+## 1.35.3 - Unreleased
+
+### Fixed
+
+- Close other views leaves empty pane in some cases
+
 ## 1.35.2 - 2024-08-27
 
 ### Fixed

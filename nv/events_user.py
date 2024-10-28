@@ -4,7 +4,7 @@ from pathlib import Path
 import sublime
 
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
-from NeoVintageous.nv.modes import M_EVENT, Mode as M, text_to_modes, mode_names_rev,mode_clean_names_rev
+from NeoVintageous.nv.modes import M_EVENT, M_ANY, Mode as M, text_to_modes, mode_names_rev,mode_clean_names_rev
 from NeoVintageous.nv.rc import cfgU
 from NeoVintageous.nv.cfg_parse import clean_name
 
@@ -249,7 +249,6 @@ if sys.platform.startswith('win') and PLATFORM == 'windows':
       return
     ahkIDs.add(id)
 
-  from NeoVintageous.nv.modes import M_EVENT, M_ANY, Mode as M, text_to_modes, mode_names_rev,mode_clean_names_rev
   def post_mode_message(old, new):
     global cfg_updated, ahkIDs
     if not _pywin:

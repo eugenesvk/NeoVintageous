@@ -63,6 +63,7 @@ def addLoggingLevel(levelName, levelNum, methodName=None):
     if self.isEnabledFor(levelNum):
       self._log(levelNum, message, args, **kwargs)
   def logToRoot(message, *args, **kwargs):
+    kwargs.setdefault('stacklevel', 3) # make the line numbers and function names come out correct with custom formatters
     logging.log(levelNum, message, *args, **kwargs)
 
   logging.addLevelName(levelNum, levelName)

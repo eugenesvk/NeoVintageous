@@ -13,7 +13,7 @@ def add_module_logger_levels():
   addLoggingLevel('KEYY', DEFAULT_LOG_LEVEL - 20)
   addLoggingLevel('MAP', DEFAULT_LOG_LEVEL - 20)
   addLoggingLevel('MAPP', DEFAULT_LOG_LEVEL - 12)
-  addLoggingLevel('SET', DEFAULT_LOG_LEVEL - 20)
+  addLoggingLevel('ST', DEFAULT_LOG_LEVEL - 20) # 🐞 with SET, conflicts with other plugins
   addLoggingLevel('CFG', DEFAULT_LOG_LEVEL - 20)
   addLoggingLevel('T', DEFAULT_LOG_LEVEL - 20)
 

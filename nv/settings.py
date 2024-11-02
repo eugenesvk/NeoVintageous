@@ -17,7 +17,7 @@ from NeoVintageous.nv.cfg_parse import clean_name, clean_path
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
-_log.setLevel('SET')
+_log.setLevel('ST')
 if _log.hasHandlers(): # clear existing handlers, including sublime's
     logging.getLogger(__name__).handlers.clear()
     # _log.addHandler(stream_handler)

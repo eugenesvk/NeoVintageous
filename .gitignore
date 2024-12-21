@@ -37,7 +37,6 @@ package-metadata.json
 # project's built docs
 *.html
 !docs/index.html
-ToDo.md
 
 # vim
 *~

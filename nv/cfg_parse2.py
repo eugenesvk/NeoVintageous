@@ -72,25 +72,6 @@ def _parse_let_kdl2(node:kdl2.Node,cfg='') -> None:
         _log.debug(f"set var from kdl: ¦{pkey}¦=¦{val}¦")
         variables.set(pkey,val)
 
-def _parse_rc_g_kdl2(rc_g:kdl2.Node):
-    win = sublime.active_window()
-    for node in rc_g.nodes: # r#":set invrelativenumber"#
-        _parse_rc_cfg_kdl2(win,rc_cfg=node)
-
-def _parse_rc_cfg_kdl2(win,rc_cfg:kdl2.Node) -> None:
-    if not (cfgT := type(rc_cfg)) is kdl2.Node:
-        _log.error("Type of ‘rc’ config group should be kdl2.Node, not ‘%s’",cfgT)
-        return None
-    node = rc_cfg               # r#":set invrelativenumber"#
-    if len(node.entries) ==0:
-        _log.warn("‘rc’ config nodes must have no arguments/properties ‘%s’",node)
-        return None
-    opt_name = node.name     # r#":set invrelativenumber"#
-    if opt_name:
-        # print(f"‘rc’ config: node with no args/props, running as an Ex command ‘{node}’")
-        _source(win, [opt_name], nodump=True)
-        return None
-
 def _parse_general_cfg_kdl2(general_cfg:kdl2.Node,CFG:dict,DEF:dict,st_pref=None) -> None:
     if not (cfgT := type(general_cfg)) is kdl2.Node:
         _log.error("Type of ‘general’ config group should be kdl2.Node, not ‘%s’",cfgT)

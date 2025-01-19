@@ -231,11 +231,11 @@ def _parse_vars_kdl1(node_vars:kdl.Node,CFG:dict,var_d:dict={}):
     # print(f"var_d pos {var_d}")
     return var_d
 
-def _parse_keybinds_kdl1(keybinds:kdl.Node,CFG:dict,var_d:dict={}):
+def _parse_keybinds_kdl1(keybinds:kdl.Node,CFG:dict,cfgU,var_d:dict={}):
     var_d_combo = _parse_vars_kdl1(keybinds,CFG,var_d)
     for kb_node in keybinds.nodes: # (Ⓝ)"q" "OpenNameSpace"
-        _parse_keybind_kdl1(keybind=kb_node, CFG=CFG, var_d=var_d_combo)
-def _parse_keybind_kdl1(keybind:kdl.Node, CFG:dict, cfgU:dict, gmodes:Mode=Mode(0),var_d:dict={}):
+        _parse_keybind_kdl1(keybind=kb_node, CFG=CFG, cfgU=cfgU, var_d=var_d_combo)
+def _parse_keybind_kdl1(keybind:kdl.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0),var_d:dict={}):
     from NeoVintageous.nv.mappings import mappings_add, mappings_add_text
     if not (cfgT := type(keybind)) is kdl.Node:
         _log.error("Type of ‘keybind’ should be kdl.Node, not ‘%s’",cfgT)
@@ -330,6 +330,6 @@ def _parse_keybind_kdl1(keybind:kdl.Node, CFG:dict, cfgU:dict, gmodes:Mode=Mode(
                 # print(f"kb map+ ({mode}){key}={cmd_txt} with {prop}")
     if children and not isChain:       # without Chain argument...
         for child in children:         # ...parse children as keybinds
-            _parse_keybind_kdl1(keybind=child, CFG=CFG, gmodes=modes, var_d=var_d)
+            _parse_keybind_kdl1(keybind=child, CFG=CFG, cfgU=cfgU, gmodes=modes, var_d=var_d)
 
 

@@ -206,6 +206,80 @@ def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d
 
   return (doc,var_d)
 
+def parse_kdl2_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d:dict={}):
+  _log.cfg("  parse_kdl2_config @ %s with vars %s",cfg_p,var_d)
+
+  def fn_i(kdl_py_obj, parse_fragment):
+    return kdl_py_obj
+  def fn_import(kdl_py_obj, parse_fragment, kdl_docs=kdl_docs):
+    import_var = {}
+    for (key, val) in kdl_py_obj.getProps((...,...)):
+      if hasattr(val,'tag') and val.tag is not None:
+        import_var[key] = val
+
+    _log.cfg("%s",import_var)
+    var_set   = dict()
+    var_d_new = dict()
+    for pkey,tag_val in kdl_py_obj.props.items(): # Parse properties for var_name=(var)"val" pairs
+      tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''      #(var)
+      val = tag_val.value if hasattr(tag_val,'value') else tag_val #"val"
+      if tag in ['var','$']:
+        var_set[pkey] = val
+      if tag == 'varpass':
+        if pkey in var_d['set']:
+          var_set[pkey] = var_d['set'][pkey]
+          _log.cfg("  passing %s=%s",pkey,var_d['set'][pkey])
+        else:
+          _log.warn("  ‘%s’ variable is supposed to be passed from the variables available to this config, but it can't be found in %s (parsing ‘%s’)", pkey, list(var_d['set'].keys()), kdl_py_obj)
+        if val:
+          _log.warn("  ‘varpass’ variable ‘%s’ should have an empty value, not ‘%s’", pkey,val)
+    var_d_new['set'] = var_set
+
+    for arg in kdl_py_obj.args: # import (keybind)"./NV/mykeys.kdl"
+      tag = arg.tag   if hasattr(arg,'tag'  ) else enclose_in # todo: or enclose twice?
+      val = arg.value if hasattr(arg,'value') else arg
+      ext = '' if val.lower().endswith('.kdl') else '.kdl'
+      fname = val + ext
+      enclose_pre = (tag + ' {\n') if tag else '' # keybind
+      enclose_pos =          '\n}' if tag else ''
+      _log.debug("arg=‘%s’ tag=‘%s’ cfg_p.parent=‘%s’ val=‘%s’%s\n(cfg_p=‘%s’)"
+        ,         arg,     tag,     cfg_p.parent,     val,   ext,  cfg_p)
+      if (cfg_import_f := Path(cfg_p.parent,fname).expanduser()).exists():
+        try:
+          with open(cfg_import_f, 'r', encoding='utf-8', errors='replace') as f:
+            cfg_import = enclose_pre + f.read() + enclose_pos
+        except FileNotFoundError as e:
+          sublime.error_message(f"{PACKAGE_NAME}:\nTried and failed to load\n{cfg_import_f}")
+          break
+      else:
+        sublime.error_message(f"{PACKAGE_NAME}:\nCouldn't find config\n{cfg_import_f}\nimported in\n{cfg_p}")
+        break
+      parse_kdl2_config(cfg_import, cfg_import_f, kdl_docs, enclose_in=tag, var_d=var_d_new)
+    return None # consume imports, successfull will be stored as separate docs, so drop kdl_py_obj
+
+  parseConfig = kdl2.ParseConfig(
+    nativeUntaggedValues	=True       	#|True| produce native Py objects (str int float bool None) for ()untagged values, or kdl-Py objects (kdl2.String kdl2.Decimal...)
+    ,nativeTaggedValues 	=True       	#|True| produce native Py objects for (tagged)values for predefined tags like i8..u64 f32 uuid url regex
+    #,valueConverters   	= {"i":fn_i}	# A dictionary of tag->converter functions
+    ,nodeConverters     	= {(None,"import"):fn_import,(None,"Import"):fn_import # match untagged import node ()
+      } # A dictionary of NodeKey->converter functions
+  )
+  printConfig = kdl2.PrintConfig(
+    indent            	="  " 	#|"\t"|
+    ,semicolons       	=False	#|False|
+    ,printNulls       	=True 	#|True| if False, skip over any "null"/None arg/props. Corrupts docs that use "null" keyword intentionally, but can be useful if you'd prefer to use a None value as a signal that the argument has been removed
+    ,respectStringType	=True 	#|True| output strings as the same type they were in the input, either raw (r#"foo"#) or normal ("foo") (only kdl-Py, not native ones (e.g, set nativeUntaggedValues=False))
+    ,respectRadix     	=True 	#|True| ≈respectStringType, output numbers as the radix they were in the input, like 0x1b for hex numbers. False: print decimal numbers (kdl-Py)
+    ,exponent         	="e"  	#|e| character to use for the exponent part of decimal numbers, when printed with scientific notation, "e" or "E" (kdl-Py)
+  )
+  doc = kdl2.Parser(parseConfig, printConfig).parse(cfg)
+  for node in doc.nodes:
+    clean_node_name2(node)
+  # print(type(doc),'\n',doc)
+  kdl_docs += [(doc,var_d)] # append parsed doc to the list
+
+  return (doc,var_d)
+
 def parse_user_sublime_cmdline(line:str) -> Union[str,None]:
   command = sublime.decode_value('{'+line+'}')
   if   not  'command' in command:

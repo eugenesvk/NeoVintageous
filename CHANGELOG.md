@@ -21,6 +21,10 @@
    <!-- + :lock: ??? -->
    <!-- vulnerabilities -->
 
+  - __Added__
+   + support for shorter variable types `$` for `var` and `$→` for `varpass`
+   + support KDL v2 (set as default)
+
 [0.931.1352]: https://github.com/eugenesvk/NeoVintageous/compare/0.931.1352...HEAD
 ## [0.931.1352]
   - __Fixed__

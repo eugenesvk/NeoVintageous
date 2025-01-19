@@ -396,7 +396,7 @@ class cfgU(metaclass=Singleton):
         _log.t("load_kdl rc   ⏰%s %s", DFMT.format(t=(datetime.now() - t)), TFMT.format(t=(t:=datetime.now())))
 
         for (keybind,var_d) in cfgU.kdl['keybind']:
-            _parse_keybinds_kdl(keybinds=keybind,CFG=CFG,var_d=var_d)
+            _parse_keybinds_kdl(keybinds=keybind,CFG=CFG,cfgU=cfgU,var_d=var_d)
         _log.t("load_kdl key  ⏰%s %s", DFMT.format(t=(datetime.now() - t)), TFMT.format(t=(t:=datetime.now())))
 
         _import_plugins_with_user_data_kdl()

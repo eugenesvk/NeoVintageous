@@ -10,7 +10,7 @@ import NeoVintageous.dep.kdl as kdl
 import NeoVintageous.dep.kdl2 as kdl2
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.modes import Mode, Mode as M, text_to_modes, mode_names, MODE_NAMES_OLD, M_EVENT, M_ANY, M_CMDTXT
-from NeoVintageous.nv.cfg import _keybind_prop
+from NeoVintageous.nv.cfg import _keybind_prop, re_count, re_subl_tag, re_filetype
 from NeoVintageous.nv.cfg_parse import clean_name, clean_cmd
 
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL, TFMT, DFMT
@@ -234,7 +234,7 @@ def _parse_keybinds_kdl1(keybinds:kdl.Node,CFG:dict,var_d:dict={}):
     var_d_combo = _parse_vars_kdl1(keybinds,CFG,var_d)
     for kb_node in keybinds.nodes: # (Ⓝ)"q" "OpenNameSpace"
         _parse_keybind_kdl1(keybind=kb_node, CFG=CFG, var_d=var_d_combo)
-def _parse_keybind_kdl1(keybind:kdl.Node, CFG:dict, gmodes:Mode=Mode(0),var_d:dict={}):
+def _parse_keybind_kdl1(keybind:kdl.Node, CFG:dict, cfgU:dict, gmodes:Mode=Mode(0),var_d:dict={}):
     from NeoVintageous.nv.mappings import mappings_add, mappings_add_text
     if not (cfgT := type(keybind)) is kdl.Node:
         _log.error("Type of ‘keybind’ should be kdl.Node, not ‘%s’",cfgT)

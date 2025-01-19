@@ -20,6 +20,9 @@ _L = True if _log.isEnabledFor(logging.CFG) else False
 
 _KDL_VERSION = 2
 
+re_count = re.compile(r"[№⌗×⋅cn](\d+)")
+re_subl_tag = re.compile(r"subl|sublime|st")
+re_filetype = re.compile(r"[\s,]+")
 _keybind_prop = {
   'desc':['d','des','desc','description','inf','info'],
   'icon':['i','icn','icon','img','image'],

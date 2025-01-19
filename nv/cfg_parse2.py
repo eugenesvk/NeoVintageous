@@ -11,6 +11,10 @@ import NeoVintageous.dep.kdl2 as kdl2
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.modes import Mode, Mode as M, text_to_modes, mode_names, MODE_NAMES_OLD, M_EVENT, M_ANY, M_CMDTXT
 
+from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL, TFMT, DFMT
+_log = logging.getLogger(__name__)
+_log.setLevel(DEFAULT_LOG_LEVEL)
+
 def _node_has_arg(node:kdl2.Node) -> bool:
     has_arg = False
     for arg in node.getArgs((...,...)):

@@ -77,6 +77,19 @@ def get_tag_val_warn(tag_val:kdl.Value,logger:logging.Logger=None,node_name:str=
     tag = None
     val = tag_val
   return (tag,val)
+def get_tag_val_warn2(tag_val:kdl2.Value,logger:logging.Logger=None,node_name:str=''):
+  """split KDL2 value into tag and value, and warn if tag exists"""
+  if isinstance(tag_val, kdl2.Value):
+    tag = tag_val.tag
+    val = tag_val.value
+    if tag is not None:
+      if logger:
+        logger.warn("node ‘%s’ has unrecognized tag in value ‘%s’"
+          ,        node_name,                           tag_val)
+  else:
+    tag = None
+    val = tag_val
+  return (tag,val)
 
 def parse_kdl_doc(s,v_untag:bool=False,v_tag:bool=False):
   parseConfig = kdl.ParseConfig(

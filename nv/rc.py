@@ -156,18 +156,11 @@ from NeoVintageous.plugin import PACKAGE_NAME
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.modes import Mode, Mode as M, text_to_modes, mode_names, MODE_NAMES_OLD, M_EVENT, M_ANY, M_CMDTXT
 
+from NeoVintageous.nv.cfg import _keybind_prop
 from NeoVintageous.nv.cfg_parse import clean_name, clean_cmd
 re_count = re.compile(r"[№⌗×⋅cn](\d+)")
 re_subl_tag = re.compile(r"subl|sublime|st")
 re_filetype = re.compile(r"[\s,]+")
-_keybind_prop = {
-    'desc':['d','des','desc','description','inf','info'],
-    'icon':['i','icn','icon','img','image'],
-    'type':['t','type'],
-    'file':['ft','filetype'],
-    'defk':['defk','default_key','≝k'],
-    'defc':['defc','default_cmd','≝c'],
-    }
 
 from NeoVintageous.nv.cfg_parse1 import _parse_general_cfg_kdl1, _parse_keybinds_kdl1
 from NeoVintageous.nv.cfg_parse2 import _parse_general_cfg_kdl2, _parse_keybinds_kdl2
@@ -326,7 +319,7 @@ class cfgU(metaclass=Singleton):
         except Exception as e2:
             # print(f"couldn't parse the docs as KDL2 due to: {e2}")
             try:
-                NeoVintageous.nv.cfg_parse._KDL_VERSION = 1
+                NeoVintageous.nv.cfg._KDL_VERSION = 1
                 parse_kdl_config(cfg, cfg_f, kdl_docs)
                 return kdl_docs
             except Exception as e1:
@@ -336,7 +329,7 @@ class cfgU(metaclass=Singleton):
 
     @staticmethod
     def load_kdl():
-        is2 = (NeoVintageous.nv.cfg_parse._KDL_VERSION == 2)
+        is2 = (NeoVintageous.nv.cfg._KDL_VERSION == 2)
         _parse_general_g_kdl = _parse_general_g_kdl2 if is2 else _parse_general_g_kdl1
         _parse_rc_g_kdl      = _parse_rc_g_kdl2      if is2 else _parse_rc_g_kdl1
         _parse_keybinds_kdl  = _parse_keybinds_kdl2  if is2 else _parse_keybinds_kdl1

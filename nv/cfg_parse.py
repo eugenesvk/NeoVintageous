@@ -18,7 +18,6 @@ if _log.hasHandlers(): # clear existing handlers, including sublime's
     # _log.addHandler(stream_handler)
 _L = True if _log.isEnabledFor(logging.CFG) else False
 
-_KDL_VERSION = 2
 
 re_flags = 0
 re_flags |= re.MULTILINE | re.IGNORECASE

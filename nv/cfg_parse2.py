@@ -89,7 +89,7 @@ def _parse_rc_cfg_kdl2(win,rc_cfg:kdl2.Node) -> None:
         _source(win, [opt_name], nodump=True)
         return None
 
-def _parse_general_g_kdl2(general_g:kdl2.Node):
+def _parse_general_g_kdl2(general_g:kdl2.Node,CFG:dict,DEF:dict):
     win = sublime.active_window()
     st_pref = sublime.load_settings('Preferences.sublime-settings')
     if (src_pre := general_g.get((None,"source"))):
@@ -107,8 +107,8 @@ def _parse_general_g_kdl2(general_g:kdl2.Node):
             break
 
     for node in general_g.nodes: # set relativenumber=true
-        _parse_general_cfg_kdl2(general_cfg=node,st_pref=st_pref,CFG=CFG,DEF=DEF)
-def _parse_general_cfg_kdl2(general_cfg:kdl2.Node,st_pref=None,CFG:dict,DEF:dict) -> None:
+        _parse_general_cfg_kdl2(general_cfg=node,CFG=CFG,DEF=DEF,st_pref=st_pref)
+def _parse_general_cfg_kdl2(general_cfg:kdl2.Node,CFG:dict,DEF:dict,st_pref=None) -> None:
     if not (cfgT := type(general_cfg)) is kdl2.Node:
         _log.error("Type of ‘general’ config group should be kdl2.Node, not ‘%s’",cfgT)
         return None
@@ -193,7 +193,7 @@ def _parse_general_cfg_kdl2(general_cfg:kdl2.Node,st_pref=None,CFG:dict,DEF:dict
         _log.error("Unrecognized option type within ‘general’ config group, expecting ‘let’/‘set’/‘-’, not ‘%s’",opt_name)
         return None
 
-def _parse_keybind_arg(node:kdl2.Node, prop_subl={}):
+def _parse_keybind_arg2(node:kdl2.Node, CFG:dict, prop_subl={}):
     cmd_l   = []
     isChain = False
     for arg in node.getArgs((...,...)) # Parse arguments
@@ -222,7 +222,7 @@ def _parse_keybind_arg(node:kdl2.Node, prop_subl={}):
         for i in range(1,1+(count if count > 1 else 1)):
             cmd_l.append(cmd)
     return (cmd_l, isChain)
-def _parse_vars_kdl2(node_vars:kdl2.Node,var_d:dict={}):
+def _parse_vars_kdl2(node_vars:kdl2.Node,CFG:dict,var_d:dict={}):
     # print(f"var_d pre {var_d}")
     # use var_d from #import key=val props to seed initial values
     pre = CFG['var_def'][0] #‘
@@ -274,11 +274,11 @@ def _parse_vars_kdl2(node_vars:kdl2.Node,var_d:dict={}):
     # print(f"var_d pos {var_d}")
     return var_d
 
-def _parse_keybinds_kdl2(keybinds:kdl2.Node,var_d:dict={}):
-    var_d_combo = _parse_vars_kdl2(keybinds,var_d)
+def _parse_keybinds_kdl2(keybinds:kdl2.Node,CFG:dict,var_d:dict={}):
+    var_d_combo = _parse_vars_kdl2(keybinds,CFG,var_d)
     for kb_node in keybinds.nodes: # (Ⓝ)"q" "OpenNameSpace"
-        _parse_keybind_kdl2(keybind=kb_node, var_d=var_d_combo)
-def _parse_keybind_kdl2(keybind:kdl2.Node, gmodes:Mode=Mode(0), var_d:dict={}):
+        _parse_keybind_kdl2(keybind=kb_node, CFG=CFG, var_d=var_d_combo)
+def _parse_keybind_kdl2(keybind:kdl2.Node, CFG:dict, gmodes:Mode=Mode(0), var_d:dict={}):
     from NeoVintageous.nv.mappings import mappings_add, mappings_add_text
     if not (cfgT := type(keybind)) is kdl2.Node:
         _log.error("Type of ‘keybind’ should be kdl2.Node, not ‘%s’",cfgT)
@@ -332,7 +332,7 @@ def _parse_keybind_kdl2(keybind:kdl2.Node, gmodes:Mode=Mode(0), var_d:dict={}):
                     prop_rest[pkey] = int(val)
                 else:
                     prop_rest[pkey] = val
-    (cmd,isChain)         = _parse_keybind_arg(node=node, prop_subl=prop_rest) # Parse arguments
+    (cmd,isChain)         = _parse_keybind_arg2(node=node, CFG=CFG, prop_subl=prop_rest) # Parse arguments
     cmd_txt.extend(cmd)
     if children and isChain:           # with Chain argument...
         for child in children:         # ...parse children as commands
@@ -343,7 +343,7 @@ def _parse_keybind_kdl2(keybind:kdl2.Node, gmodes:Mode=Mode(0), var_d:dict={}):
                 for dkey,key_abbrev in _keybind_prop.items():
                     if pkey not in key_abbrev: # non-specified key=val pairs
                         prop_rest[pkey] = val
-            (cmd,_) = _parse_keybind_arg(node=child, prop_subl=prop_rest)
+            (cmd,_) = _parse_keybind_arg2(node=child, CFG=CFG, prop_subl=prop_rest)
             cmd_txt.extend(cmd)
 
     if not modes:
@@ -373,5 +373,5 @@ def _parse_keybind_kdl2(keybind:kdl2.Node, gmodes:Mode=Mode(0), var_d:dict={}):
                 # print(f"kb map+ ({mode}){key}={cmd_txt} with {prop}")
     if children and not isChain:       # without Chain argument...
         for child in children:         # ...parse children as keybinds
-            _parse_keybind_kdl2(keybind=child, gmodes=modes, var_d=var_d)
+            _parse_keybind_kdl2(keybind=child, CFG=CFG, gmodes=modes, var_d=var_d)
 

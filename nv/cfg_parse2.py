@@ -198,7 +198,7 @@ def _parse_general_cfg_kdl2(general_cfg:kdl2.Node,CFG:dict,DEF:dict,st_pref=None
 def _parse_keybind_arg2(node:kdl2.Node, CFG:dict, prop_subl={}):
     cmd_l   = []
     isChain = False
-    for arg in node.getArgs((...,...)) # Parse arguments
+    for arg in node.getArgs((...,...)): # Parse arguments
         tag = clean_name(arg.tag   if hasattr(arg,'tag'  ) else '' )
         val = clean_cmd (arg.value if hasattr(arg,'value') else arg)
         val_dirt = arg.value if hasattr(arg,'value') else arg
@@ -256,7 +256,7 @@ def _parse_vars_kdl2(node_vars:kdl2.Node,CFG:dict,var_d:dict={}):
         val = tag_val.value if hasattr(tag_val,'value') else tag_val
         if tag: # vardef/set should have no tags
             continue
-        for (key,tag_val) in node.getProps((...,...)) # 2. testvar=⎇ key=value pairs
+        for (key,tag_val) in node.getProps((...,...)): # 2. testvar=⎇ key=value pairs
             if hasattr(tag_val,'value'): #=(t)⎇ if (t) exists (though shouldn't)
                 val = tag_val.value # ignore tag
                 _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"

@@ -89,9 +89,10 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
       import "NeoVintageous.keyB.kdl" m=(var)"Ⓝ" ipre=(var)""    ipos=(var)""  //  (Ⓝ)[
       import "NeoVintageous.keyB.kdl" m=(var)"ⓘ" ipre=(var)"<C-" ipos=(var)">" //  (ⓘ)<C-[>
       ```
+      (or `$` instead of `var` like `ipre=($)""`)
       Can also pass variables through to subsequent imports via the `varpass` tag, e.g.:
-        - @`NeoVintageous.kdl`: `import "cfgA.kd" m=(var)"Ⓝ"` defines variable `m` as a normal mode
-        - @`cfgA.kdl`: `import "cfgB.kd" m=(varpass)""` passes the value of `m` further
+        - @`NeoVintageous.kdl`: `import "cfgA.kd" m=(var)"Ⓝ"` (or `($)"Ⓝ"`) defines variable `m` as a normal mode
+        - @`cfgA.kdl`: `import "cfgB.kd" m=(varpass)""` (or `($→)""`) passes the value of `m` further
         - @`cfgB.kdl`: `(‘m’)a MoveToEol` will get `Ⓝ` as the value of `m`
 
     + group keybinds under a single mode without having to repeat mode's name in each keybind

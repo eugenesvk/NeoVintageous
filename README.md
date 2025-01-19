@@ -40,43 +40,43 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
     + ✨ non-QWERTY/non-Latin layouts based on custom user `keymap` dictionary in `User/NeoVintageous.kdl` (see [example config](./NeoVintageous.help.kdl)). Requires manually running `NeoVintageous: Generate non-QWERTY keymap` command to convert default NeoVintageous keybinds to use this keymap
     + ✨ non-Latin keybinds, e.g., `noremap ц b` (or `(n)ц b`) to move back by word when a Cyrillic layout is on (does not work with modifier keys since Sublime Text doesn't report non-Latin keys in key combos, see [this ST issue](https://github.com/sublimehq/sublime_text/issues/5980))
   - ✨ better configuration file format `NeoVintageous.kdl` (see [example](./NeoVintageous.help.kdl)) with:
-    + Fewer quotes (and in the future v2 version with even fewer quotes):
+    + Fewer useless quotes:
       ```
-       plugin    {  surround    {  punctuation_marks    ‘="‘’"    “="“”"    ‹="‹›"   «="«»" ;};}
+       plugin    {  surround    {  punctuation_marks    ‘ = ‘’    “ = “”    ‹ = ‹›   « = «» }}
       "plugin" : { "surround" : { "punctuation_marks":{"‘":"‘’", "“":"“”", "‹":"‹›","«":"«»"}} },
       ```
     + Inline comments:
       ```
-      punctuation-alias "clear"/*clear defaults d=")" B="}" r="]" a=">" }*/\
-                                                 d="(" f="[" g="‘" h="“"
+      punctuation-alias clear/*clear defaults d=")" B="}" r="]" a=">" }*/\
+                                              d="(" f="[" g=‘ h=“
       ```
     + Support for raw strings so you don't need to escape anything:
       ```
-       upper 	r#"l;'\"
+       upper 	 #"l;'\"
       "upper"	: "l;'\\",
       ```
-    + Shorter general config option names without the `neovintageous_` prefix (`default_mode "normal"` instead of `"vintageous_default_mode" : "normal",`
+    + Shorter general config option names without the `neovintageous_` prefix (`default_mode normal` instead of `"vintageous_default_mode" : "normal",`
     - BUT automatic reload on file change isn't supported, use `NeoVintageous: Reload config` command manually
   + ✨ support for importing other config files
     ```
-    import (keybind)"NeoVintageous.key.kdl"
+    import (keybind)NeoVintageous.key.kdl
     /*↑import file name ↑ relative to this main config file or an absolute '/'-prefixed path since this calls pathlib's 'Path(main_config_folder, import_value)' docs.python.org/3/library/pathlib.html
     group values↑ in ‘keybind{}’, so the file itself can include only top-level ‘key command’ lines
     */
     ```
   + ✨ human-readable format for setting keyboard shortcuts<br/>
-    `(nv)d "MoveByWordsBackward" // understandable command name`<br/>
+    `(nv)d MoveByWordsBackward // understandable command name`<br/>
     instead of `.neovintageousrc`'s<br/>
     `nnoremap d b` why do you need to remember that `b` moves by words backwards if you never use it?<br/>
     `vnoremap d b "b=MoveByWordsBackward` oh, and you can't even add a comment on the same line to clarify it<br/>
     And the whole `noremap` doesn't need to be repeated on every single line
-    + command repeat count in keybinds: `(Ⓝ)d (⋅4)"MoveByBigWordsBackward"` (or `№` `⌗` `c` `n` `×` `⋅` prefix) will move by 4 Words
-    + list of commands is executed as a single chain without the need to specify `chain` command: `(Ⓝ)q "MoveByBigWords" "MoveByBigWords"`
+    + command repeat count in keybinds: `(Ⓝ)d (⋅4)MoveByBigWordsBackward` (or `№` `⌗` `c` `n` `×` `⋅` prefix) will move by 4 Words
+    + list of commands is executed as a single chain without the need to specify `chain` command: `(Ⓝ)q MoveByBigWords MoveByBigWords`
     + `chain` argument to add node children as a sequence of commands for the same keybind (in case they need to set their own properties)
       ```kdl
-      (Ⓝ)q "MoveByBigWords" "chain" {
-        ↓/*node names are ignored*/ "MoveByBigWords"
-        - r#":"command":"move","args":{"by":"words","forward":true,"extend":true}<CR>"#
+      (Ⓝ)q MoveByBigWords chain {
+        ↓/*node names are ignored*/ MoveByBigWords
+        - #":"command":"move","args":{"by":"words","forward":true,"extend":true}<CR>"#
       }
       ```
     + template variables to, e.g., import the same keybind with a single modifier variation per mode to make them toggle relative lines with <kbd>[</kbd> in Normal mode and <kbd>⎈</kbd><kbd>[</kbd> in Insert mode
@@ -86,13 +86,13 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
       ```
       `NeoVintageous.key.kdl` file that will import ↑
       ```kdl
-      import "NeoVintageous.keyB.kdl" m=(var)"Ⓝ" ipre=(var)""    ipos=(var)""  //  (Ⓝ)[
-      import "NeoVintageous.keyB.kdl" m=(var)"ⓘ" ipre=(var)"<C-" ipos=(var)">" //  (ⓘ)<C-[>
+      import NeoVintageous.keyB.kdl m=(var)Ⓝ ipre=(var)""  ipos=(var)""  //  (Ⓝ)[
+      import NeoVintageous.keyB.kdl m=(var)ⓘ ipre=(var)<C- ipos=(var)>  //  (ⓘ)<C-[>
       ```
       (or `$` instead of `var` like `ipre=($)""`)
       Can also pass variables through to subsequent imports via the `varpass` tag, e.g.:
-        - @`NeoVintageous.kdl`: `import "cfgA.kd" m=(var)"Ⓝ"` (or `($)"Ⓝ"`) defines variable `m` as a normal mode
-        - @`cfgA.kdl`: `import "cfgB.kd" m=(varpass)""` (or `($→)""`) passes the value of `m` further
+        - @`NeoVintageous.kdl`: `import cfgA.kd m=(var)Ⓝ` (or `($)Ⓝ`) defines variable `m` as a normal mode
+        - @`cfgA.kdl`: `import cfgB.kd m=(varpass)""` (or `($→)""`) passes the value of `m` further
         - @`cfgB.kdl`: `(‘m’)a MoveToEol` will get `Ⓝ` as the value of `m`
 
     + group keybinds under a single mode without having to repeat mode's name in each keybind
@@ -104,7 +104,7 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
       ```
     + execute Sublime Text commands by writing arguments in a `prop=value` format
       ```kdl
-      (Ⓝ)r (subl)"move" by="words" forward=true extend=false
+      (Ⓝ)r (subl)move by=words forward=true extend=false
       //- r#":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"#
       // ! but this is NOT suitable for chains since prop=val in KDL do not maintain position vs. arguments, so to execute multiple Sublime Text commands with arguments you'd still need to "chain them"
       (Ⓝ)t "chain" {

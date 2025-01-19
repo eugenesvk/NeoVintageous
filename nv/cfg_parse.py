@@ -220,7 +220,7 @@ def parse_kdl2_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_
     _log.cfg("%s",import_var)
     var_set   = dict()
     var_d_new = dict()
-    for pkey,tag_val in kdl_py_obj.props.items(): # Parse properties for var_name=(var)"val" pairs
+    for (pkey,tag_val) in kdl_py_obj.getProps((...,...)): # Parse properties for var_name=(var)"val" pairs
       tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''      #(var)
       val = tag_val.value if hasattr(tag_val,'value') else tag_val #"val"
       if tag in ['var','$']:
@@ -235,7 +235,7 @@ def parse_kdl2_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_
           _log.warn("  ‘varpass’ variable ‘%s’ should have an empty value, not ‘%s’", pkey,val)
     var_d_new['set'] = var_set
 
-    for arg in kdl_py_obj.args: # import (keybind)"./NV/mykeys.kdl"
+    for arg in kdl_py_obj.getArgs((...,...)): # import (keybind)"./NV/mykeys.kdl"
       tag = arg.tag   if hasattr(arg,'tag'  ) else enclose_in # todo: or enclose twice?
       val = arg.value if hasattr(arg,'value') else arg
       ext = '' if val.lower().endswith('.kdl') else '.kdl'

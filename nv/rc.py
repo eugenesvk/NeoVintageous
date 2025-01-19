@@ -323,7 +323,7 @@ class cfgU(metaclass=Singleton):
         except Exception as e2:
             # print(f"couldn't parse the docs as KDL2 due to: {e2}")
             try:
-                NeoVintageous.nv.cfg._KDL_VERSION = 1
+                NeoVintageous.nv.cfg.KDLV = 1
                 parse_kdl_config(cfg, cfg_f, kdl_docs)
                 return kdl_docs
             except Exception as e1:
@@ -334,7 +334,7 @@ class cfgU(metaclass=Singleton):
     @staticmethod
     def load_kdl():
         global t
-        is2 = (NeoVintageous.nv.cfg._KDL_VERSION == 2)
+        is2 = (NeoVintageous.nv.cfg.KDLV == 2)
         _parse_general_g_kdl = _parse_general_g_kdl2 if is2 else _parse_general_g_kdl1
         _parse_rc_g_kdl      = _parse_rc_g_kdl2      if is2 else _parse_rc_g_kdl1
         _parse_keybinds_kdl  = _parse_keybinds_kdl2  if is2 else _parse_keybinds_kdl1

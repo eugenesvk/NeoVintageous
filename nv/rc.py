@@ -169,8 +169,43 @@ _keybind_prop = {
     'defc':['defc','default_cmd','≝c'],
     }
 
-from NeoVintageous.nv.cfg_parse1 import _parse_rc_g_kdl1, _parse_general_g_kdl1, _parse_keybinds_kdl1
-from NeoVintageous.nv.cfg_parse2 import _parse_rc_g_kdl2, _parse_general_g_kdl2, _parse_keybinds_kdl2
+from NeoVintageous.nv.cfg_parse1 import _parse_rc_g_kdl1, _parse_general_cfg_kdl1, _parse_keybinds_kdl1
+from NeoVintageous.nv.cfg_parse2 import _parse_rc_g_kdl2, _parse_general_cfg_kdl2, _parse_keybinds_kdl2
+def _parse_general_g_kdl1(general_g:kdl.Node,CFG:dict,DEF:dict):
+    win = sublime.active_window()
+    st_pref = sublime.load_settings('Preferences.sublime-settings')
+    if (src_pre := general_g.get((None,"source"))):
+        if (args := src_pre.args):
+            tag_val = args[0] #(t)"/dvorak.neovintageous" if (t) exists (though shouldn't)
+            # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
+            if hasattr(tag_val,'value'):
+                val = tag_val.value # ignore tag
+                _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
+                    ,      src_pre.name,                               tag_val)
+            else:
+                val = tag_val
+            # print(f"loading source first ‘{val}’")
+            _pre_load(win,val)
+    for node in general_g.nodes: # set relativenumber=true
+        _parse_general_cfg_kdl1(general_cfg=node,CFG=CFG,DEF=DEF,st_pref=st_pref)
+def _parse_general_g_kdl2(general_g:kdl2.Node,CFG:dict,DEF:dict):
+    win = sublime.active_window()
+    st_pref = sublime.load_settings('Preferences.sublime-settings')
+    if (src_pre := general_g.get((None,"source"))):
+        for arg in src_pre.getArgs((...,...)): # only get the first one
+            tag_val = arg #(t)"/dvorak.neovintageous" if (t) exists (though shouldn't)
+            # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
+            if hasattr(tag_val,'value'):
+                val = tag_val.value # ignore tag
+                _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
+                    ,      src_pre.name,                               tag_val)
+            else:
+                val = tag_val
+            # print(f"loading source first ‘{val}’")
+            _pre_load(win,val)
+            break
+    for node in general_g.nodes: # set relativenumber=true
+        _parse_general_cfg_kdl2(general_cfg=node,CFG=CFG,DEF=DEF,st_pref=st_pref)
 
 DEF = dict()
 DEF['res_tag'] = list() # internal command description tags, exclude these when parsing a sublime command so that it doesn't get arguments it can't understand

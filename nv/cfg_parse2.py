@@ -67,7 +67,7 @@ def _parse_set_kdl2(node:kdl.Node,cfg='') -> None:
 
 from NeoVintageous.nv import variables
 def _parse_let_kdl2(node:kdl2.Node,cfg='') -> None:
-    if not node.props:
+    if not _node_has_prop(node):
         _log.warn("%sconfig has a ‘let’ command without var=value properties (%s)",
             f'‘{cfg}’ ' if cfg else '',                                     node)
     for (pkey,tag_val) in node.getProps((...,...)):
@@ -115,19 +115,22 @@ def _parse_general_cfg_kdl2(general_cfg:kdl2.Node,CFG:dict,DEF:dict,st_pref=None
         type_def = opt_d['t']   # bool
         val_def  = opt_d['v']   # False
         if type_def == dict: # todo: iterate over values to strip tags?
-            if not node.props:
+            if not _node_has_prop(node):
                 _log.error("Unrecognized option type for %s in the ‘general’ config group, expecting %s, but there are no key=val properties!"
                         ,                             opt_name,                                   type_def)
             else:
-                CFG['general'][name_def] = node.props
+                props = dict()
+                for (pkey,tag_val) in node.getProps((...,...)):
+                    props[pkey] = tag_val
+                CFG['general'][name_def] = props
                 _over = ''
                 if  st_pref.has(f"vintageous_{name_def}"): # override Preferences with KDL's
-                    st_pref.set(f"vintageous_{name_def}", node.props)
+                    st_pref.set(f"vintageous_{name_def}", props)
                     _over = ' (overridden Preferences)'
                 if  st_pref.has(           f"{name_def}"): # override Preferences with KDL's
-                    st_pref.set(           f"{name_def}", node.props)
+                    st_pref.set(           f"{name_def}", props)
                     _over = ' (overridden Preferences)'
-                _log.cfg("set user dict ‘%s’=‘%s’%s",name_def,node.props,_over)
+                _log.cfg("set user dict ‘%s’=‘%s’%s",name_def,props,_over)
             return None
         else:
             for arg in node.getArgs((...,...)):

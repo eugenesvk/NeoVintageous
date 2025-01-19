@@ -166,6 +166,7 @@ def _parse_general_cfg_kdl2(general_cfg:kdl2.Node,CFG:dict,DEF:dict,st_pref=None
         _log.error("Unrecognized option type within ‘general’ config group, expecting ‘let’/‘set’/‘-’, not ‘%s’",opt_name)
         return None
 
+import copy
 def _parse_keybind_arg2(node:kdl2.Node, CFG:dict, prop_subl={}):
     cmd_l   = []
     isChain = False

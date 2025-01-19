@@ -597,8 +597,18 @@ class cfgU(metaclass=Singleton):
         else:
             _log.info("Couldn't find ‘%s’",cfg_p) # config file is optional
             return kdl_docs
-        parse_kdl_config(cfg, cfg_f, kdl_docs)
-        return kdl_docs
+        try:
+            parse_kdl2_config(cfg, cfg_f, kdl_docs)
+            return kdl_docs
+        except Exception as e2:
+            # print(f"couldn't parse the docs as KDL2 due to: {e2}")
+            try:
+                parse_kdl_config(cfg, cfg_f, kdl_docs)
+                return kdl_docs
+            except Exception as e1:
+                print(f"Couldn't parse {cfg_f} as KDL2 due to: {e2}")
+                print(f"  nor as KDL1 due to: {e1}")
+                return []
 
     @staticmethod
     def load_kdl():
@@ -703,7 +713,7 @@ def _import_plugins_with_user_data_kdl():
     from NeoVintageous.nv import macros
     macros.reload_with_user_data_kdl()
 
-from NeoVintageous.nv.cfg_parse import parse_kdl_config
+from NeoVintageous.nv.cfg_parse import parse_kdl_config, parse_kdl2_config
 # def load_cfgU() -> None:
 #     """load alternative user config file to a global class and add a watcher event to track changes"""
 #     global cfgU

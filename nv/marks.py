@@ -7,6 +7,7 @@ from NeoVintageous.nv.jumplist import jumplist_back
 from NeoVintageous.nv.session  import get_session_value
 from NeoVintageous.nv.settings import get_setting
 from NeoVintageous.nv.utils    import get_insertion_point_at_b
+from NeoVintageous.nv          import cfg as nvcfg
 
 from NeoVintageous.nv.rc import cfgU
 
@@ -41,7 +42,8 @@ def reload_with_user_data_kdl() -> None:
                 continue
             if cfg_key == 'back': # "'" "`"
                 CFG['back'] = list() # reset defaults
-                for arg in node.args:     # Parse arguments
+                nargs = node.getArgs((...,...)) if nvcfg.KDLV == 2 else node.args
+                for arg in nargs:     # Parse arguments
                     tag = arg.tag   if hasattr(arg,'tag'  ) else ''
                     val = arg.value if hasattr(arg,'value') else arg
                     # if tag:

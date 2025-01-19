@@ -13,6 +13,7 @@ from NeoVintageous.nv.utils     import get_insertion_point_at_b, next_non_blank,
 from NeoVintageous.nv.vi.search import find_in_range, reverse_search_by_pt
 from NeoVintageous.nv.vi.units  import word_starts
 from NeoVintageous.nv.cfg_parse import clean_name
+from NeoVintageous.nv           import cfg as nvcfg
 
 from NeoVintageous.nv.rc import cfgU
 
@@ -150,7 +151,7 @@ def reload_with_user_data_kdl() -> None:
                 continue
 
             if cfg_key == 'seekforward': # ⎀a(B) don't sub ⎀a(b) if false
-                args = [a for a in node.getArgs((...,...))] if NeoVintageous.nv.cfg.KDLV == 2 else node.args()
+                args = [a for a in node.getArgs((...,...))] if nvcfg.KDLV == 2 else node.args()
                 if args:
                     if not isinstance(args[0],bool):
                         _log.error("node ‘%s’ argument should be ‘true’ or ‘false’, not ‘%s’"
@@ -165,7 +166,7 @@ def reload_with_user_data_kdl() -> None:
                         ,          cfg_key,                               ', '.join(args))
                 continue
             if cfg_key == 'steadycursor': # don't 'move' ⎀cursor to the changed punctuation
-                nargs = node.getArgs((...,...)) if NeoVintageous.nv.cfg.KDLV == 2 else node.args
+                nargs = node.getArgs((...,...)) if nvcfg.KDLV == 2 else node.args
                 for arg in nargs:     # Parse arguments, toggle all
                     tag = arg.tag   if hasattr(arg,'tag'  ) else ''
                     val = arg.value if hasattr(arg,'value') else arg
@@ -179,7 +180,7 @@ def reload_with_user_data_kdl() -> None:
                         for key in _STEADY_CURSOR_KEY:
                             CFG['steadycursor'][key] = False
                         continue
-                nprops = node.getProps((...,...)) if NeoVintageous.nv.cfg.KDLV == 2 else node.props.items()
+                nprops = node.getProps((...,...)) if nvcfg.KDLV == 2 else node.props.items()
                 for pkey,tag_val in nprops: # Parse properties, toggle per group ‘quote=true’
                     tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
                     val = tag_val.value if hasattr(tag_val,'value') else tag_val
@@ -194,7 +195,7 @@ def reload_with_user_data_kdl() -> None:
                 continue
 
             text_obj = to_names_rev[val]
-            nargs = node.getArgs((...,...)) if NeoVintageous.nv.cfg.KDLV == 2 else node.args
+            nargs = node.getArgs((...,...)) if nvcfg.KDLV == 2 else node.args
             for arg in nargs:             # Parse arguments, −OLD pairs "b"
                 tag = arg.tag   if hasattr(arg,'tag'  ) else ''
                 val = arg.value if hasattr(arg,'value') else arg
@@ -229,7 +230,7 @@ def reload_with_user_data_kdl() -> None:
                 replaced.append(lbl[0])
                 replaced.append(lbl[1])
 
-            nprops = node.getProps((...,...)) if NeoVintageous.nv.cfg.KDLV == 2 else node.props.items()
+            nprops = node.getProps((...,...)) if nvcfg.KDLV == 2 else node.props.items()
             for pkey,tag_val in nprops: # Parse properties, +NEW pairs d="()"
                 tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
                 val = tag_val.value if hasattr(tag_val,'value') else tag_val

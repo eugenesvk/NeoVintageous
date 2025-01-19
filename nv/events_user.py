@@ -7,6 +7,7 @@ from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PEN
 from NeoVintageous.nv.modes import M_EVENT, M_ANY, Mode as M, text_to_modes, mode_names_rev,mode_clean_names_rev
 from NeoVintageous.nv.rc import cfgU
 from NeoVintageous.nv.cfg_parse import clean_name
+from NeoVintageous.nv           import cfg as nvcfg
 
 __all__ = ['NeoVintageousEventsUser'] # User events: run cli commands on mode changes
 
@@ -53,7 +54,7 @@ def reload_with_user_data_kdl() -> None:
     cfg_updated = True
     for node in cfg.nodes: # (ⓘ)in {(mac)"~/bin" "--var" r#"{"v":1}"#;} or post_mode_message class="AutoHotkey" name="AutoHotkey.ahk"
       if (cfg_key:=node.name) == 'postmodemessage':
-        nprops = node.getProps((...,...)) if NeoVintageous.nv.cfg.KDLV == 2 else node.props.items()
+        nprops = node.getProps((...,...)) if nvcfg.KDLV == 2 else node.props.items()
         for  key,tag_val in nprops: # 1. class='AutoHotkey' name='AutoHotkey.ahk' pairs
           key = clean_name(key)
           if hasattr(tag_val,'value'): #class=(t)‘AutoHotkey’ if (t) exists (though shouldn't)
@@ -89,7 +90,7 @@ def reload_with_user_data_kdl() -> None:
       # 1. Parse node arguments:  (os)exe arg;
       cmf_full = None
       exe = None
-      nargs = node.getArgs((...,...)) if NeoVintageous.nv.cfg.KDLV == 2 else node.args
+      nargs = node.getArgs((...,...)) if nvcfg.KDLV == 2 else node.args
       for i,arg in enumerate(nargs):
         tag_os = arg.tag   if hasattr(arg,'tag'  ) else ''
         val    = arg.value if hasattr(arg,'value') else arg
@@ -133,7 +134,7 @@ def reload_with_user_data_kdl() -> None:
           _log.error("node ‘%s’ has no OS tag in ‘%s’, skipping"
             ,               cfg.name,             exe)
           continue # skip to another node
-        nargs = node_cmd.getArgs((...,...)) if NeoVintageous.nv.cfg.KDLV == 2 else node_cmd.args
+        nargs = node_cmd.getArgs((...,...)) if nvcfg.KDLV == 2 else node_cmd.args
         for i,arg in enumerate(nargs):
           tag = arg.tag   if hasattr(arg,'tag'  ) else ''
           val = arg.value if hasattr(arg,'value') else arg

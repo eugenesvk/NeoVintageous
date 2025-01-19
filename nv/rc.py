@@ -610,6 +610,7 @@ class cfgU(metaclass=Singleton):
         except Exception as e2:
             # print(f"couldn't parse the docs as KDL2 due to: {e2}")
             try:
+                NeoVintageous.nv._KDL_VERSION = 1
                 parse_kdl_config(cfg, cfg_f, kdl_docs)
                 return kdl_docs
             except Exception as e1:

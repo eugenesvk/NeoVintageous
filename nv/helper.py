@@ -36,11 +36,11 @@ def _flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore):
             yield from flatten_kdl(node_child, key_new, sep=sep,lvl=lvl,ignore=ignore).items()
         if isinstance(doc_node, kdl.Node):
             key_this = key_parent + sep + key if key_parent else key
-            nprops = doc_node.getProps((...,...)) if NeoVintageous.nv.cfg.KDLV == 2 else doc_node.props.items()
+            nprops = doc_node.getProps((...,...))
             for key,val in nprops:
                 key_new = key_this + sep + key if key_this else key
                 yield key_new, val
-            nargs = doc_node.getArgs((...,...)) if NeoVintageous.nv.cfg.KDLV == 2 else doc_node.args
+            nargs = doc_node.getArgs((...,...))
             for i, arg in enumerate(nargs):
                 # tag = arg.tag   if hasattr(arg,'tag'  ) else ''
                 val = arg.value if hasattr(arg,'value') else arg

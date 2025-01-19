@@ -247,7 +247,8 @@ def reload_with_user_data_kdl() -> None:
                         _log.warn("node ‘%s’ has extra arguments in its child ‘%s’, only the 1st was used ‘%s’"
                             ,           cfg_key ,                         node.name   ,       {', '.join(args)})
                 node = node_parent
-                for (key,tag_val) in node.props.items(): # 2. ‘=‘’ key=value pairs
+                nprops = node.getProps((...,...)) if NeoVintageous.nv.cfg.KDLV == 2 else node.props.items()
+                for key,tag_val in nprops: # 2. ‘=‘’ key=value pairs
                     if hasattr(tag_val,'value'): #‘=(t)‘’ if (t) exists (though shouldn't)
                         val = tag_val.value # ignore tag
                         _log.warn("node ‘%s’ has unrecognized tag  property ‘%s=%s’"
@@ -312,7 +313,8 @@ def reload_with_user_data_kdl() -> None:
                         _log.warn("node ‘%s’ has extra arguments in its child ‘%s’, only the 1st was used ‘%s’"
                             ,         cfg_key ,                                node.name,{', '.join(args)})
                 node = node_parent
-                for (key,tag_val) in node.props.items(): # 2. d=(   key=value pairs
+                nprops = node.getProps((...,...)) if NeoVintageous.nv.cfg.KDLV == 2 else node.props.items()
+                for key,tag_val in nprops: # 2. d=(   key=value pairs
                     if hasattr(tag_val,'value'): #(t)"(" if (t) exists (though shouldn't)
                         val = tag_val.value # ignore tag
                         _log.warn("node ‘%s’ has unrecognized tag  property ‘%s=%s’"
@@ -369,7 +371,8 @@ def reload_with_user_data_kdl() -> None:
                         _log.warn("node ‘%s’ has extra arguments in its child ‘%s’, only the 1st was used ‘%s’"
                             ,       cfg_key,                             node.name,            {', '.join(args)})
                 node = node_parent
-                for (key,tag_val) in node.props.items(): # 2. add=true   key=value pairs
+                nprops = node.getProps((...,...)) if NeoVintageous.nv.cfg.KDLV == 2 else node.props.items()
+                for key,tag_val in nprops: # 2. add=true   key=value pairs
                     if hasattr(tag_val,'value'): #(t)true if (t) exists (though shouldn't)
                         val = tag_val.value # ignore tag
                         _log.warn("node ‘%s’ has unrecognized tag  property ‘%s=%s’"

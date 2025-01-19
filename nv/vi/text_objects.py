@@ -177,7 +177,8 @@ def reload_with_user_data_kdl() -> None:
                         for key in _STEADY_CURSOR_KEY:
                             CFG['steadycursor'][key] = False
                         continue
-                for pkey,tag_val in node.props.items(): # Parse properties, toggle per group ‘quote=true’
+                nprops = node.getProps((...,...)) if NeoVintageous.nv.cfg.KDLV == 2 else node.props.items()
+                for pkey,tag_val in nprops: # Parse properties, toggle per group ‘quote=true’
                     tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
                     val = tag_val.value if hasattr(tag_val,'value') else tag_val
                     # if tag:
@@ -225,7 +226,8 @@ def reload_with_user_data_kdl() -> None:
                 replaced.append(lbl[0])
                 replaced.append(lbl[1])
 
-            for pkey,tag_val in node.props.items(): # Parse properties, +NEW pairs d="()"
+            nprops = node.getProps((...,...)) if NeoVintageous.nv.cfg.KDLV == 2 else node.props.items()
+            for pkey,tag_val in nprops: # Parse properties, +NEW pairs d="()"
                 tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
                 val = tag_val.value if hasattr(tag_val,'value') else tag_val
                 # if tag:

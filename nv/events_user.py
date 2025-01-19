@@ -53,7 +53,8 @@ def reload_with_user_data_kdl() -> None:
     cfg_updated = True
     for node in cfg.nodes: # (ⓘ)in {(mac)"~/bin" "--var" r#"{"v":1}"#;} or post_mode_message class="AutoHotkey" name="AutoHotkey.ahk"
       if (cfg_key:=node.name) == 'postmodemessage':
-        for (key,tag_val) in node.props.items(): # 1. class='AutoHotkey' name='AutoHotkey.ahk' pairs
+        nprops = node.getProps((...,...)) if NeoVintageous.nv.cfg.KDLV == 2 else node.props.items()
+        for  key,tag_val in nprops: # 1. class='AutoHotkey' name='AutoHotkey.ahk' pairs
           key = clean_name(key)
           if hasattr(tag_val,'value'): #class=(t)‘AutoHotkey’ if (t) exists (though shouldn't)
             val = tag_val.value # ignore tag

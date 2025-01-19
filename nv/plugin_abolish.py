@@ -95,7 +95,8 @@ def reload_with_user_data_kdl() -> None:
             # 2. Parse node properties:  m=mixedcase
             if (cfg_key:=node_parent.name) == 'steadycursor':
                 # _log.debug(f"@plugin abolish: Parsing config {cfg_key}")
-                if (args := node_parent.args): # 0. true
+                args = [a for a in node_parent.getArgs((...,...))] if NeoVintageous.nv.cfg.KDLV == 2 else node_parent.args()
+                if args: # 0. true
                     tag_val = args[0] #(t)‘’ if (t) exists (though shouldn't)
                     (tag,val) = get_tag_val_warn(tag_val=tag_val,logger=_log,node_name=cfg_key)
                     if not isinstance(val,bool):
@@ -113,7 +114,8 @@ def reload_with_user_data_kdl() -> None:
 
             if (cfg_key:=node_parent.name) == 'alias':
                 # _log.debug(f"@plugin abolish: Parsing config {cfg_key}")
-                if (args := node_parent.args): # 0. clear
+                args = [a for a in node_parent.getArgs((...,...))] if NeoVintageous.nv.cfg.KDLV == 2 else node_parent.args()
+                if args: # 0. clear
                     tag_val = args[0] #(t)‘’ if (t) exists (though shouldn't)
                     (tag,val) = get_tag_val_warn(tag_val=tag_val,logger=_log,node_name=cfg_key)
                     if val == 'clear':
@@ -130,7 +132,8 @@ def reload_with_user_data_kdl() -> None:
                         ,        cfg_key,                                {', '.join(args)})
                 for node in node_parent.nodes: # 1. m mixedcase key_node value_arg pairs
                     key = node.name
-                    if (args := node.args):
+                    args = [a for a in node.getArgs((...,...))] if NeoVintageous.nv.cfg.KDLV == 2 else node.args()
+                    if args:
                         tag_val = args[0] #(t)‘’ if (t) exists (though shouldn't)
                         # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
                         if hasattr(tag_val,'value'):

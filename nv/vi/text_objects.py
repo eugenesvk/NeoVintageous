@@ -150,7 +150,8 @@ def reload_with_user_data_kdl() -> None:
                 continue
 
             if cfg_key == 'seekforward': # ⎀a(B) don't sub ⎀a(b) if false
-                if (args := node.args):
+                args = [a for a in node.getArgs((...,...))] if NeoVintageous.nv.cfg.KDLV == 2 else node.args()
+                if args:
                     if not isinstance(args[0],bool):
                         _log.error("node ‘%s’ argument should be ‘true’ or ‘false’, not ‘%s’"
                             ,           node.name,                                   args[0])
@@ -164,7 +165,8 @@ def reload_with_user_data_kdl() -> None:
                         ,          cfg_key,                               ', '.join(args))
                 continue
             if cfg_key == 'steadycursor': # don't 'move' ⎀cursor to the changed punctuation
-                for arg in node.args:     # Parse arguments, toggle all
+                nargs = node.getArgs((...,...)) if NeoVintageous.nv.cfg.KDLV == 2 else node.args
+                for arg in nargs:     # Parse arguments, toggle all
                     tag = arg.tag   if hasattr(arg,'tag'  ) else ''
                     val = arg.value if hasattr(arg,'value') else arg
                     # if tag:
@@ -192,7 +194,8 @@ def reload_with_user_data_kdl() -> None:
                 continue
 
             text_obj = to_names_rev[val]
-            for arg in node.args:          # Parse arguments, −OLD pairs "b"
+            nargs = node.getArgs((...,...)) if NeoVintageous.nv.cfg.KDLV == 2 else node.args
+            for arg in nargs:             # Parse arguments, −OLD pairs "b"
                 tag = arg.tag   if hasattr(arg,'tag'  ) else ''
                 val = arg.value if hasattr(arg,'value') else arg
                 # if tag:

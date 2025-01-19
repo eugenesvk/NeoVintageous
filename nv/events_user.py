@@ -89,7 +89,8 @@ def reload_with_user_data_kdl() -> None:
       # 1. Parse node arguments:  (os)exe arg;
       cmf_full = None
       exe = None
-      for i,arg in enumerate(node.args):
+      nargs = node.getArgs((...,...)) if NeoVintageous.nv.cfg.KDLV == 2 else node.args
+      for i,arg in enumerate(nargs):
         tag_os = arg.tag   if hasattr(arg,'tag'  ) else ''
         val    = arg.value if hasattr(arg,'value') else arg
         if i == 0: # check the os tag in the first argument
@@ -132,7 +133,8 @@ def reload_with_user_data_kdl() -> None:
           _log.error("node ‘%s’ has no OS tag in ‘%s’, skipping"
             ,               cfg.name,             exe)
           continue # skip to another node
-        for i,arg in enumerate(node_cmd.args):
+        nargs = node_cmd.getArgs((...,...)) if NeoVintageous.nv.cfg.KDLV == 2 else node_cmd.args
+        for i,arg in enumerate(nargs):
           tag = arg.tag   if hasattr(arg,'tag'  ) else ''
           val = arg.value if hasattr(arg,'value') else arg
           if tag:

@@ -40,7 +40,8 @@ def _flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore):
             for key,val in nprops:
                 key_new = key_this + sep + key if key_this else key
                 yield key_new, val
-            for i, arg in enumerate(doc_node.args):
+            nargs = doc_node.getArgs((...,...)) if NeoVintageous.nv.cfg.KDLV == 2 else doc_node.args
+            for i, arg in enumerate(nargs):
                 # tag = arg.tag   if hasattr(arg,'tag'  ) else ''
                 val = arg.value if hasattr(arg,'value') else arg
                 if i == 0: # store only the 1st arg without any prefixes

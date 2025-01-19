@@ -1,3 +1,4 @@
+/-kdl-version 2
 /* Below is a sample of ‘NeoVintageous.kdl’ config file
   (run ‘NeoVintageous: Open new config file example (KDL)’ in Command Palette to open)
   (run ‘Preferences: NeoVintageous New Settings (KDL)’ in Command Palette to open it along with your config)
@@ -27,28 +28,28 @@ keybind { // or add keybinds in the main config file
     (Ⓝ_)q (⋅2)"MoveByBigWordsBackward" file="kdl"
     (Ⓝ_)q (⋅2)"MoveByBigWords"
   // execute two Sublime Text commands without any "chain" intermediary
-    (Ⓝ)w r#":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"# r#":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"#
+    (Ⓝ)w #":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"# #":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"#
   // execute multiple         commands with    a   "chain" intermediary
     // helpful when a chained command  needs to have dedicated properties (not shown in the example below)
     // childrens' node names are ignored, so use ‘-’ or whatever
-    (Ⓝ)e r#":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"# "chain" {
+    (Ⓝ)e #":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"# "chain" {
       ↓/*node names are ignored*/ "MoveByBigWords"
-      - r#":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"#
-      - r#":"command":"move","args":{"by":"words","forward":true,"extend":true}<CR>"#
+      - #":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"#
+      - #":"command":"move","args":{"by":"words","forward":true,"extend":true}<CR>"#
     }
   // group normal-mode keybinds without having to specify Normal mode for each keybind
     // can add more modes to a keybind, but NOT remove the group mode(s)
     (Ⓝ)my_normal_group { // should move only once in normal mode since 2nd command switches to visual mode
-      a "MoveByBigWordsBackward" r#":"command":"move","args":{"by":"words","forward":false,"extend":true }<CR>"#
-      s "MoveByBigWords"         r#":"command":"move","args":{"by":"words","forward":true ,"extend":true }<CR>"#
+      a "MoveByBigWordsBackward" #":"command":"move","args":{"by":"words","forward":false,"extend":true }<CR>"#
+      s "MoveByBigWords"         #":"command":"move","args":{"by":"words","forward":true ,"extend":true }<CR>"#
     }
   // execute Sublime Text commands by writing arguments in a prop=value format
-    (Ⓝ)r (subl)"move" by="words" forward=true extend=false
-    // - r#":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"#
+    (Ⓝ)r (subl)"move" by="words" forward=#true extend=#false
+    // - #":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"#
     // ! but this is NOT suitable for chains since prop=val in KDL do not maintain position vs. arguments, so to execute multiple Sublime Text commands with arguments you'd still need to "chain them"
     (Ⓝ)t "chain" {
-      - (⋅5subl)"move" by="words" forward=true extend=false
-      - (⋅5subl)"move" by="words" forward=true extend=true
+      - (⋅5subl)"move" by="words" forward=#true extend=#false
+      - (⋅5subl)"move" by="words" forward=#true extend=#true
     }
     // ! also, this doesn't work for nested arguments, those still require pasting the full json snippet
 
@@ -59,20 +60,21 @@ keybind { // or add keybinds in the main config file
     import "NeoVintageous.keyB.kdl" m=(var)"Ⓝ" ipre=(var)""    ipos=(var)""  //  (Ⓝ)[
     import "NeoVintageous.keyB.kdl" m=(var)"ⓘ" ipre=(var)"<C-" ipos=(var)">" //  (ⓘ)<C-[>
     import "NeoVintageous.keyB.kdl" m=(varpass)"" // or use the mode variable passed to this config through to the next one
+    // or ($) instead of (var); ($→) instead of (varpass)
 }
 
 rc { // Literal Ex commands
-  r#":set relativenumber?"# // must have no arguments/properties, only a single node (use r#"raw"# strings to avoid any escapes
+  #":set relativenumber?"# // must have no arguments/properties, only a single node (use #"raw"# strings to avoid any escapes
 }
 
 general { // General options
   let mapleader="<space>"
-  set "relativenumber"=true relativenumber="inv" "relativenumber?" // support for vim "noargument" format and a more explicit config=value
+  set "relativenumber"=#true relativenumber="inv" "relativenumber?" // support for vim "noargument" format and a more explicit config=value
 
   default_mode                  	"normal"	//|""|  	default mode when activating or switching views (Visual selections are retained when the window loses focus)
-  reset_mode_when_switching_tabs	false   	//|true|	reset to Normal when a view is activated
+  reset_mode_when_switching_tabs	#false   	//|true|	reset to Normal when a view is activated
 
-  highlighted_yank                  	true   	//|true| 	github.com/machakann/vim-highlightedyank
+  highlighted_yank                  	#true   	//|true| 	github.com/machakann/vim-highlightedyank
   highlighted_yank_duration         	1000   	//|1000| 	ms
   highlighted_yank_style            	"fill" 	//|fill| 	¦outline¦underline¦squiggly_underline¦stippled_underline¦
   search_cur_style                  	"fill" 	//|fill| 	¦↑¦ current     search style
@@ -80,57 +82,57 @@ general { // General options
   search_occ_style                  	"fill" 	//|fill| 	¦↑¦ occurrences search style
   bell                              	"blink"	//|blink|	¦view¦views¦ Visual bell style type
   bell_color_scheme                 	"dark" 	//|dark| 	¦light¦path/to/scheme¦ Visual bell color-scheme
-  auto_nohlsearch_on_normal_enter   	true   	//|true| Clear search highlighting when entering Normal (usually occurs on ⎋)
+  auto_nohlsearch_on_normal_enter   	#true   	//|true| Clear search highlighting when entering Normal (usually occurs on ⎋)
     // :noh[lsearch]                	       	// clear search highlighting directly
     // noremap <C-l> :nohlsearch<CR>	       	// map a key combination to clear search highlighting
 
   // NeoVintageous Plugins
-  enable_abolish         	true	//|true |	github.com/tpope/vim-abolish
-  enable_commentary      	true	//|true |	github.com/tpope/vim-commentary
-  enable_multiple_cursors	true	//|true |	github.com/terryma/vim-multiple-cursors
-  enable_sneak           	true	//|false|	github.com/justinmk/vim-sneak
-  enable_sublime         	true	//|true |	Sublime Text tweaks
-  enable_surround        	true	//|true |	github.com/tpope/vim-surround
-  enable_targets         	true	//|true |	github.com/wellle/targets.vim
-  enable_unimpaired      	true	//|true |	github.com/tpope/vim-unimpaired
+  enable_abolish         	#true	//|true |	github.com/tpope/vim-abolish
+  enable_commentary      	#true	//|true |	github.com/tpope/vim-commentary
+  enable_multiple_cursors	#true	//|true |	github.com/terryma/vim-multiple-cursors
+  enable_sneak           	#true	//|false|	github.com/justinmk/vim-sneak
+  enable_sublime         	#true	//|true |	Sublime Text tweaks
+  enable_surround        	#true	//|true |	github.com/tpope/vim-surround
+  enable_targets         	#true	//|true |	github.com/wellle/targets.vim
+  enable_unimpaired      	#true	//|true |	github.com/tpope/vim-unimpaired
 
-  use_ctrl_keys  	true	//|true|	Enable key bindings prefaced by ⎈
-  use_super_keys 	true	//|true|	Enable key bindings prefaced by ◆ (⌘ Mac, ❖ Windows)
+  use_ctrl_keys  	#true	//|true|	Enable key bindings prefaced by ⎈
+  use_super_keys 	#true	//|true|	Enable key bindings prefaced by ◆ (⌘ Mac, ❖ Windows)
   /-handle_keys \	    	 //|{}| 	ignore keys (handled by ST)
-    "<C-q>"=false  "<C-w>"=false "<C-e>"=false "<C-r>"=false "<C-t>"=false "<C-y>"=false "<C-u>"=true "<C-i>"=false "<C-o>"=false \
-    "<C-a>"=false  "<C-s>"=false "<C-f>"=false "<C-g>"=false "<C-h>"=false "<C-j>"=false "<C-k>"=false "<C-l>"=false \
-    "<C-z>"=false  "<C-x>"=false "<C-c>"=false "<C-v>"=false "<C-b>"=true  "<C-m>"=false \
-    "<C-Q>"=false  "<C-W>"=false "<C-E>"=false "<C-R>"=false "<C-T>"=false "<C-Y>"=false "<C-U>"=true "<C-I>"=false "<C-O>"=false "<C-P>"=false \
-    "<C-A>"=false  "<C-S>"=false "<C-F>"=false "<C-G>"=false "<C-H>"=false "<C-J>"=false "<C-K>"=false "<C-L>"=false \
-    "<C-Z>"=false  "<C-X>"=false "<C-C>"=false "<C-V>"=false "<C-B>"=true  "<C-N>"=false "<C-M>"=false \
-    "<C-[>"=true   "<C-]>"=true  "<C-;>"=false "<C-.>"=false "<C-/>"=false "<C-0>"=true \
-    "<C-{>"=false  "<C-}>"=false "<C-=>"=false "<C-<>"=false "<C->>"=false "<C-?>"=false \
-    "<C-'>"=false  "<C-|>"=false \
-    "<C-\">"=false "<C-\\>"=false
-  //              	     	ignore ⎈f `{"<C-f>":false}` or `{"i_<C-f>": false}` in insert
-  //              	     	`n_`orm `i_`ns `v_`is `V_`visLine `b_`visBlock `s_`el
-  // "i_escape_jj"	true 	//|false|	Map insert mode jj to ⎋
-  // "i_escape_jk"	true 	//|false|	Map insert mode jk to ⎋
-  "nvⓘ_⎋←ii"      	false	//|false|	Map insert mode ii to ⎋
-  "nvⓘ_⎋←;i"      	true 	//|false|	Map insert mode ;i to ⎋
+    "<C-q>"=#false  "<C-w>"=#false "<C-e>"=#false "<C-r>"=#false "<C-t>"=#false "<C-y>"=#false "<C-u>"=#true "<C-i>"=#false "<C-o>"=#false \
+    "<C-a>"=#false  "<C-s>"=#false "<C-f>"=#false "<C-g>"=#false "<C-h>"=#false "<C-j>"=#false "<C-k>"=#false "<C-l>"=#false \
+    "<C-z>"=#false  "<C-x>"=#false "<C-c>"=#false "<C-v>"=#false "<C-b>"=#true  "<C-m>"=#false \
+    "<C-Q>"=#false  "<C-W>"=#false "<C-E>"=#false "<C-R>"=#false "<C-T>"=#false "<C-Y>"=#false "<C-U>"=#true "<C-I>"=#false "<C-O>"=#false "<C-P>"=#false \
+    "<C-A>"=#false  "<C-S>"=#false "<C-F>"=#false "<C-G>"=#false "<C-H>"=#false "<C-J>"=#false "<C-K>"=#false "<C-L>"=#false \
+    "<C-Z>"=#false  "<C-X>"=#false "<C-C>"=#false "<C-V>"=#false "<C-B>"=#true  "<C-N>"=#false "<C-M>"=#false \
+    "<C-[>"=#true   "<C-]>"=#true  "<C-;>"=#false "<C-.>"=#false "<C-/>"=#false "<C-0>"=#true \
+    "<C-{>"=#false  "<C-}>"=#false "<C-=>"=#false "<C-<>"=#false "<C->>"=#false "<C-?>"=#false \
+    "<C-'>"=#false  "<C-|>"=#false \
+    "<C-\">"=#false "<C-\\>"=#false
+  //              	      	ignore ⎈f `{"<C-f>":false}` or `{"i_<C-f>": #false}` in insert
+  //              	      	`n_`orm `i_`ns `v_`is `V_`visLine `b_`visBlock `s_`el
+  // "i_escape_jj"	#true  	//|false|	Map insert mode jj to ⎋
+  // "i_escape_jk"	#true  	//|false|	Map insert mode jk to ⎋
+  "nvⓘ_⎋←ii"      	#false	//|false|	Map insert mode ii to ⎋
+  "nvⓘ_⎋←;i"      	#true  	//|false|	Map insert mode ;i to ⎋
 
-  use_sys_clipboard                  	true                  	//|false|	Propagate copy actions to the system clipboard
-  clear_auto_indent_on_esc           	true                  	//|true |	delete indent if you type nothing after ␤ (⎋ after O)
-  auto_complete_exit_from_insert_mode	true                  	//|true |	⎋ to exit to Normal mode (always closes auto complete)
-  multi_cursor_exit_from_visual_mode 	false                 	//|false|	false: quit key ⎋¦J in Visual mode will delete existing cursors (can operate on all the cursors)
-  lsp_save                           	false                 	//|false|	Override native save to handle LSP Code-Actions-On-Save. See https://github.com/sublimelsp/LSP/issues/1725
-  shell_silent                       	false                 	//|false|	Show output panel from shell commands
-  show_marks_in_gutter               	true                  	//|true |	Show marks in the gutter
+  use_sys_clipboard                  	#true                  	//|false|	Propagate copy actions to the system clipboard
+  clear_auto_indent_on_esc           	#true                  	//|true |	delete indent if you type nothing after ␤ (⎋ after O)
+  auto_complete_exit_from_insert_mode	#true                  	//|true |	⎋ to exit to Normal mode (always closes auto complete)
+  multi_cursor_exit_from_visual_mode 	#false                	//|false|	#false: quit key ⎋¦J in Visual mode will delete existing cursors (can operate on all the cursors)
+  lsp_save                           	#false                 	//|false|	Override native save to handle LSP Code-Actions-On-Save. See https://github.com/sublimelsp/LSP/issues/1725
+  shell_silent                       	#false                 	//|false|	Show output panel from shell commands
+  show_marks_in_gutter               	#true                  	//|true |	Show marks in the gutter
   sneak_use_ic_scs                   	1                     	//|0    |	0=Always case-sensitive 1=Case sensitivity is determined by `ignorecase` and `smartcase`
-  exit_when_quitting_last_window     	true                  	//|true |	Behavior of commands like ZZ, :quit, :wq, etc.
-    //                               	true                  	  exit ST on closing the last view
-    //                               	false                 	  keep ST on closing the last view
+  exit_when_quitting_last_window     	#true                  	//|true |	Behavior of commands like ZZ, :quit, :wq, etc.
+    //                               	#true                  	  exit ST on closing the last view
+    //                               	#false                 	  keep ST on closing the last view
     //                               	unless_sidebar_visible	  exit ST only if the sidebar is hidden
 
-  source	null	 // Read Ex commands from a resource before the NeoVintageous.kdl is loaded, so you can still override these Ex commands in your config file, for example:
+  source	#null	 // Read Ex commands from a resource before the NeoVintageous.kdl is loaded, so you can still override these Ex commands in your config file, for example:
     // Packages/NeoVintageousDvorak/dvorak.neovintageous   // See github.com/gerardroche/NeoVintageousDvorak
     // Packages/NeoVintageousColemak/colemak.neovintageous // See github.com/gerardroche/NeoVintageousColemak
-  auto_switch_input_method        	false	//|false| Enable automatic switching of input methods.
+  auto_switch_input_method        	#false	//|false| Enable automatic switching of input methods.
   auto_switch_input_method_default	""   	// Configure the default input method to be used. Examples: "xkb:us::eng", "us", "0", "1", "2", "com.apple.keylayout.US", "1033"
   auto_switch_input_method_get_cmd	""   	///path/to/im-select Specify the complete command path for retrieving the current input method key. Examples: "/usr/bin/ibus engine", "/usr/local/bin/xkb-switch", "/usr/bin/fcitx-remote", "/path/to/im-get", "/usr/bin/qdbus org.kde.keyboard /Layouts getLayout", "/usr/local/bin/im-select", "D:\\bin\\im-select.exe"
   auto_switch_input_method_set_cmd	""   	///path/to/im-select {im} Provide the complete command path for switching input methods, using {im} as a placeholder for the input method key. Examples: "/usr/bin/ibus engine {im}", "/usr/local/bin/xkb-switch -s {im}", "/usr/bin/fcitx-remote -t {im}", "/path/to/im-set {im}", "/usr/bin/qdbus org.kde.keyboard /Layouts setLayout {im}", "/usr/local/bin/im-select {im}", "D:\\bin\\im-select.exe {im}"
@@ -140,16 +142,16 @@ keymap { // Use custom keymaps (non-QWERTY/non-Latin) in command mode
   // 1. add "lower"/"upper" keymaps below that match the position of QWERTY symbols
   // 2. Run command "NeoVintageous: Generate non-QWERTY key bindings"
   // (doesn't work for key combinations pending resolution of https://github.com/sublimehq/sublime_text/issues/5980)
-  /-qwerty  	r#"`12 34567890-=\ qwertyuiop[] asdfghjkl;' zxcvbnm,./"#
-  lower     	r#"ё12 34567890-=\ йцукенгшщзхъ фывапролджэ ячсмитьбю."#
-  upper     	r#"Ё!@ #$%^&*()_+| ЙЦУКЕНГШЩЗХЪ ФЫВАПРОЛДЖЭ ЯЧСМИТЬБЮ?"#
-  /-qwerty  	r#"~!@ #$%^&*()_+| QWERTYUIOP{} ASDFGHJKL:" ZXCVBNM<>?"#
-  /-upper   	r#"Ё!\"№;%:?*()_+/ ЙЦУКЕНГШЩЗХЪ ФЫВАПРОЛДЖЭ ЯЧСМИТЬБЮ,"# // remap some symbols to same to avoid issues with losing them in regular latin keybinds like ; being remapped to $ since ⇧4 is translated to ; in Ru
-  alias true	// 3. allows using `map й w` in .neovintageous to map non-latin keys separately from latin ones
+  /-qwerty  	#"`12 34567890-=\ qwertyuiop[] asdfghjkl;' zxcvbnm,./"#
+  lower     	#"ё12 34567890-=\ йцукенгшщзхъ фывапролджэ ячсмитьбю."#
+  upper     	#"Ё!@ #$%^&*()_+| ЙЦУКЕНГШЩЗХЪ ФЫВАПРОЛДЖЭ ЯЧСМИТЬБЮ?"#
+  /-qwerty  	#"~!@ #$%^&*()_+| QWERTYUIOP{} ASDFGHJKL:" ZXCVBNM<>?"#
+  /-upper   	#"Ё!\"№;%:?*()_+/ ЙЦУКЕНГШЩЗХЪ ФЫВАПРОЛДЖЭ ЯЧСМИТЬБЮ,"# // remap some symbols to same to avoid issues with losing them in regular latin keybinds like ; being remapped to $ since ⇧4 is translated to ; in Ru
+  alias #true	// 3. allows using `map й w` in .neovintageous to map non-latin keys separately from latin ones
   // assigns to each command an extra keybind in alt layout so that said key can be used in the TO sublime-keymap field
 }
 edit { // Edit behavior |default|
-  move_left_on_insert_exit false	//|true| move cursor left on ⓘ→Ⓝ to be consistent with line-end editing vimhelp.org/vim_faq.txt.html#faq-10.2
+  move_left_on_insert_exit #false	//|true| move cursor left on ⓘ→Ⓝ to be consistent with line-end editing vimhelp.org/vim_faq.txt.html#faq-10.2
 }
 event { /* Run cli commands on entering/leaving a mode by adding
   (mode)Event {(os)cmd "arg1" "arg2";}
@@ -157,13 +159,13 @@ event { /* Run cli commands on entering/leaving a mode by adding
   Event	: in enter     out exit leave
   OS   	: ⌘  🍏 m mac osx macos     🐧 l lin linux     🪟 🗔 ⊞ w win windows
   */              //↓ CaSe, ␠whitespace⭾, and _.separator- sensitive
-  (ⓘ)in 	 (mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓘ":1}"#
-  (ⓘ)out	{(mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓘ":0}"#;} //child node format also works
+  (ⓘ)in 	 (mac)"~/.local/bin/karabiner_cli" "--set-variables" #"{"isNVⓘ":1}"#
+  (ⓘ)out	{(mac)"~/.local/bin/karabiner_cli" "--set-variables" #"{"isNVⓘ":0}"#;} //child node format also works
   /-post_mode_message class="AutoHotkey" name="AutoHotkey.ahk" mid="nv_a61171a06fc94216a3433cf83cd16e35"; // Post messages to a window of this class and with this text in its name with this unique ID (target app must use the same id to receive the message)
-  /-(ⓘ)in 	 (win)"send_mode_message" internal=true; // run internal command
-  /-(ⓘ)out	{(win)"send mode message" internal=true;}
-  /-(n)in 	{(mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓃ":1}"#;}
-  /-(n)out	{(mac)"~/.local/bin/karabiner_cli" "--set-variables" r#"{"isNVⓃ":0}"#;}
+  /-(ⓘ)in 	 (win)"send_mode_message" internal=#true; // run internal command
+  /-(ⓘ)out	{(win)"send mode message" internal=#true;}
+  /-(n)in 	{(mac)"~/.local/bin/karabiner_cli" "--set-variables" #"{"isNVⓃ":1}"#;}
+  /-(n)out	{(mac)"~/.local/bin/karabiner_cli" "--set-variables" #"{"isNVⓃ":0}"#;}
 }
 status { // Set values/reorder the status bar mode indicator, indicator format is '<prefix><Mode><suffix>', where Mode's name can be either of the space-separated values:
   /*normal  	Ⓝ N	     visual     	Ⓥ V
@@ -199,33 +201,33 @@ indicator { // Set various indicator format
     line	"━"	// Linewise      text
   }; /-registers char="c" line="━━" // prop=val format also works
   count { // Set values for command ‘count’ popup indicator
-    enable    	true	//|true|	Show a popup at cursor location with a command repeat count
-    prefix    	""  	//||    	Prefix label shown before count number (e.g., ⌗3)
-    max_width 	80  	//|80|  	max popup width
-    max_height	30  	//|30|  	max popup height
-    template  	r#"<body id="nv_motion_count"><span>{prefix}{count}</span></body>"# //|<body id="nv_motion_count"><span>{prefix}{count}</span></body>| Full HTML popup template replacement that will receive two variables: prefix and count
+    enable    	#true	//|true|	Show a popup at cursor location with a command repeat count
+    prefix    	""   	//||    	Prefix label shown before count number (e.g., ⌗3)
+    max_width 	80   	//|80|  	max popup width
+    max_height	30   	//|30|  	max popup height
+    template  	#"<body id="nv_motion_count"><span>{prefix}{count}</span></body>"# //|<body id="nv_motion_count"><span>{prefix}{count}</span></body>| Full HTML popup template replacement that will receive two variables: prefix and count
   }; /-count prefix="⌗" // prop=val format is also allowed
 }
 mark { // Set various marks options
   back "'" "`" // marks that signal to go back to the previous selection
 }
 text_object { // Set various text object options
-  steady_cursor true/*←apply to all functions*/ /*override for a function→*/caselowerchar=true caselowerline=true
+  steady_cursor #true/*←apply to all functions*/ /*override for a function→*/caselowerchar=#true caselowerline=#true
     // Don't move ⎀cursor to the text object borders when a given command acts on it, e.g., "lower case within a word" command in ‘LOWER⎀case’ will result in:
     // ⎀lowercase  if true
     //  lower⎀case if false
     // only 2 commands are currently supported
-  seek_forward false // search for text objects outside of current selection, e.g., "lower case within (parentheses)" command in ‘⎀a(B)’ results in:
+  seek_forward #false // search for text objects outside of current selection, e.g., "lower case within (parentheses)" command in ‘⎀a(B)’ results in:
     // ‘a(B)’ if false (default)
     // ‘a(b)’ if true
   // Use custom text object list/labels (only within existing groups listed below), format:
-  //↓GroupName  label="Add pair" "Add pair" label_remove=null or "" "clear" //clear all group defaults (NO tag)
+  //↓GroupName  label="Add pair" "Add pair" label_remove=#null or "" "clear" //clear all group defaults (NO tag)
   Quote    	g="‘’" ‘="‘’" ’="‘’"  y="`' '" \                                  	// def '"`#$&*+-./:;=_|~\
     /**/   	"‘’" /*←↑     ↑ are the same: unlabeled pairs parsed using self*/\	//
     /**/   	y="`' '" /*separate a pair by space ↓ if it's > 2 symbols*/       	//
   Bracket  	"clear"/*clear all Bracket defaults*/  \                          	// def b() [] B{} <>
     /**/   	d="()" f="[]" j="{}" n="【】"                                       	// ...any symbol↑ is a label
-  Sentence 	"x" /*← new label */ "s"=null                                     	// |s|
+  Sentence 	"x" /*← new label */ "s"=#null                                    	// |s|
   Tag      	"c" /*← empty "" value since there are not Tag delimiters*/ "t"   	// |t|
   Word     	"s" w="" /*← Remove the default label for Word */                 	// |w|
   BigWord  	"e" W=""                                                          	// |W|
@@ -237,7 +239,7 @@ text_object { // Set various text object options
 
 plugin {
   abolish { // Use custom aliases in Abolish plugin
-    steady_cursor true // don't 'move' ⎀cursor to the word's beginning on case changes
+    steady_cursor #true // don't 'move' ⎀cursor to the word's beginning on case changes
     alias "clear"/*clear all default aliases*/ { // ._-␠ and CaSe are ignored in alias names
       m  	"MiXedCase" 	; p        	"MiXedCase"
       c  	"camelCase" 	;          	//
@@ -251,7 +253,7 @@ plugin {
   }
   unimpaired { // Use custom aliases in UnImpaired plugin
     option "clear"/*clear all default aliases*/ { // ._-␠ and CaSe are ignored in alias names
-    v null;//clear a specific alias
+    v #null;//clear a specific alias
     a "menu"; t "sidebar"; m "minimap"; e "statusbar";
     w "wrap"      	; //word_wrap
     l "list"      	; //draw_white_space
@@ -282,15 +284,15 @@ plugin {
     function "clear"/*clear defaults f F*/\
       "a" (␠)"s" // tags  ␠ ␣ s sp space   add spaces between () and arguments
     "append space to chars" ")}]" // "({["
-    steady_cursor add=true delete=true replace=true // don't 'move' ⎀cursor to the changed punctuation:
+    steady_cursor add=#true delete=#true replace=#true // don't 'move' ⎀cursor to the changed punctuation:
       // surround-word add of ‘(’ in  ‘text_⎀surr’  results in ‘(text_⎀surr)’
         //                                                not ‘⎀(text_surr)’
       // surround   delete of ‘(’ in ‘(text_⎀surr)’ results in  ‘text_⎀surr’
         //                                                 not ‘⎀text_surr’
       // surround  replace of ‘(’ in ‘(text_⎀surr)’ results in  ‘[text_⎀surr]’
         //               with ‘[’                          not ‘⎀[text_surr]’
-    /-steady_cursor {add true; replace true; delete true;} //key val child node format also works
-    seek_forward false /* When looking for brackets, if the current text is NOT enclosed in them, but Targets plugin is enabled, seek the next pair of brackets, for example (⎀ is cursor position):
+    /-steady_cursor {add #true; replace #true; delete #true;} //key val child node format also works
+    seek_forward #false /* When looking for brackets, if the current text is NOT enclosed in them, but Targets plugin is enabled, seek the next pair of brackets, for example (⎀ is cursor position):
         ⎀a(b)  with surround delete of ( will result in:
         ⎀ab       if SEEK_FORWARD is true : the next pair of () after ⎀ found and deleted
         ⎀a(b)     if SEEK_FORWARD is false: the next pair of () is ignored

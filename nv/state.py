@@ -44,7 +44,7 @@ def reload_with_user_data_kdl() -> None:
         _log.debug("@registers: Parsing config indicator/count")
         for cfg_key in CFG:
             if (node := cfg.get(cfg_key,None)): # prefix "⌗" node/arg pair
-                if (args := node.args):
+                if (args := [a for a in node.getArgs((...,...))]):
                     tag_val = args[0] #(t)"⌗" if (t) exists (though shouldn't)
                     # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
                     if hasattr(tag_val,'value'):
@@ -62,8 +62,8 @@ def reload_with_user_data_kdl() -> None:
                     _log.warn("node ‘%s’ has extra arguments in its child ‘%s’, only the 1st was used ‘%s’"
                         ,         cfg_key,                              node.name,         {', '.join(args)})
         node = cfg
-        for i,key in enumerate(prop_d := node.props): # prefix="⌗", alternative notation to child node/arg pairs
-            tag_val = prop_d[key] #prefix=(t)"⌗" if (t) exists (though shouldn't)
+        for i,(key,val) in enumerate(node.getProps((...,...))): # prefix="⌗", alternative notation to child node/arg pairs
+            tag_val = val #prefix=(t)"⌗" if (t) exists (though shouldn't)
             # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
             if hasattr(tag_val,'value'):
                 val = tag_val.value # ignore tag

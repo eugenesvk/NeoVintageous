@@ -7,6 +7,7 @@ import sublime
 import sublime_plugin
 
 import NeoVintageous.dep.kdl as kdl
+import NeoVintageous.dep.kdl2 as kdl2
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL, TFMT
 from NeoVintageous.plugin import PACKAGE_NAME
 
@@ -39,6 +40,22 @@ def clean_node_name(node:kdl.Node,rec:bool=True,parent:Union[str,None]=None): # 
     else:
       for node in node.nodes:
         clean_node_name(node, rec=rec)
+def clean_node_name2(node:kdl2.Node,rec:bool=True,parent:Union[str,None]=None): # recursively clean KDL2 node names (remove separators ␠⭾-_. etc)
+  node.name = re.sub(node_separator,'',node.name.casefold())
+  if rec:
+    if   node.name in ['keybind','rc']: # don't normalize keybind/init Ex commands
+      return
+    elif node.name == 'alias'\
+      and parent   == 'abolish': # don't normalize children of ‘alias’ as they can be - _
+      return
+    elif node.name == 'event': # don't normalize event cli commands (but normalize the initial (mode)Event node)
+      rec = False
+    if node.name == 'abolish':
+      for node in node.nodes:
+        clean_node_name2(node, rec=rec, parent='abolish')
+    else:
+      for node in node.nodes:
+        clean_node_name2(node, rec=rec)
 def clean_name(name:str): # clean name by removing separators ␠⭾-_. and converting to lowercase
   return re.sub(node_separator,'',name.casefold()) if  name                                              else name
 def clean_cmd (name:str): # convert command name to lowercase (don't remove _ since sublime uses those as seps)

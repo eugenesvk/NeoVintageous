@@ -148,7 +148,7 @@ def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d
     for pkey,tag_val in kdl_py_obj.props.items(): # Parse properties for var_name=(var)"val" pairs
       tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''      #(var)
       val = tag_val.value if hasattr(tag_val,'value') else tag_val #"val"
-      if tag == 'var':
+      if tag in ['var','$']:
         var_set[pkey] = val
       if tag == 'varpass':
         if pkey in var_d['set']:

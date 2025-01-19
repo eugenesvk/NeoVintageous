@@ -207,6 +207,7 @@ def key2textcmd(key:str,mode:M) -> dict:
 
 
 import NeoVintageous.dep.kdl as kdl
+import NeoVintageous.dep.kdl2 as kdl2
 import NeoVintageous.nv.cfg_parse
 def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
     # nnoremap FileType go gd :LspSymbolDefinition<CR>
@@ -268,11 +269,11 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
                 if def_cmd:
                     props['defc'] = def_cmd # save ‘MultipleCursorsSkip’ default command for ‘l’ key to props ‘defc’
                 if '"' in cmd_txt: # create a raw string to avoid escaping quotes
-                    arg = kdl.RawString(tag=None,value=cmd_txt)
+                    arg = kdl2.RawString(tag=None,value=cmd_txt)
                 else:
-                    arg = kdl.   String(tag=None,value=cmd_txt)
+                    arg = kdl2.   String(tag=None,value=cmd_txt)
                 props['file'] = file_types
-                node_key = kdl.Node(tag=mode_s, name=key, args=[arg], props=props)
+                node_key = kdl2.Node(tag=mode_s, name=key, args=[arg], props=props)
                 NeoVintageous.nv.cfg_parse._NVRC_KDL.nodes.append(node_key)
             for file_type in file_types.split(','):
                 for mode in modes:
@@ -316,10 +317,10 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
         if def_cmd:
             props['defc'] = def_cmd # save ‘MultipleCursorsSkip’ default command for ‘l’ key to props ‘defc’
         if '"' in cmd_txt: # create a raw string to avoid escaping quotes
-            arg = kdl.RawString(tag=None,value=cmd_txt)
+            arg = kdl2.RawString(tag=None,value=cmd_txt)
         else:
-            arg = kdl.   String(tag=None,value=cmd_txt)
-        node_key = kdl.Node(tag=mode_s, name=key, args=[arg], props=props)
+            arg = kdl2.   String(tag=None,value=cmd_txt)
+        node_key = kdl2.Node(tag=mode_s, name=key, args=[arg], props=props)
         NeoVintageous.nv.cfg_parse._NVRC_KDL.nodes.append(node_key)
 
     for mode in modes:

@@ -217,4 +217,4 @@ def parse_user_sublime_cmdline(line:str) -> Union[str,None]:
 _dump_to_kdl = False
 _NVRC_KDL = None
 if _dump_to_kdl:
-  _NVRC_KDL = parse_kdl_doc('')
+  _NVRC_KDL = parse_kdl2_doc('')

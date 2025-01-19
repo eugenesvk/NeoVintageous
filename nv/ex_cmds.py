@@ -419,7 +419,7 @@ def ex_inoremap(lhs: str = None, rhs: str = None, **kwargs) -> None:
 
 def ex_let(name, value, **kwargs) -> None: # mapleader <space>
     if NeoVintageous.nv.cfg_parse._dump_to_kdl:
-        node_key = kdl.Node(tag=None, name='let', props={name:value})
+        node_key = kdl2.Node(tag=None, name='let', props={name:value})
         NeoVintageous.nv.cfg_parse._NVRC_KDL.nodes.append(node_key)
     variables.set(name, re.sub('^(?:"|\')(.*)(?:"|\')$', '\\1', value))
 
@@ -678,7 +678,7 @@ def ex_registers(window, view, **kwargs) -> None:
 
 def ex_set(option: str, value, **kwargs) -> None:
     if NeoVintageous.nv.cfg_parse._dump_to_kdl:
-        node_key = kdl.Node(tag=None, name='set', props={option:value})
+        node_key = kdl2.Node(tag=None, name='set', props={option:value})
         NeoVintageous.nv.cfg_parse._NVRC_KDL.nodes.append(node_key)
     view = kwargs.get('view', None)
     if not view:

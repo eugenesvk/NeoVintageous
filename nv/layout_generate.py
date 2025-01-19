@@ -198,6 +198,7 @@ def expand(string):
 
 # Command to generate the KDL version of the default keymap
 import NeoVintageous.dep.kdl as kdl
+import NeoVintageous.dep.kdl2 as kdl2
 from NeoVintageous.nv.cfg_parse import parse_kdl_doc
 
 from NeoVintageous.nv.modes import Mode as M, M_ANY, INSERT,INTERNAL_NORMAL,NORMAL,OPERATOR_PENDING,REPLACE,SELECT,UNKNOWN,VISUAL,VISUAL_BLOCK,VISUAL_LINE
@@ -237,7 +238,7 @@ class NvDefaultKeymapKdl(ApplicationCommand):
         (mode_l_sort,m_enum) = mode_group_sort(mode_l)
         mode_s = "".join(mode_l_sort) # Ⓝⓘ
         cmd_txt = map_cmd2textcmd[cmd][0] # ViDeleteUpToCursor → DeleteUpToCursor
-        node_key = kdl.Node(tag=mode_s, name=keybind, args=[cmd_txt])
+        node_key = kdl2.Node(tag=mode_s, name=keybind, args=[cmd_txt])
         keymap_kdl.nodes.append(node_key)
         # print(f"  {i}{j} {keybind}={cmd} @ {mode_l}")
 
@@ -272,7 +273,7 @@ class NvDefaultKeymapKdl(ApplicationCommand):
         (mode_l_sort,m_enum) = mode_group_sort(mode_l)
         mode_s = "".join(mode_l_sort) # Ⓝⓘ
         cmd_txt = map_cmd2textcmd[cmd][0] # MultipleCursorsStart → MultipleCursorsStart
-        node_key = kdl.Node(tag=mode_s, name=keybind, args=[cmd_txt])
+        node_key = kdl2.Node(tag=mode_s, name=keybind, args=[cmd_txt])
         keymap_plugin_kdl.nodes.append(node_key)
         # print(f"  {i}{j} {keybind}={cmd} @ {mode_l}")
 
@@ -394,10 +395,10 @@ class NvOldCfgKeymapKdl(ApplicationCommand):
             if def_cmd:
               props['defc'] = def_cmd # save ‘MultipleCursorsSkip’ default command for ‘l’ key to props ‘defc’
             if '"' in cmd_txt: # create a raw string to avoid escaping quotes
-              arg = kdl.RawString(tag=None,value=cmd_txt)
+              arg = kdl2.RawString(tag=None,value=cmd_txt)
             else:
-              arg = kdl.   String(tag=None,value=cmd_txt)
-            node_key = kdl.Node(tag=f"{mode_enum:®}", name=keybind, args=[arg], props=props)
+              arg = kdl2.   String(tag=None,value=cmd_txt)
+            node_key = kdl2.Node(tag=f"{mode_enum:®}", name=keybind, args=[arg], props=props)
             # (Ⓝ)d     "MoveByWordsBackward"  def="b"
             # (Ⓝ)<D-d> "MultipleCursorsStart" def="gh"
 

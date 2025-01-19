@@ -169,8 +169,44 @@ _keybind_prop = {
     'defc':['defc','default_cmd','≝c'],
     }
 
-from NeoVintageous.nv.cfg_parse1 import _parse_rc_g_kdl1, _parse_general_cfg_kdl1, _parse_keybinds_kdl1
-from NeoVintageous.nv.cfg_parse2 import _parse_rc_g_kdl2, _parse_general_cfg_kdl2, _parse_keybinds_kdl2
+from NeoVintageous.nv.cfg_parse1 import _parse_general_cfg_kdl1, _parse_keybinds_kdl1
+from NeoVintageous.nv.cfg_parse2 import _parse_general_cfg_kdl2, _parse_keybinds_kdl2
+def _parse_rc_g_kdl1(rc_g:kdl.Node):
+    win = sublime.active_window()
+    for node in rc_g.nodes: # r#":set invrelativenumber"#
+        _parse_rc_cfg_kdl1(win,rc_cfg=node)
+def _parse_rc_cfg_kdl1(win,rc_cfg:kdl.Node) -> None:
+    if not (cfgT := type(rc_cfg)) is kdl.Node:
+        _log.error("Type of ‘rc’ config group should be kdl.Node, not ‘%s’",cfgT)
+        return None
+    node = rc_cfg               # r#":set invrelativenumber"#
+    if node.args or\
+       node.props:
+        _log.warn("‘rc’ config nodes must have no arguments/properties ‘%s’",node)
+        return None
+    opt_name = node.name     # r#":set invrelativenumber"#
+    if opt_name:
+        # print(f"‘rc’ config: node with no args/props, running as an Ex command ‘{node}’")
+        _source(win, [opt_name], nodump=True)
+        return None
+def _parse_rc_g_kdl2(rc_g:kdl2.Node):
+    win = sublime.active_window()
+    for node in rc_g.nodes: # r#":set invrelativenumber"#
+        _parse_rc_cfg_kdl2(win,rc_cfg=node)
+def _parse_rc_cfg_kdl2(win,rc_cfg:kdl2.Node) -> None:
+    if not (cfgT := type(rc_cfg)) is kdl2.Node:
+        _log.error("Type of ‘rc’ config group should be kdl2.Node, not ‘%s’",cfgT)
+        return None
+    node = rc_cfg               # r#":set invrelativenumber"#
+    if len(node.entries) ==0:
+        _log.warn("‘rc’ config nodes must have no arguments/properties ‘%s’",node)
+        return None
+    opt_name = node.name     # r#":set invrelativenumber"#
+    if opt_name:
+        # print(f"‘rc’ config: node with no args/props, running as an Ex command ‘{node}’")
+        _source(win, [opt_name], nodump=True)
+        return None
+
 def _parse_general_g_kdl1(general_g:kdl.Node,CFG:dict,DEF:dict):
     win = sublime.active_window()
     st_pref = sublime.load_settings('Preferences.sublime-settings')

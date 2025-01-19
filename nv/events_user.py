@@ -108,7 +108,8 @@ def reload_with_user_data_kdl() -> None:
           cmf_full  = [val] # start a new command
         else:
           cmf_full += [val] # append argument to command
-      if node.props.get('internal',False):
+      got_int = any('internal' == k for (k,v) in node.getProps((...,...))) if nvcfg.KDLV == 2 else node.props.get('internal',False)
+      if got_int:
         if (internal_func := CMD_INTERNAL.get(clean_name(exe),None)):
           cmf_full = internal_func
         else:
@@ -142,7 +143,8 @@ def reload_with_user_data_kdl() -> None:
             _log.warn("node ‘%s’ has unrecognized tag ‘%s’ in argument ‘%s’, ignoring"
               ,            cfg.name,                   tag,             val)
           cmf_full  += [val] # append argument to command
-        if node_cmd.props.get('internal',False):
+        got_int = any('internal' == k for (k,v) in node_cmd.getProps((...,...))) if nvcfg.KDLV == 2 else node_cmd.props.get('internal',False)
+        if got_int:
           if (internal_func := CMD_INTERNAL.get(clean_name(exe),None)):
             cmf_full = internal_func
           else:

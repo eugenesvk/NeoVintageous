@@ -176,6 +176,8 @@ _keybind_prop = {
     'defc':['defc','default_cmd','≝c'],
     }
 
+from NeoVintageous.nv.cfg_parse1 import _parse_rc_g_kdl1, _parse_general_g_kdl1, _parse_keybinds_kdl1
+from NeoVintageous.nv.cfg_parse2 import _parse_rc_g_kdl2, _parse_general_g_kdl2, _parse_keybinds_kdl2
 
 DEF = dict()
 DEF['res_tag'] = list() # internal command description tags, exclude these when parsing a sublime command so that it doesn't get arguments it can't understand
@@ -271,6 +273,10 @@ class cfgU(metaclass=Singleton):
     @staticmethod
     def load_kdl():
         global t
+        is2 = (NeoVintageous.nv._KDL_VERSION == 2)
+        _parse_general_g_kdl = _parse_general_g_kdl2 if is2 else _parse_general_g_kdl1
+        _parse_rc_g_kdl      = _parse_rc_g_kdl2      if is2 else _parse_rc_g_kdl1
+        _parse_keybinds_kdl  = _parse_keybinds_kdl2  if is2 else _parse_keybinds_kdl1
         if hasattr(cfgU,'kdl') and cfgU.kdl: # avoid loading the same config multiple times
             return
         cfg_l:List[(kdl.Document,dict)] = cfgU.read_kdl_file()
@@ -321,7 +327,7 @@ class cfgU(metaclass=Singleton):
         # print('cfgU.flat', cfgU.flat)
 
         if (general_g := cfgU.kdl['general']):
-            _parse_general_g_kdl(general_g=general_g)
+            _parse_general_g_kdl(general_g=general_g,CFG=CFG,DEF=DEF)
         _log.t("load_kdl gen  ⏰%s %s", DFMT.format(t=(datetime.now() - t)), TFMT.format(t=(t:=datetime.now())))
 
         if (rc_g := cfgU.kdl['rc']):
@@ -329,7 +335,7 @@ class cfgU(metaclass=Singleton):
         _log.t("load_kdl rc   ⏰%s %s", DFMT.format(t=(datetime.now() - t)), TFMT.format(t=(t:=datetime.now())))
 
         for (keybind,var_d) in cfgU.kdl['keybind']:
-            _parse_keybinds_kdl(keybinds=keybind,var_d=var_d)
+            _parse_keybinds_kdl(keybinds=keybind,var_d=var_d,CFG=CFG)
         _log.t("load_kdl key  ⏰%s %s", DFMT.format(t=(datetime.now() - t)), TFMT.format(t=(t:=datetime.now())))
 
         _import_plugins_with_user_data_kdl()

@@ -21,6 +21,8 @@
    <!-- + :lock: ??? -->
    <!-- vulnerabilities -->
 
+  - __Changed__
+   + refactor cfg parsing: move out of `rc.py` and split into KDL v1 and v2
   - __Added__
    + support for shorter variable types `$` for `var` and `$→` for `varpass`
    + support KDL v2 (set as default)

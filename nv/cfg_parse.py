@@ -150,7 +150,7 @@ def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d
       val = tag_val.value if hasattr(tag_val,'value') else tag_val #"val"
       if tag in ['var','$']:
         var_set[pkey] = val
-      if tag == 'varpass':
+      if tag in ['varpass','$→']:
         if pkey in var_d['set']:
           var_set[pkey] = var_d['set'][pkey]
           _log.cfg("  passing %s=%s",pkey,var_d['set'][pkey])
@@ -225,7 +225,7 @@ def parse_kdl2_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_
       val = tag_val.value if hasattr(tag_val,'value') else tag_val #"val"
       if tag in ['var','$']:
         var_set[pkey] = val
-      if tag == 'varpass':
+      if tag in ['varpass','$→']:
         if pkey in var_d['set']:
           var_set[pkey] = var_d['set'][pkey]
           _log.cfg("  passing %s=%s",pkey,var_d['set'][pkey])

@@ -11,6 +11,7 @@ from datetime import datetime
 import sublime
 
 import NeoVintageous.dep.kdl as kdl
+import NeoVintageous.dep.kdl2 as kdl2
 from NeoVintageous.nv.polyfill import nv_message as message
 from NeoVintageous.nv.helper import flatten_dict, flatten_kdl, Singleton
 
@@ -116,7 +117,7 @@ def _source(window, source, nodump=False) -> None:
             if ex_cmdline:
                 do_ex_cmdline(window, ex_cmdline)
             elif NeoVintageous.nv.cfg_parse._dump_to_kdl and not nodump:
-                node_key = kdl.Node(tag=None, name='≠', args=[kdl.RawString(line.rstrip())])
+                node_key = kdl2.Node(tag=None, name='≠', args=[kdl2.RawString(line.rstrip())])
                 NeoVintageous.nv.cfg_parse._NVRC_KDL.nodes.append(node_key)
     finally:
         window.settings().erase('_nv_sourcing')

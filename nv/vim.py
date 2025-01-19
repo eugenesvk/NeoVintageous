@@ -76,7 +76,7 @@ def reload_with_user_data_kdl() -> None:
         _log.debug("@nv.vim: Parsing config status")
         for cfg_key in CFG: # 1a. parse arguments for non-mode statuses
             if (node := cfg.get(cfg_key,None)): # id_seq "vim-seq" node/arg pair
-                if (args := node.args):
+                if (args := [a for a in node.getArgs((...,...))]):
                     tag_val = args[0] #(t)"vim-seq" if (t) exists (though shouldn't)
                     # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
                     if hasattr(tag_val,'value'):
@@ -94,7 +94,7 @@ def reload_with_user_data_kdl() -> None:
                     _log.warn("node ‘%s’ has extra arguments in its child ‘%s’, only the 1st was used ‘%s’"
                         ,         cfg_key,                             node.name,         {', '.join(args)})
         for node in cfg.nodes: # 1b. parse arguments for mode statuses
-            for arg in node.args:
+            for arg in node.getArgs((...,...)):
                 tag_val = arg #(t)"vim-seq" if (t) exists (though shouldn't)
                 # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
                 if hasattr(tag_val,'value'):
@@ -108,8 +108,8 @@ def reload_with_user_data_kdl() -> None:
                     CFGM[mode] = val
                     # print(f"status mode CFGM ‘{mode}’ from ‘{node.name}’ argument ‘{val}’")
         node = cfg
-        for i,key in enumerate(prop_d := node.props): # 2. parse properties id_seq="vim-seq", alternative notation to child node/arg pairs
-            tag_val = prop_d[key] #(t)"vim-seq" if (t) exists (though shouldn't)
+        for i,(key,val) in enumerate(node.getProps((...,...))): # 2. parse properties id_seq="vim-seq", alternative notation to child node/arg pairs
+            tag_val = val #(t)"vim-seq" if (t) exists (though shouldn't)
             # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
             if hasattr(tag_val,'value'):
                 val = tag_val.value # ignore tag

@@ -195,7 +195,7 @@ def _parse_rc_cfg_kdl2(win,rc_cfg:kdl2.Node) -> None:
         _log.error("Type of ‘rc’ config group should be kdl2.Node, not ‘%s’",cfgT)
         return None
     node = rc_cfg               # r#":set invrelativenumber"#
-    if len(node.entries) ==0:
+    if not len(node.entries) == 0:
         _log.warn("‘rc’ config nodes must have no arguments/properties ‘%s’",node)
         return None
     opt_name = node.name     # r#":set invrelativenumber"#

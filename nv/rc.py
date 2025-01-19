@@ -322,7 +322,7 @@ class cfgU(metaclass=Singleton):
             _parse_rc_g_kdl(rc_g=rc_g)
 
         for (keybind,var_d) in cfgU.kdl['keybind']:
-            _parse_keybinds_kdl(keybinds=keybind,var_d=var_d,CFG=CFG)
+            _parse_keybinds_kdl(keybinds=keybind,CFG=CFG,var_d=var_d)
 
         _import_plugins_with_user_data_kdl()
 

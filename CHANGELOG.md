@@ -1,6 +1,6 @@
 # Changelog
 
-[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.931.1352...HEAD
+[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.950.1352...HEAD
 ## [Unreleased]
   <!-- - __Added__ -->
   <!--   + ✨ new features -->
@@ -15,6 +15,8 @@
   <!-- - __Security__ -->
   <!--   + 🔒️ vulnerabilities -->
 
+[0.950.1352]: https://github.com/eugenesvk/NeoVintageous/compare/0.950.1352...HEAD
+## [0.950.1352]
   - __Changed__
     + refactor cfg parsing: move out of `rc.py` and split into KDL v1 and v2
   - __Added__

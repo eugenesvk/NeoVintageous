@@ -26,6 +26,7 @@
   - __Added__
    + support for shorter variable types `$` for `var` and `$→` for `varpass`
    + support KDL v2 (set as default)
+   + support for `Pywin32` as an automatic dependency
 
 [0.931.1352]: https://github.com/eugenesvk/NeoVintageous/compare/0.931.1352...HEAD
 ## [0.931.1352]

@@ -151,7 +151,7 @@ def reload_with_user_data_kdl() -> None:
                 continue
 
             if cfg_key == 'seekforward': # ⎀a(B) don't sub ⎀a(b) if false
-                args = [a for a in node.getArgs((...,...))] if nvcfg.KDLV == 2 else node.args()
+                args = [a for a in node.getArgs((...,...))] if nvcfg.KDLV == 2 else node.args
                 if args:
                     if not isinstance(args[0],bool):
                         _log.error("node ‘%s’ argument should be ‘true’ or ‘false’, not ‘%s’"

@@ -215,7 +215,7 @@ def reload_with_user_data_kdl() -> None:
                 # _log.debug(f"@plugin surround: Parsing config {cfg_key}")
                 for node in node_parent.nodes: # 1. ‘ ‘’ key_node value_arg pairs
                     key = node.name
-                    args = [a for a in node.getArgs((...,...))] if nvcfg.KDLV == 2 else node.args()
+                    args = [a for a in node.getArgs((...,...))] if nvcfg.KDLV == 2 else node.args
                     if args:
                         tag_val = args[0] #(t)‘’ if (t) exists (though shouldn't)
                         # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
@@ -282,7 +282,7 @@ def reload_with_user_data_kdl() -> None:
                 # _log.debug(f"@plugin surround: Parsing config {cfg_key}")
                 if node_parent.get('clear',None):
                     CFG[cfg_key].clear()
-                nargs = node_parent.getArgs((...,...)) if nvcfg.KDLV == 2 else node_parent.args()
+                nargs = node_parent.getArgs((...,...)) if nvcfg.KDLV == 2 else node_parent.args
                 for arg in nargs:          # Parse arguments, only 'clear' is valid, ignore others
                     tag = arg.tag   if hasattr(arg,'tag'  ) else ''
                     val = arg.value if hasattr(arg,'value') else arg
@@ -298,7 +298,7 @@ def reload_with_user_data_kdl() -> None:
                     key = node.name
                     if key == 'clear':
                         continue # already cleared separately, don't clear our own values
-                    args = [a for a in node.getArgs((...,...))] if nvcfg.KDLV == 2 else node.args()
+                    args = [a for a in node.getArgs((...,...))] if nvcfg.KDLV == 2 else node.args
                     if args:
                         tag_val = args[0] #(t)"(" if (t) exists (though shouldn't)
                         # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
@@ -333,7 +333,7 @@ def reload_with_user_data_kdl() -> None:
                     # _log.warn(f"node ‘{cfg_key}’ is missing key=value properties")
 
             if (cfg_key:=node_parent.name) == 'function':
-                nargs = [a for a in node_parent.getArgs((...,...))] if nvcfg.KDLV == 2 else node_parent.args()
+                nargs = [a for a in node_parent.getArgs((...,...))] if nvcfg.KDLV == 2 else node_parent.args
                 for arg in nargs:          # Parse arguments
                     tag = arg.tag   if hasattr(arg,'tag'  ) else ''
                     val = arg.value if hasattr(arg,'value') else arg
@@ -354,7 +354,7 @@ def reload_with_user_data_kdl() -> None:
                 _log.debug("@plugin surround: Parsing config ‘%s’",cfg_key)
                 for node in node_parent.nodes: # 1. add true  key_node value_arg pairs
                     key = node.name
-                    args = [a for a in node.getArgs((...,...))] if nvcfg.KDLV == 2 else node.args()
+                    args = [a for a in node.getArgs((...,...))] if nvcfg.KDLV == 2 else node.args
                     if args:
                         tag_val = args[0] #(t)true if (t) exists (though shouldn't)
                         # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
@@ -398,7 +398,7 @@ def reload_with_user_data_kdl() -> None:
             if (cfg_key:=node_parent.name) == 'appendspacetochars': # )}]
                 # _log.debug(f"@plugin surround: Parsing config {cfg_key}")
                 node = node_parent
-                args = [a for a in node.getArgs((...,...))] if nvcfg.KDLV == 2 else node.args()
+                args = [a for a in node.getArgs((...,...))] if nvcfg.KDLV == 2 else node.args
                 if args:
                     if not isinstance(args[0],str):
                         _log.error("node ‘%s’ argument should be a string, not ‘%s’",node.name,type(args[0]))
@@ -411,7 +411,7 @@ def reload_with_user_data_kdl() -> None:
             if (cfg_key:=node_parent.name) == 'seekforward': # ⎀a(b) don't delete () if false
                 # _log.debug(f"@plugin surround: Parsing config {cfg_key}")
                 node = node_parent
-                args = [a for a in node.getArgs((...,...))] if nvcfg.KDLV == 2 else node.args()
+                args = [a for a in node.getArgs((...,...))] if nvcfg.KDLV == 2 else node.args
                 if args:
                     if not isinstance(args[0],bool):
                         _log.error("node ‘%s’ argument should be ‘true’ or ‘false’, not ‘%s’"

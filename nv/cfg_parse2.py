@@ -32,7 +32,7 @@ def _node_has_prop(node:kdl2.Node) -> bool:
     return has_prop
 
 
-def _parse_set_kdl2(node:kdl.Node,cfg='') -> None:
+def _parse_set_kdl2(node:kdl2.Node,cfg='') -> None:
     from NeoVintageous.nv.ex_cmds import ex_set # inline import to avoid circular dependency errors
     win  = sublime.active_window()
     view = win.active_view()

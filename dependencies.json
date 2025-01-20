@@ -1,0 +1,3 @@
+{"$schema":"sublime://packagecontrol.io/schemas/dependencies",
+"windows":{">=4050":["pywin32"]}
+}

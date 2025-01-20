@@ -310,18 +310,23 @@ class cfgU(metaclass=Singleton):
         else:
             _log.info("Couldn't find ‘%s’",cfg_p) # config file is optional
             return kdl_docs
+
+        parse_kdl_cfg_1st = parse_kdl2_config if NeoVintageous.nv.cfg.KDLV == 2 else parse_kdl_config
+        parse_kdl_cfg_2nd = parse_kdl_config  if NeoVintageous.nv.cfg.KDLV == 2 else parse_kdl2_config
+        v_1st =      NeoVintageous.nv.cfg.KDLV
+        v_2nd = 1 if NeoVintageous.nv.cfg.KDLV == 2 else 2
         try:
-            parse_kdl2_config(cfg, cfg_f, kdl_docs)
+            parse_kdl_cfg_1st(cfg, cfg_f, kdl_docs)
             return kdl_docs
-        except Exception as e2:
-            # print(f"couldn't parse the docs as KDL2 due to: {e2}")
+        except Exception as e1st:
+            # print(f"couldn't parse the docs as KDL{v_1st} due to: {e1st}")
             try:
-                NeoVintageous.nv.cfg.KDLV = 1
-                parse_kdl_config(cfg, cfg_f, kdl_docs)
+                NeoVintageous.nv.cfg.KDLV = v_2nd
+                parse_kdl_cfg_2nd(cfg, cfg_f, kdl_docs)
                 return kdl_docs
-            except Exception as e1:
-                print(f"Couldn't parse {cfg_f} as KDL2 due to: {e2}")
-                print(f"  nor as KDL1 due to: {e1}")
+            except Exception as e2nd:
+                print(f"Couldn't parse {cfg_f} as KDL{v_1st} due to: {e1st}")
+                print(f"  nor as KDL{v_2nd} due to: {e2nd}")
                 return []
 
     @staticmethod

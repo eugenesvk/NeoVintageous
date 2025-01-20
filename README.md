@@ -152,6 +152,7 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
     + `MoveByWordEndsNoSep`,`MoveByWordEndsBackwardNoSep` command to move to word's end ignoring punctuation
       old: `wordA, wordB` would stop at `A` `,` `B`
       new: `wordA, wordB` would stop at `A`     `B`
+  - Requires Sublime Text 4050 13 November 2019 to use the newer Python version
 
 ## Settings
 

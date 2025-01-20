@@ -166,6 +166,8 @@ Or open only `NeoVintageous.help.kdl`: run `NeoVintageous: Open new config file 
 
 The old `.neovintageousrc` config continues to work as is, just that the new config is loaded later and overrides its options
 
+If you're using the old KDL v1 config version, set `"nv_kdl_v":1,` in your `Preferences.sublime-settings` to avoid console log error spam from KDL v2 default parser trying to load v1 config first
+
 ## About NeoVintageous
 
 NeoVintageous is the Vim engine for [Sublime Text](https://www.sublimetext.com/), designed to be fast, reliable, and zero configuration required. A fork of Vintageous, it is the ideal drop-in replacement.

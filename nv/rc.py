@@ -311,6 +311,18 @@ class cfgU(metaclass=Singleton):
             _log.info("Couldn't find ‘%s’",cfg_p) # config file is optional
             return kdl_docs
 
+        st_pref = sublime.load_settings('Preferences.sublime-settings')
+        if (kdlv := st_pref.get('nv_kdl_v')):
+            if   isinstance(kdlv,int):
+                if kdlv in [1,2]:
+                    NeoVintageous.nv.cfg.KDLV =     kdlv
+                else:
+                    _log.error(f"‘nv_kdl_v’ in ‘Preferences.sublime-settings’ should either be 1 or 2, not {kdlv} (using default {NeoVintageous.nv.cfg.KDLV})")
+            elif isinstance(kdlv,str):
+                if kdlv in ["1","2"]:
+                    NeoVintageous.nv.cfg.KDLV = int(kdlv)
+                else:
+                    _log.error(f"‘nv_kdl_v’ in ‘Preferences.sublime-settings’ should either be 1 or 2, not {kdlv} (using default {NeoVintageous.nv.cfg.KDLV})")
         parse_kdl_cfg_1st = parse_kdl2_config if NeoVintageous.nv.cfg.KDLV == 2 else parse_kdl_config
         parse_kdl_cfg_2nd = parse_kdl_config  if NeoVintageous.nv.cfg.KDLV == 2 else parse_kdl2_config
         v_1st =      NeoVintageous.nv.cfg.KDLV
@@ -331,10 +343,6 @@ class cfgU(metaclass=Singleton):
 
     @staticmethod
     def load_kdl():
-        is2 = (NeoVintageous.nv.cfg.KDLV == 2)
-        _parse_general_g_kdl = _parse_general_g_kdl2 if is2 else _parse_general_g_kdl1
-        _parse_rc_g_kdl      = _parse_rc_g_kdl2      if is2 else _parse_rc_g_kdl1
-        _parse_keybinds_kdl  = _parse_keybinds_kdl2  if is2 else _parse_keybinds_kdl1
         if hasattr(cfgU,'kdl') and cfgU.kdl: # avoid loading the same config multiple times
             return
         cfg_l:List[(kdl.Document,dict)] = cfgU.read_kdl_file()
@@ -381,6 +389,10 @@ class cfgU(metaclass=Singleton):
         cfgU.flat = flatten_kdl(cfgU.kdl, ignore=ignore) # store a flat dictionary for easy access
         # print('cfgU.flat', cfgU.flat)
 
+        is2 = (NeoVintageous.nv.cfg.KDLV == 2)
+        _parse_general_g_kdl = _parse_general_g_kdl2 if is2 else _parse_general_g_kdl1
+        _parse_rc_g_kdl      = _parse_rc_g_kdl2      if is2 else _parse_rc_g_kdl1
+        _parse_keybinds_kdl  = _parse_keybinds_kdl2  if is2 else _parse_keybinds_kdl1
         if (general_g := cfgU.kdl['general']):
             _parse_general_g_kdl(general_g=general_g,CFG=CFG,DEF=DEF)
 

@@ -3,129 +3,123 @@
 [unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.931.1352...HEAD
 ## [Unreleased]
   <!-- - __Added__ -->
-   <!-- + :sparkles: ??? -->
-   <!-- new features -->
+  <!--   + ✨ new features -->
   <!-- - __Changed__ -->
-   <!-- + ???  -->
-   <!-- changes in existing functionality -->
+  <!--   + changes in existing functionality -->
   <!-- - __Fixed__ -->
-   <!-- + :beetle: ??? -->
-   <!-- bug fixes -->
+  <!--   + 🐞 bug fixes -->
   <!-- - __Deprecated__ -->
-   <!-- + :poop: ??? -->
-   <!-- soon-to-be removed features -->
+  <!--   + 💩 soon-to-be removed features -->
   <!-- - __Removed__ -->
-   <!-- + :wastebasket: ??? -->
-   <!-- now removed features -->
+  <!--   + 🗑️ now removed features -->
   <!-- - __Security__ -->
-   <!-- + :lock: ??? -->
-   <!-- vulnerabilities -->
+  <!--   + 🔒️ vulnerabilities -->
 
   - __Changed__
-   + refactor cfg parsing: move out of `rc.py` and split into KDL v1 and v2
+    + refactor cfg parsing: move out of `rc.py` and split into KDL v1 and v2
   - __Added__
-   + support for shorter variable types `$` for `var` and `$→` for `varpass`
-   + support KDL v2 (set as default)
+    + support for shorter variable types `$` for `var` and `$→` for `varpass`
+    + support KDL v2 (set as default)
 
 [0.931.1352]: https://github.com/eugenesvk/NeoVintageous/compare/0.931.1352...HEAD
 ## [0.931.1352]
   - __Fixed__
-   + logging conflict with other plugins when setting `SET` as a logging property
+    + logging conflict with other plugins when setting `SET` as a logging property
 
 [0.93.1352]: https://github.com/eugenesvk/NeoVintageous/compare/0.93.1352...HEAD
 ## [0.93.1352]
   - __Fixed__
-   + fix missing import
+    + fix missing import
 
 [0.92.1352]: https://github.com/eugenesvk/NeoVintageous/compare/0.92.1352...HEAD
 ## [0.92.1352]
   - __Changed__
-   + Updated to upstream release 1.35.2
+    + Updated to upstream release 1.35.2
 
 [0.92.1350]: https://github.com/eugenesvk/NeoVintageous/compare/0.92.1350...HEAD
 ## [0.92.1350]
   - __Added__
-   + :sparkles: use of user data (e.g., icons) set in the new KDL config to be used for showing status icons as well as Help (not implemented yet)<br/>
+    + :sparkles: use of user data (e.g., icons) set in the new KDL config to be used for showing status icons as well as Help (not implemented yet)<br/>
      `z	"Indent" icon="⇛🄼"` would display `⇛🄼` icon in the status bar to indicate that it's expecting a motion for a command that will indent the motioned-over text
-   + :sparkles: allow <kbd>⇧</kbd><kbd>⎇</kbd><kbd>KEY</kbd> to be bound in user config
-   + :sparkles: `MoveByWordEndsNoSep`,`MoveByWordEndsBackwardNoSep` command to move to word's end ignoring punctuation
+    + :sparkles: allow <kbd>⇧</kbd><kbd>⎇</kbd><kbd>KEY</kbd> to be bound in user config
+    + :sparkles: `MoveByWordEndsNoSep`,`MoveByWordEndsBackwardNoSep` command to move to word's end ignoring punctuation
      old: `wordA, wordB` would stop at `A` `,` `B`
      new: `wordA, wordB` would stop at `A`     `B`
-   + :sparkles: <kbd>⎈</kbd><kbd>,</kbd>/<kbd>\\</kbd> to bindable commands
-   + :sparkles: support for sending a notification to AutoHotkey on Windows on mode changes
+    + :sparkles: <kbd>⎈</kbd><kbd>,</kbd>/<kbd>\\</kbd> to bindable commands
+    + :sparkles: support for sending a notification to AutoHotkey on Windows on mode changes
      - requires manual installation of the Pywin32 dependency after adding [this repo](https://github.com/eugenesvk/Pywin32) to the Package Control (couldn't get the new [Package Control Libraries](https://github.com/packagecontrol/channel) channel with dependencies work for Pywin32)
 
 [0.91.1350]: https://github.com/eugenesvk/NeoVintageous/compare/0.91.1350...HEAD
 ## [0.91.1350]
   - __Added__
-   + support for rebinding Ctrl/Win/Alt key combos in Insert mode (they're still ignored by default unless explicitly enabled via the `handle_keys` config to not break all of the default Sublime Text's combos with these modifiers, also <kbd>Alt</kbd><kbd>F1</kbd>... function key combos are ignored by default)
-   + support for text object pairs as targets for the goto command
-   + support for user configuration of marks' back aliases: ' \`
-   + support for user configuration of UnImpaired option aliases
-   + `GotoTargetPrev`/`GotoTargetNext` commands to allow using the brackets as arguments instead of as names<br/>
+    + support for rebinding Ctrl/Win/Alt key combos in Insert mode (they're still ignored by default unless explicitly enabled via the `handle_keys` config to not break all of the default Sublime Text's combos with these modifiers, also <kbd>Alt</kbd><kbd>F1</kbd>... function key combos are ignored by default)
+    + support for text object pairs as targets for the goto command
+    + support for user configuration of marks' back aliases: ' \`
+    + support for user configuration of UnImpaired option aliases
+    + `GotoTargetPrev`/`GotoTargetNext` commands to allow using the brackets as arguments instead of as names<br/>
      `(Ⓝ)gdd" "GotoTargetPrev" "‹"`<br/>
      `(Ⓝ)gdd" "GotoTargetPrevWhateverThatBracketIsNamed"`
-   + surround: option to customize function prefix (`f` `F`)
-   + support for count to the screen top/bottom movement commands, e.g., can move to line 5 from the visible top
-   + support for user config of the macros recording indicator, e.g., short visible `🔴w` instead of the long gray `recording @w`
-   + search command for an unbounded string under cursor matches <kbd>g</kbd><kbd>#</kbd>/<kbd>*</kbd> vim commands
+    + surround: option to customize function prefix (`f` `F`)
+    + support for count to the screen top/bottom movement commands, e.g., can move to line 5 from the visible top
+    + support for user config of the macros recording indicator, e.g., short visible `🔴w` instead of the long gray `recording @w`
+    + search command for an unbounded string under cursor matches <kbd>g</kbd><kbd>#</kbd>/<kbd>*</kbd> vim commands
   - __Fixed__
-   + :beetle: falsy user settings treated as missing instead of being saved as value false values
-   + :beetle: `ViGotoSymbolInFile` using deprecated APIs to get symbol position
-   + :beetle: avoid dumping settings loaded from KDL to Preferences file: stop saving settings in the Preferences.sublime-settings unless they already exist there
-   + :beetle: error running search command with mode/count arg. Happens when e.g. `map m /` and press `dm` the `/` search command receives `motion_args` dictionary with `mode`/`count` keys, which its function signature lacks
-   + :beetle: unknown 65001 encoding error
-   + :beetle: `ViOpenMacrosForRepeating` default key typo
-   + :beetle: jumps to \` and `'` marks being identical instead of `'` jumping to the first non-blank char a the previous position
+    + :beetle: falsy user settings treated as missing instead of being saved as value false values
+    + :beetle: `ViGotoSymbolInFile` using deprecated APIs to get symbol position
+    + :beetle: avoid dumping settings loaded from KDL to Preferences file: stop saving settings in the Preferences.sublime-settings unless they already exist there
+    + :beetle: error running search command with mode/count arg. Happens when e.g. `map m /` and press `dm` the `/` search command receives `motion_args` dictionary with `mode`/`count` keys, which its function signature lacks
+    + :beetle: unknown 65001 encoding error
+    + :beetle: `ViOpenMacrosForRepeating` default key typo
+    + :beetle: jumps to \` and `'` marks being identical instead of `'` jumping to the first non-blank char a the previous position
   - __Changed__
-   + text object labels are removed with an explicit no value (`l=null` or `l=""` instead of the old `"l"`), while that syntax is repurposed: a pair as an argument is parsed using self (`"‘’"` is the same as `‘="‘’"` and `’="‘’"`)
+    + text object labels are removed with an explicit no value (`l=null` or `l=""` instead of the old `"l"`), while that syntax is repurposed: a pair as an argument is parsed using self (`"‘’"` is the same as `‘="‘’"` and `’="‘’"`)
 
 [0.9.1342]: https://github.com/eugenesvk/NeoVintageous/releases/tag/0.9.1342
 ## [0.9.1342]
   - __Added__
-   + support setting general plugin values currently set in `Preferences.sublime-settings` in the new KDL config format (but without the needless `neovintageous_` prefix)
-   + :sparkles: support setting `text object` options in the new KDL config
-   + :sparkles: `seek_forward` support for `text object` option — to not seek the next set of brackets/quotes if the current text@cursor position isn't enclosed in one — `⎀a(B)` with a `lowercase within ()` comand will result in:
+    + support setting general plugin values currently set in `Preferences.sublime-settings` in the new KDL config format (but without the needless `neovintageous_` prefix)
+    + :sparkles: support setting `text object` options in the new KDL config
+    + :sparkles: `seek_forward` support for `text object` option — to not seek the next set of brackets/quotes if the current text@cursor position isn't enclosed in one — `⎀a(B)` with a `lowercase within ()` comand will result in:
      - `⎀a(B)` if `seek_forward` is `false` (default)
      - `⎀a(b)` if `seek_forward` is `true`
-   + :sparkles: abolish: allow users to configure case coercion aliases
-   + :sparkles: abolish: option to maintain cursor position on case changes, e.g., converting `se⎀View⎀Sel_⎀Reverse` to upper case (⎀ denotes cursor position) will leave cursor at the same spot in the new `SE_⎀VIEW_⎀SEL_⎀REVERSE` while previously it moved it to the beginning of the word `SE_VIEW_SEL_REVERSE`
-   + support for passing variables through to subsequent imports via the `varpass` tag, e.g.:
+    + :sparkles: abolish: allow users to configure case coercion aliases
+    + :sparkles: abolish: option to maintain cursor position on case changes, e.g., converting `se⎀View⎀Sel_⎀Reverse` to upper case (⎀ denotes cursor position) will leave cursor at the same spot in the new `SE_⎀VIEW_⎀SEL_⎀REVERSE` while previously it moved it to the beginning of the word `SE_VIEW_SEL_REVERSE`
+    + support for passing variables through to subsequent imports via the `varpass` tag, e.g.:
      - @`NeoVintageous.kdl`: `#import "cfgA.kd" m=(var)"Ⓝ"` defines variable `m` as a normal mode
      - @`cfgA.kdl`: `#import "cfgB.kd" m=(varpass)""` passes the value of `m` further
      - @`cfgB.kdl`: `(‘m’)a MoveToEol` will get `Ⓝ` as the value of `m`
   - __Fixed__
-   + :beetle: key sequences with text commands (`(Ⓝ)bb "MoveToEol"`) not being resolved as a sequence
+    + :beetle: key sequences with text commands (`(Ⓝ)bb "MoveToEol"`) not being resolved as a sequence
   - __Changed__
-   + command repeat count in keybinds to include `×` `⋅` prefixes
+    + command repeat count in keybinds to include `×` `⋅` prefixes
 
 [0.8.1341]: https://github.com/eugenesvk/NeoVintageous/releases/tag/0.8.1341
 ## [0.8.1341]
   - __Added__
-   + :sparkles: template variable in the new config to allow importing the same keybinds with minor variations per mode (e.g., add an extra modifier in Insert mode to otherwise mimic Normal mode commands)
-   + allow running raw nvimrc initialization commands within `NeoVintageous.kdl`'s `rc` config group
+    + :sparkles: template variable in the new config to allow importing the same keybinds with minor variations per mode (e.g., add an extra modifier in Insert mode to otherwise mimic Normal mode commands)
+    + allow running raw nvimrc initialization commands within `NeoVintageous.kdl`'s `rc` config group
   - __Changed__
-   + allow concatenation of multiple `keybind` config groups (helpful to combine keybinds from multiple files)
+    + allow concatenation of multiple `keybind` config groups (helpful to combine keybinds from multiple files)
 
 [0.7.1341]: https://github.com/eugenesvk/NeoVintageous/releases/tag/0.7.1341
 ## [0.7.1341]
   - __Added__
-   + :sparkles: show a popup with a count indicator
-   + `general` group to the new KDL config format `NeoVintageous.kdl` with support for `set` and `let` options
-   + support for `set` and `let` options in the `keybind` group
+    + :sparkles: show a popup with a count indicator
+    + `general` group to the new KDL config format `NeoVintageous.kdl` with support for `set` and `let` options
+    + support for `set` and `let` options in the `keybind` group
 
 [0.6.1341]: https://github.com/eugenesvk/NeoVintageous/releases/tag/0.6.1341
 ## [0.6.1341]
   - __Added__
-   + :sparkles: nowrap alternative to tab switch Ex commands (`tabnextnowrap`/`tabpreviousnowrap`)
-   + :sparkles: allow user to set values various indicators:
+    + :sparkles: nowrap alternative to tab switch Ex commands (`tabnextnowrap`/`tabpreviousnowrap`)
+    + :sparkles: allow user to set values various indicators:
      + for `ls` command, e.g., replace `+` modified file mark with `🖉` similar to how a modified tab is marked
      + for `registers` command, e.g., replace `l` for linewise with `━`
-   + :sparkles: option to maintain cursor position on surround plugin's text edits, e.g., adding `'` to `my_⎀word` (⎀ denotes cursor position) will leave cursor at the same spot in the new `'my_⎀word'` while previously it moved it to the first inserted punctuation `⎀'my_word'`
-   + :sparkles: option to not seek the next set brackets if current text isn't enclosed in one — `⎀a(b)` with surround delete will result in:
+    + :sparkles: option to maintain cursor position on surround plugin's text edits, e.g., adding `'` to `my_⎀word` (⎀ denotes cursor position) will leave cursor at the same spot in the new `'my_⎀word'` while previously it moved it to the first inserted punctuation `⎀'my_word'`
+    + :sparkles: option to not seek the next set brackets if current text isn't enclosed in one — `⎀a(b)` with surround delete will result in:
      - `⎀a(b)` if `seek_forward` is `false` (default)
      - `⎀ab`   if `seek_forward` is `true`
-   + :sparkles: new KDL config format `NeoVintageous.kdl` with
+    + :sparkles: new KDL config format `NeoVintageous.kdl` with
      + Fewer quotes (and in the future v2 version with even fewer quotes):
        ```
         plugin    {  surround    {  punctuation_marks    ‘="‘’"    “="“”"    ‹="‹›"   «="«»" ;};}
@@ -141,14 +135,14 @@
         upper 	r#"l;'\"
        "upper"	: "l;'\\",
        ```
-   + :sparkles: support for importing other config files
+    + :sparkles: support for importing other config files
      ```
      #import (keybind)"NeoVintageous.key.kdl"
      /*↑ or ‘import’ to import ↑ file name relative to this main config file
      group values↑ in ‘keybind{}’, so the file itself can include only top-level ‘key command’ lines
      */
      ```
-   + :sparkles: human-readable format for setting keyboard shortcuts
+    + :sparkles: human-readable format for setting keyboard shortcuts
      `(nv)d "MoveByWordsBackward" // understandable command name`
      instead of `.neovintageousrc`'s
      `nnoremap d b` why do you need to remember that `b` moves by words backwards if you never use it?
@@ -185,11 +179,11 @@
 [0.5.1341]: https://github.com/eugenesvk/NeoVintageous/releases/tag/0.5.1341
 ## [0.5.1341]
   - __Added__
-   + :sparkles: allow users to call cli commands on entering/leaving a mode
-   + :sparkles: non-QWERTY/non-Latin layouts based on custom user `keymap` dictionary in `User/NeoVintageous.sublime-settings` (requires manually running `NeoVintageous: Generate non-QWERTY keymap` command)
-   + :sparkles: support of non-Latin maps in `.neovintageous`, e.g., `noremap ц b` to move back by word when a Cyrillic layout is on (does not work with modifier keys since Sublime Text doesn't report non-Latin keys)
-   + :sparkles: rudimentary foundations to support custom key symbols in user config, e.g., `noremap ⇟ w` to move by word with a PageDown key
-   + :sparkles: support for raw sublime text commands in user config
+    + :sparkles: allow users to call cli commands on entering/leaving a mode
+    + :sparkles: non-QWERTY/non-Latin layouts based on custom user `keymap` dictionary in `User/NeoVintageous.sublime-settings` (requires manually running `NeoVintageous: Generate non-QWERTY keymap` command)
+    + :sparkles: support of non-Latin maps in `.neovintageous`, e.g., `noremap ц b` to move back by word when a Cyrillic layout is on (does not work with modifier keys since Sublime Text doesn't report non-Latin keys)
+    + :sparkles: rudimentary foundations to support custom key symbols in user config, e.g., `noremap ⇟ w` to move by word with a PageDown key
+    + :sparkles: support for raw sublime text commands in user config
       ```
       " w moves to line's first non-whitespace char
       " q does the same twice, but with selection
@@ -199,16 +193,16 @@
       " or use the old syntax with an extra :colon instead of UpperCamelCase (convenient for no-argument commands)
       noremap q ::move_to<CR>
       ```
-   + :sparkles: surround: allow users to configure marks, mark aliases, when to append an extra space
-   + :sparkles: preliminary support for configuring keybinds without having to learn a foreign vim language by calling the command(s) by name, e.g., `l MoveLeftByChars` instead of `l h`. Also allows rebinding plugin commands without using environment variables, e.g., `b Sneak` instead of setting `$NEOVINTAGEOUS_SNEAK_MAP_S`)
-   + :sparkles: Allow user configuration of status bar Mode indicators, including suffix, indicator, prefix, and indicator position relative to other indicators. Also updates defaults to be more terse and symbolic (e.g., ⓘ instead of INSERT and Ⓥ▋ instead of VISUAL BLOCK)
+    + :sparkles: surround: allow users to configure marks, mark aliases, when to append an extra space
+    + :sparkles: preliminary support for configuring keybinds without having to learn a foreign vim language by calling the command(s) by name, e.g., `l MoveLeftByChars` instead of `l h`. Also allows rebinding plugin commands without using environment variables, e.g., `b Sneak` instead of setting `$NEOVINTAGEOUS_SNEAK_MAP_S`)
+    + :sparkles: Allow user configuration of status bar Mode indicators, including suffix, indicator, prefix, and indicator position relative to other indicators. Also updates defaults to be more terse and symbolic (e.g., ⓘ instead of INSERT and Ⓥ▋ instead of VISUAL BLOCK)
   - __Changed__
-   + commands: add key symbols like `⎈` to command name for easier visual differentiation and 1-symbol-search 
+    + commands: add key symbols like `⎈` to command name for easier visual differentiation and 1-symbol-search 
   - __Fixed__
-   + :beetle: literal tabs in .neovintageous config breaking some remaps by removing all literal tabs during parsing
-   + :beetle: invalid register error for non-latin macros
-   + :beetle: keypad numbers not working as count prefix
-   + :beetle: 1-symbol keys like `⇟` in named key aliases not recognized
+    + :beetle: literal tabs in .neovintageous config breaking some remaps by removing all literal tabs during parsing
+    + :beetle: invalid register error for non-latin macros
+    + :beetle: keypad numbers not working as count prefix
+    + :beetle: 1-symbol keys like `⇟` in named key aliases not recognized
 
 
 ## 1.35.3 - Unreleased

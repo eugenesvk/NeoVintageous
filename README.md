@@ -105,7 +105,7 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
     + execute Sublime Text commands by writing arguments in a `prop=value` format
       ```kdl
       (Ⓝ)r (subl)move by=words forward=true extend=false
-      //- r#":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"#
+      //-  #":"command":"move","args":{"by":"words","forward":true,"extend":false}<CR>"#
       // ! but this is NOT suitable for chains since prop=val in KDL do not maintain position vs. arguments, so to execute multiple Sublime Text commands with arguments you'd still need to "chain them"
       (Ⓝ)t "chain" {
         - (⋅5subl)"move" by="words" forward=true extend=false

@@ -11,7 +11,7 @@ import sublime
 import NeoVintageous.dep.kdl as kdl
 import NeoVintageous.dep.kdl2 as kdl2
 from NeoVintageous.nv.polyfill import nv_message as message
-from NeoVintageous.nv.helper import flatten_dict, flatten_kdl, Singleton
+from NeoVintageous.nv.helper import flatten_kdl1, flatten_kdl2, Singleton
 
 
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
@@ -386,10 +386,11 @@ class cfgU(metaclass=Singleton):
         ignore = {1:cfg_group, 2:[]} # ignore the lowest level dictionary groups as they repeat node names
         for g,subg in cfg_nest.items():
             ignore[2] += subg
+        is2 = (NeoVintageous.nv.cfg.KDLV == 2)
+        flatten_kdl = flatten_kdl2 if is2 else flatten_kdl1
         cfgU.flat = flatten_kdl(cfgU.kdl, ignore=ignore) # store a flat dictionary for easy access
         # print('cfgU.flat', cfgU.flat)
 
-        is2 = (NeoVintageous.nv.cfg.KDLV == 2)
         _parse_general_g_kdl = _parse_general_g_kdl2 if is2 else _parse_general_g_kdl1
         _parse_rc_g_kdl      = _parse_rc_g_kdl2      if is2 else _parse_rc_g_kdl1
         _parse_keybinds_kdl  = _parse_keybinds_kdl2  if is2 else _parse_keybinds_kdl1

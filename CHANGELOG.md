@@ -18,6 +18,7 @@
   - __Added__
     + option not to ignore newline on normal by char moves, i.e., end cursor on the last ␤ char instead of on the `X` char before it
       `single line: charX␤`
+    + option to not add `:` to the `EX` command line (and don't cancel when it's missing/cmd line is empty)
   - __Fixed__
     + `move_left_on_insert_exit` having no effect on some operations due to `fix_eol` function ignoring it
 

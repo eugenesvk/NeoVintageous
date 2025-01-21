@@ -2480,7 +2480,8 @@ class nv_vi_move_char_right(TextCommand):
                 if view.line(s.b).empty():
                     return s
 
-                x_limit = min(view.line(s.b).b - 1, s.b + count, view.size())
+                nl = 0 if (get_config('edit.ignore_nl_on_char_move') == False) else 1
+                x_limit = min(view.line(s.b).b - nl, s.b + count, view.size())
                 return Region(x_limit, x_limit)
 
             if mode == INTERNAL_NORMAL:

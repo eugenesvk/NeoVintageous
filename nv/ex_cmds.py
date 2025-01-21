@@ -15,7 +15,7 @@ from sublime import yes_no_cancel_dialog
 
 from NeoVintageous.nv.rc        import cfgU
 from NeoVintageous.nv           import shell, variables
-from NeoVintageous.nv.cmdline   import CmdlineOutput
+from NeoVintageous.nv.cmdline   import CmdlineOutput, Cmdline
 from NeoVintageous.nv.ex.nodes  import RangeNode
 from NeoVintageous.nv.ex.parser import parse_command_line, resolve_address
 from NeoVintageous.nv.goto      import GotoView, goto_help_subject
@@ -724,7 +724,7 @@ def ex_silent(window, view, command: str = None, **kwargs) -> None:
         return
 
     set_setting(view, 'shell_silent', True)
-    do_ex_cmdline(window, ':' + command)
+    do_ex_cmdline(window, Cmdline.EX + command)
     reset_setting(view, 'shell_silent')
 
 

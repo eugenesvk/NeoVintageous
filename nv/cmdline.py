@@ -1,5 +1,6 @@
-from NeoVintageous.nv.options import get_option
-from NeoVintageous.nv.utils import hide_panel
+from NeoVintageous.nv.options  import get_option
+from NeoVintageous.nv.utils    import hide_panel
+from NeoVintageous.nv.settings import get_config
 
 
 def _init_common_panel_settings(panel) -> None:
@@ -41,6 +42,7 @@ class Cmdline():
             raise ValueError('invalid cmdline type')
 
         self._type = type
+        self._decolonize = get_config('edit.decolonize_ex')
 
         if type in (self.SEARCH_FORWARD, self.SEARCH_BACKWARD) and not get_option(view, 'incsearch'):
             on_change = None
@@ -54,7 +56,7 @@ class Cmdline():
     def prompt(self, initial_text: str) -> None:
         input_panel = self._window.show_input_panel(
             caption='',
-            initial_text=self._type + initial_text,
+            initial_text= initial_text if (self._type == self.EX and self._decolonize) else self._type + initial_text,
             on_done=self._on_done,
             on_change=self._on_change,
             on_cancel=self._on_cancel
@@ -70,10 +72,16 @@ class Cmdline():
             self._callbacks[callback](*args)
 
     def _is_valid_input(self, cmdline) -> bool:
-        return isinstance(cmdline, str) and len(cmdline) > 0 and cmdline[0] == self._type
+        if (self._type == self.EX and self._decolonize): # don't close EX if `:` is removed
+            return isinstance(cmdline, str)
+        else:
+            return isinstance(cmdline, str) and len(cmdline) > 0 and cmdline[0] == self._type
 
     def _filter_input(self, inp: str) -> str:
-        return inp[1:]
+        if (self._type == self.EX and self._decolonize): # don't filter out `:` since it's not inserted in the actual field
+            return inp
+        else:
+            return inp[1:]
 
     def _on_done(self, inp: str) -> None:
         if not self._is_valid_input(inp):

@@ -8,6 +8,7 @@
     - but need to retain the old A and <M-A> notation since user configs use it, so not worth it
   - add a Shifted function instead of Upper to also work with 9→( and [→{
   - change default keymap to ergonomic one (add a config to revert)
+  - cache hashes of all imported kdl files during the last config load and dump the consolidated cfgU file to disk so that next time all you'd need to do is caclulate hashes of 10 files instead of parsing them as KDL?
 # Plugins
   - check easymotion vs ST's acejump
 # keymap generator:

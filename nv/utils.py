@@ -8,7 +8,7 @@ from sublime import FORCE_GROUP, Region, View, Window, CLASS_WORD_END, CLASS_WOR
 
 from NeoVintageous.nv.options  import get_option
 from NeoVintageous.nv.polyfill import make_all_groups_same_size, set_selection, spell_add, spell_undo
-from NeoVintageous.nv.settings import get_cmdline_cwd, get_mode, get_setting, get_visual_block_direction, set_mode, set_processing_notation, set_visual_block_direction, set_xpos
+from NeoVintageous.nv.settings import get_cmdline_cwd, get_mode, get_setting, get_visual_block_direction, set_mode, set_processing_notation, set_visual_block_direction, set_xpos, get_config
 from NeoVintageous.nv.vim      import DIRECTION_DOWN, DIRECTION_UP
 from NeoVintageous.nv.modes    import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.vim      import is_visual_mode, status_message

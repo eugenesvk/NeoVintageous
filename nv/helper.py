@@ -12,8 +12,11 @@ def flatten_dict(d:MutableMapping, key_parent:str = '', sep:str = '.'):
     return dict(_flatten_dict_gen(d, key_parent, sep))
 
 from typing import Union
-import NeoVintageous.dep.kdl as kdl
-def _flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore):
+import NeoVintageous.dep.kdl  as kdl1
+import NeoVintageous.dep.kdl2 as kdl2
+def _flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore, is2):
+    kdl = kdl2 if is2 else kdl1
+    flatten_kdl = flatten_kdl2 if is2 else flatten_kdl1
     lvl += 1
     if isinstance(kdl_dic, dict):
         d = kdl_dic
@@ -49,9 +52,12 @@ def _flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore):
                 else:
                     key_new = key_this + str(i+1) # add a numeric prefix
                 yield key_new, val
-def flatten_kdl(kdl_dic:Union[kdl.Document,kdl.Node,dict], key_parent:str = '', sep:str = '.', lvl:int=0, ignore:dict={1:[],2:[]}):
+def flatten_kdl1(kdl_dic:Union[kdl1.Document,kdl1.Node,dict], key_parent:str = '', sep:str = '.', lvl:int=0, ignore:dict={1:[],2:[]}):
     """convert KDL document or a dictionary of KDL nodes into a flat dictionary, ignoring 2nd+ argument, but retaining key=val properties"""
-    return dict(_flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore))
+    return dict(_flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore, is2=False))
+def flatten_kdl2(kdl_dic:Union[kdl2.Document,kdl2.Node,dict], key_parent:str = '', sep:str = '.', lvl:int=0, ignore:dict={1:[],2:[]}):
+    """convert KDL document or a dictionary of KDL nodes into a flat dictionary, ignoring 2nd+ argument, but retaining key=val properties"""
+    return dict(_flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore, is2=True))
 
 import threading
 class Singleton(type): # doesn't deadlock: if both Class_1 and Class_2 implement old singleton pattern, calling the constructor of Class_1 in Class_2 (or vice versa) would dead-lock since all the classes implemented through that meta-class share the same lock

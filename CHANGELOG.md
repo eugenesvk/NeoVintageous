@@ -15,6 +15,9 @@
   <!-- - __Security__ -->
   <!--   + 🔒️ vulnerabilities -->
 
+  - __Fixed__
+    + flatten_kdl ignored kdl 1/2 version
+
 [0.950.1352]: https://github.com/eugenesvk/NeoVintageous/compare/0.950.1352...HEAD
 ## [0.950.1352]
   - __Changed__

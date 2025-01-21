@@ -153,6 +153,7 @@ keymap { // Use custom keymaps (non-QWERTY/non-Latin) in command mode
 edit { // Edit behavior |default|
   move_left_on_insert_exit #false	//|true| move cursor left on ⓘ→Ⓝ to be consistent with line-end editing vimhelp.org/vim_faq.txt.html#faq-10.2
   ignore_nl_on_char_move   #false	//|true| `nv_vi_move_char_right` will not stop at ␤ unlike ST's `move args:{by:characters,forward:true}}`
+  decolonize_ex            #true 	//|false| don't add `:` to the EX command line panel (and don't close the panel if it becomes empty)
 }
 event { /* Run cli commands on entering/leaving a mode by adding
   (mode)Event {(os)cmd arg1 arg2;}

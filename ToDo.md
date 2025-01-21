@@ -4,8 +4,6 @@
     - Sublime's minihtml isn't powerful enough to display KLE html, maybe a simple table?
   - fix multilingual
     - unfortunately, single-key rebinds are still keycap based, so remapping ⇧4 from qwerty to russian means losing ; since that's what's mapped there, need to exclude this remap from user config or wait until ST implements proper physical key mapping https://github.com/sublimehq/sublime_text/issues/5976
-  - simplify config keymap and have S-a everywhere instead of A to be consistent with S-f1
-    - but need to retain the old A and <M-A> notation since user configs use it, so not worth it
   - add a Shifted function instead of Upper to also work with 9→( and [→{
   - change default keymap to ergonomic one (add a config to revert)
   - cache hashes of all imported kdl files during the last config load and dump the consolidated cfgU file to disk so that next time all you'd need to do is caclulate hashes of 10 files instead of parsing them as KDL?
@@ -22,8 +20,10 @@
   - mark neovint as incompatible plugin in my fork
 
 # ?
+  - simplify config keymap and have S-a everywhere instead of A to be consistent with S-f1
+    - but need to retain the old A and <M-A> notation since user configs use it, so not worth it
   - add to space mode all various comment types 1,2,3,4,5
-  - simpler layer-based keybinding format for simple keybinds that can be represented with a single symbol defined elsewhere
+  - simpler layer-based keybinding format for simple keybinds that can be represented with a single symbol defined elsewhere?
   ```
    §   1  2  3 4  5 6  7   8   9  0  -  =  ←  label
    ⎋ ‽     №  ¤    ‸  ‽   ⁂     ⁀   ⹀        r

@@ -493,7 +493,8 @@ def extract_word(view, mode: str, sel) -> str:
 # these issues can't be worked-around e.g. the mouse click issue described
 # above. See https://github.com/SublimeTextIssues/Core/issues/2121.
 def fix_eol_cursor(view, mode: str) -> None:
-    if mode in (NORMAL, INTERNAL_NORMAL):
+    ignore_nl = get_config('edit.move_left_on_insert_exit') == False
+    if mode in (NORMAL, INTERNAL_NORMAL) and ignore_nl:
         def f(view, s):
             b = s.b
 

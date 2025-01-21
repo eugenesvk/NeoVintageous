@@ -15,6 +15,12 @@
   <!-- - __Security__ -->
   <!--   + 🔒️ vulnerabilities -->
 
+  - __Added__
+    + option not to ignore newline on normal by char moves, i.e., end cursor on the last ␤ char instead of on the `X` char before it
+      `single line: charX␤`
+  - __Fixed__
+    + `move_left_on_insert_exit` having no effect on some operations due to `fix_eol` function ignoring it
+
 [0.951.1352]: https://github.com/eugenesvk/NeoVintageous/compare/0.951.1352...HEAD
 ## [0.951.1352]
   - __Fixed__

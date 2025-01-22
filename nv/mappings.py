@@ -153,45 +153,46 @@ def _has_partial_matches_text(view, mode: str, lhs: str) -> bool:
                         return True
 
     return False
-def _get_partial_matches_text(view, mode: str, lhs: str) -> dict:
+def _get_partial_matches_help(view, mode: str, lhs: str) -> dict:
     part_match = dict()
     for map_lhs, map_rhs in _mappings_text[mode].items():
+        map_rhs_help = _mappings_help[mode].get(map_lhs,None)
         if isinstance(map_rhs, str ) or\
            isinstance(map_rhs, list): #bb ['movetoeol']
             if map_lhs.startswith(lhs):
                 if lhs == '<':
                     if map_lhs.startswith('<lt>'):
-                        part_match[map_lhs] = map_rhs
+                        part_match[map_lhs] = map_rhs_help
                     elif re_key_non_lt.match(map_lhs):
                         continue
                     else:
-                        part_match[map_lhs] = map_rhs
+                        part_match[map_lhs] = map_rhs_help
                 else:
-                    part_match[map_lhs] = map_rhs
+                    part_match[map_lhs] = map_rhs_help
         else:
             file_type = get_file_type(view)
             if file_type and file_type in map_rhs:
                 if map_lhs.startswith(lhs):
                     if lhs == '<':
                         if map_lhs.startswith('<lt>'):
-                            part_match[map_lhs] = map_rhs
+                            part_match[map_lhs] = map_rhs_help
                         elif re_key_non_lt.match(map_lhs):
                             continue
                         else:
-                            part_match[map_lhs] = map_rhs
+                            part_match[map_lhs] = map_rhs_help
                     else:
-                        part_match[map_lhs] = map_rhs
+                        part_match[map_lhs] = map_rhs_help
             elif '' in map_rhs:
                 if map_lhs.startswith(lhs):
                     if lhs == '<':
                         if map_lhs.startswith('<lt>'):
-                            part_match[map_lhs] = map_rhs
+                            part_match[map_lhs] = map_rhs_help
                         elif re_key_non_lt.match(map_lhs):
                             continue
                         else:
-                            part_match[map_lhs] = map_rhs
+                            part_match[map_lhs] = map_rhs_help
                     else:
-                        part_match[map_lhs] = map_rhs
+                        part_match[map_lhs] = map_rhs_help
     return part_match
 
 

@@ -124,3 +124,7 @@ class RepeatableTimer(object):  # Singleton
       return
     if hasattr(cls._instance, "t"): # print("cancelled the old timer")
       cls._instance.t.cancel()
+
+import inspect
+def fname(): # gets caller's function name
+  return inspect.currentframe().f_back.f_code.co_name # w/o f_back gets this fn name

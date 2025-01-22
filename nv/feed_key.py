@@ -143,10 +143,10 @@ class FeedKeyHandler():
                     self._dbg_txt += f" ↩ _hCount"
                 return
 
-        _part_txt = get_partial_text    (self.view)
-        _part_seq = get_partial_sequence(self.view)
-        set_partial_text                (self.view, _part_txt + [self.key])
-        set_partial_sequence            (self.view, _part_seq +  self.key)
+        _part_txt = get_partial_text    (self.view) + [self.key]
+        _part_seq = get_partial_sequence(self.view) +  self.key
+        set_partial_text                (self.view, _part_txt)
+        set_partial_sequence            (self.view, _part_seq)
 
         cmdT = mappings_resolve_text(self.view, check_user_mappings=self.check_user_mappings)
         cmdS = mappings_resolve     (self.view, check_user_mappings=self.check_user_mappings)

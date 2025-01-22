@@ -19,6 +19,7 @@ from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PEN
 from NeoVintageous.nv.modes import Mode as M, mode_names, mode_names_rev, text_to_modes, text_to_mode_alone
 from NeoVintageous.nv     import vim # for always fresh config values, defaults + user
 from NeoVintageous.nv.vim import clean_view, enter_insert_mode, enter_normal_mode, enter_visual_mode, is_visual_mode, mode_to_name, reset_status_line, run_action, run_motion
+from NeoVintageous.nv.helper import fname
 from NeoVintageous.nv.events_user import on_mode_change
 
 from NeoVintageous.nv.rc import cfgU
@@ -108,7 +109,7 @@ def update_status_line(view) -> None:
     seq_txt = get_sequence(view)
     seq_icon = get_seq_icon(view)
     view.set_status(vim.CFG['idseq'], seq_icon)
-    _log.key("set ‘idseq’ status to ‘%s’ from ‘%s’ m‘%s’",seq_icon,seq_txt,get_mode(view))
+    _log.key("set ‘idseq’ status to ‘%s’ from ‘%s’ m‘%s’ @%s",seq_icon,seq_txt,get_mode(view),fname())
 
     if CFG['enable'] and (match := re_cmd_count.findall(seq_txt)): # show popup
         count_s = ''.join(match)

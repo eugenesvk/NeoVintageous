@@ -266,7 +266,8 @@ def _parse_keybind_kdl2(keybind:kdl2.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0), 
   mode_s = node.tag              # ‘Ⓝ’
   key    = node.name             # ‘q’
   children = node.nodes          # either full keybinds or just commands with Chain argument
-  cmd_txt = []                   # ‘[OpenNameSpace]’
+  cmd_o   = []                   # ‘[OpenNameSpace]’ # original user supplied name
+  cmd_txt = []                   # ‘[opennamespace]’
   if key in ['vardef','varset'] and node.tag is None: # skip variables (parsed earlier)
     return
   if key == '≠': # skip comment nodes (todo: when lib supports roundtrip, save as actual comments)
@@ -311,8 +312,9 @@ def _parse_keybind_kdl2(keybind:kdl2.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0), 
           prop_rest[pkey] = int(val)
         else:
           prop_rest[pkey] = val
-  (cmd,isChain)         = _parse_keybind_arg2(node=node, CFG=CFG, prop_subl=prop_rest) # Parse arguments
-  cmd_txt.extend(cmd)
+  (cmd,cmdo,isChain)      = _parse_keybind_arg2(node=node, CFG=CFG, prop_subl=prop_rest) # Parse arguments
+  cmd_txt.extend(cmd )
+  cmd_o  .extend(cmdo)
   if children and isChain:           # with Chain argument...
     for child in children:         # ...parse children as commands
       prop_rest = dict()
@@ -322,8 +324,9 @@ def _parse_keybind_kdl2(keybind:kdl2.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0), 
         for dkey,key_abbrev in _keybind_prop.items():
           if pkey not in key_abbrev: # non-specified key=val pairs
             prop_rest[pkey] = val
-      (cmd,_) = _parse_keybind_arg2(node=child, CFG=CFG, prop_subl=prop_rest)
-      cmd_txt.extend(cmd)
+      (cmd,cmdo,_) = _parse_keybind_arg2(node=child, CFG=CFG, prop_subl=prop_rest)
+      cmd_txt.extend(cmd )
+      cmd_o  .extend(cmdo)
 
   if not modes:
     _log.error("Couldn't parse ‘%s’ to a list of modes, skipping ‘%s’"
@@ -348,7 +351,7 @@ def _parse_keybind_kdl2(keybind:kdl2.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0), 
     for mode in M_CMDTXT: # iterate over all of the allowed modes
       if mode & modes:  # if it's part of the keybind's modes, register the key
         cfgU.text_commands[mode][key] = cmd_txt
-        mappings_add_text(mode=MODE_NAMES_OLD[mode], key=key, cmd=cmd_txt, prop=prop)
+        mappings_add_text(mode=MODE_NAMES_OLD[mode], key=key, cmd=cmd_txt, cmd_o=cmd_o, prop=prop)
         # print(f"kb map+ ({mode}){key}={cmd_txt} with {prop}")
   if children and not isChain:       # without Chain argument...
     for child in children:         # ...parse children as keybinds

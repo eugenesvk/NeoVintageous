@@ -162,12 +162,12 @@ class FeedKeyHandler():
 
         if (isTextHandled := self._handle_text()):
             if _L:
-                _log.key('%s\n%s',self._dbg_txt,self._dbg_seq)
+                _log.key('%s\n%s  @%s',self._dbg_txt,self._dbg_seq,fname())
             return
         else:
             self._handle_seq()
             if _L:
-                _log.key('%s\n%s',self._dbg_txt,self._dbg_seq)
+                _log.key('%s\n%s  @%s',self._dbg_txt,self._dbg_seq,fname())
     def _handle_mapping_text(self, mapping: Mapping) -> None:
         if self.do_eval: # TODO Review What happens if Mapping + do_eval=False
             evaluate_mapping_text(self.view, mapping)

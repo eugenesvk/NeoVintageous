@@ -326,8 +326,8 @@ def mappings_add(mode:Union[str,list], lhs: str, rhs: str) -> None:
     for mode in modes:
         _mappings[mode][key] = rhs
 
-def mappings_add_text(mode:str, key:str, cmd:Union[str,list], prop:dict={}) -> None:
-    #           mode_normal     W        MoveByBigWords       {file:['txt','rs']}
+def mappings_add_text(mode:str, key:str, cmd:Union[str,list], cmd_o:Union[str,list]='', prop:dict={}) -> None:
+    #           mode_normal     W        movebybigwords       MoveByBigWords           {file:['txt','rs']}
     key_norm = _normalise_lhs(key)
     old_cmd_ftype = _mappings_text[mode].get(key_norm)
     _log.mapp(" map+txt ¦%s¦ ‹¦%s ≈ %s¦⟶¦%s¦› @file¦%s¦ oldcmd¦%s¦"
@@ -348,10 +348,13 @@ def mappings_add_text(mode:str, key:str, cmd:Union[str,list], prop:dict={}) -> N
 
     if prop: # store User data (icons, descriptions, type) to our classes for later use in Status and Help
         cmd_txt = ''
+        cmd_ot  = ''
         if isinstance(cmd,list) and len(cmd) == 1 and isinstance(cmd0 := cmd[0],str): # cmd can be None if null in kdl
             cmd_txt = cmd0.lower()
+            cmd_ot  = cmd_o[0]
         if isinstance(cmd,str):
             cmd_txt = cmd .lower()
+            cmd_ot  = cmd_o
         if not cmd_txt:
             return
         cmd_cls = _text_to_command(view=None,text=cmd_txt)
@@ -362,6 +365,8 @@ def mappings_add_text(mode:str, key:str, cmd:Union[str,list], prop:dict={}) -> N
                 cmd_cls.icon = _p
             if _p := prop.get('type',None):
                 cmd_cls.type = _p
+            if _p := prop.get('type',None):
+                cmd_cls.cmdo = cmd_ot
 
 def mappings_remove(mode: str, lhs: str) -> None:
     del _mappings[mode][_normalise_lhs(lhs)]

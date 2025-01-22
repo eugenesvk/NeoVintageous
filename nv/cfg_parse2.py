@@ -174,7 +174,7 @@ def _parse_keybind_arg2(node:kdl2.Node, CFG:dict, prop_subl={}):
   for arg in node.getArgs((...,...)): # Parse arguments
     tag = clean_name(arg.tag   if hasattr(arg,'tag'  ) else '' )
     val = clean_cmd (arg.value if hasattr(arg,'value') else arg)
-    val_dirt = arg.value if hasattr(arg,'value') else arg
+    val_dirt =       arg.value if hasattr(arg,'value') else arg
     count = 1
     if val == 'chain':
       isChain = True

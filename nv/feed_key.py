@@ -13,6 +13,7 @@ from NeoVintageous.nv.vi.keys import resolve_keypad_count, to_bare_command_name
 from NeoVintageous.nv.vi.seqs import ESC
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.vim import enter_normal_mode, is_visual_mode
+from NeoVintageous.nv.helper           import RepeatableTimer, fname
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL, TFMT, addLoggingLevel, stream_handler
 
 _log = logging.getLogger(__name__)
@@ -72,8 +73,8 @@ class FeedKeyHandler():
         return False
 
     def _append_sequence(self) -> None:
-        _log.keyt('‘%s’ icon status ‘%s’'
-            ,self.key,"")
+        _log.keyt('‘%s’ icon status ‘%s’ @%s'
+            ,self.key,"",fname())
         append_sequence         (self.view, self.key)
 
         update_status_line      (self.view)

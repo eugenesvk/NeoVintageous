@@ -45,6 +45,16 @@ _mappings_text = { # stores text_commands like ‘enter_insert_mode’ as oppose
     VISUAL          	: {}
 }  # type: dict
 
+_mappings_help = { # stores icons/descriptions/original name for text_commands
+    INSERT              : {},
+    NORMAL              : {},
+    OPERATOR_PENDING    : {},
+    SELECT              : {},
+    VISUAL_BLOCK        : {},
+    VISUAL_LINE         : {},
+    VISUAL              : {}
+}  # type: dict
+
 
 class Mapping:
 
@@ -370,21 +380,27 @@ def mappings_add_text(mode:str, key:str, cmd:Union[str,list], cmd_o:Union[str,li
     #           mode_normal     W        movebybigwords       MoveByBigWords           {file:['txt','rs']}
     key_norm = _normalise_lhs(key)
     old_cmd_ftype = _mappings_text[mode].get(key_norm)
+    old_hlp_ftype = _mappings_help[mode].get(key_norm)
     _log.mapp(" map+txt ¦%s¦ ‹¦%s ≈ %s¦⟶¦%s¦› @file¦%s¦ oldcmd¦%s¦"
       ,                mode, key,key_norm,cmd,prop.get('file',''),old_cmd_ftype)
     if (file_types := prop.get('file')):
         if not old_cmd_ftype:
             _mappings_text[mode][key_norm]            = {}
+            _mappings_help[mode][key_norm]            = {}
         elif (isinstance(old_cmd_ftype,str ) or\
               isinstance(old_cmd_ftype,list)):
             _mappings_text[mode][key_norm]            = {'':old_cmd_ftype}
+            _mappings_help[mode][key_norm]            = {'':old_hlp_ftype}
         for file_type in file_types:
             _mappings_text    [mode][key_norm][file_type] = cmd
+            _mappings_help    [mode][key_norm][file_type] ={"cmd":cmd,"cmdo":cmd_o,'desc':prop.get('desc',None),"icon":prop.get('icon',None),"type":prop.get('type',None)}
         return
     if       (isinstance(old_cmd_ftype,dict)): # don't overwrite existing filetype commands
         _mappings_text        [mode][key_norm][''       ] = cmd
+        _mappings_help        [mode][key_norm][''       ] ={"cmd":cmd,"cmdo":cmd_o,'desc':prop.get('desc',None),"icon":prop.get('icon',None),"type":prop.get('type',None)}
     else:                                          # ok to overwrite old commands
         _mappings_text        [mode][key_norm]            = cmd
+        _mappings_help        [mode][key_norm]            ={"cmd":cmd,"cmdo":cmd_o,'desc':prop.get('desc',None),"icon":prop.get('icon',None),"type":prop.get('type',None)}
 
     if prop: # store User data (icons, descriptions, type) to our classes for later use in Status and Help
         cmd_txt = ''

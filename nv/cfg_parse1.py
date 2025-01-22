@@ -153,6 +153,7 @@ def _parse_general_cfg_kdl1(general_cfg:kdl.Node,CFG:dict,DEF:dict,st_pref=None)
 import copy
 def _parse_keybind_arg1(node:kdl.Node, CFG:dict, prop_subl={}):
   cmd_l   = []
+  cmd_o   = [] # original unmodified command for later display purposes
   isChain = False
   for arg in node.args:          # Parse arguments
     tag = clean_name(arg.tag   if hasattr(arg,'tag'  ) else '' )
@@ -169,17 +170,20 @@ def _parse_keybind_arg1(node:kdl.Node, CFG:dict, prop_subl={}):
           del prop_subl_clean[key]
       subl_arg = f',"args":{json.dumps(prop_subl_clean)}' if prop_subl_clean else ''
       cmd      = f'"command":"{val_dirt}"{subl_arg}<CR>'
+      cmdo     = val_dirt
       # (Ⓝ)q (subl)"move" by="words" forward=true extend=true
       # →"command":"move","args":{"by": "words", "forward": true, "extend": true}<CR>
       _log.cfg("parsed (subl) command ¦%s¦ val_dirty=¦%s¦ arg=¦%s¦ → ¦%s¦"
         ,                            cmd, val_dirt,subl_arg, prop_subl_clean)
     else:
-      cmd = val
+      cmd  = val
+      cmdo = val_dirt
     if count_l := re_count.findall(tag): # find a count tag and add commands×count
       count = int(count_l[0])
     for i in range(1,1+(count if count > 1 else 1)):
       cmd_l.append(cmd)
-  return (cmd_l, isChain)
+      cmd_o.append(cmdo)
+  return (cmd_l, cmd_o, isChain)
 def _parse_vars_kdl1(node_vars:kdl.Node,CFG:dict,var_d:dict={}):
   # print(f"var_d pre {var_d}")
   # use var_d from #import key=val props to seed initial values

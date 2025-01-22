@@ -80,3 +80,47 @@ class Symbol:
         self.name = f"Symbol({name})"
     def __repr__(self):
         return self.name
+
+from threading import Timer
+import time, threading
+import typing as tp
+from typing import Union
+
+class RepeatableTimer(object):  # Singleton
+  _instance: Union[tp.Any,None] = None
+  _lock = threading.Lock()
+  def __new__(cls, t, cbfn, args=[], kwargs={}):
+    if not cls._instance:
+      with cls._lock:
+        if not cls._instance:
+          cls._instance = super().__new__(cls)
+          cls._instance.__is_init = False
+    return cls._instance
+  def __init__(self, t, cbfn, args=[], kwargs={}) -> None:
+    self.__is_init: bool
+    self.t: Timer
+    self._interval = t
+    self._cbfn     = cbfn
+    self._args     = args
+    self._kwargs   = kwargs
+    if self.__is_init:
+      return
+    self.__is_init = True
+  def start(self):
+    if hasattr(self, "t"): # print("re-starting the timer")
+      self.t.cancel() # cancel the old timer and replace it with ↓
+    self.t = Timer(self._interval, self._cbfn, self._args, self._kwargs)
+    self.t.start()
+  def cancel(self):
+    if hasattr(self, "t"): # print("canceling the timer")
+      self.t.cancel()
+
+  @classmethod
+  def cancel(cls):
+    cls.stop()
+  @classmethod
+  def stop(cls):
+    if not cls._instance:           # print("no instance exsits, nothing to cancel")
+      return
+    if hasattr(cls._instance, "t"): # print("cancelled the old timer")
+      cls._instance.t.cancel()

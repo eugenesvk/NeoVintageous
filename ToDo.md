@@ -1,10 +1,10 @@
 # ToDo
   - Add a select-first (select-without-extend) mode (~kak/hx)
+  - fix 11 error invalid mode
 # Keymap
   - add a Shifted function instead of Upper to also work with 9→( and [→{
   - change default keymap to ergonomic one (add a config to revert)
 # Perf
-  - cache hashes of all imported kdl files during the last config load and dump the consolidated cfgU file to disk so that next time all you'd need to do is caclulate hashes of 10 files instead of parsing them as KDL?
   - keymap generator: save source hash on generation to settings and on upgrade check if default keymap's hash changed, and if so, prompt the user and run generator again
 # Plugins
   - check easymotion vs ST's acejump
@@ -21,6 +21,7 @@
     - Sublime's minihtml isn't powerful enough to display KLE html, maybe a simple table?
 
 # ?
+  - ? Parse all configs on load (cache for perf) instead of leaving i tto every plugin, while only storing unparsed nodes?
   - simplify config keymap and have S-a everywhere instead of A to be consistent with S-f1
     - but need to retain the old A and <M-A> notation since user configs use it, so not worth it
   - add to space mode all various comment types 1,2,3,4,5
@@ -42,7 +43,8 @@
 ‹.m› а	 e
 ‹.m› в	 b
 
-+ resolved
-  - (yes, without this mappings to й would not be recognized) is `SEQ['q'] += ['й']` really needed? seems to work without it, but how?
-  - (no?) is there a way to allow direct remapping of й in neovintageous map without having to add sublime keymap?
-  - convert all bindings to dictonaries of lists (partially done)
+# +Resolved
+  + cache hashes of all imported kdl files during the last config load and dump the consolidated cfgU file to disk so that next time all you'd need to do is caclulate hashes of 10 files instead of parsing them as KDL?
+  + (yes, without this mappings to й would not be recognized) is `SEQ['q'] += ['й']` really needed? seems to work without it, but how?
+  + (no?) is there a way to allow direct remapping of й in neovintageous map without having to add sublime keymap?
+  + convert all bindings to dictonaries of lists (partially done)

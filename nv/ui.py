@@ -120,6 +120,49 @@ DEF = dict( # proper HTML tables not supported in limited Sublime's html, so use
 )
 import copy
 CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
+def reload_with_user_data_kdl() -> None:
+    if hasattr(cfgU,'kdl') and (nest := cfgU.kdl.get('indicator',None))\
+        and                    (cfg  :=     nest.get('key_help' ,None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
+        global CFG
+        _log.debug("@ui: Parsing config indicator/key_help")
+        for cfg_key in CFG:
+            if (node := cfg.get(cfg_key,None)): # prefix "⌗" node/arg pair
+                if (args := [a for a in node.getArgs((...,...))]):
+                    tag_val = args[0] #(t)"⌗" if (t) exists (though shouldn't)
+                    # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
+                    if hasattr(tag_val,'value'):
+                        val = tag_val.value # ignore tag
+                        _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
+                            ,      node.name,                               tag_val)
+                    else:
+                        val = tag_val
+                    CFG[node.name] = val
+                    # print(f"indicator key_help from argument ‘{tag_val}’")
+                elif not args:
+                    _log.warn("node ‘%s’ is missing arguments in its child ‘%s’"
+                        ,         cfg_key,                               node.name)
+                if len(args) > 1:
+                    _log.warn("node ‘%s’ has extra arguments in its child ‘%s’, only the 1st was used ‘%s’"
+                        ,         cfg_key,                              node.name,         {', '.join(args)})
+        node = cfg
+        for i,(key,val) in enumerate(node.getProps((...,...))): # prefix="⌗", alternative notation to child node/arg pairs
+            tag_val = val #prefix=(t)"⌗" if (t) exists (though shouldn't)
+            # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
+            if hasattr(tag_val,'value'):
+                val = tag_val.value # ignore tag
+                _log.warn("node ‘%s’ has unrecognized tag in property ‘%s=%s’"
+                    ,             node.name,                         key,tag_val)
+            else:
+                val = tag_val
+            if key in CFG:
+                CFG[key] = val
+                # print(f"indicator key_help from property ‘{key}={val}’")
+            else:
+                _log.error("node ‘%s’ has unrecognized property ‘%s=%s’"
+                    ,             node.name,                   key,tag_val)
+    else:
+        CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
+
 def get_popup_key_table_html(prefix,cmd_part:dict) -> str:
     rows = []
     for key,val in cmd_part.items(): # 'nnn': {

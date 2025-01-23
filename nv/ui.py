@@ -1,16 +1,10 @@
-from sublime import DRAW_EMPTY_AS_OVERWRITE
-from sublime import DRAW_NO_FILL
-from sublime import DRAW_NO_OUTLINE
-from sublime import DRAW_SOLID_UNDERLINE
-from sublime import DRAW_SQUIGGLY_UNDERLINE
-from sublime import DRAW_STIPPLED_UNDERLINE
-from sublime import active_window
-from sublime import set_timeout
+from sublime import DRAW_EMPTY_AS_OVERWRITE, DRAW_NO_FILL, DRAW_NO_OUTLINE, DRAW_SOLID_UNDERLINE, DRAW_SQUIGGLY_UNDERLINE, DRAW_STIPPLED_UNDERLINE
+from sublime import active_window, set_timeout
 
-from NeoVintageous.nv.options import get_option
+from NeoVintageous.nv.options  import get_option
 from NeoVintageous.nv.settings import get_setting
 from NeoVintageous.nv.settings import get_setting_hly
-from NeoVintageous.nv.vim import status_message
+from NeoVintageous.nv.vim      import status_message
 
 
 def _ui_bell(*msg: str) -> None:

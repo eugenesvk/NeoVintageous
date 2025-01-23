@@ -1,6 +1,6 @@
 # Changelog
 
-[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.951.1352...HEAD
+[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.96.1352...HEAD
 ## [Unreleased]
   <!-- - __Added__ -->
   <!--   + ✨ new features -->
@@ -15,6 +15,8 @@
   <!-- - __Security__ -->
   <!--   + 🔒️ vulnerabilities -->
 
+[0.96.1352]: https://github.com/eugenesvk/NeoVintageous/compare/0.96.1352...HEAD
+## [0.96.1352]
   - __Added__
     + ✨ delayed key help popup <img src="./doc/img/help_popup_match.png" alt="Key help popup" width="350">
     + option not to ignore newline on normal by char moves, i.e., end cursor on the last ␤ char instead of on the `X` char before it

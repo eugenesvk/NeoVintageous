@@ -109,6 +109,7 @@ def ui_highlight_yank_clear(view) -> None:
 
 DEF = dict( # proper HTML tables not supported in limited Sublime's html, so use a bad formatting gimmick
      enable = True
+    ,delay  = 1
     ,table  = '''<body id="nv_help_key">
       <div>K⃣          🅃    Command\t            \tℹ</div>
       {rows}

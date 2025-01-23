@@ -128,3 +128,5 @@ class RepeatableTimer(object):  # Singleton
 import inspect
 def fname(): # gets caller's function name
   return inspect.currentframe().f_back.f_code.co_name # w/o f_back gets this fn name
+
+remove_prefix = lambda text, prefix: text[len(prefix):] if text.startswith(prefix) else text

@@ -448,6 +448,8 @@ def _import_plugins_with_user_data_kdl():
     marks.reload_with_user_data_kdl()
     from NeoVintageous.nv import macros
     macros.reload_with_user_data_kdl()
+    from NeoVintageous.nv import ui
+    ui.reload_with_user_data_kdl()
 
 from NeoVintageous.nv.cfg_parse import parse_kdl_config, parse_kdl2_config
 # def load_cfgU() -> None:

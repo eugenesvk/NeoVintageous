@@ -16,6 +16,7 @@
   <!--   + 🔒️ vulnerabilities -->
 
   - __Added__
+    + ✨ delayed key help popup <img src="./doc/img/help_popup_match.png" alt="Key help popup" width="350">
     + option not to ignore newline on normal by char moves, i.e., end cursor on the last ␤ char instead of on the `X` char before it
       `single line: charX␤`
     + option to not add `:` to the `EX` command line (and don't cancel when it's missing/cmd line is empty)

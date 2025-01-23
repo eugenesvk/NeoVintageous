@@ -1,10 +1,12 @@
+import sublime  # noqa: E402
 from sublime import DRAW_EMPTY_AS_OVERWRITE, DRAW_NO_FILL, DRAW_NO_OUTLINE, DRAW_SOLID_UNDERLINE, DRAW_SQUIGGLY_UNDERLINE, DRAW_STIPPLED_UNDERLINE
-from sublime import active_window, set_timeout
+from sublime import active_window, set_timeout, PopupFlags
 
 from NeoVintageous.nv.options  import get_option
 from NeoVintageous.nv.settings import get_setting
 from NeoVintageous.nv.settings import get_setting_hly
 from NeoVintageous.nv.vim      import status_message
+from NeoVintageous.nv.helper   import remove_prefix
 
 
 def _ui_bell(*msg: str) -> None:
@@ -104,3 +106,41 @@ def ui_highlight_yank(view) -> None:
 
 def ui_highlight_yank_clear(view) -> None:
     view.erase_regions('highlightedyank')
+
+DEF = dict( # proper HTML tables not supported in limited Sublime's html, so use a bad formatting gimmick
+     enable = True
+    ,table  = '''<body id="nv_help_key">
+      <div>K⃣          🅃    Command\t            \tℹ</div>
+      {rows}
+    </body>'''
+    ,row            = '''<div>{key}   {icon}   {type} ¦ {cmd} ¦ {info}</div>'''
+    ,max_width       = 1280 # 320
+    ,max_height      =  960 # 240
+)
+import copy
+CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
+def get_popup_key_table_html(prefix,cmd_part:dict) -> str:
+    rows = []
+    for key,val in cmd_part.items(): # 'nnn': {
+        key_no_pre = remove_prefix(key,prefix)
+        key_b = f"{prefix}<b>{key_no_pre}</b>"
+        cmdo = ' '.join(val['cmdo']) or '' #'cmdo':['MoveToBracketMatch']
+        icon = val['icon'] or '   ' #'desc':'Go (comment) ([{ or preprocessor directive match @ line'
+        type = val['type'] or '  ' #'icon':'🢔(n)🢖'
+        info = val['desc'] or '   ' #'type':'‸'
+        row = CFG['row'].format_map(dict(key=key_b,icon=icon,type=type,cmd=cmdo,info=info))
+        rows.append(row)
+    return CFG['table'].format_map(dict(rows=''.join(rows)))
+from NeoVintageous.nv.mappings import _get_partial_matches_help
+def show_popup_key_help(view:sublime.View, prefix:str, point:int=-1) -> None:
+    if not view:
+        return
+    cmd_part = _get_partial_matches_help(view, "mode_normal", prefix)
+    # print(f"prefix={prefix} cmd_part = {cmd_part}")
+    view.show_popup(
+        content       = get_popup_key_table_html(prefix,cmd_part) # str
+        ,flags        = PopupFlags.HIDE_ON_CHARACTER_EVENT        #
+        ,location     = point                                     # Point -1
+        ,max_width    = CFG['max_width']                          # DIP
+        ,max_height   = CFG['max_height']                         # DIP
+    )

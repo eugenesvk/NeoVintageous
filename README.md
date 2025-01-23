@@ -169,6 +169,10 @@ The old `.neovintageousrc` config continues to work as is, just that the new con
 
 If you're using the old KDL v1 config version, set `"nv_kdl_v":1,` in your `Preferences.sublime-settings` to avoid console log error spam from KDL v2 default parser trying to load v1 config first
 
+## Known Issues
+
+- delayed key help popup can't be a properly formatted table because Sublime Text's minihtml is too limited and doesn't support tables (upvote [fr](https://github.com/sublimehq/sublime_text/issues/3262) and [fr](https://github.com/sublimehq/sublime_text/issues/1105) to hopefully change that in the next decade or so)
+
 ## About NeoVintageous
 
 NeoVintageous is the Vim engine for [Sublime Text](https://www.sublimetext.com/), designed to be fast, reliable, and zero configuration required. A fork of Vintageous, it is the ideal drop-in replacement.

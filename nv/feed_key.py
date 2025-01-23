@@ -11,6 +11,7 @@ from NeoVintageous.nv.vi.cmd_base import CommandNotFound, ViCommandDefBase, ViMo
 from NeoVintageous.nv.vi.cmd_defs import ViOpenNameSpace, ViOpenRegister
 from NeoVintageous.nv.vi.keys import resolve_keypad_count, to_bare_command_name
 from NeoVintageous.nv.vi.seqs import ESC
+from NeoVintageous.nv         import ui
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.vim import enter_normal_mode, is_visual_mode
 from NeoVintageous.nv.helper           import RepeatableTimer, fname
@@ -238,7 +239,7 @@ class FeedKeyHandler():
         if isinstance(cmd, IncompleteMapping):
             if _L:
                 self._dbg_txt += f" ↩+ ¦¦cmd=IncompleteMapping"
-            t=RepeatableTimer(t=1,cbfn=show_popup_key_help,args=(),kwargs={"view":self.view, "prefix":''.join(self._part_txt)})
+            t=RepeatableTimer(t=ui.CFG['delay'],cbfn=show_popup_key_help,args=(),kwargs={"view":self.view, "prefix":''.join(self._part_txt)})
             t.start()
             return True
         if isinstance(cmd, ViOpenNameSpace  ):

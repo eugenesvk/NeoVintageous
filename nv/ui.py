@@ -107,6 +107,13 @@ def ui_highlight_yank(view) -> None:
 def ui_highlight_yank_clear(view) -> None:
     view.erase_regions('highlightedyank')
 
+import logging
+from NeoVintageous.nv.rc import cfgU
+from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
+_log = logging.getLogger(__name__)
+_log.setLevel(DEFAULT_LOG_LEVEL)
+# _L = True if _log.isEnabledFor(logging.KEY) else False
+
 DEF = dict( # proper HTML tables not supported in limited Sublime's html, so use a bad formatting gimmick
      enable = True
     ,delay  = 1
@@ -122,7 +129,7 @@ import copy
 CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
 def reload_with_user_data_kdl() -> None:
     if hasattr(cfgU,'kdl') and (nest := cfgU.kdl.get('indicator',None))\
-        and                    (cfg  :=     nest.get('key_help' ,None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
+        and                    (cfg  :=     nest.get('keyhelp' ,None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
         global CFG
         _log.debug("@ui: Parsing config indicator/key_help")
         for cfg_key in CFG:

@@ -351,7 +351,7 @@ class cfgU(metaclass=Singleton):
         # Split config into per-section/per-plugin group
         cfg_group  = ['keymap','event','status','edit','keybind','general','rc','textobject','mark']
         cfg_nest   = {'plugin'   :['surround','abolish','unimpaired']
-            ,         'indicator':['ls','registers','count','macro']}
+            ,         'indicator':['ls','registers','count','keyhelp','macro']}
         # Set config dictionaries to emtpy
         for g in cfg_group:
             cfgU.kdl          [g] = None

@@ -120,6 +120,7 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
       `{"keys":["alt+x"],"command":"delete_word","context":[{"key":"ⓘ"}]},` 
   + Improved aesthetics:
     + (user configurable) status icons for command indicators: if you use <kbd>r</kbd> to record a macro, it doesn't make sense to see `q` in the statusbar just because the default keybind is <kbd>q</kbd>. Instead you see a recording symbol ⏺ or can add your own in the `i="⏺"` keybind field
+    + ✨ delayed key help popup (no popup if you press the full keybind quickly)<br/>![key_help](./doc/img/help_popup_match.png)
     + ✨ show a popup with a count indicator<br/>before![before](./doc/img/count_popup_before.png) ![after](./doc/img/count_popup_after.png)after
     + ✨ allow user to set values of various indicators:
       + for `macros` recording, e.g., short bright `🔴w` instead of the long gray `recording @w`

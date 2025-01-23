@@ -17,6 +17,7 @@ from NeoVintageous.nv.ex_cmds          import do_ex_cmd_edit_wrap, do_ex_cmdline
 from NeoVintageous.nv.feed_key         import FeedKeyHandler
 from NeoVintageous.nv.feed_cmd         import FeedTextCmdHandler
 from NeoVintageous.nv.goto             import GotoView, get_linewise_non_blank_target, jump_to_mark
+from NeoVintageous.nv.helper           import RepeatableTimer
 from NeoVintageous.nv.history          import history_update
 from NeoVintageous.nv.history          import next_cmdline_history
 from NeoVintageous.nv.history          import reset_cmdline_history
@@ -294,6 +295,7 @@ class nv_feed_key(WindowCommand):
                 _log.key('\n\n—⌨️———\nHFeed ‘%s’¦‘%s’ #%s eval=%s usrMap=%s reg‘%s’ C‘%s’ seq‘%s’ P‘%s’ txtP‘%s’ mot‘%s’⋅%s act‘%s’⋅%s'
                 ,                         key,char,count_,do_eval,check_user_mappings
                 ,                                                            reg,  regC,   seq, seqP,    txtP,    mot,  mot_c,act,act_c)
+            RepeatableTimer.stop() # in case we've primed the help timer on previous key, but didn't wait for it to fire, cancel it
             FeedKeyHandler(self.window.active_view(),key,repeat_count,do_eval,check_user_mappings).handle()
         except Exception as e:
             print('NeoVintageous: An error occurred:')

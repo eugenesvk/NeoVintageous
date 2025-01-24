@@ -14,7 +14,7 @@ import sublime
 import NeoVintageous.dep.kdl as kdl
 import NeoVintageous.dep.kdl2 as kdl2
 from NeoVintageous.nv.polyfill import nv_message as message
-from NeoVintageous.nv.helper import flatten_kdl1, flatten_kdl2, Singleton
+from NeoVintageous.nv.helper import flatten_kdl1, flatten_kdl2, Singleton, print_time
 
 
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
@@ -305,6 +305,8 @@ class cfgU(metaclass=Singleton):
 
     @staticmethod
     def read_kdl_file() -> List[kdl.Document]:
+        t = OrderedDict()
+        t['beg'] = ttime()
         cfg_p = cfgU.cfg_p
         cfg_f = cfgU.cfg_f
         kdl_docs = [] # list of KDL docs in the order of parsing, includes imports as separate items
@@ -335,18 +337,25 @@ class cfgU(metaclass=Singleton):
         parse_kdl_cfg_2nd = parse_kdl_config  if NeoVintageous.nv.cfg.KDLV == 2 else parse_kdl2_config
         v_1st =      NeoVintageous.nv.cfg.KDLV
         v_2nd = 1 if NeoVintageous.nv.cfg.KDLV == 2 else 2
+        t['pre_parse'] = ttime()
         try:
             parse_kdl_cfg_1st(cfg, cfg_f, kdl_docs)
+            t['parse1st'] = ttime()
+            print_time(pre="cfgU.read_kdl_file parts ⏰load", t=t)
             return kdl_docs
         except Exception as e1st:
             # print(f"couldn't parse the docs as KDL{v_1st} due to: {e1st}")
             try:
                 NeoVintageous.nv.cfg.KDLV = v_2nd
                 parse_kdl_cfg_2nd(cfg, cfg_f, kdl_docs)
+                t['parse2nd'] = ttime()
+                print_time(pre="cfgU.read_kdl_file parts ⏰load", t=t)
                 return kdl_docs
             except Exception as e2nd:
                 print(f"Couldn't parse {cfg_f} as KDL{v_1st} due to: {e1st}")
                 print(f"  nor as KDL{v_2nd} due to: {e2nd}")
+                t['parse_fail'] = ttime()
+                print_time(pre="cfgU.read_kdl_file parts ⏰load", t=t)
                 return []
 
     @staticmethod
@@ -421,17 +430,7 @@ class cfgU(metaclass=Singleton):
 
         _import_plugins_with_user_data_kdl()
         t['_import_plugins_with_user_data_kdl'] = ttime()
-        res = []
-        for i,(k,v) in enumerate(t.items()):
-            if i == 0:
-                v_1 = v
-                continue
-            else:
-                v_s = "{:.2f}".format((v - v_1) / ns)
-                res.append(f"{k}\t{v_s}")
-            v_1 = v
-        res_s = '\n'.join(res)
-        print(f"cfgU.load_kdl parts ⏰load\n{res_s}") # ⏲
+        print_time(pre="cfgU.load_kdl parts ⏰load", t=t)
 
     @staticmethod
     def unload_kdl():

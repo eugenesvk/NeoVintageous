@@ -1,0 +1,5 @@
+{"$schema":"sublime://packagecontrol.io/schemas/channel","schema_version":"4.0.0",
+"repositories": [
+  "https://raw.githubusercontent.com/eugenesvk/NeoVintageous/refs/heads/master/dep/nv_repository_v4.json"
+]
+}

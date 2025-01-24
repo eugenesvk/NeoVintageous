@@ -3,8 +3,7 @@ from sublime import DRAW_EMPTY_AS_OVERWRITE, DRAW_NO_FILL, DRAW_NO_OUTLINE, DRAW
 from sublime import active_window, set_timeout, PopupFlags
 
 from NeoVintageous.nv.options  import get_option
-from NeoVintageous.nv.settings import get_setting
-from NeoVintageous.nv.settings import get_setting_hly
+from NeoVintageous.nv.settings import get_setting, get_setting_hly
 from NeoVintageous.nv.vim      import status_message
 from NeoVintageous.nv.helper   import remove_prefix
 

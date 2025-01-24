@@ -2,12 +2,15 @@ import re
 import logging
 from typing  import Union
 from pathlib import Path
+from collections import OrderedDict
+from time import monotonic_ns as ttime
 
 import sublime
 import sublime_plugin
 
 import NeoVintageous.dep.kdl as kdl
 import NeoVintageous.dep.kdl2 as kdl2
+from NeoVintageous.nv.helper import fname, print_time
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL, TFMT
 from NeoVintageous.plugin import PACKAGE_NAME
 
@@ -123,6 +126,8 @@ def parse_kdl2_doc(s,v_untag:bool=False,v_tag:bool=False):
   return kdl2.Parser(parseConfig, printConfig).parse(s)
 
 def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d:dict={}):
+  t = OrderedDict()
+  t['beg'] = ttime()
   _log.cfg("  parse_kdl_config @ %s with vars %s",cfg_p,var_d)
 
   def fn_i(kdl_py_obj, parse_fragment):
@@ -200,14 +205,18 @@ def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d
     ,exponent         	="e"  	#|e| character to use for the exponent part of decimal numbers, when printed with scientific notation, "e" or "E" (kdl-Py)
   )
   doc = kdl.Parser(parseConfig, printConfig).parse(cfg)
+  t['pos_doc'] = ttime()
   for node in doc.nodes:
     clean_node_name(node)
   # print(type(doc),'\n',doc)
   kdl_docs += [(doc,var_d)] # append parsed doc to the list
 
+  print_time(pre=f"@{fname()} parts ⏰load {cfg_p}", t=t)
   return (doc,var_d)
 
 def parse_kdl2_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d:dict={}):
+  t = OrderedDict()
+  t['beg'] = ttime()
   _log.cfg("  parse_kdl2_config @ %s with vars %s",cfg_p,var_d)
 
   def fn_i(kdl_py_obj, parse_fragment):
@@ -274,11 +283,14 @@ def parse_kdl2_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_
     ,exponent         	="e"  	#|e| character to use for the exponent part of decimal numbers, when printed with scientific notation, "e" or "E" (kdl-Py)
   )
   doc = kdl2.Parser(parseConfig, printConfig).parse(cfg)
+  t['pos_doc'] = ttime()
   for node in doc.nodes:
     clean_node_name2(node)
   # print(type(doc),'\n',doc)
   kdl_docs += [(doc,var_d)] # append parsed doc to the list
 
+  # t['pos_clean'] = ttime()
+  print_time(pre=f"@{fname()} parts ⏰load {cfg_p}", t=t)
   return (doc,var_d)
 
 def parse_user_sublime_cmdline(line:str) -> Union[str,None]:

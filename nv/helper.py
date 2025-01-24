@@ -1,3 +1,4 @@
+from collections     import OrderedDict
 from collections.abc import MutableMapping
 
 def _flatten_dict_gen(d, key_parent, sep):
@@ -130,3 +131,19 @@ def fname(): # gets caller's function name
   return inspect.currentframe().f_back.f_code.co_name # w/o f_back gets this fn name
 
 remove_prefix = lambda text, prefix: text[len(prefix):] if text.startswith(prefix) else text
+
+from math import pow
+def print_time(pre:str, t:OrderedDict):
+  """Print an ordered dictionary of label=time, calculating durations and printing a table"""
+  ns = pow(10,9) # nanosecond, which 'monotonic_ns' are measured in
+  res = []
+  for i,(k,v) in enumerate(t.items()):
+    if i == 0:
+      v_1 = v
+      continue
+    else:
+      v_s = "{:.2f}".format((v - v_1) / ns)
+      res.append(f"{k}\t{v_s}")
+      v_1 = v
+  res_s = '\n'.join(res)
+  print(f"{pre}\n{res_s}") # ⏲

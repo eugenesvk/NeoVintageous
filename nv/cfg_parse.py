@@ -10,6 +10,7 @@ import sublime_plugin
 
 import NeoVintageous.dep.kdl as kdl
 import NeoVintageous.dep.kdl2 as kdl2
+import ckdl
 from NeoVintageous.nv.helper import fname, print_time
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL, TFMT
 from NeoVintageous.plugin import PACKAGE_NAME
@@ -94,6 +95,67 @@ def get_tag_val_warn2(tag_val:kdl2.Value,logger:logging.Logger=None,node_name:st
     tag = None
     val = tag_val
   return (tag,val)
+
+def parse_ckdl_config(v,cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d:dict={}):
+  _log.info("  parse_ckdl_config @ %s with vars %s",cfg_p,var_d)
+
+  printConfig = ckdl.EmitterOptions(
+    indent            =2                                            #≝4
+    ,escape_mode      =ckdl.EscapeMode.default                      #minimal control newline tab ascii_mode defaul                    Which characters should be escaped in regular strings
+    ,identifier_mode  =ckdl.IdentifierMode.prefer_bare_identifiers  #prefer_bare_identifiers quote_all_identifiers ascii_identifiers  How should identifiers (i.e., node names, type annotations and property keys) be rendered
+    ,float_mode       =ckdl.FloatMode(always_write_decimal_point=None, always_write_decimal_point_or_exponent=None, capital_e=None, exponent_plus=None, plus=None, min_exponent=None) #How exactly should doubles be formatted
+    ,version          =2  #KDL version to emit
+  )
+  doc = ckdl.parse(cfg,version=v) # version=None or "detect" to support both
+  kdl_docs += [(doc,var_d)]
+  for node in doc.nodes: # Check imports
+    if node.name.lower() in ["import"] and node.type_annotation is None: # match untagged import node ()
+      # import_var = {}
+      # for key, val in node.properties.items():
+      #   if hasattr(val,'type_annotation') and val.type_annotation is not None:
+      #     import_var[key] = val ;print(f"added to import_var {key}={val}")
+      # _log.info("%s",import_var)
+
+      var_set   = dict()
+      var_d_new = dict()
+      for (pkey,tag_val) in node.properties.items(): # Parse properties for var_name=(var)"val" pairs
+        tag = tag_val.type_annotation if hasattr(tag_val,'type_annotation'  ) else ''      #(var)
+        val = tag_val.value           if hasattr(tag_val,'value'            ) else tag_val #"val"
+        if tag in ['var','$']:
+          var_set[pkey] = val
+        if tag in ['varpass','$→']:
+          if 'set' in var_d and pkey in var_d['set']:
+            var_set[pkey] = var_d['set'][pkey]
+            _log.info("  passing %s=%s",pkey,var_d['set'][pkey])
+          elif not 'set' in var_d:
+            _log.warn("  ‘%s’ variable is supposed to be passed from the variables available to this config, but this config has none (parsing ‘%s’)", pkey, node)
+          elif not pkey in var_d['set']:
+            _log.warn("  ‘%s’ variable is supposed to be passed from the variables available to this config, but it can't be found in %s (parsing ‘%s’)", pkey, list(var_d['set'].keys()), node)
+          if val:
+            _log.warn("  ‘varpass’ variable ‘%s’ should have an empty value, not ‘%s’", pkey,val)
+      var_d_new['set'] = var_set
+
+      for arg in node.args: # import (keybind)"./NV/mykeys.kdl"
+        tag = arg.type_annotation if hasattr(arg,'type_annotation'  ) else enclose_in # todo: or enclose twice?
+        val = arg.value           if hasattr(arg,'value'            ) else arg
+        ext = '' if val.lower().endswith('.kdl') else '.kdl'
+        fname = val + ext
+        enclose_pre = (tag + ' {\n') if tag else '' # keybind
+        enclose_pos =          '\n}' if tag else ''
+        _log.debug("arg=‘%s’ tag=‘%s’ cfg_p.parent=‘%s’ val=‘%s’%s\n(cfg_p=‘%s’)"
+          ,         arg,     tag,     cfg_p.parent,     val,   ext,  cfg_p)
+        if (cfg_import_f := Path(cfg_p.parent,fname).expanduser()).exists():
+          try:
+            with open(cfg_import_f, 'r', encoding='utf-8', errors='replace') as f:
+              cfg_import = enclose_pre + f.read() + enclose_pos
+          except FileNotFoundError as e:
+            #todo# sublime.error_message(f"{PACKAGE_NAME}:\nTried and failed to load\n{cfg_import_f}")
+            break
+        else:
+          #todo# sublime.error_message(f"{PACKAGE_NAME}:\nCouldn't find config\n{cfg_import_f}\nimported in\n{cfg_p}")
+          break
+        parse_ckdl_config(v,cfg_import, cfg_import_f, kdl_docs, enclose_in=tag, var_d=var_d_new)
+  return (doc,var_d)
 
 def parse_kdl_doc(s,v_untag:bool=False,v_tag:bool=False):
   parseConfig = kdl.ParseConfig(

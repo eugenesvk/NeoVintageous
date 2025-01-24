@@ -3,7 +3,7 @@ from sublime import DRAW_EMPTY_AS_OVERWRITE, DRAW_NO_FILL, DRAW_NO_OUTLINE, DRAW
 from sublime import active_window, set_timeout, PopupFlags
 
 from NeoVintageous.nv.options  import get_option
-from NeoVintageous.nv.settings import get_setting, get_setting_hly
+from NeoVintageous.nv.settings import get_setting, get_setting_hly, get_mode
 from NeoVintageous.nv.vim      import status_message
 from NeoVintageous.nv.helper   import remove_prefix
 
@@ -185,7 +185,7 @@ from NeoVintageous.nv.mappings import _get_partial_matches_help
 def show_popup_key_help(view:sublime.View, prefix:str, point:int=-1) -> None:
     if not view:
         return
-    cmd_part = _get_partial_matches_help(view, "mode_normal", prefix)
+    cmd_part = _get_partial_matches_help(view, get_mode(view), prefix)
     # print(f"prefix={prefix} cmd_part = {cmd_part}")
     view.show_popup(
         content       = get_popup_key_table_html(prefix,cmd_part) # str

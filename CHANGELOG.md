@@ -1,6 +1,6 @@
 # Changelog
 
-[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.96.1352...HEAD
+[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.961.1352...HEAD
 ## [Unreleased]
   <!-- - __Added__ -->
   <!--   + ✨ new features -->
@@ -15,6 +15,8 @@
   <!-- - __Security__ -->
   <!--   + 🔒️ vulnerabilities -->
 
+[0.961.1352]: https://github.com/eugenesvk/NeoVintageous/compare/0.961.1352...HEAD
+## [0.961.1352]
   - __Fixed__
     + hardcoded mode used for key help instead of an actual one
 

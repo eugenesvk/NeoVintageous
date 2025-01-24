@@ -15,6 +15,9 @@
   <!-- - __Security__ -->
   <!--   + 🔒️ vulnerabilities -->
 
+  - __Fixed__
+    + hardcoded mode used for key help instead of an actual one
+
 [0.96.1352]: https://github.com/eugenesvk/NeoVintageous/compare/0.96.1352...HEAD
 ## [0.96.1352]
   - __Added__

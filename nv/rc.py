@@ -5,6 +5,9 @@ import re
 import json
 from pathlib import Path
 from typing import List, Union
+from time import monotonic_ns as ttime
+from math import pow
+from collections import OrderedDict
 
 import sublime
 
@@ -82,6 +85,7 @@ def _pre_load(window,source) -> None:
         except FileNotFoundError as e:
             print('NeoVintageous:', e)
 
+ns = pow(10,9) # nanosecond, which 'monotonic_ns' are measured in
 def _load() -> None:
     window = sublime.active_window()
 
@@ -96,7 +100,11 @@ def _load() -> None:
     except FileNotFoundError:
         _log.info('%s file not found', _file_path())
     # load_cfgU()
+    t0 = ttime()
     cfgU.load_kdl()
+    t00 = ttime()
+    dur_total = t00 - t0
+    print("cfgU.load_kdl ⏰load ∑{:.2f}s".format(dur_total/ns)) # ⏲
 
 
 import NeoVintageous.nv.cfg_parse
@@ -343,9 +351,12 @@ class cfgU(metaclass=Singleton):
 
     @staticmethod
     def load_kdl():
+        t = OrderedDict()
+        t['beg'] = ttime()
         if hasattr(cfgU,'kdl') and cfgU.kdl: # avoid loading the same config multiple times
             return
         cfg_l:List[(kdl.Document,dict)] = cfgU.read_kdl_file()
+        t['file'] = ttime()
         cfgU.kdl = dict()
 
         # Split config into per-section/per-plugin group
@@ -383,6 +394,7 @@ class cfgU(metaclass=Singleton):
                             else:
                                 cfgU.kdl[nest][g] = node
 
+        t['group'] = ttime()
         ignore = {1:cfg_group, 2:[]} # ignore the lowest level dictionary groups as they repeat node names
         for g,subg in cfg_nest.items():
             ignore[2] += subg
@@ -394,16 +406,32 @@ class cfgU(metaclass=Singleton):
         _parse_general_g_kdl = _parse_general_g_kdl2 if is2 else _parse_general_g_kdl1
         _parse_rc_g_kdl      = _parse_rc_g_kdl2      if is2 else _parse_rc_g_kdl1
         _parse_keybinds_kdl  = _parse_keybinds_kdl2  if is2 else _parse_keybinds_kdl1
+        t['flat'] = ttime()
         if (general_g := cfgU.kdl['general']):
             _parse_general_g_kdl(general_g=general_g,CFG=CFG,DEF=DEF)
+            t['_parse_general_g_kdl'] = ttime()
 
         if (rc_g := cfgU.kdl['rc']):
             _parse_rc_g_kdl(rc_g=rc_g)
+            t['_parse_rc_g_kdl'] = ttime()
 
         for (keybind,var_d) in cfgU.kdl['keybind']:
             _parse_keybinds_kdl(keybinds=keybind,CFG=CFG,cfgU=cfgU,var_d=var_d)
+        t['_parse_keybinds_kdl'] = ttime()
 
         _import_plugins_with_user_data_kdl()
+        t['_import_plugins_with_user_data_kdl'] = ttime()
+        res = []
+        for i,(k,v) in enumerate(t.items()):
+            if i == 0:
+                v_1 = v
+                continue
+            else:
+                v_s = "{:.2f}".format((v - v_1) / ns)
+                res.append(f"{k}\t{v_s}")
+            v_1 = v
+        res_s = '\n'.join(res)
+        print(f"cfgU.load_kdl parts ⏰load\n{res_s}") # ⏲
 
     @staticmethod
     def unload_kdl():

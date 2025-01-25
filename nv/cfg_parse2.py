@@ -193,7 +193,7 @@ def _parse_general_cfg_kdl2(general_cfg:kdl2.Node,CFG:dict,DEF:dict,st_pref=None
     # print('CFG pos',CFG)
     return None
   elif opt_name in DEF['gen_def']:
-    opt_d    =   DEF['gen_def'][opt_name]
+    opt_d    =     DEF['gen_def'][opt_name]
     name_def = opt_d['key'] # vintageous_auto_switch_input_method
     type_def = opt_d['t']   # bool
     val_def  = opt_d['v']   # False

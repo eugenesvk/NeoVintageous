@@ -152,27 +152,30 @@ def reload_with_user_data_kdl() -> None:
                 continue
 
             if cfg_key == 'seekforward': # ⎀a(B) don't sub ⎀a(b) if false
-                args = [a for a in node.getArgs((...,...))] if kdlv == 2 else node.args
-                if args:
-                    if not isinstance(args[0],bool):
-                        _log.error("node ‘%s’ argument should be ‘true’ or ‘false’, not ‘%s’"
-                            ,           node.name,                                   args[0])
-                    else:
-                        CFG[cfg_key] = args[0]
+                args = False
+                for i,(arg,tag,val) in enumerate(cfgU.cfg_parse.arg_tag_val(node)):
+                    args = True
+                    if i == 0:
+                        if tag: #(t)"(" if (t) exists (though shouldn't)
+                            _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
+                                ,      node.name,                                 arg)
+                        if isinstance(arg,bool):
+                            CFG[cfg_key] = arg
+                        else:
+                            _log.error("node ‘%s’ argument should be ‘true’ or ‘false’, not ‘%s’"
+                                ,           node.name,                                   arg)
+                        CFG[cfg_key][key] = val
+                        _log.debug('CFG set to arg @%s %s=%s',cfg_key,key,val)
+                    elif i > 0:
+                        _log.warn("node ‘%s’ has extra arguments (only the 1st was used): ‘%s’...",cfg_key,arg)
+                        break
                 if not args:
-                    _log.warn("node ‘%s’ is missing arguments"
-                        ,          cfg_key)
-                if len(args) > 1:
-                    _log.warn("node ‘%s’ has extra arguments, only the 1st was used ‘%s’"
-                        ,          cfg_key,                               ', '.join(args))
+                    _log.warn("node ‘%s’ is missing arguments",cfg_key)
                 continue
             if cfg_key == 'steadycursor': # don't 'move' ⎀cursor to the changed punctuation
-                nargs = node.getArgs((...,...)) if kdlv == 2 else node.args
-                for arg in nargs:     # Parse arguments, toggle all
-                    tag = arg.tag   if hasattr(arg,'tag'  ) else ''
-                    val = arg.value if hasattr(arg,'value') else arg
+                for (arg,tag,val) in cfgU.cfg_parse.arg_tag_val(node): # Parse arguments, toggle all
                     # if tag:
-                        # _log.debug("node ‘%s’ has unrecognized tag in argument %s",node.name,arg)
+                    #     _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’",node.name,arg)
                     if val == True:
                         for key in _STEADY_CURSOR_KEY:
                             CFG['steadycursor'][key] = True
@@ -181,10 +184,7 @@ def reload_with_user_data_kdl() -> None:
                         for key in _STEADY_CURSOR_KEY:
                             CFG['steadycursor'][key] = False
                         continue
-                nprops = node.getProps((...,...)) if kdlv == 2 else node.props.items()
-                for pkey,tag_val in nprops: # Parse properties, toggle per group ‘quote=true’
-                    tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
-                    val = tag_val.value if hasattr(tag_val,'value') else tag_val
+                for (pkey,tag_val,tag,val) in prop_key_tag_val(node): # Parse properties, toggle per group ‘quote=true’
                     # if tag:
                         # _log.debug("node ‘%s’ has unrecognized value tag in property %s",cfg_key,pkey)
                     if not isinstance(val, bool):
@@ -196,10 +196,7 @@ def reload_with_user_data_kdl() -> None:
                 continue
 
             text_obj = to_names_rev[val]
-            nargs = node.getArgs((...,...)) if kdlv == 2 else node.args
-            for arg in nargs:             # Parse arguments, −OLD pairs "b"
-                tag = arg.tag   if hasattr(arg,'tag'  ) else ''
-                val = arg.value if hasattr(arg,'value') else arg
+            for (arg,tag,val) in cfgU.cfg_parse.arg_tag_val(node): # Parse arguments, −OLD pairs "b"
                 # if tag:
                     # _log.debug("node ‘%s’ has unrecognized tag in argument %s",node.name,arg)
                 if   val == 'clear':
@@ -231,10 +228,7 @@ def reload_with_user_data_kdl() -> None:
                 replaced.append(lbl[0])
                 replaced.append(lbl[1])
 
-            nprops = node.getProps((...,...)) if kdlv == 2 else node.props.items()
-            for pkey,tag_val in nprops: # Parse properties, +NEW pairs d="()"
-                tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
-                val = tag_val.value if hasattr(tag_val,'value') else tag_val
+            for (pkey,tag_val,tag,val) in prop_key_tag_val(node): # Parse properties, +NEW pairs d="()"
                 # if tag:
                     # _log.debug("node ‘%s’ has unrecognized value tag in property %s",node.name,pkey)
                 pair = None

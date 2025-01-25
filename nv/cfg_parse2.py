@@ -391,6 +391,7 @@ def _parse_keybind_kdl2(keybind:kdl2.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0), 
       _parse_keybind_kdl2(keybind=child, CFG=CFG, cfgU=cfgU, gmodes=modes, var_d=var_d)
 
 def _flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore):
+  kdl = kdl2
   flatten_kdl = flatten_kdl2
   lvl += 1
   if isinstance(kdl_dic, dict):

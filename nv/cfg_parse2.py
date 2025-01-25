@@ -221,7 +221,7 @@ def _parse_general_cfg_kdl2(general_cfg:kdl2.Node,CFG:dict,DEF:dict,st_pref=None
         val = arg.value if hasattr(arg,'value') else arg
         _log.debug("%s %s %s", arg, f"tag={tag}", f"val={val}")
         isSameType = False
-        if     isinstance(    type_def,type):
+        if   isinstance(    type_def,type):
           if isinstance(val,type_def):
             isSameType = True
         elif isinstance(type_def,list):

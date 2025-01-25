@@ -8,7 +8,14 @@ import sublime_plugin
 
 import NeoVintageous.dep.kdl as kdl
 import NeoVintageous.dep.kdl2 as kdl2
-import ckdl
+_libckdl = False
+try:
+  import ckdl
+  _libckdl = True
+except ImportError:
+  _libckdl = False
+except ModuleNotFoundError:
+  _libckdl = False
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL, TFMT
 from NeoVintageous.plugin import PACKAGE_NAME
 

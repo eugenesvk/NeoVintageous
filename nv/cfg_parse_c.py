@@ -20,6 +20,9 @@ _log.setLevel(DEFAULT_LOG_LEVEL)
 from typing import Callable, Generator, Union, Tuple
 import typing as tp
 
+def children(node:ckdl.Node) -> ckdl.Node:
+  for child in node.children:
+    yield child
 t_parent = Union[ckdl.Document, ckdl.Node]
 def node_get(doc_or_node:t_parent, name:str, df=None) -> Union[ckdl.Node, None]:
   if isinstance(doc_or_node, ckdl.Document):

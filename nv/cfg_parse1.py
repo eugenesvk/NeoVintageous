@@ -19,6 +19,10 @@ _log.setLevel(DEFAULT_LOG_LEVEL)
 
 from typing import Union
 import typing as tp
+
+def children(node:kdl1.Node) -> kdl1.Node:
+  for child in node.nodes:
+    yield child
 t_parent = Union[kdl.Document, kdl.Node]
 def node_get(doc_or_node:t_parent, name:str, df=None):
   return doc_or_node.get(name, df)

@@ -76,57 +76,37 @@ def reload_with_user_data_kdl() -> None:
         _log.debug("@nv.vim: Parsing config status")
         for cfg_key in CFG: # 1a. parse arguments for non-mode statuses
             if (node := cfg.get(cfg_key,None)): # id_seq "vim-seq" node/arg pair
-                if (args := [a for a in node.getArgs((...,...))]):
-                    tag_val = args[0] #(t)"vim-seq" if (t) exists (though shouldn't)
-                    # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
-                    if hasattr(tag_val,'value'):
-                        val = tag_val.value # ignore tag
-                        _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
-                            ,      node.name,                                 tag_val)
-                    else:
-                        val = tag_val
-                    CFG[node.name] = val
-                    #print(f"status from argument ‘{node.name}’ is ‘{tag_val}’")
-                elif not args:
+                args = False
+                for i,(arg,tag,val) in enumerate(cfgU.cfg_parse.arg_tag_val(node)):
+                    args = True
+                    if i == 0:
+                        if tag:
+                            _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’",node.name,arg)
+                        CFG[node.name] = val #;_log.debug('indicator key_help from arg @%s %s',node.name,val)
+                    elif i > 0:
+                        _log.warn("node ‘%s’ has extra arguments in its child ‘%s’ (only the 1st was used): ‘%s’...",cfg_key,node.name,arg)
+                        break
+                if not args:
                     _log.warn("node ‘%s’ is missing arguments in its child ‘%s’"
-                        ,       cfg_key,                              node.name)
-                if len(args) > 1:
-                    _log.warn("node ‘%s’ has extra arguments in its child ‘%s’, only the 1st was used ‘%s’"
-                        ,         cfg_key,                             node.name,         {', '.join(args)})
+                        ,         cfg_key,                               node.name)
         for node in cfg.nodes: # 1b. parse arguments for mode statuses
-            for arg in node.getArgs((...,...)):
-                tag_val = arg #(t)"vim-seq" if (t) exists (though shouldn't)
-                # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
-                if hasattr(tag_val,'value'):
-                    val = tag_val.value # ignore tag
-                    _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
-                        ,       node.name,                                 tag_val)
-                else:
-                    val = tag_val
+            for (arg,tag,val) in cfgU.cfg_parse.arg_tag_val(node):
+                if tag:
+                    _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’",node.name,arg)
                 if (mode := mode_names_rev.get(node.name        ,\
                             mode_names_rev.get(node.name.upper(),None))): # kdl keys are converted to lowercase, so check 'i' and 'I'
-                    CFGM[mode] = val
-                    # print(f"status mode CFGM ‘{mode}’ from ‘{node.name}’ argument ‘{val}’")
+                    CFGM[mode] = val ;_log.debug("status mode CFGM ‘%s’ from ‘%s’ argument ‘%s’",mode,node.name,val)
         node = cfg
-        for i,(key,val) in enumerate(node.getProps((...,...))): # 2. parse properties id_seq="vim-seq", alternative notation to child node/arg pairs
-            tag_val = val #(t)"vim-seq" if (t) exists (though shouldn't)
-            # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
-            if hasattr(tag_val,'value'):
-                val = tag_val.value # ignore tag
-                _log.warn("node ‘%s’ has unrecognized tag in property ‘%s=%s’"
-                    ,       node.name,                                key,tag_val)
-            else:
-                val = tag_val
+        for i,(key,tag_val,tag,val) in enumerate(prop_key_tag_val(node)): # 2. parse properties id_seq="vim-seq", alternative notation to child node/arg pairs
+            if tag:
+                _log.warn("node ‘%s’ has unrecognized tag in property ‘%s=%s’",node.name,key,tag_val)
             if key in CFG: # 2a. for non-mode statuses
-                CFG[key] = val
-                #print(f"status from property ‘{key}={val}’")
+                CFG[key] = val ;_log.debug("status from property ‘%s=%s’",key,val)
             elif key in mode_names_rev: # 2b. for mode statuses
                 mode = mode_names_rev[key]
-                CFGM[mode] = val
-                # print(f"status mode CFGM from property ‘{key}={val}’")
+                CFGM[mode] = val ;_log.debug("status mode CFGM from property ‘%s=%s’",key,val)
             else:
-                _log.error("node ‘%s’ has unrecognized property ‘%s=%s’"
-                    ,       node.name,                          key,tag_val)
+                _log.error("node ‘%s’ has unrecognized property ‘%s=%s’",node.name,key,tag_val)
     else:
         CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
 

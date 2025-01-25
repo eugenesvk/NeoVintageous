@@ -75,7 +75,7 @@ def get_tag_val_warn(tag_val:ckdl.Value,logger:logging.Logger=None,node_name:str
 
 def _parse_rc_g_kdl(rc_g:ckdl.Node):
   win = sublime.active_window()
-  for node in rc_g.nodes: # r#":set invrelativenumber"#
+  for node in rc_g.children: # r#":set invrelativenumber"#
     _parse_rc_cfg_kdl(win,rc_cfg=node)
 def _parse_rc_cfg_kdl(win,rc_cfg:ckdl.Node) -> None:
   if not (cfgT := type(rc_cfg)) is ckdl.Node:
@@ -94,7 +94,7 @@ def _parse_rc_cfg_kdl(win,rc_cfg:ckdl.Node) -> None:
 def _parse_general_g_kdl(general_g:ckdl.Node,CFG:dict,DEF:dict):
   win = sublime.active_window()
   st_pref = sublime.load_settings('Preferences.sublime-settings')
-  if (src_pre := general_g.get((None,"source"))):
+  if (src_pre := node_get(general_g, "source")):
     for arg in src_pre.args: # only get the first one
       tag_val = arg #(t)"/dvorak.neovintageous" if (t) exists (though shouldn't)
       # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
@@ -107,7 +107,7 @@ def _parse_general_g_kdl(general_g:ckdl.Node,CFG:dict,DEF:dict):
       # print(f"loading source first ‘{val}’")
       _pre_load(win,val)
       break
-  for node in general_g.nodes: # set relativenumber=true
+  for node in general_g.children: # set relativenumber=true
     _parse_general_cfg_kdl_c(general_cfg=node,CFG=CFG,DEF=DEF,st_pref=st_pref)
 
 def _parse_set_kdl_c(node:ckdl.Node,cfg='') -> None:
@@ -123,7 +123,7 @@ def _parse_set_kdl_c(node:ckdl.Node,cfg='') -> None:
     val = clean_cmd (arg.value           if hasattr(arg,'value'          ) else arg)
     _log.debug(f"set option from kdl arg: ¦{val}¦")
     ex_set(option=val,value=None, **args)
-  for (pkey,tag_val) in node.properties: # Parse properties
+  for (pkey,tag_val) in node.properties.items(): # Parse properties
     tag = tag_val.type_annotation if hasattr(tag_val,'type_annotation') else ''
     val = tag_val.value           if hasattr(tag_val,'value'          ) else tag_val
     _log.debug(f"set option from kdl prop: ¦{pkey}¦=¦{val}¦")
@@ -149,7 +149,7 @@ def _parse_let_kdl_c(node:ckdl.Node,cfg='') -> None:
   if not node.properties:
     _log.warn("%sconfig has a ‘let’ command without var=value properties (%s)",
       f'‘{cfg}’ ' if cfg else '',                                     node)
-  for (pkey,tag_val) in node.properties:
+  for (pkey,tag_val) in node.properties.items(): # Parse properties
     tag = tag_val.type_annotation if hasattr(tag_val,'type_annotation') else ''
     val = tag_val.value           if hasattr(tag_val,'value'          ) else tag_val
     _log.debug(f"set var from kdl: ¦{pkey}¦=¦{val}¦")
@@ -175,7 +175,7 @@ def _parse_general_cfg_kdl_c(general_cfg:ckdl.Node,CFG:dict,DEF:dict,st_pref=Non
     if hasattr(node,'type_annotation'): # vardef should have no tags
       _log.warn("node ‘%s’ has unrecognized tag",node.name)
       return None
-    for (pkey,tag_val) in node.properties: # Parse definition properties
+    for (pkey,tag_val) in node.properties.items(): # Parse definition properties
       tag = tag_val.type_annotation if hasattr(tag_val,'type_annotation') else ''
       val = tag_val.value           if hasattr(tag_val,'value'          ) else tag_val
       if pkey == 'pre':
@@ -194,7 +194,7 @@ def _parse_general_cfg_kdl_c(general_cfg:ckdl.Node,CFG:dict,DEF:dict,st_pref=Non
             ,                             opt_name,                                   type_def)
       else:
         props = dict()
-        for (pkey,tag_val) in node.properties:
+        for (pkey,tag_val) in node.properties.items():
           props[pkey] = tag_val
         CFG['general'][name_def] = props
         _over = ''
@@ -288,7 +288,7 @@ def _parse_vars_kdl(node_vars:ckdl.Node,CFG:dict,var_d:dict={}): # TODO update
       if hasattr(node,'type_annotation'): # vardef should have no tags
         _log.warn("node ‘%s’ has unrecognized tag (should have none)",node.name)
         continue
-      for (pkey,tag_val) in node.properties: # parse definition properties
+      for (pkey,tag_val) in node.properties.items(): # parse definition properties
         tag = tag_val.type_annotation if hasattr(tag_val,'type_annotation') else ''
         val = tag_val.value           if hasattr(tag_val,'value'          ) else tag_val
         if pkey == 'pre':
@@ -322,7 +322,7 @@ def _parse_vars_kdl(node_vars:ckdl.Node,CFG:dict,var_d:dict={}): # TODO update
 
 def _parse_keybinds_kdl(keybinds:ckdl.Node,CFG:dict,cfgU,var_d:dict={}): # TODO: update
   var_d_combo = _parse_vars_kdl(keybinds,CFG,var_d)
-  for kb_node in keybinds.nodes: # (Ⓝ)"q" "OpenNameSpace"
+  for kb_node in keybinds.children: # (Ⓝ)"q" "OpenNameSpace"
     _parse_keybind_kdl(keybind=kb_node, CFG=CFG, cfgU=cfgU, var_d=var_d_combo)
 def _parse_keybind_kdl(keybind:ckdl.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0), var_d:dict={}): # TODO: update
   from NeoVintageous.nv.mappings import mappings_add, mappings_add_text
@@ -330,9 +330,9 @@ def _parse_keybind_kdl(keybind:ckdl.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0), v
     _log.error("Type of ‘keybind’ should be ckdl.Node, not ‘%s’",cfgT)
     return None
   node = keybind                 # (Ⓝ)"q" "OpenNameSpace"
-  mode_s = node.tag              # ‘Ⓝ’
+  mode_s = node.type_annotation  # ‘Ⓝ’
   key    = node.name             # ‘q’
-  children = node.nodes          # either full keybinds or just commands with Chain argument
+  children = node.children       # either full keybinds or just commands with Chain argument
   cmd_o   = []                   # ‘[OpenNameSpace]’ # original user supplied name
   cmd_txt = []                   # ‘[opennamespace]’
   if key in ['vardef','varset'] and node.type_annotation is None: # skip variables (parsed earlier)
@@ -363,7 +363,7 @@ def _parse_keybind_kdl(keybind:ckdl.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0), v
 
   prop = dict()                  # Parse properties
   prop_rest = dict()             # Properties left from known defaults (e.g., part of Sublime commands)
-  for (pkey,tag_val) in node.properties: # ‘i="✗" d="Close a tab"’
+  for (pkey,tag_val) in node.properties.items(): # ‘i="✗" d="Close a tab"’
     tag = tag_val.type_annotation if hasattr(tag_val,'type_annotation') else ''
     val = tag_val.value           if hasattr(tag_val,'value'          ) else tag_val
     for dkey,key_abbrev in _keybind_prop.items():
@@ -443,17 +443,15 @@ def _flatten_kdl_gen_c(kdl_dic, key_parent, sep, lvl, ignore):
   else:
     doc_node = kdl_dic
     key = doc_node.name if isinstance(doc_node, kdl.Node) else ''
-    for node_child in doc_node.nodes:
+    for node_child in doc_node.children:
       key_new = key_parent + sep + key if key_parent else key
       yield from flatten_kdl(node_child, key_new, sep=sep,lvl=lvl,ignore=ignore).items()
     if isinstance(doc_node, kdl.Node):
       key_this = key_parent + sep + key if key_parent else key
-      nprops = doc_node.properties
-      for key,val in nprops:
+      for key,val in doc_node.properties.items():
         key_new = key_this + sep + key if key_this else key
         yield key_new, val
-      nargs = doc_node.args
-      for i, arg in enumerate(nargs):
+      for i, arg in enumerate(doc_node.args):
         # tag = arg.type_annotation if hasattr(arg,'type_annotation') else ''
         val = arg.value           if hasattr(arg,'value'          ) else arg
         if i == 0: # store only the 1st arg without any prefixes

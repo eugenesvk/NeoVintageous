@@ -390,3 +390,43 @@ def _parse_keybind_kdl2(keybind:kdl2.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0), 
     for child in children:         # ...parse children as keybinds
       _parse_keybind_kdl2(keybind=child, CFG=CFG, cfgU=cfgU, gmodes=modes, var_d=var_d)
 
+def _flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore):
+  flatten_kdl = flatten_kdl2
+  lvl += 1
+  if isinstance(kdl_dic, dict):
+    d = kdl_dic
+    for key, val in d.items():
+      if lvl in ignore and key in ignore[lvl]: # skip dict groups that are dupes of node names
+        key_new = key_parent
+      else:
+        key_new = key_parent + sep + key if key_parent else key
+      if   isinstance(val, dict):
+        yield from flatten_kdl(val, key_new, sep=sep,lvl=lvl,ignore=ignore).items()
+      elif isinstance(val, kdl.Node):
+        yield from flatten_kdl(val, key_new, sep=sep,lvl=lvl,ignore=ignore).items()
+      else:
+        yield key_new, val
+  else:
+    doc_node = kdl_dic
+    key = doc_node.name if isinstance(doc_node, kdl.Node) else ''
+    for node_child in doc_node.nodes:
+      key_new = key_parent + sep + key if key_parent else key
+      yield from flatten_kdl(node_child, key_new, sep=sep,lvl=lvl,ignore=ignore).items()
+    if isinstance(doc_node, kdl.Node):
+      key_this = key_parent + sep + key if key_parent else key
+      nprops = doc_node.getProps((...,...))
+      for key,val in nprops:
+        key_new = key_this + sep + key if key_this else key
+        yield key_new, val
+      nargs = doc_node.getArgs((...,...))
+      for i, arg in enumerate(nargs):
+        # tag = arg.tag   if hasattr(arg,'tag'  ) else ''
+        val = arg.value if hasattr(arg,'value') else arg
+        if i == 0: # store only the 1st arg without any prefixes
+          key_new = key_this
+        else:
+          key_new = key_this + str(i+1) # add a numeric prefix
+        yield key_new, val
+def flatten_kdl2(kdl_dic:Union[kdl2.Document,kdl2.Node,dict], key_parent:str = '', sep:str = '.', lvl:int=0, ignore:dict={1:[],2:[]}):
+    """convert KDL document or a dictionary of KDL nodes into a flat dictionary, ignoring 2nd+ argument, but retaining key=val properties"""
+    return dict(_flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore))

@@ -9,7 +9,7 @@ from typing import List, Union
 import sublime
 
 from NeoVintageous.nv.polyfill import nv_message as message
-from NeoVintageous.nv.helper import flatten_kdl1, flatten_kdl2, Singleton
+from NeoVintageous.nv.helper import Singleton
 import NeoVintageous.nv.cfg_parse
 from NeoVintageous.nv.cfg_parse import _pre_load, _source
 
@@ -225,13 +225,13 @@ class cfgU(metaclass=Singleton):
         else:
             if nvcfg.CFG['pref']['kdlv']    == 2:
                 from NeoVintageous.nv import cfg_parse2
-                flatten_kdl          = flatten_kdl2
+                flatten_kdl          = cfg_parse2.flatten_kdl2
                 _parse_general_g_kdl = cfg_parse2._parse_general_g_kdl2
                 _parse_rc_g_kdl      = cfg_parse2._parse_rc_g_kdl2
                 _parse_keybinds_kdl  = cfg_parse2._parse_keybinds_kdl2
             else:
                 from NeoVintageous.nv import cfg_parse1
-                flatten_kdl          = flatten_kdl1
+                flatten_kdl          = cfg_parse1.flatten_kdl1
                 _parse_general_g_kdl = cfg_parse1._parse_general_g_kdl1
                 _parse_rc_g_kdl      = cfg_parse1._parse_rc_g_kdl1
                 _parse_keybinds_kdl  = cfg_parse1._parse_keybinds_kdl1

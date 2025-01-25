@@ -172,6 +172,7 @@ If you're using the old KDL v1 config version, set `"nv_kdl_v":1,` in your `Pref
 ## Known Issues
 
 - delayed key help popup can't be a properly formatted table because Sublime Text's minihtml is too limited and doesn't support tables (upvote [fr](https://github.com/sublimehq/sublime_text/issues/3262) and [fr](https://github.com/sublimehq/sublime_text/issues/1105) to hopefully change that in the next decade or so)
+- Python-based KDL config parser is slow, to use a fast C-based parser instead: set up the [ST's 3.8 lib channel](https://github.com/packagecontrol/channel), then `ckdl` should be automatically installed (or you can force it via `Package Control: Satisfy Libraries`). It's configured to be used by default, to revert to the vendored Python-based version configure to use it by adding `"nv_kdl_parser": "py",` (default is `"ckdl"`) to your user `Preferences.sublime-settings`
 
 ## About NeoVintageous
 

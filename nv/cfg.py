@@ -37,8 +37,8 @@ DEF['var_def'] = ['‘','’']
 DEF['pref'] = {} # Preferences.sublime-settings
 DEF['pref_def'] = {
   # clean name	: dict(type   default value	 ???old/internal key name
-  'kdlv'      	: dict(t=int,v=2           	,lim=[1,2]   	,key='nv_kdl_v'     	),
-  'kdlparser' 	: dict(t=str,v='ckdl'      	,lim=['ckdl']	,key='nv_kdl_parser'	),
+  'kdlv'      	: dict(t=int,v=2           	,lim=[1,2]        	,key='nv_kdl_v'     	),
+  'kdlp'      	: dict(t=str,v='ckdl'      	,lim=['ckdl','py']	,key='nv_kdl_parser'	),
 }
 for dkey,d_val in DEF['pref_def'].items():
   DEF['pref'][dkey] = d_val['v']

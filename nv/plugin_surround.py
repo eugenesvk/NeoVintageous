@@ -267,7 +267,7 @@ def reload_with_user_data_kdl() -> None:
 
             if (cfg_key:=node_parent.name) == 'punctuationalias':
                 # _log.debug(f"@plugin surround: Parsing config {cfg_key}")
-                if node_parent.get('clear',None):
+                if cfgU.cfg_parse.node_get(node_parent,'clear',None):
                     CFG[cfg_key].clear()
                 for (arg,tag,val) in cfgU.cfg_parse.arg_tag_val(node): # Parse arguments, only 'clear' is valid, ignore others
                     # if tag:

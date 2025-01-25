@@ -11,7 +11,7 @@ from NeoVintageous.nv.polyfill    import set_selection
 from NeoVintageous.nv.vi          import seqs
 from NeoVintageous.nv.vi.cmd_base import RequireOneCharMixin, ViOperatorDef, translate_action
 from NeoVintageous.nv.modes       import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
-from NeoVintageous.nv.cfg_parse   import clean_name, get_tag_val_warn
+from NeoVintageous.nv.cfg_parse   import clean_name
 from NeoVintageous.nv             import cfg as nvcfg
 
 from NeoVintageous.nv.rc import cfgU
@@ -97,84 +97,83 @@ def reload_with_user_data_kdl() -> None:
             # 2. Parse node properties:  m=mixedcase
             if (cfg_key:=node_parent.name) == 'steadycursor':
                 # _log.debug(f"@plugin abolish: Parsing config {cfg_key}")
-                args = [a for a in node_parent.getArgs((...,...))] if kdlv == 2 else node_parent.args
-                if args: # 0. true
-                    tag_val = args[0] #(t)‘’ if (t) exists (though shouldn't)
-                    (tag,val) = get_tag_val_warn(tag_val=tag_val,logger=_log,node_name=cfg_key)
-                    if not isinstance(val,bool):
-                        _log.warn("node ‘%s’ has unrecognized value in argument ‘%s’, expecting one of: %s"
-                            ,       cfg_key,                              tag_val,'clear')
-                    else:
-                        CFG[cfg_key] = val
-                        _log.debug('CFG set to arg @%s ‘%s’=‘%s’'
-                                ,             cfg.name,cfg_key,val)
-                elif not args:
+                args = False
+                for i,(arg,tag,val) in enumerate(cfgU.cfg_parse.arg_tag_val(node_parent)):
+                    args = True # 0. true
+                    if i == 0:
+                        if tag: #(t)‘’ if (t) exists (though shouldn't)
+                            _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
+                                ,      cfg_key,                                   arg)
+                        if isinstance(val,bool):
+                            CFG[cfg_key] = val
+                            _log.debug('CFG set to arg @%s ‘%s’=‘%s’',cfg.name,cfg_key,val)
+                        else:
+                            _log.warn("node ‘%s’ has unrecognized value in argument ‘%s’, expecting one of: %s"
+                                ,       cfg_key,                              tag_val,'clear')
+                    elif i > 0:
+                        _log.warn("node ‘%s’ has extra arguments (only the 1st was used): ‘%s’...",cfg_key,arg)
+                        break
+                if not args:
                     _log.warn("node ‘%s’ is missing arguments",cfg_key)
-                if len(args) > 1:
-                    _log.warn("node ‘%s’ has extra arguments, only the 1st was used ‘%s’"
-                        ,        cfg_key,                                {', '.join(args)})
 
             if (cfg_key:=node_parent.name) == 'alias':
                 # _log.debug(f"@plugin abolish: Parsing config {cfg_key}")
-                args = [a for a in node_parent.getArgs((...,...))] if kdlv == 2 else node_parent.args
-                if args: # 0. clear
-                    tag_val = args[0] #(t)‘’ if (t) exists (though shouldn't)
-                    (tag,val) = get_tag_val_warn(tag_val=tag_val,logger=_log,node_name=cfg_key)
-                    if val == 'clear':
-                        CFG[cfg_key].clear() # clear all existing aliases
-                        _log.debug('CFG arg cleared @%s ‘%s’={}',cfg.name,cfg_key)
-                    else:
-                        _log.warn("node ‘%s’ has unrecognized value in argument ‘%s’, expecting one of: %s"
-                            ,       node.name,                              tag_val,'clear')
-                # elif not args:
-                    # _log.warn("node ‘%s’ is missing arguments in its child ‘%s’"
-                        # ,           cfg_key,                          node.name)
-                if len(args) > 1:
-                    _log.warn("node ‘%s’ has extra arguments, only the 1st was used ‘%s’"
-                        ,        cfg_key,                                {', '.join(args)})
+                args = False
+                for i,(arg,tag,val) in enumerate(cfgU.cfg_parse.arg_tag_val(node_parent)):
+                    args = True # 0. clear
+                    if i == 0:
+                        if tag: #(t)‘’ if (t) exists (though shouldn't)
+                            _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
+                                ,      cfg_key,                                   arg)
+                        if val == 'clear':
+                            CFG[cfg_key].clear() # clear all existing aliases
+                            _log.debug('CFG arg cleared @%s ‘%s’={}',cfg.name,cfg_key)
+                        else:
+                            _log.warn("node ‘%s’ has unrecognized value in argument ‘%s’, expecting: %s"
+                                ,       node.name,                              tag_val,'clear')
+                    elif i > 0:
+                        _log.warn("node ‘%s’ has extra arguments (only the 1st was used): ‘%s’...",cfg_key,arg)
+                        break
+                # if not args:
+                #     _log.warn("node ‘%s’ is missing arguments in its child ‘%s’"
+                #         ,         cfg_key ,                                 node.name)
                 for node in node_parent.nodes: # 1. m mixedcase key_node value_arg pairs
                     key = node.name
-                    args = [a for a in node.getArgs((...,...))] if kdlv == 2 else node.args
-                    if args:
-                        tag_val = args[0] #(t)‘’ if (t) exists (though shouldn't)
-                        # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
-                        if hasattr(tag_val,'value'):
-                            val = clean_name(tag_val.value) # ignore tag
-                            _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
-                                ,      node.name,                               tag_val)
-                        else:
-                            val = clean_name(tag_val)
-                        if val in DEF['coercion']:
-                            CFG[    cfg_key][key] = val # mixedcase
-                            _log.debug('CFG set to arg @%s ‘%s’=‘%s’'
-                                ,                   cfg_key,key,val)
-                        else:
-                            _log.warn("node ‘%s’ has unrecognized value in argument ‘%s’, expecting one of: %s"
-                                ,       node.name,                              tag_val,' '.join(DEF['coercion'].keys()))
-                    elif not args:
+                    args = False
+                    for i,(arg,tag,val) in enumerate(cfgU.cfg_parse.arg_tag_val(node_parent)):
+                        args = True # 0. clear
+                        if i == 0:
+                            if tag: #(t)‘’ if (t) exists (though shouldn't)
+                                _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
+                                    ,      node.name,                                 arg)
+                            val = clean_name(val)
+                            if val in DEF['coercion']:
+                                CFG[    cfg_key][key] = val # mixedcase
+                                _log.debug('CFG set to arg @%s ‘%s’=‘%s’',cfg_key,key,val)
+                            else:
+                                _log.warn("node ‘%s’ has unrecognized value in argument ‘%s’, expecting one of: %s"
+                                    ,       node.name,                              tag_val,' '.join(DEF['coercion'].keys()))
+                        elif i > 0:
+                            _log.warn("node ‘%s’ has extra arguments (only the 1st was used): ‘%s’...",cfg_key,arg)
+                            break
+                    if not args:
                         _log.warn("node ‘%s’ is missing arguments in its child ‘%s’"
-                            ,           cfg_key ,                          node.name)
-                    if len(args) > 1:
-                        _log.warn("node ‘%s’ has extra arguments in its child ‘%s’, only the 1st was used ‘%s’"
-                            ,           cfg_key ,                         node.name   ,       {', '.join(args)})
+                            ,         cfg_key ,                                 node.name)
                 node = node_parent
-                nprops = node.getProps((...,...)) if kdlv == 2 else node.props.items()
-                for key,tag_val in nprops: # 2. m=mixedcase key=value pairs
-                    if hasattr(tag_val,'value'): #‘=(t)‘’ if (t) exists (though shouldn't)
-                        val = clean_name(tag_val.value) # ignore tag
+                props = False
+                for (key,tag_val,tag,val) in prop_key_tag_val(node): # 2. m=mixedcase key=value pairs
+                    props = True
+                    if tag: #‘=(t)‘’ if (t) exists (though shouldn't)
                         _log.warn("node ‘%s’ has unrecognized tag  property ‘%s=%s’"
                             ,       node.name,                              key,tag_val)
-                    else:
-                        val = clean_name(tag_val)
-                    # val = tag_val.value if hasattr(tag_val,'value') else tag_val
+                    val = clean_name(val)
                     if  val in DEF['coercion']:
                         CFG[    cfg_key][key] = val # mixedcase
-                        _log.debug('CFG set to prop @%s %s=%s'
-                            ,                   cfg_key,key,val)
+                        _log.debug('CFG set to prop @%s %s=%s',cfg_key,key,val)
                     else:
                         _log.warn("node ‘%s’ has unrecognized value in property ‘%s=%s’, expecting one of: %s"
                             ,       node.name,                                  key,tag_val,' '.join(DEF['coercion'].keys()))
-                # elif not node.props:
+                # if not props:
                     # _log.warn("node ‘%s’ is missing missing key=value properties",cfg_key)
     else:
         CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload

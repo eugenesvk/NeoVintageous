@@ -71,16 +71,17 @@ def reload_with_user_data_kdl() -> None:
         continue
 
       # 2. (ⓘ)in {(mac)"~/bin" "--var" r#"{"v":1}"#;}
-      mode = mode_clean_names_rev.get(clean_name(node.tag ),None) # ‘Mode.Insert’ for ‘ⓘ’
+      node_tag = cfgU.cfg_parse.node_tag(node)
+      mode = mode_clean_names_rev.get(clean_name(node_tag ),None) # ‘Mode.Insert’ for ‘ⓘ’
       evt  = EVENTrev            .get(clean_name(node.name),None) # ‘enter’       for ‘in’
       if not mode or\
          not mode in M.Event:
         _log.error("node ‘%s’ has no/unrecognized mode in tag ‘(%s)%s’, skipping (expecting one of %s)"
-          ,            cfg.name,                          node.tag,node.name, ' '.join(list(mode_clean_names_rev.keys())))
+          ,            cfg.name,                          node_tag,node.name, ' '.join(list(mode_clean_names_rev.keys())))
         continue
       if not evt  in EVENT:
         _log.error("node ‘%s’ has unrecognized event in name ‘(%s)%s’, skipping"
-          ,            cfg.name,                       node.tag,node.name)
+          ,            cfg.name,                       node_tag,node.name)
         continue
       # 1. Parse node arguments:  (os)exe arg;
       cmf_full = None

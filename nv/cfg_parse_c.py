@@ -132,7 +132,7 @@ def _parse_set_kdl_c(node:ckdl.Node,cfg='') -> None:
     ex_set(option=opt_key,value=opt_val, **args)
 
 from NeoVintageous.nv import variables
-def _parse_let_kdl_c(node:kdlc.Node,cfg='') -> None:
+def _parse_let_kdl_c(node:ckdl.Node,cfg='') -> None:
   if not node.properties:
     _log.warn("%sconfig has a ‘let’ command without var=value properties (%s)",
       f'‘{cfg}’ ' if cfg else '',                                     node)
@@ -142,9 +142,9 @@ def _parse_let_kdl_c(node:kdlc.Node,cfg='') -> None:
     _log.debug(f"set var from kdl: ¦{pkey}¦=¦{val}¦")
     variables.set(pkey,val)
 
-def _parse_general_cfg_kdl_c(general_cfg:kdlc.Node,CFG:dict,DEF:dict,st_pref=None) -> None:
-  if not (cfgT := type(general_cfg)) is kdlc.Node:
-    _log.error("Type of ‘general’ config group should be kdlc.Node, not ‘%s’",cfgT)
+def _parse_general_cfg_kdl_c(general_cfg:ckdl.Node,CFG:dict,DEF:dict,st_pref=None) -> None:
+  if not (cfgT := type(general_cfg)) is ckdl.Node:
+    _log.error("Type of ‘general’ config group should be ckdl.Node, not ‘%s’",cfgT)
     return None
   node = general_cfg          # set relativenumber=true
   opt_name    = node.name     # ‘set’

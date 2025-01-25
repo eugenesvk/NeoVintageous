@@ -214,7 +214,7 @@ def reload_with_user_data_kdl() -> None:
             # 2. Parse node properties:  ‘=‘’  “=“”
             if (cfg_key:=node_parent.name) == 'punctuationmarks':
                 # _log.debug(f"@plugin surround: Parsing config {cfg_key}")
-                for node in node_parent.nodes: # 1. ‘ ‘’ key_node value_arg pairs
+                for node in cfgU.cfg_parse.children(node_parent): # 1. ‘ ‘’ key_node value_arg pairs
                     key = node.name
                     args = False
                     for i,(arg,tag,val) in enumerate(cfgU.cfg_parse.arg_tag_val(node)):
@@ -278,7 +278,7 @@ def reload_with_user_data_kdl() -> None:
                     else:
                         # _log.error("node ‘%s’ has unparseable argument %s\n  expecting a ‘clear’, other values are set as properties or child nodes",node.name,arg)
                         continue
-                for node in node_parent.nodes: # 1. d (  key_node value_arg pairs
+                for node in cfgU.cfg_parse.children(node_parent): # 1. d (  key_node value_arg pairs
                     key = node.name
                     if key == 'clear':
                         continue # already cleared separately, don't clear our own values
@@ -328,7 +328,7 @@ def reload_with_user_data_kdl() -> None:
 
             if (cfg_key:=node_parent.name) == 'steadycursor':
                 _log.debug("@plugin surround: Parsing config ‘%s’",cfg_key)
-                for node in node_parent.nodes: # 1. add true  key_node value_arg pairs
+                for node in cfgU.cfg_parse.children(node_parent): # 1. add true  key_node value_arg pairs
                     key = node.name
                     args = False
                     for i,(arg,tag,val) in enumerate(cfgU.cfg_parse.arg_tag_val(node)): # Parse arguments

@@ -137,7 +137,7 @@ def reload_with_user_data_kdl() -> None:
                 # if not args:
                 #     _log.warn("node ‘%s’ is missing arguments in its child ‘%s’"
                 #         ,         cfg_key ,                                 node.name)
-                for node in node_parent.nodes: # 1. m mixedcase key_node value_arg pairs
+                for node in cfgU.cfg_parse.children(node_parent): # 1. m mixedcase key_node value_arg pairs
                     key = node.name
                     args = False
                     for i,(arg,tag,val) in enumerate(cfgU.cfg_parse.arg_tag_val(node_parent)):

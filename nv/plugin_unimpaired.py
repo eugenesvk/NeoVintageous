@@ -76,7 +76,7 @@ def reload_with_user_data_kdl() -> None:
                         _log.warn("node ‘%s’ has extra arguments (only the 1st was used): ‘%s’...",cfg_key,arg)
                         break
 
-                for node in node_parent.nodes: # 1. m menu key_node value_arg pairs
+                for node in cfgU.cfg_parse.children(node_parent): # 1. m menu key_node value_arg pairs
                     key = node.name
                     args = False
                     for i,(arg,tag,val) in enumerate(cfgU.cfg_parse.arg_tag_val(node)):

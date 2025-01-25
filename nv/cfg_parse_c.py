@@ -46,11 +46,11 @@ def prop_key_tag_val_clean(node:ckdl.Node) -> Generator[Tuple[str,t_ckdl_or_val,
     val = clean_cmd (tag_val.value           if hasattr(tag_val,'value'          ) else tag_val)
     yield (pkey,tag_val,tag,val)
 
-def _parse_rc_g_kdl_c(rc_g:ckdl.Node):
+def _parse_rc_g_kdl(rc_g:ckdl.Node):
   win = sublime.active_window()
   for node in rc_g.nodes: # r#":set invrelativenumber"#
-    _parse_rc_cfg_kdl_c(win,rc_cfg=node)
-def _parse_rc_cfg_kdl_c(win,rc_cfg:ckdl.Node) -> None:
+    _parse_rc_cfg_kdl(win,rc_cfg=node)
+def _parse_rc_cfg_kdl(win,rc_cfg:ckdl.Node) -> None:
   if not (cfgT := type(rc_cfg)) is ckdl.Node:
     _log.error("Type of ‘rc’ config group should be ckdl.Node, not ‘%s’",cfgT)
     return None
@@ -64,7 +64,7 @@ def _parse_rc_cfg_kdl_c(win,rc_cfg:ckdl.Node) -> None:
     _source(win, [opt_name], nodump=True)
     return None
 
-def _parse_general_g_kdl_c(general_g:ckdl.Node,CFG:dict,DEF:dict):
+def _parse_general_g_kdl(general_g:ckdl.Node,CFG:dict,DEF:dict):
   win = sublime.active_window()
   st_pref = sublime.load_settings('Preferences.sublime-settings')
   if (src_pre := general_g.get((None,"source"))):
@@ -245,7 +245,7 @@ def _parse_keybind_arg_c(node:ckdl.Node, CFG:dict, prop_subl={}):
       cmd_l.append(cmd )
       cmd_o.append(cmdo)
   return (cmd_l, cmd_o, isChain)
-def _parse_vars_ckdl(node_vars:ckdl.Node,CFG:dict,var_d:dict={}): # TODO update
+def _parse_vars_kdl(node_vars:ckdl.Node,CFG:dict,var_d:dict={}): # TODO update
   # print(f"var_d pre {var_d}")
   # use var_d from #import key=val props to seed initial values
   pre = CFG['var_def'][0] #‘
@@ -293,11 +293,11 @@ def _parse_vars_ckdl(node_vars:ckdl.Node,CFG:dict,var_d:dict={}): # TODO update
   # print(f"var_d pos {var_d}")
   return var_d
 
-def _parse_keybinds_kdl_c(keybinds:ckdl.Node,CFG:dict,cfgU,var_d:dict={}): # TODO: update
-  var_d_combo = _parse_vars_ckdl(keybinds,CFG,var_d)
+def _parse_keybinds_kdl(keybinds:ckdl.Node,CFG:dict,cfgU,var_d:dict={}): # TODO: update
+  var_d_combo = _parse_vars_kdl(keybinds,CFG,var_d)
   for kb_node in keybinds.nodes: # (Ⓝ)"q" "OpenNameSpace"
-    _parse_keybind_kdl_c(keybind=kb_node, CFG=CFG, cfgU=cfgU, var_d=var_d_combo)
-def _parse_keybind_kdl_c(keybind:ckdl.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0), var_d:dict={}): # TODO: update
+    _parse_keybind_kdl(keybind=kb_node, CFG=CFG, cfgU=cfgU, var_d=var_d_combo)
+def _parse_keybind_kdl(keybind:ckdl.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0), var_d:dict={}): # TODO: update
   from NeoVintageous.nv.mappings import mappings_add, mappings_add_text
   if not (cfgT := type(keybind)) is ckdl.Node:
     _log.error("Type of ‘keybind’ should be ckdl.Node, not ‘%s’",cfgT)
@@ -395,11 +395,10 @@ def _parse_keybind_kdl_c(keybind:ckdl.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0),
         # print(f"kb map+ ({mode}){key}={cmd_txt} with {prop}")
   if children and not isChain:       # without Chain argument...
     for child in children:         # ...parse children as keybinds
-      _parse_keybind_kdl2(keybind=child, CFG=CFG, cfgU=cfgU, gmodes=modes, var_d=var_d)
+      _parse_keybind_kdl(keybind=child, CFG=CFG, cfgU=cfgU, gmodes=modes, var_d=var_d)
 
 def _flatten_kdl_gen_c(kdl_dic, key_parent, sep, lvl, ignore):
   kdl = ckdl
-  flatten_kdl = flatten_kdl_c
   lvl += 1
   if isinstance(kdl_dic, dict):
     d = kdl_dic
@@ -435,6 +434,6 @@ def _flatten_kdl_gen_c(kdl_dic, key_parent, sep, lvl, ignore):
         else:
           key_new = key_this + str(i+1) # add a numeric prefix
         yield key_new, val
-def flatten_kdl_c(kdl_dic:Union[ckdl.Document,ckdl.Node,dict], key_parent:str = '', sep:str = '.', lvl:int=0, ignore:dict={1:[],2:[]}):
+def flatten_kdl(kdl_dic:Union[ckdl.Document,ckdl.Node,dict], key_parent:str = '', sep:str = '.', lvl:int=0, ignore:dict={1:[],2:[]}):
   """convert KDL document or a dictionary of KDL nodes into a flat dictionary, ignoring 2nd+ argument, but retaining key=val properties"""
   return dict(_flatten_kdl_gen_c(kdl_dic, key_parent, sep, lvl, ignore))

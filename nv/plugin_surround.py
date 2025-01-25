@@ -263,7 +263,7 @@ def reload_with_user_data_kdl() -> None:
                             _log.warn("node ‘%s’ ‘%s’ should have an argument of 2 space-separated substrings, not ‘%s’"
                                       ,node.name,key,                                                              _len)
                 # if not props:
-                    # _log.warn(f"node ‘{cfg_key}’ is missing key=value properties")
+                    # _log.warn("node ‘%s’ is missing missing key=value properties",cfg_key)
 
             if (cfg_key:=node_parent.name) == 'punctuationalias':
                 # _log.debug(f"@plugin surround: Parsing config {cfg_key}")
@@ -309,7 +309,7 @@ def reload_with_user_data_kdl() -> None:
                     _log.debug('CFG set to prop @%s %s=%s'
                         ,                   cfg_key,key,val)
                 # if not props:
-                    # _log.warn(f"node ‘{cfg_key}’ is missing key=value properties")
+                    # _log.warn("node ‘%s’ is missing missing key=value properties",cfg_key)
 
             if (cfg_key:=node_parent.name) == 'function':
                 for (arg,tag,val) in cfgU.cfg_parse.arg_tag_val(node_parent): # Parse arguments
@@ -364,7 +364,7 @@ def reload_with_user_data_kdl() -> None:
                         _log.warn("node ‘%s’ has unrecognized property ‘%s=%s’"
                             ,       node.name,                         key,val)
                 # if not props:
-                    # _log.warn(f"node ‘{cfg_key}’ is missing key=value properties")
+                    # _log.warn("node ‘%s’ is missing missing key=value properties",cfg_key)
 
             if (cfg_key:=node_parent.name) == 'appendspacetochars': # )}]
                 # _log.debug(f"@plugin surround: Parsing config {cfg_key}")

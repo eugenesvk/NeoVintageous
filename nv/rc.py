@@ -223,6 +223,7 @@ class cfgU(metaclass=Singleton):
                 from NeoVintageous.nv import cfg_parse2  as cfg_parse
             else:
                 from NeoVintageous.nv import cfg_parse1  as cfg_parse
+        cfgU.cfg_parse = cfg_parse
         cfgU.flat = cfg_parse.flatten_kdl(cfgU.kdl, ignore=ignore) # store a flat dictionary for easy access
         # print('cfgU.flat', cfgU.flat)
 

@@ -49,7 +49,7 @@ def prop_key_tag_val_clean(node:ckdl.Node) -> Generator[Tuple[str,t_ckdl_or_val,
 def get_tag_val_warn(tag_val:ckdl.Value,logger:logging.Logger=None,node_name:str=''):
   """split KDL value into tag and value, and warn if tag exists"""
   if isinstance(tag_val, ckdl.Value):
-    tag = tag_val.tag
+    tag = tag_val.type_annotation
     val = tag_val.value
     if tag is not None:
       if logger:

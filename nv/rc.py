@@ -217,20 +217,21 @@ class cfgU(metaclass=Singleton):
         for g,subg in cfg_nest.items():
             ignore[2] += subg
         if nvcfg.CFG['pref']['kdlp'] == 'ckdl' and _libckdl:
-            flatten_kdl = NeoVintageous.nv.cfg_parse_c.flatten_kdl_c
-            _parse_general_g_kdl = NeoVintageous.nv.cfg_parse_c._parse_general_g_kdl_c
-            _parse_rc_g_kdl      = NeoVintageous.nv.cfg_parse_c._parse_rc_g_kdl_c
-            _parse_keybinds_kdl  = NeoVintageous.nv.cfg_parse_c._parse_keybinds_kdl_c
+            from NeoVintageous.nv import cfg_parse_c
+            flatten_kdl          = cfg_parse_c.flatten_kdl_c
+            _parse_general_g_kdl = cfg_parse_c._parse_general_g_kdl_c
+            _parse_rc_g_kdl      = cfg_parse_c._parse_rc_g_kdl_c
+            _parse_keybinds_kdl  = cfg_parse_c._parse_keybinds_kdl_c
         else:
             if nvcfg.CFG['pref']['kdlv']    == 2:
                 from NeoVintageous.nv import cfg_parse2
-                flatten_kdl = flatten_kdl2
+                flatten_kdl          = flatten_kdl2
                 _parse_general_g_kdl = cfg_parse2._parse_general_g_kdl2
                 _parse_rc_g_kdl      = cfg_parse2._parse_rc_g_kdl2
                 _parse_keybinds_kdl  = cfg_parse2._parse_keybinds_kdl2
             else:
                 from NeoVintageous.nv import cfg_parse1
-                flatten_kdl = flatten_kdl1
+                flatten_kdl          = flatten_kdl1
                 _parse_general_g_kdl = cfg_parse1._parse_general_g_kdl1
                 _parse_rc_g_kdl      = cfg_parse1._parse_rc_g_kdl1
                 _parse_keybinds_kdl  = cfg_parse1._parse_keybinds_kdl1

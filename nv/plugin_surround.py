@@ -240,7 +240,7 @@ def reload_with_user_data_kdl() -> None:
                             _log.warn("node ‘%s’ has extra arguments in its child ‘%s’ (only the 1st was used): ‘%s’..."
                                 ,           cfg_key ,                         node.name   ,                   arg)
                             break
-                    elif not args:
+                    if not args:
                         _log.warn("node ‘%s’ is missing arguments in its child ‘%s’",cfg_key,node.name)
                 node = node_parent
                 props = False
@@ -347,7 +347,7 @@ def reload_with_user_data_kdl() -> None:
                             _log.warn("node ‘%s’ has extra arguments in its child ‘%s’ (only the 1st was used): ‘%s’..."
                                 ,       cfg_key,                             node.name,                         arg)
                             break
-                    elif not args:
+                    if not args:
                         _log.warn("node ‘%s’ is missing arguments in its child ‘%s’"
                             ,       cfg_key,                              node.name)
                 node = node_parent

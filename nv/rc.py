@@ -252,17 +252,14 @@ class cfgU(metaclass=Singleton):
     @staticmethod
     def unload_kdl():
         if hasattr(cfgU,'kdl'): # reset config
-            cfgU.kdl = dict()
-            _log.debug('@cfgU.unload_kdl: erased current cfgU.kdl')
+            cfgU.kdl  = dict() ;_log.debug('@cfgU.unload_kdl: erased current cfgU.kdl')
         if hasattr(cfgU,'flat'): # reset flat config
-            cfgU.flat = dict()
-            _log.debug('@cfgU.unload_kdl: erased current cfgU.flat')
+            cfgU.flat = dict() ;_log.debug('@cfgU.unload_kdl: erased current cfgU.flat')
         if hasattr(cfgU,'text_commands'): # reset text_commands config
             text_commands = dict()
             for _m in M_CMDTXT:
                 text_commands[_m] = dict()
-            cfgU.text_commands = text_commands
-            _log.debug('@cfgU.unload_kdl: erased current cfgU.text_commands')
+            cfgU.text_commands = text_commands ;_log.debug('@cfgU.unload_kdl: erased current cfgU.text_commands')
         nvcfg.CFG = copy.deepcopy(nvcfg.DEF) # reset to defaults on reload
         _import_plugins_with_user_data_kdl() # reset plugin defaults
 

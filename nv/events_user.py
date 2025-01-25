@@ -113,7 +113,7 @@ def reload_with_user_data_kdl() -> None:
         _log.debug("added a command from args to ‘%s’‘%s’‘%s’ = ‘%s’"
           ,                                      os,mode,evt,   cmf_full)
       # 2. Parse node children : {(os)exe arg;}
-      for node_cmd in node.nodes:
+      for node_cmd in cfgU.cfg_parse.children(node):
         cmf_full = None
         tag_os = node_cmd.tag  if hasattr(node_cmd,'tag' ) else ''
         exe    = node_cmd.name

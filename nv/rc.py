@@ -216,36 +216,24 @@ class cfgU(metaclass=Singleton):
         ignore = {1:cfg_group, 2:[]} # ignore the lowest level dictionary groups as they repeat node names
         for g,subg in cfg_nest.items():
             ignore[2] += subg
-        if nvcfg.CFG['pref']['kdlp'] == 'ckdl' and _libckdl:
-            from NeoVintageous.nv import cfg_parse_c
-            flatten_kdl          = cfg_parse_c.flatten_kdl_c
-            _parse_general_g_kdl = cfg_parse_c._parse_general_g_kdl_c
-            _parse_rc_g_kdl      = cfg_parse_c._parse_rc_g_kdl_c
-            _parse_keybinds_kdl  = cfg_parse_c._parse_keybinds_kdl_c
+        if     nvcfg.CFG['pref']['kdlp'] == 'ckdl' and _libckdl:
+            from     NeoVintageous.nv import cfg_parse_c as cfg_parse
         else:
-            if nvcfg.CFG['pref']['kdlv']    == 2:
-                from NeoVintageous.nv import cfg_parse2
-                flatten_kdl          = cfg_parse2.flatten_kdl2
-                _parse_general_g_kdl = cfg_parse2._parse_general_g_kdl2
-                _parse_rc_g_kdl      = cfg_parse2._parse_rc_g_kdl2
-                _parse_keybinds_kdl  = cfg_parse2._parse_keybinds_kdl2
+            if nvcfg.CFG['pref']['kdlv'] == 2:
+                from NeoVintageous.nv import cfg_parse2  as cfg_parse
             else:
-                from NeoVintageous.nv import cfg_parse1
-                flatten_kdl          = cfg_parse1.flatten_kdl1
-                _parse_general_g_kdl = cfg_parse1._parse_general_g_kdl1
-                _parse_rc_g_kdl      = cfg_parse1._parse_rc_g_kdl1
-                _parse_keybinds_kdl  = cfg_parse1._parse_keybinds_kdl1
-        cfgU.flat = flatten_kdl(cfgU.kdl, ignore=ignore) # store a flat dictionary for easy access
+                from NeoVintageous.nv import cfg_parse1  as cfg_parse
+        cfgU.flat = cfg_parse.flatten_kdl(cfgU.kdl, ignore=ignore) # store a flat dictionary for easy access
         # print('cfgU.flat', cfgU.flat)
 
         if (general_g := cfgU.kdl['general']):
-            _parse_general_g_kdl(general_g=general_g,CFG=nvcfg.CFG,DEF=nvcfg.DEF)
+            cfg_parse._parse_general_g_kdl(general_g=general_g,CFG=nvcfg.CFG,DEF=nvcfg.DEF)
 
         if (rc_g := cfgU.kdl['rc']):
-            _parse_rc_g_kdl(rc_g=rc_g)
+            cfg_parse._parse_rc_g_kdl(rc_g=rc_g)
 
         for (keybind,var_d) in cfgU.kdl['keybind']:
-            _parse_keybinds_kdl(keybinds=keybind,CFG=nvcfg.CFG,cfgU=cfgU,var_d=var_d)
+            cfg_parse._parse_keybinds_kdl(keybinds=keybind,CFG=nvcfg.CFG,cfgU=cfgU,var_d=var_d)
 
         _import_plugins_with_user_data_kdl()
 

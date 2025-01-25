@@ -17,22 +17,22 @@ from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL, TFMT, DFMT
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
 
-def arg_tag_val           (node:kdl2.Node);
+def arg_tag_val           (node:kdl2.Node):
   for arg            in node.getArgs ((...,...)): # Parse arguments
     tag =            arg.tag       if hasattr(arg    ,'tag'  ) else ''
     val =            arg.value     if hasattr(arg    ,'value') else arg
     yield (arg,tag,val)
-def arg_tag_val_clean     (node:kdl2.Node);
+def arg_tag_val_clean     (node:kdl2.Node):
   for arg            in node.getArgs ((...,...)): # Parse arguments
     tag = clean_name(arg.tag       if hasattr(arg    ,'tag'  ) else '' )
     val = clean_cmd (arg.value     if hasattr(arg    ,'value') else arg)
     yield (arg,tag,val)
-def prop_key_tag_val      (node:kdl2.Node);
+def prop_key_tag_val      (node:kdl2.Node):
   for (pkey,tag_val) in node.getProps((...,...)): # Parse properties
     tag =            tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
     val =            tag_val.value if hasattr(tag_val,'value') else tag_val
     yield (pkey,tag_val,tag,val)
-def prop_key_tag_val_clean(node:kdl2.Node);
+def prop_key_tag_val_clean(node:kdl2.Node):
   for (pkey,tag_val) in node.getProps((...,...)): # Parse properties
     tag = clean_name(tag_val.tag   if hasattr(tag_val,'tag'  ) else ''     )
     val = clean_cmd (tag_val.value if hasattr(tag_val,'value') else tag_val)

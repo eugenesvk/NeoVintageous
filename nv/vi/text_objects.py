@@ -159,13 +159,11 @@ def reload_with_user_data_kdl() -> None:
                         if tag: #(t)"(" if (t) exists (though shouldn't)
                             _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
                                 ,      node.name,                                 arg)
-                        if isinstance(arg,bool):
-                            CFG[cfg_key] = arg
+                        if isinstance(val,bool):
+                            CFG[cfg_key] = val
                         else:
                             _log.error("node ‘%s’ argument should be ‘true’ or ‘false’, not ‘%s’"
                                 ,           node.name,                                   arg)
-                        CFG[cfg_key][key] = val
-                        _log.debug('CFG set to arg @%s %s=%s',cfg_key,key,val)
                     elif i > 0:
                         _log.warn("node ‘%s’ has extra arguments (only the 1st was used): ‘%s’...",cfg_key,arg)
                         break

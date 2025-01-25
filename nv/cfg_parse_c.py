@@ -21,17 +21,17 @@ from typing import Callable, Generator, Union, Tuple
 import typing as tp
 t_ckdl_or_val = Union[ckdl.Value, None, bool, int, float, str]
 t_ckdl_val    = Union[            None, bool, int, float, str]
-def arg_tag_val           (node:ckdl.Node) -> Generator[Tuple[t_ckdl_or_val,str,t_ckdl_val]]:
+def arg_tag_val           (node:ckdl.Node) -> Generator[Tuple[t_ckdl_or_val,str,t_ckdl_val],None,None]:
   for arg            in node.args      : # Parse arguments
     tag =            arg.type_annotation     if hasattr(arg    ,'type_annotation') else ''
     val =            arg.value               if hasattr(arg    ,'value'          ) else arg
     yield (arg,tag,val)
-def arg_tag_val_clean     (node:ckdl.Node) -> Generator[Tuple[t_ckdl_or_val,str,t_ckdl_val]]:
+def arg_tag_val_clean     (node:ckdl.Node) -> Generator[Tuple[t_ckdl_or_val,str,t_ckdl_val],None,None]:
   for arg            in node.args      : # Parse arguments
     tag = clean_name(arg.type_annotation     if hasattr(arg    ,'type_annotation') else '' )
     val = clean_cmd (arg.value               if hasattr(arg    ,'value'          ) else arg)
     yield (arg,tag,val)
-def prop_key_tag_val      (node:ckdl.Node) -> Generator[Tuple[str,t_ckdl_or_val,str,t_ckdl_val]]:
+def prop_key_tag_val      (node:ckdl.Node) -> Generator[Tuple[str,t_ckdl_or_val,str,t_ckdl_val],None,None]:
   for (pkey,tag_val) in node.properties.items(): # Parse properties
     tag =            tag_val.type_annotation if hasattr(tag_val,'type_annotation') else ''
     val =            tag_val.value           if hasattr(tag_val,'value'          ) else tag_val
@@ -40,7 +40,7 @@ def prop_key_tag_val      (node:ckdl.Node) -> Generator[Tuple[str,t_ckdl_or_val,
     # assert(isinstance(tag    ,str          ))
     # assert(isinstance(val    ,t_ckdl_val   ))
     yield (pkey,tag_val,tag,val)
-def prop_key_tag_val_clean(node:ckdl.Node) -> Generator[Tuple[str,t_ckdl_or_val,str,t_ckdl_val]]:
+def prop_key_tag_val_clean(node:ckdl.Node) -> Generator[Tuple[str,t_ckdl_or_val,str,t_ckdl_val],None,None]:
   for (pkey,tag_val) in node.properties.items(): # Parse properties
     tag = clean_name(tag_val.type_annotation if hasattr(tag_val,'type_annotation') else '')
     val = clean_cmd (tag_val.value           if hasattr(tag_val,'value'          ) else tag_val)

@@ -130,6 +130,16 @@ class cfgU(metaclass=Singleton):
         st_pref = sublime.load_settings('Preferences.sublime-settings')
 
         cfg_pref = nvcfg.CFG['pref']
+        def_kdlp = nvcfg.CFG['pref_def']['kdlp']
+        if (kdlp := st_pref.get('nv_kdl_parser')):
+            if   isinstance(kdlp,def_kdlp['t']):
+                if kdlp in def_kdlp['lim']:
+                    cfg_pref['kdlp'] =     kdlp
+                else:
+                    _log.error(f"‘nv_kdl_parser’ in ‘Preferences.sublime-settings’ should be either of {def_kdlv['lim']}, not {kdlp} (using default {def_kdlp['v']})")
+            else:
+                _log.error(    f"‘nv_kdl_parser’ in ‘Preferences.sublime-settings’ should be a string, not {type(kdlp)} (using default {def_kdlp['v']})")
+
         def_kdlv = nvcfg.CFG['pref_def']['kdlv']
         if (kdlv := st_pref.get('nv_kdl_v')):
             if   isinstance(kdlv,def_kdlv['t']):
@@ -142,10 +152,14 @@ class cfgU(metaclass=Singleton):
                     cfg_pref['kdlv'] = int(kdlv)
                 else:
                     _log.error(f"‘nv_kdl_v’ in ‘Preferences.sublime-settings’ should be either of {def_kdlv['lim']}, not {kdlv} (using default {def_kdlv['v']})")
-        parse_kdl_cfg_1st = parse_kdl2_config if nvcfg.CFG['pref']['kdlv'] == 2 else parse_kdl_config
-        parse_kdl_cfg_2nd = parse_kdl_config  if nvcfg.CFG['pref']['kdlv'] == 2 else parse_kdl2_config
         v_1st =      nvcfg.CFG['pref']['kdlv']
         v_2nd = 1 if nvcfg.CFG['pref']['kdlv'] == 2 else 2
+        if nvcfg.CFG['pref']['kdlp'] == 'ckdl' and _libckdl:
+            parse_kdl_cfg_1st = parse_ckdl2_config if v_1st == 2 else parse_ckdl1_config
+            parse_kdl_cfg_2nd = parse_ckdl1_config if v_2nd == 1 else parse_ckdl2_config
+        else:
+            parse_kdl_cfg_1st = parse_kdl2_config  if v_1st == 2 else parse_kdl_config
+            parse_kdl_cfg_2nd = parse_kdl_config   if v_2nd == 1 else parse_kdl2_config
         try:
             parse_kdl_cfg_1st(cfg, cfg_f, kdl_docs)
             return kdl_docs
@@ -205,14 +219,25 @@ class cfgU(metaclass=Singleton):
         ignore = {1:cfg_group, 2:[]} # ignore the lowest level dictionary groups as they repeat node names
         for g,subg in cfg_nest.items():
             ignore[2] += subg
-        is2 = (nvcfg.CFG['pref']['kdlv'] == 2)
-        flatten_kdl = flatten_kdl2 if is2 else flatten_kdl1
+        if nvcfg.CFG['pref']['kdlp'] == 'ckdl' and _libckdl:
+            flatten_kdl = NeoVintageous.nv.cfg_parse_c.flatten_kdl_c
+            _parse_general_g_kdl = NeoVintageous.nv.cfg_parse_c._parse_general_g_kdl_c
+            _parse_rc_g_kdl      = NeoVintageous.nv.cfg_parse_c._parse_rc_g_kdl_c
+            _parse_keybinds_kdl  = NeoVintageous.nv.cfg_parse_c._parse_keybinds_kdl_c
+        else:
+            if nvcfg.CFG['pref']['kdlv']    == 2:
+                flatten_kdl = flatten_kdl2
+                _parse_general_g_kdl = _parse_general_g_kdl2
+                _parse_rc_g_kdl      = _parse_rc_g_kdl2
+                _parse_keybinds_kdl  = _parse_keybinds_kdl2
+            else:
+                flatten_kdl = flatten_kdl1
+                _parse_general_g_kdl = _parse_general_g_kdl1
+                _parse_rc_g_kdl      = _parse_rc_g_kdl1
+                _parse_keybinds_kdl  = _parse_keybinds_kdl1
         cfgU.flat = flatten_kdl(cfgU.kdl, ignore=ignore) # store a flat dictionary for easy access
         # print('cfgU.flat', cfgU.flat)
 
-        _parse_general_g_kdl = _parse_general_g_kdl2 if is2 else _parse_general_g_kdl1
-        _parse_rc_g_kdl      = _parse_rc_g_kdl2      if is2 else _parse_rc_g_kdl1
-        _parse_keybinds_kdl  = _parse_keybinds_kdl2  if is2 else _parse_keybinds_kdl1
         if (general_g := cfgU.kdl['general']):
             _parse_general_g_kdl(general_g=general_g,CFG=nvcfg.CFG,DEF=nvcfg.DEF)
 
@@ -269,7 +294,7 @@ def _import_plugins_with_user_data_kdl():
     from NeoVintageous.nv import ui
     ui.reload_with_user_data_kdl()
 
-from NeoVintageous.nv.cfg_parse import parse_kdl_config, parse_kdl2_config
+from NeoVintageous.nv.cfg_parse import parse_kdl_config, parse_kdl2_config, parse_ckdl1_config, parse_ckdl2_config, _libckdl
 # def load_cfgU() -> None:
 #     """load alternative user config file to a global class and add a watcher event to track changes"""
 #     global cfgU

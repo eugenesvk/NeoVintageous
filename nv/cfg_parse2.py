@@ -252,7 +252,7 @@ def _parse_vars_kdl2(node_vars:kdl2.Node,CFG:dict,var_d:dict={}):
     if tag: # vardef should have no tags
       _log.warn("node ‘%s’ has unrecognized tag",node.name)
       continue
-    for (pkey,tag_val) in child.getProps((...,...)): # parse definition properties
+    for (pkey,tag_val) in node.getProps((...,...)): # parse definition properties
       tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
       val = tag_val.value if hasattr(tag_val,'value') else tag_val
       if pkey == 'pre':

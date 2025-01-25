@@ -103,6 +103,8 @@ def parse_ckdl_config(v,cfg:str, cfg_p:Path, kdl_docs:list    , enclose_in:str='
     ,version          =2  #KDL version to emit
   )
   doc = ckdl.parse(cfg,version=v) # version=None or "detect" to support both
+  for node in doc.nodes:
+    clean_node_name_c(node)
   kdl_docs += [(doc,var_d)]
   for node in doc.nodes: # Check imports
     if node.name.lower() in ["import"] and node.type_annotation is None: # match untagged import node ()

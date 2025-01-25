@@ -43,12 +43,12 @@ DEF['pref_def'] = {
 for dkey,d_val in DEF['pref_def'].items():
   DEF['pref'][dkey] = d_val['v']
 DEF['general'] = {}
-DEF['gen_def'] = { # todo: replace float with int when kdl-py issue is fixed
+DEF['gen_def'] = {
   # clean name                    	: dict(type   default value	 old/internal key name
   'defaultmode'                   	: dict(t=str ,v="normal"   	,key='default_mode'                       ),
   'resetmodewhenswitchingtabs'    	: dict(t=bool,v=False      	,key='reset_mode_when_switching_tabs'     ),
   'highlightedyank'               	: dict(t=bool,v=True       	,key='highlighted_yank'                   ),
-  'highlightedyankduration'       	: dict(t=float,v=1000      	,key='highlighted_yank_duration'          ),
+  'highlightedyankduration'       	: dict(t=int ,v=1000       	,key='highlighted_yank_duration'          ),
   'highlightedyankstyle'          	: dict(t=str ,v="fill"     	,key='highlighted_yank_style'             ),
   'searchcurstyle'                	: dict(t=str ,v="fill"     	,key='search_cur_style'                   ),
   'searchincstyle'                	: dict(t=str ,v="fill"     	,key='search_inc_style'                   ),
@@ -78,7 +78,7 @@ DEF['gen_def'] = { # todo: replace float with int when kdl-py issue is fixed
   'lspsave'                       	: dict(t=bool,v=False      	,key='lsp_save'                           ),
   'shellsilent'                   	: dict(t=bool,v=False      	,key='shell_silent'                       ),
   'showmarksingutter'             	: dict(t=bool,v=True       	,key='show_marks_in_gutter'               ),
-  'sneakuseicscs'                 	: dict(t=float,v=1         	,key='sneak_use_ic_scs'                   ),
+  'sneakuseicscs'                 	: dict(t=int ,v=1          	,key='sneak_use_ic_scs'                   ),
   'exitwhenquittinglastwindow'    	: dict(t=[bool,str],v=True 	,key='exit_when_quitting_last_window'     ),
   'source'                        	: dict(t=str ,v=''         	,key='source'                             ),
   'autoswitchinputmethod'         	: dict(t=bool,v=False      	,key='auto_switch_input_method'           ),

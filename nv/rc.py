@@ -109,7 +109,7 @@ class cfgU(metaclass=Singleton):
         text_commands[_m] = dict()
 
     @staticmethod
-    def read_kdl_file() -> List: #List[kdl1|kdl2|ckdl.Document]
+    def read_kdl_file() -> List: #List[(kdl1|kdl2|ckdl.Document, dict)]
         cfg_p = cfgU.cfg_p
         cfg_f = cfgU.cfg_f
         kdl_docs = [] # list of KDL docs in the order of parsing, includes imports as separate items

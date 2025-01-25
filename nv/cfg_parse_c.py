@@ -20,6 +20,8 @@ _log.setLevel(DEFAULT_LOG_LEVEL)
 from typing import Callable, Generator, Union, Tuple
 import typing as tp
 
+def node_tag(node:ckdl.Node) -> Union[str, None]:
+  return node.type_annotation
 def children(node:ckdl.Node) -> ckdl.Node:
   for child in node.children:
     yield child

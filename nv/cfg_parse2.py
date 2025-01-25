@@ -20,6 +20,8 @@ _log.setLevel(DEFAULT_LOG_LEVEL)
 from typing import Union
 import typing as tp
 
+def node_tag(node:kdl2.Node) -> Union[str, None]:
+  return node.tag
 def children(node:kdl2.Node) -> kdl2.Node:
   for child in node.nodes:
     yield child

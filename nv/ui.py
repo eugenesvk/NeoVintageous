@@ -132,7 +132,7 @@ def reload_with_user_data_kdl() -> None:
         global CFG
         _log.debug("@ui: Parsing config indicator/key_help")
         for cfg_key in CFG:
-            if (node := cfg.get(cfg_key,None)): # delay 1 node/arg pair
+            if (node := cfgU.cfg_parse.node_get(cfg,cfg_key,None)): # delay 1 node/arg pair
                 args = False
                 for i,(arg,tag,val) in enumerate(cfgU.cfg_parse.arg_tag_val(node)):
                     args = True

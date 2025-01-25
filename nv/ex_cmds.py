@@ -102,7 +102,7 @@ def reload_with_user_data_kdl() -> None:
         global CFG
         _log.debug("@registers: Parsing config indicator/ls")
         for cfg_key in CFG:                     # line
-            if (node := cfg.get(cfg_key,None)): # line "━" node/arg pair
+            if (node := cfgU.cfg_parse.node_get(cfg,cfg_key,None)): # line "━" node/arg pair
                 args = False
                 for i,(arg,tag,val) in enumerate(cfgU.cfg_parse.arg_tag_val(node)):
                     args = True

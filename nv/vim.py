@@ -75,7 +75,7 @@ def reload_with_user_data_kdl() -> None:
     if hasattr(cfgU,'kdl') and (cfg := cfgU.kdl.get('status',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
         _log.debug("@nv.vim: Parsing config status")
         for cfg_key in CFG: # 1a. parse arguments for non-mode statuses
-            if (node := cfg.get(cfg_key,None)): # id_seq "vim-seq" node/arg pair
+            if (node := cfgU.cfg_parse.node_get(cfg,cfg_key,None)): # id_seq "vim-seq" node/arg pair
                 args = False
                 for i,(arg,tag,val) in enumerate(cfgU.cfg_parse.arg_tag_val(node)):
                     args = True

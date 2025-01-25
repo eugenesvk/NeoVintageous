@@ -177,6 +177,14 @@ class cfgU(metaclass=Singleton):
             return
         cfg_l = cfgU.read_kdl_file() #cfg_l:List[(kdl1|kdl2|ckdl.Document,dict)]
         cfgU.kdl = dict()
+        if     nvcfg.CFG['pref']['kdlp'] == 'ckdl' and _libckdl:
+            from     NeoVintageous.nv import cfg_parse_c as cfg_parse
+        else:
+            if nvcfg.CFG['pref']['kdlv'] == 2:
+                from NeoVintageous.nv import cfg_parse2  as cfg_parse
+            else:
+                from NeoVintageous.nv import cfg_parse1  as cfg_parse
+        cfgU.cfg_parse = cfg_parse
 
         # Split config into per-section/per-plugin group
         cfg_group  = ['keymap','event','status','edit','keybind','general','rc','textobject','mark']
@@ -216,14 +224,6 @@ class cfgU(metaclass=Singleton):
         ignore = {1:cfg_group, 2:[]} # ignore the lowest level dictionary groups as they repeat node names
         for g,subg in cfg_nest.items():
             ignore[2] += subg
-        if     nvcfg.CFG['pref']['kdlp'] == 'ckdl' and _libckdl:
-            from     NeoVintageous.nv import cfg_parse_c as cfg_parse
-        else:
-            if nvcfg.CFG['pref']['kdlv'] == 2:
-                from NeoVintageous.nv import cfg_parse2  as cfg_parse
-            else:
-                from NeoVintageous.nv import cfg_parse1  as cfg_parse
-        cfgU.cfg_parse = cfg_parse
         cfgU.flat = cfg_parse.flatten_kdl(cfgU.kdl, ignore=ignore) # store a flat dictionary for easy access
         # print('cfgU.flat', cfgU.flat)
 

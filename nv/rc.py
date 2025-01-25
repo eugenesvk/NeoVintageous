@@ -98,9 +98,6 @@ from NeoVintageous.nv.modes import Mode, Mode as M, text_to_modes, mode_names, M
 from NeoVintageous.nv.cfg import _keybind_prop, re_count, re_subl_tag, re_filetype
 from NeoVintageous.nv.cfg_parse import clean_name, clean_cmd
 
-from NeoVintageous.nv.cfg_parse1 import _parse_keybinds_kdl1, _parse_rc_g_kdl1, _parse_general_g_kdl1
-from NeoVintageous.nv.cfg_parse2 import _parse_keybinds_kdl2, _parse_rc_g_kdl2, _parse_general_g_kdl2
-
 from NeoVintageous.nv import cfg as nvcfg
 # cfgU_settings = (f'{PACKAGE_NAME}.sublime-settings')
 class cfgU(metaclass=Singleton):
@@ -226,15 +223,17 @@ class cfgU(metaclass=Singleton):
             _parse_keybinds_kdl  = NeoVintageous.nv.cfg_parse_c._parse_keybinds_kdl_c
         else:
             if nvcfg.CFG['pref']['kdlv']    == 2:
+                from NeoVintageous.nv import cfg_parse2
                 flatten_kdl = flatten_kdl2
-                _parse_general_g_kdl = _parse_general_g_kdl2
-                _parse_rc_g_kdl      = _parse_rc_g_kdl2
-                _parse_keybinds_kdl  = _parse_keybinds_kdl2
+                _parse_general_g_kdl = cfg_parse2._parse_general_g_kdl2
+                _parse_rc_g_kdl      = cfg_parse2._parse_rc_g_kdl2
+                _parse_keybinds_kdl  = cfg_parse2._parse_keybinds_kdl2
             else:
+                from NeoVintageous.nv import cfg_parse1
                 flatten_kdl = flatten_kdl1
-                _parse_general_g_kdl = _parse_general_g_kdl1
-                _parse_rc_g_kdl      = _parse_rc_g_kdl1
-                _parse_keybinds_kdl  = _parse_keybinds_kdl1
+                _parse_general_g_kdl = cfg_parse1._parse_general_g_kdl1
+                _parse_rc_g_kdl      = cfg_parse1._parse_rc_g_kdl1
+                _parse_keybinds_kdl  = cfg_parse1._parse_keybinds_kdl1
         cfgU.flat = flatten_kdl(cfgU.kdl, ignore=ignore) # store a flat dictionary for easy access
         # print('cfgU.flat', cfgU.flat)
 

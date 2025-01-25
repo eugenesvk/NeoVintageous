@@ -224,6 +224,10 @@ def _parse_general_cfg_kdl2(general_cfg:kdl2.Node,CFG:dict,DEF:dict,st_pref=None
         if   isinstance(    type_def,type):
           if isinstance(val,type_def):
             isSameType = True
+          else:
+            if type_def in [int,float] and\
+              type(val) in [int,float]:
+                isSameType = True
         elif isinstance(type_def,list):
           for t_ in type_def:
             if isinstance(val,t_):

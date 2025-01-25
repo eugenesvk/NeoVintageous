@@ -17,6 +17,12 @@ from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL, TFMT, DFMT
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
 
+from typing import Union
+import typing as tp
+t_parent = Union[kdl.Document, kdl.Node]
+def node_get(doc_or_node:t_parent, name:str, df=None):
+  return doc_or_node.get(name, df)
+
 def arg_tag_val           (node:kdl.Node):
   for arg            in node.args      : # Parse arguments
     tag =            arg.tag       if hasattr(arg    ,'tag'  ) else ''

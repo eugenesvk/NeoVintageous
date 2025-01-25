@@ -19,6 +19,19 @@ _log.setLevel(DEFAULT_LOG_LEVEL)
 
 from typing import Callable, Generator, Union, Tuple
 import typing as tp
+
+t_parent = Union[ckdl.Document, ckdl.Node]
+def node_get(doc_or_node:t_parent, name:str, df=None) -> Union[ckdl.Node, None]:
+  if isinstance(doc_or_node, ckdl.Document):
+    for node in doc_or_node.nodes:
+      if node.name == name:
+        return node
+  if isinstance(doc_or_node, ckdl.Node):
+    for node in doc_or_node.children:
+      if node.name == name:
+        return node
+  return df
+
 t_ckdl_or_val = Union[ckdl.Value, None, bool, int, float, str]
 t_ckdl_val    = Union[            None, bool, int, float, str]
 def arg_tag_val           (node:ckdl.Node) -> Generator[Tuple[t_ckdl_or_val,str,t_ckdl_val],None,None]:

@@ -6,8 +6,6 @@ from pathlib import Path
 import sublime
 import sublime_plugin
 
-import NeoVintageous.dep.kdl as kdl
-import NeoVintageous.dep.kdl2 as kdl2
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL, TFMT
 from NeoVintageous.plugin import PACKAGE_NAME
 

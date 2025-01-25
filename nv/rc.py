@@ -8,8 +8,6 @@ from typing import List, Union
 
 import sublime
 
-import NeoVintageous.dep.kdl as kdl
-import NeoVintageous.dep.kdl2 as kdl2
 from NeoVintageous.nv.polyfill import nv_message as message
 from NeoVintageous.nv.helper import flatten_kdl1, flatten_kdl2, Singleton
 import NeoVintageous.nv.cfg_parse
@@ -117,7 +115,7 @@ class cfgU(metaclass=Singleton):
         text_commands[_m] = dict()
 
     @staticmethod
-    def read_kdl_file() -> List[kdl.Document]:
+    def read_kdl_file() -> List: #List[kdl1|kdl2|ckdl.Document]
         cfg_p = cfgU.cfg_p
         cfg_f = cfgU.cfg_f
         kdl_docs = [] # list of KDL docs in the order of parsing, includes imports as separate items
@@ -166,7 +164,7 @@ class cfgU(metaclass=Singleton):
     def load_kdl():
         if hasattr(cfgU,'kdl') and cfgU.kdl: # avoid loading the same config multiple times
             return
-        cfg_l:List[(kdl.Document,dict)] = cfgU.read_kdl_file()
+        cfg_l = cfgU.read_kdl_file() #cfg_l:List[(kdl1|kdl2|ckdl.Document,dict)]
         cfgU.kdl = dict()
 
         # Split config into per-section/per-plugin group

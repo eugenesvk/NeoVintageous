@@ -128,28 +128,31 @@ class cfgU(metaclass=Singleton):
             return kdl_docs
 
         st_pref = sublime.load_settings('Preferences.sublime-settings')
+
+        cfg_pref = nvcfg.CFG['pref']
+        def_kdlv = nvcfg.CFG['pref_def']['kdlv']
         if (kdlv := st_pref.get('nv_kdl_v')):
-            if   isinstance(kdlv,int):
-                if kdlv in [1,2]:
-                    NeoVintageous.nv.cfg.KDLV =     kdlv
+            if   isinstance(kdlv,def_kdlv['t']):
+                if kdlv in def_kdlv['lim']:
+                    cfg_pref['kdlv'] =     kdlv
                 else:
-                    _log.error(f"‘nv_kdl_v’ in ‘Preferences.sublime-settings’ should either be 1 or 2, not {kdlv} (using default {NeoVintageous.nv.cfg.KDLV})")
+                    _log.error(f"‘nv_kdl_v’ in ‘Preferences.sublime-settings’ should be either of {def_kdlv['lim']}, not {kdlv} (using default {def_kdlv['v']})")
             elif isinstance(kdlv,str):
                 if kdlv in ["1","2"]:
-                    NeoVintageous.nv.cfg.KDLV = int(kdlv)
+                    cfg_pref['kdlv'] = int(kdlv)
                 else:
-                    _log.error(f"‘nv_kdl_v’ in ‘Preferences.sublime-settings’ should either be 1 or 2, not {kdlv} (using default {NeoVintageous.nv.cfg.KDLV})")
-        parse_kdl_cfg_1st = parse_kdl2_config if NeoVintageous.nv.cfg.KDLV == 2 else parse_kdl_config
-        parse_kdl_cfg_2nd = parse_kdl_config  if NeoVintageous.nv.cfg.KDLV == 2 else parse_kdl2_config
-        v_1st =      NeoVintageous.nv.cfg.KDLV
-        v_2nd = 1 if NeoVintageous.nv.cfg.KDLV == 2 else 2
+                    _log.error(f"‘nv_kdl_v’ in ‘Preferences.sublime-settings’ should be either of {def_kdlv['lim']}, not {kdlv} (using default {def_kdlv['v']})")
+        parse_kdl_cfg_1st = parse_kdl2_config if nvcfg.CFG['pref']['kdlv'] == 2 else parse_kdl_config
+        parse_kdl_cfg_2nd = parse_kdl_config  if nvcfg.CFG['pref']['kdlv'] == 2 else parse_kdl2_config
+        v_1st =      nvcfg.CFG['pref']['kdlv']
+        v_2nd = 1 if nvcfg.CFG['pref']['kdlv'] == 2 else 2
         try:
             parse_kdl_cfg_1st(cfg, cfg_f, kdl_docs)
             return kdl_docs
         except Exception as e1st:
             # print(f"couldn't parse the docs as KDL{v_1st} due to: {e1st}")
             try:
-                NeoVintageous.nv.cfg.KDLV = v_2nd
+                nvcfg.CFG['pref']['kdlv'] = v_2nd
                 parse_kdl_cfg_2nd(cfg, cfg_f, kdl_docs)
                 return kdl_docs
             except Exception as e2nd:
@@ -202,7 +205,7 @@ class cfgU(metaclass=Singleton):
         ignore = {1:cfg_group, 2:[]} # ignore the lowest level dictionary groups as they repeat node names
         for g,subg in cfg_nest.items():
             ignore[2] += subg
-        is2 = (NeoVintageous.nv.cfg.KDLV == 2)
+        is2 = (nvcfg.CFG['pref']['kdlv'] == 2)
         flatten_kdl = flatten_kdl2 if is2 else flatten_kdl1
         cfgU.flat = flatten_kdl(cfgU.kdl, ignore=ignore) # store a flat dictionary for easy access
         # print('cfgU.flat', cfgU.flat)

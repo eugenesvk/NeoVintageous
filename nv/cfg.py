@@ -16,8 +16,6 @@ if _log.hasHandlers(): # clear existing handlers, including sublime's
     # _log.addHandler(stream_handler)
 _L = True if _log.isEnabledFor(logging.CFG) else False
 
-KDLV = 2
-
 re_count = re.compile(r"[№⌗×⋅cn](\d+)")
 re_subl_tag = re.compile(r"subl|sublime|st")
 re_filetype = re.compile(r"[\s,]+")
@@ -36,6 +34,14 @@ for dkey,key_abbrev in _keybind_prop.items(): # 'type':['t','type']
   for val in key_abbrev:                      #          t   type
     DEF['res_tag'].append(val)
 DEF['var_def'] = ['‘','’']
+DEF['pref'] = {} # Preferences.sublime-settings
+DEF['pref_def'] = {
+  # clean name	: dict(type   default value	 ???old/internal key name
+  'kdlv'      	: dict(t=int,v=2           	,lim=[1,2]   	,key='nv_kdl_v'     	),
+  'kdlparser' 	: dict(t=str,v='ckdl'      	,lim=['ckdl']	,key='nv_kdl_parser'	),
+}
+for dkey,d_val in DEF['pref_def'].items():
+  DEF['pref'][dkey] = d_val['v']
 DEF['general'] = {}
 DEF['gen_def'] = { # todo: replace float with int when kdl-py issue is fixed
   # clean name                    	: dict(type   default value	 old/internal key name

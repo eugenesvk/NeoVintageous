@@ -37,7 +37,7 @@ def reload_with_user_data_kdl() -> None:
                     _log.warn("node ‘%s’ is missing arguments in its child ‘%s’"
                         ,         cfg_key,                               node.name)
         node = cfg
-        for i,(key,tag_val,tag,val) in enumerate(prop_key_tag_val(node)): # record="🔴", alt notation to child node/arg pairs
+        for i,(key,tag_val,tag,val) in enumerate(cfgU.cfg_parse.prop_key_tag_val(node)): # record="🔴", alt notation to child node/arg pairs
             if tag:
                 _log.warn("node ‘%s’ has unrecognized tag in property ‘%s=%s’",node.name,key,tag_val)
             if key in CFG:

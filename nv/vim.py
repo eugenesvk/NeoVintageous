@@ -97,7 +97,7 @@ def reload_with_user_data_kdl() -> None:
                             mode_names_rev.get(node.name.upper(),None))): # kdl keys are converted to lowercase, so check 'i' and 'I'
                     CFGM[mode] = val ;_log.debug("status mode CFGM ‘%s’ from ‘%s’ argument ‘%s’",mode,node.name,val)
         node = cfg
-        for i,(key,tag_val,tag,val) in enumerate(prop_key_tag_val(node)): # 2. parse properties id_seq="vim-seq", alternative notation to child node/arg pairs
+        for i,(key,tag_val,tag,val) in enumerate(cfgU.cfg_parse.prop_key_tag_val(node)): # 2. parse properties id_seq="vim-seq", alternative notation to child node/arg pairs
             if tag:
                 _log.warn("node ‘%s’ has unrecognized tag in property ‘%s=%s’",node.name,key,tag_val)
             if key in CFG: # 2a. for non-mode statuses

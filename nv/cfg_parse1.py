@@ -17,6 +17,27 @@ from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL, TFMT, DFMT
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
 
+def arg_tag_val           (node:kdl.Node);
+  for arg            in node.args      : # Parse arguments
+    tag =            arg.tag       if hasattr(arg    ,'tag'  ) else ''
+    val =            arg.value     if hasattr(arg    ,'value') else arg
+    yield (arg,tag,val)
+def arg_tag_val_clean     (node:kdl.Node);
+  for arg            in node.args      : # Parse arguments
+    tag = clean_name(arg.tag       if hasattr(arg    ,'tag'  ) else '' )
+    val = clean_cmd (arg.value     if hasattr(arg    ,'value') else arg)
+    yield (arg,tag,val)
+def prop_key_tag_val      (node:kdl.Node);
+  for (pkey,tag_val) in node.props.items(): # Parse properties
+    tag =            tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
+    val =            tag_val.value if hasattr(tag_val,'value') else tag_val
+    yield (pkey,tag_val,tag,val)
+def prop_key_tag_val_clean(node:kdl.Node);
+  for (pkey,tag_val) in node.props.items(): # Parse properties
+    tag = clean_name(tag_val.tag   if hasattr(tag_val,'tag'  ) else ''     )
+    val = clean_cmd (tag_val.value if hasattr(tag_val,'value') else tag_val)
+    yield (pkey,tag_val,tag,val)
+
 def _parse_rc_g_kdl1(rc_g:kdl.Node):
   win = sublime.active_window()
   for node in rc_g.nodes: # r#":set invrelativenumber"#

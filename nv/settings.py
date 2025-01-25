@@ -12,6 +12,7 @@ from NeoVintageous.nv.events_user import on_mode_change
 from NeoVintageous.nv.log import addLoggingLevel, stream_handler
 from NeoVintageous.nv.rc import cfgU
 from NeoVintageous.nv    import rc
+from NeoVintageous.nv    import cfg as nvcfg
 from NeoVintageous.nv.cfg_parse import clean_name, clean_path
 
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
@@ -33,8 +34,8 @@ def get_config(path:str, default=None):
 def get_setting  (view, name: str, default=None):
     if         view.settings().has  ('vintageous_%s' % name):
         return view.settings().get  ('vintageous_%s' % name)
-    elif name in rc.CFG['general']:
-        return   rc.CFG['general'].get  (                  name, default)
+    elif name in nvcfg.CFG['general']:
+        return   nvcfg.CFG['general'].get  (           name, default)
     else:
         return default
 def set_setting  (view, name: str, value) -> None:

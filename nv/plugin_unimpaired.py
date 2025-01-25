@@ -104,7 +104,7 @@ def reload_with_user_data_kdl() -> None:
                 node = node_parent
 
                 props = False
-                for (key,tag_val,tag,val) in prop_key_tag_val(node): # 2. m=menu key=value pairs
+                for (key,tag_val,tag,val) in cfgU.cfg_parse.prop_key_tag_val(node): # 2. m=menu key=value pairs
                     props = True
                     if tag: #‘=(t)‘’ if (t) exists (though shouldn't)
                         _log.warn("node ‘%s’ has unrecognized tag  property ‘%s=%s’"

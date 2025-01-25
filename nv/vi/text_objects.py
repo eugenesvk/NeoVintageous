@@ -184,7 +184,7 @@ def reload_with_user_data_kdl() -> None:
                         for key in _STEADY_CURSOR_KEY:
                             CFG['steadycursor'][key] = False
                         continue
-                for (pkey,tag_val,tag,val) in prop_key_tag_val(node): # Parse properties, toggle per group ‘quote=true’
+                for (pkey,tag_val,tag,val) in cfgU.cfg_parse.prop_key_tag_val(node): # Parse properties, toggle per group ‘quote=true’
                     # if tag:
                         # _log.debug("node ‘%s’ has unrecognized value tag in property %s",cfg_key,pkey)
                     if not isinstance(val, bool):
@@ -228,7 +228,7 @@ def reload_with_user_data_kdl() -> None:
                 replaced.append(lbl[0])
                 replaced.append(lbl[1])
 
-            for (pkey,tag_val,tag,val) in prop_key_tag_val(node): # Parse properties, +NEW pairs d="()"
+            for (pkey,tag_val,tag,val) in cfgU.cfg_parse.prop_key_tag_val(node): # Parse properties, +NEW pairs d="()"
                 # if tag:
                     # _log.debug("node ‘%s’ has unrecognized value tag in property %s",node.name,pkey)
                 pair = None

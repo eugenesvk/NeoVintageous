@@ -54,7 +54,7 @@ def reload_with_user_data_kdl() -> None:
     cfg_updated = True
     for node in cfg.nodes: # (ⓘ)in {(mac)"~/bin" "--var" r#"{"v":1}"#;} or post_mode_message class="AutoHotkey" name="AutoHotkey.ahk"
       if (cfg_key:=node.name) == 'postmodemessage':
-        for (key,tag_val,tag,val) in prop_key_tag_val(node): # 1. class='AutoHotkey' name='AutoHotkey.ahk' pairs
+        for (key,tag_val,tag,val) in cfgU.cfg_parse.prop_key_tag_val(node): # 1. class='AutoHotkey' name='AutoHotkey.ahk' pairs
           key = clean_name(key)
           if tag: #class=(t)‘AutoHotkey’ if (t) exists (though shouldn't)
             _log.warn("node ‘%s’ has unrecognized tag  property ‘%s=%s’"
@@ -100,7 +100,7 @@ def reload_with_user_data_kdl() -> None:
           cmf_full  = [val] # start a new command
         else:
           cmf_full += [val] # append argument to command
-      got_int = any('internal' == clean_name(k) for (k,_,_,_) in prop_key_tag_val(node))
+      got_int = any('internal' == clean_name(k) for (k,_,_,_) in cfgU.cfg_parse.prop_key_tag_val(node))
       if got_int:
         if (internal_func := CMD_INTERNAL.get(clean_name(exe),None)):
           cmf_full = internal_func
@@ -132,7 +132,7 @@ def reload_with_user_data_kdl() -> None:
             _log.warn("node ‘%s’ has unrecognized tag ‘%s’ in argument ‘%s’, ignoring"
               ,            cfg.name,                   tag,             val)
           cmf_full  += [val] # append argument to command
-        got_int = any('internal' == clean_name(k) for (k,_,_,_) in prop_key_tag_val(node_cmd))
+        got_int = any('internal' == clean_name(k) for (k,_,_,_) in cfgU.cfg_parse.prop_key_tag_val(node_cmd))
         if got_int:
           if (internal_func := CMD_INTERNAL.get(clean_name(exe),None)):
             cmf_full = internal_func

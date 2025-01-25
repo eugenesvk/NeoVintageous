@@ -244,7 +244,7 @@ def reload_with_user_data_kdl() -> None:
                         _log.warn("node ‘%s’ is missing arguments in its child ‘%s’",cfg_key,node.name)
                 node = node_parent
                 props = False
-                for (key,tag_val,tag,val) in prop_key_tag_val(node): # 2. ‘=‘’ key=value pairs
+                for (key,tag_val,tag,val) in cfgU.cfg_parse.prop_key_tag_val(node): # 2. ‘=‘’ key=value pairs
                     props = True
                     if tag: #‘=(t)‘’ if (t) exists (though shouldn't)
                         _log.warn("node ‘%s’ has unrecognized tag  property ‘%s=%s’"
@@ -300,7 +300,7 @@ def reload_with_user_data_kdl() -> None:
                             ,         cfg_key ,                                 node.name)
                 node = node_parent
                 props = False
-                for (key,tag_val,tag,val) in prop_key_tag_val(node): # 2. d=(   key=value pairs
+                for (key,tag_val,tag,val) in cfgU.cfg_parse.prop_key_tag_val(node): # 2. d=(   key=value pairs
                     props = True
                     if tag: #(t)"(" if (t) exists (though shouldn't)
                         _log.warn("node ‘%s’ has unrecognized tag  property ‘%s=%s’"
@@ -352,7 +352,7 @@ def reload_with_user_data_kdl() -> None:
                             ,       cfg_key,                              node.name)
                 node = node_parent
                 props = False
-                for (key,tag_val,tag,val) in prop_key_tag_val(node): # 2. add=true   key=value pairs
+                for (key,tag_val,tag,val) in cfgU.cfg_parse.prop_key_tag_val(node): # 2. add=true   key=value pairs
                     props = True
                     if tag: #(t)true if (t) exists (though shouldn't)
                         _log.warn("node ‘%s’ has unrecognized tag  property ‘%s=%s’"

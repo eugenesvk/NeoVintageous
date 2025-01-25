@@ -69,13 +69,11 @@ def _parse_general_g_kdl2(general_g:kdl2.Node,CFG:dict,DEF:dict):
 
 def _parse_set_kdl2(node:kdl2.Node,cfg='') -> None:
   from NeoVintageous.nv.ex_cmds import ex_set # inline import to avoid circular dependency errors
-  win  = sublime.active_window()
-  view = win.active_view()
   args = dict()
-  if win:
+  if (win := sublime.active_window()):
     args['window'] = win
-  if view:
-    args['view']   = view
+    if (view := win.active_view()):
+      args['view'] = view
 
   for arg in node.getArgs((...,...)): # Parse arguments
     tag = clean_name(arg.tag   if hasattr(arg,'tag'  ) else '' )

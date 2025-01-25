@@ -53,7 +53,7 @@ def reload_with_user_data_kdl() -> None:
         and                    (cfg  :=     nest.get('unimpaired',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
         global CFG
         _log.debug("@plugin unimpaired: Parsing config")
-        for node_parent in cfg.nodes: # 'alias'
+        for node_parent in cfgU.cfg_parse.children(cfg): # 'alias'
             # 0. Parse node       args: clear
             # 1. Parse node child args: {m menu;}
             # 2. Parse node properties:  m=menu

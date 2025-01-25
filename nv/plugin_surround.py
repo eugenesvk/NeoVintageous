@@ -209,7 +209,7 @@ def reload_with_user_data_kdl() -> None:
     if hasattr(cfgU,'kdl') and (nest := cfgU.kdl.get('plugin'  ,None))\
         and                    (cfg  :=     nest.get('surround',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
         global CFG, VALID_TARGETS
-        for node_parent in cfg.nodes: # 'punctuation_marks'
+        for node_parent in cfgU.cfg_parse.children(cfg): # 'punctuation_marks'
             # 1. Parse node child args: {‘ ‘’; “ “”;}
             # 2. Parse node properties:  ‘=‘’  “=“”
             if (cfg_key:=node_parent.name) == 'punctuationmarks':

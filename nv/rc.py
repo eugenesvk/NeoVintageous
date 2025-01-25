@@ -12,6 +12,8 @@ import NeoVintageous.dep.kdl as kdl
 import NeoVintageous.dep.kdl2 as kdl2
 from NeoVintageous.nv.polyfill import nv_message as message
 from NeoVintageous.nv.helper import flatten_kdl1, flatten_kdl2, Singleton
+import NeoVintageous.nv.cfg_parse
+from NeoVintageous.nv.cfg_parse import _pre_load, _source
 
 
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
@@ -74,14 +76,6 @@ def _unload() -> None:
     _unload_cfgU()
 
 
-def _pre_load(window,source) -> None:
-    if source and isinstance(source, str):
-        try:
-            _source(window, iter(sublime.load_resource(source).splitlines()))
-            _log.info('sourced %s', source)
-        except FileNotFoundError as e:
-            print('NeoVintageous:', e)
-
 def _load() -> None:
     window = sublime.active_window()
 
@@ -97,59 +91,6 @@ def _load() -> None:
         _log.info('%s file not found', _file_path())
     # load_cfgU()
     cfgU.load_kdl()
-
-
-import NeoVintageous.nv.cfg_parse
-def _source(window, source, nodump=False) -> None:
-    from NeoVintageous.nv.ex_cmds import do_ex_cmdline # inline import to avoid circular dependency errors
-
-    try:
-        window.settings().set('_nv_sourcing', True)
-        for line in source:
-            ex_cmdline = _parse_line(line)
-            if ex_cmdline:
-                do_ex_cmdline(window, ex_cmdline)
-            elif NeoVintageous.nv.cfg_parse._dump_to_kdl and not nodump:
-                node_key = kdl2.Node(tag=None, name='≠', args=[kdl2.RawString(line.rstrip())])
-                NeoVintageous.nv.cfg_parse._NVRC_KDL.nodes.append(node_key)
-    finally:
-        window.settings().erase('_nv_sourcing')
-
-
-# Recursive mappings (:map, :nmap, :omap, :smap, :vmap) are not supported. They
-# were removed in version 1.5.0. They were removed because they were they were
-# implemented as non-recursive mappings.
-_PARSE_LINE_PATTERN = re.compile(
-    '^\\s*(?::)?(?P<cmdline>(?P<cmd>(?:[nsviox])?noremap|let|set|(?:[nsviox])?unmap) .*)$')
-
-
-def _parse_line(line: str):
-    try:
-        line = line.rstrip()
-        if line:
-            match = _PARSE_LINE_PATTERN.match(line)
-            if match:
-                cmdline = match.group('cmdline')
-                # Ensure there is leading colon, because the parser pattern omits it.
-                if cmdline:
-                    cmdline = ':' + cmdline
-
-                # The '|' character is used to chain commands. Users should
-                # escape it with a slash or use '<bar>'. See :h map-bar. It's
-                # translated to <bar> internally (implementation detail).
-                # See https://github.com/NeoVintageous/NeoVintageous/issues/615.
-                cmdline = cmdline.replace('\\|', '<bar>')
-                cmdline = cmdline.replace('\t', ' ') # avoid bugs with tab literal
-
-                if '|' in cmdline:
-                    # Using '|' to separate map commands is currently not supported.
-                    raise Exception('E488: Trailing characters: {}'.format(line.rstrip()))
-
-                return cmdline
-    except Exception as e:
-        message('error detected while processing {} at line "{}":\n{}'.format(_file_name(), line.rstrip(), str(e)))
-
-    return None
 
 
 from NeoVintageous.plugin import PACKAGE_NAME

@@ -201,20 +201,20 @@ class cfgU(metaclass=Singleton):
         # Fill config dictionaries
         for (cfg,var_d) in cfg_l: # store the latest existing value in any of the docs
             for g in cfg_group:   # direct config groups like 'keymap'
-                if (node := cfg.get(g, None)):
+                if (node := cfg_parse.node_get(cfg, g, None)):
                     if g == 'keybind':
                         cfgU.kdl[g] += [(node,var_d)]
                     else:
                         cfgU.kdl[g]  = node
             for nest in cfg_nest: # nested config groups like 'surround' within 'plugin'
-                if (node_nest := cfg.get(nest, None)):       # 'plugin'   node
+                if (node_nest := cfg_parse.node_get(cfg, nest, None)):       # 'plugin'   node
                     for g in cfg_nest[nest]:                 # 'surround'
-                        if (node := node_nest.get(g, None)): # 'surround' child node
+                        if (node := cfg_parse.node_get(node_nest, g, None)): # 'surround' child node
                             if g in cfgU.kdl[nest]: # dupe, but the other is less specific, overwrite
                                 _log.error("node ‘%s’ already set as a direct node, overwriting"
                                     ,             g)
                             cfgU.kdl[nest][g] = node
-                        if (node := cfg.get(g, None)):       # 'surround' direct node
+                        if (node := cfg_parse.node_get(cfg, g, None)):       # 'surround' direct node
                             if g in cfgU.kdl[nest]: # dupe, but     this  is less specific, ignore
                                 _log.error("node ‘%s’ already set as a child of ‘%s’, skipping this dupe"
                                     ,             g,                            nest)

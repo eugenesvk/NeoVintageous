@@ -100,7 +100,11 @@ def get_tag_val_warn2(tag_val:kdl2.Value,logger:logging.Logger=None,node_name:st
     val = tag_val
   return (tag,val)
 
-def parse_ckdl_config(v,cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d:dict={}):
+def parse_ckdl1_config( cfg:str, cfg_p:Path, kdl_docs:list    , enclose_in:str=''    ,var_d:dict={}):
+  parse_ckdl_config(v=1,cfg=cfg, cfg_p=cfg_p,kdl_docs=kdl_docs, enclose_in=enclose_in,var_d=var_d)
+def parse_ckdl2_config( cfg:str, cfg_p:Path, kdl_docs:list    , enclose_in:str=''    ,var_d:dict={}):
+  parse_ckdl_config(v=2,cfg=cfg, cfg_p=cfg_p,kdl_docs=kdl_docs, enclose_in=enclose_in,var_d=var_d)
+def parse_ckdl_config(v,cfg:str, cfg_p:Path, kdl_docs:list    , enclose_in:str=''    ,var_d:dict={}):
   _log.info("  parse_ckdl_config @ %s with vars %s",cfg_p,var_d)
 
   printConfig = ckdl.EmitterOptions(

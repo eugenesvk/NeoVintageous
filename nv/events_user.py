@@ -49,28 +49,22 @@ import copy
 CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
 
 def reload_with_user_data_kdl() -> None:
-  kdlv = nvcfg.CFG['pref']['kdlv']
   if hasattr(cfgU,'kdl') and (cfg := cfgU.kdl.get('event',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
     global CFG, cfg_updated
     cfg_updated = True
     for node in cfg.nodes: # (ⓘ)in {(mac)"~/bin" "--var" r#"{"v":1}"#;} or post_mode_message class="AutoHotkey" name="AutoHotkey.ahk"
       if (cfg_key:=node.name) == 'postmodemessage':
-        nprops = node.getProps((...,...)) if kdlv == 2 else node.props.items()
-        for  key,tag_val in nprops: # 1. class='AutoHotkey' name='AutoHotkey.ahk' pairs
+        for (key,tag_val,tag,val) in prop_key_tag_val(node): # 1. class='AutoHotkey' name='AutoHotkey.ahk' pairs
           key = clean_name(key)
-          if hasattr(tag_val,'value'): #class=(t)‘AutoHotkey’ if (t) exists (though shouldn't)
-            val = tag_val.value # ignore tag
+          if tag: #class=(t)‘AutoHotkey’ if (t) exists (though shouldn't)
             _log.warn("node ‘%s’ has unrecognized tag  property ‘%s=%s’"
               ,       node.name,                              key,tag_val)
-          else:
-            val = tag_val
           if key in MESSAGE_TARGET.keys():
             if val == None:
               CFG[cfg_key].pop(key,None)
             else:
               CFG[cfg_key][key] = val # AutoHotkey
-            _log.debug('CFG set to prop @%s %s=%s'
-              ,                   cfg_key,key,val)
+            _log.debug('CFG set to prop @%s %s=%s',cfg_key,key,val)
           else:
             _log.warn("node ‘%s’ has unrecognized key in ‘%s=%s’ property, expecting one of: null %s"
               ,       node.name,                         key,tag_val,' '.join(MESSAGE_TARGET.keys()))
@@ -91,12 +85,9 @@ def reload_with_user_data_kdl() -> None:
       # 1. Parse node arguments:  (os)exe arg;
       cmf_full = None
       exe = None
-      nargs = node.getArgs((...,...)) if kdlv == 2 else node.args
-      for i,arg in enumerate(nargs):
-        tag_os = arg.tag   if hasattr(arg,'tag'  ) else ''
-        val    = arg.value if hasattr(arg,'value') else arg
+      for i,(arg,tag,val) in enumerate(cfgU.cfg_parse.arg_tag_val(node)):
         if i == 0: # check the os tag in the first argument
-          if tag_os:
+          if (tag_os := tag):
             exe = val
             if not (os := OSrev.get(tag_os,None)):
               _log.error("node ‘%s’ has unrecognized OS tag ‘%s’ in ‘%s’, skipping"
@@ -109,7 +100,7 @@ def reload_with_user_data_kdl() -> None:
           cmf_full  = [val] # start a new command
         else:
           cmf_full += [val] # append argument to command
-      got_int = any('internal' == k for (k,v) in node.getProps((...,...))) if kdlv == 2 else node.props.get('internal',False)
+      got_int = any('internal' == clean_name(k) for (k,_,_,_) in prop_key_tag_val(node))
       if got_int:
         if (internal_func := CMD_INTERNAL.get(clean_name(exe),None)):
           cmf_full = internal_func
@@ -136,15 +127,12 @@ def reload_with_user_data_kdl() -> None:
           _log.error("node ‘%s’ has no OS tag in ‘%s’, skipping"
             ,               cfg.name,             exe)
           continue # skip to another node
-        nargs = node_cmd.getArgs((...,...)) if kdlv == 2 else node_cmd.args
-        for i,arg in enumerate(nargs):
-          tag = arg.tag   if hasattr(arg,'tag'  ) else ''
-          val = arg.value if hasattr(arg,'value') else arg
+        for i,(arg,tag,val) in enumerate(cfgU.cfg_parse.arg_tag_val(node_cmd)):
           if tag:
             _log.warn("node ‘%s’ has unrecognized tag ‘%s’ in argument ‘%s’, ignoring"
               ,            cfg.name,                   tag,             val)
           cmf_full  += [val] # append argument to command
-        got_int = any('internal' == k for (k,v) in node_cmd.getProps((...,...))) if kdlv == 2 else node_cmd.props.get('internal',False)
+        got_int = any('internal' == clean_name(k) for (k,_,_,_) in prop_key_tag_val(node_cmd))
         if got_int:
           if (internal_func := CMD_INTERNAL.get(clean_name(exe),None)):
             cmf_full = internal_func

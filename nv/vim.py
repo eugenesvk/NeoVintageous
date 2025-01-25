@@ -89,7 +89,7 @@ def reload_with_user_data_kdl() -> None:
                 if not args:
                     _log.warn("node ‘%s’ is missing arguments in its child ‘%s’"
                         ,         cfg_key,                               node.name)
-        for node in cfg.nodes: # 1b. parse arguments for mode statuses
+        for node in cfgU.cfg_parse.children(cfg): # 1b. parse arguments for mode statuses
             for (arg,tag,val) in cfgU.cfg_parse.arg_tag_val(node):
                 if tag:
                     _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’",node.name,arg)

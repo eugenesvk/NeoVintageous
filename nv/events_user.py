@@ -52,7 +52,7 @@ def reload_with_user_data_kdl() -> None:
   if hasattr(cfgU,'kdl') and (cfg := cfgU.kdl.get('event',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
     global CFG, cfg_updated
     cfg_updated = True
-    for node in cfg.nodes: # (ⓘ)in {(mac)"~/bin" "--var" r#"{"v":1}"#;} or post_mode_message class="AutoHotkey" name="AutoHotkey.ahk"
+    for node in cfgU.cfg_parse.children(cfg): # (ⓘ)in {(mac)"~/bin" "--var" r#"{"v":1}"#;} or post_mode_message class="AutoHotkey" name="AutoHotkey.ahk"
       if (cfg_key:=node.name) == 'postmodemessage':
         for (key,tag_val,tag,val) in cfgU.cfg_parse.prop_key_tag_val(node): # 1. class='AutoHotkey' name='AutoHotkey.ahk' pairs
           key = clean_name(key)

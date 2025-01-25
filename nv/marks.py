@@ -30,6 +30,7 @@ CFG =  copy.deepcopy(DEF) # copy defaults to be able to reset values on config r
 
 def reload_with_user_data_kdl() -> None:
     global CFG
+    kdlv = nvcfg.CFG['pref']['kdlv']
     if hasattr(cfgU,'kdl') and (cfg := cfgU.kdl.get('mark',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
         _log.debug("@marks: Parsing config")
         for node in cfg.nodes: # back "'" "`"
@@ -42,7 +43,7 @@ def reload_with_user_data_kdl() -> None:
                 continue
             if cfg_key == 'back': # "'" "`"
                 CFG['back'] = list() # reset defaults
-                nargs = node.getArgs((...,...)) if nvcfg.KDLV == 2 else node.args
+                nargs = node.getArgs((...,...)) if kdlv == 2 else node.args
                 for arg in nargs:     # Parse arguments
                     tag = arg.tag   if hasattr(arg,'tag'  ) else ''
                     val = arg.value if hasattr(arg,'value') else arg

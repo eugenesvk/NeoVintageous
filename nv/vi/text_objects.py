@@ -134,6 +134,7 @@ CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config re
 
 def reload_with_user_data_kdl() -> None:
     global CFG
+    kdlv = nvcfg.CFG['pref']['kdlv']
     if hasattr(cfgU,'kdl') and (cfg := cfgU.kdl.get('textobject',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
         _log.debug("@text_objects: Parsing config")
         replaced = [] # keep track of added values with the same label so as not to remove that label as instructed by a later config
@@ -151,7 +152,7 @@ def reload_with_user_data_kdl() -> None:
                 continue
 
             if cfg_key == 'seekforward': # ⎀a(B) don't sub ⎀a(b) if false
-                args = [a for a in node.getArgs((...,...))] if nvcfg.KDLV == 2 else node.args
+                args = [a for a in node.getArgs((...,...))] if kdlv == 2 else node.args
                 if args:
                     if not isinstance(args[0],bool):
                         _log.error("node ‘%s’ argument should be ‘true’ or ‘false’, not ‘%s’"
@@ -166,7 +167,7 @@ def reload_with_user_data_kdl() -> None:
                         ,          cfg_key,                               ', '.join(args))
                 continue
             if cfg_key == 'steadycursor': # don't 'move' ⎀cursor to the changed punctuation
-                nargs = node.getArgs((...,...)) if nvcfg.KDLV == 2 else node.args
+                nargs = node.getArgs((...,...)) if kdlv == 2 else node.args
                 for arg in nargs:     # Parse arguments, toggle all
                     tag = arg.tag   if hasattr(arg,'tag'  ) else ''
                     val = arg.value if hasattr(arg,'value') else arg
@@ -180,7 +181,7 @@ def reload_with_user_data_kdl() -> None:
                         for key in _STEADY_CURSOR_KEY:
                             CFG['steadycursor'][key] = False
                         continue
-                nprops = node.getProps((...,...)) if nvcfg.KDLV == 2 else node.props.items()
+                nprops = node.getProps((...,...)) if kdlv == 2 else node.props.items()
                 for pkey,tag_val in nprops: # Parse properties, toggle per group ‘quote=true’
                     tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
                     val = tag_val.value if hasattr(tag_val,'value') else tag_val
@@ -195,7 +196,7 @@ def reload_with_user_data_kdl() -> None:
                 continue
 
             text_obj = to_names_rev[val]
-            nargs = node.getArgs((...,...)) if nvcfg.KDLV == 2 else node.args
+            nargs = node.getArgs((...,...)) if kdlv == 2 else node.args
             for arg in nargs:             # Parse arguments, −OLD pairs "b"
                 tag = arg.tag   if hasattr(arg,'tag'  ) else ''
                 val = arg.value if hasattr(arg,'value') else arg
@@ -230,7 +231,7 @@ def reload_with_user_data_kdl() -> None:
                 replaced.append(lbl[0])
                 replaced.append(lbl[1])
 
-            nprops = node.getProps((...,...)) if nvcfg.KDLV == 2 else node.props.items()
+            nprops = node.getProps((...,...)) if kdlv == 2 else node.props.items()
             for pkey,tag_val in nprops: # Parse properties, +NEW pairs d="()"
                 tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
                 val = tag_val.value if hasattr(tag_val,'value') else tag_val

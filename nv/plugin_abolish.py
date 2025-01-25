@@ -86,6 +86,7 @@ import copy
 CFG =  copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
 
 def reload_with_user_data_kdl() -> None:
+    kdlv = nvcfg.CFG['pref']['kdlv']
     if hasattr(cfgU,'kdl') and (nest := cfgU.kdl.get('plugin'  ,None))\
         and                    (cfg  :=     nest.get('abolish',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
         global CFG
@@ -96,7 +97,7 @@ def reload_with_user_data_kdl() -> None:
             # 2. Parse node properties:  m=mixedcase
             if (cfg_key:=node_parent.name) == 'steadycursor':
                 # _log.debug(f"@plugin abolish: Parsing config {cfg_key}")
-                args = [a for a in node_parent.getArgs((...,...))] if nvcfg.KDLV == 2 else node_parent.args
+                args = [a for a in node_parent.getArgs((...,...))] if kdlv == 2 else node_parent.args
                 if args: # 0. true
                     tag_val = args[0] #(t)‘’ if (t) exists (though shouldn't)
                     (tag,val) = get_tag_val_warn(tag_val=tag_val,logger=_log,node_name=cfg_key)
@@ -115,7 +116,7 @@ def reload_with_user_data_kdl() -> None:
 
             if (cfg_key:=node_parent.name) == 'alias':
                 # _log.debug(f"@plugin abolish: Parsing config {cfg_key}")
-                args = [a for a in node_parent.getArgs((...,...))] if nvcfg.KDLV == 2 else node_parent.args
+                args = [a for a in node_parent.getArgs((...,...))] if kdlv == 2 else node_parent.args
                 if args: # 0. clear
                     tag_val = args[0] #(t)‘’ if (t) exists (though shouldn't)
                     (tag,val) = get_tag_val_warn(tag_val=tag_val,logger=_log,node_name=cfg_key)
@@ -133,7 +134,7 @@ def reload_with_user_data_kdl() -> None:
                         ,        cfg_key,                                {', '.join(args)})
                 for node in node_parent.nodes: # 1. m mixedcase key_node value_arg pairs
                     key = node.name
-                    args = [a for a in node.getArgs((...,...))] if nvcfg.KDLV == 2 else node.args
+                    args = [a for a in node.getArgs((...,...))] if kdlv == 2 else node.args
                     if args:
                         tag_val = args[0] #(t)‘’ if (t) exists (though shouldn't)
                         # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
@@ -157,7 +158,7 @@ def reload_with_user_data_kdl() -> None:
                         _log.warn("node ‘%s’ has extra arguments in its child ‘%s’, only the 1st was used ‘%s’"
                             ,           cfg_key ,                         node.name   ,       {', '.join(args)})
                 node = node_parent
-                nprops = node.getProps((...,...)) if nvcfg.KDLV == 2 else node.props.items()
+                nprops = node.getProps((...,...)) if kdlv == 2 else node.props.items()
                 for key,tag_val in nprops: # 2. m=mixedcase key=value pairs
                     if hasattr(tag_val,'value'): #‘=(t)‘’ if (t) exists (though shouldn't)
                         val = clean_name(tag_val.value) # ignore tag

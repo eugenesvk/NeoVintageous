@@ -23,37 +23,27 @@ def reload_with_user_data_kdl() -> None:
         # _log.debug(f"@macros: Parsing config indicator/macro")
         for cfg_key in CFG:
             if (node := cfg.get(cfg_key,None)): # record "🔴" node/arg pair
-                if (args := [a for a in node.getArgs((...,...))]):
-                    tag_val = args[0] #(t)"━" if (t) exists (though shouldn't)
-                    # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
-                    if hasattr(tag_val,'value'):
-                        val = tag_val.value # ignore tag
-                        _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
-                            ,      node.name,                                  tag_val)
-                    else:
-                        val = tag_val
-                    CFG[node.name] = val
-                elif not args:
+                args = False
+                for i,(arg,tag,val) in enumerate(cfgU.cfg_parse.arg_tag_val(node)):
+                    args = True
+                    if i == 0:
+                        if tag:
+                            _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’",node.name,arg)
+                        CFG[node.name] = val #;_log.debug('indicator macro from arg @%s %s',node.name,val)
+                    elif i > 0:
+                        _log.warn("node ‘%s’ has extra arguments in its child ‘%s’ (only the 1st was used): ‘%s’...",cfg_key,node.name,arg)
+                        break
+                if not args:
                     _log.warn("node ‘%s’ is missing arguments in its child ‘%s’"
-                        ,         cfg_key,                           node.name)
-                if len(args) > 1:
-                    _log.warn("node ‘%s’ has extra arguments in its child ‘%s’, only the 1st was used ‘%s’"
-                        ,         cfg_key,                          node.name,             ', '.join(args))
+                        ,         cfg_key,                               node.name)
         node = cfg
-        for i,(key,val) in enumerate(node.getProps((...,...))): # record="🔴", alternative notation to child node/arg pairs
-            tag_val = val #record=(t)"🔴" if (t) exists (though shouldn't)
-            # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
-            if hasattr(tag_val,'value'):
-                val = tag_val.value # ignore tag
-                _log.warn("node ‘%s’ has unrecognized tag in property ‘%s=%s’"
-                    ,      node.name,                                 key,tag_val)
-            else:
-                val = tag_val
+        for i,(key,tag_val,tag,val) in enumerate(prop_key_tag_val(node)): # record="🔴", alt notation to child node/arg pairs
+            if tag:
+                _log.warn("node ‘%s’ has unrecognized tag in property ‘%s=%s’",node.name,key,tag_val)
             if key in CFG:
-                CFG[key] = val
+                CFG[key] = val ;_log.debug("indicator macro from property ‘%s=%s’",key,val)
             else:
-                _log.error("node ‘%s’ has unrecognized property ‘%s=%s’"
-                    ,       node.name,                          key,tag_val)
+                _log.error("node ‘%s’ has unrecognized property ‘%s=%s’",node.name,key,tag_val)
     else:
         CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
 

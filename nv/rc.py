@@ -159,79 +159,8 @@ from NeoVintageous.nv.modes import Mode, Mode as M, text_to_modes, mode_names, M
 from NeoVintageous.nv.cfg import _keybind_prop, re_count, re_subl_tag, re_filetype
 from NeoVintageous.nv.cfg_parse import clean_name, clean_cmd
 
-from NeoVintageous.nv.cfg_parse1 import _parse_general_cfg_kdl1, _parse_keybinds_kdl1
-from NeoVintageous.nv.cfg_parse2 import _parse_general_cfg_kdl2, _parse_keybinds_kdl2
-def _parse_rc_g_kdl1(rc_g:kdl.Node):
-    win = sublime.active_window()
-    for node in rc_g.nodes: # r#":set invrelativenumber"#
-        _parse_rc_cfg_kdl1(win,rc_cfg=node)
-def _parse_rc_cfg_kdl1(win,rc_cfg:kdl.Node) -> None:
-    if not (cfgT := type(rc_cfg)) is kdl.Node:
-        _log.error("Type of ‘rc’ config group should be kdl.Node, not ‘%s’",cfgT)
-        return None
-    node = rc_cfg               # r#":set invrelativenumber"#
-    if node.args or\
-       node.props:
-        _log.warn("‘rc’ config nodes must have no arguments/properties ‘%s’",node)
-        return None
-    opt_name = node.name     # r#":set invrelativenumber"#
-    if opt_name:
-        # print(f"‘rc’ config: node with no args/props, running as an Ex command ‘{node}’")
-        _source(win, [opt_name], nodump=True)
-        return None
-def _parse_rc_g_kdl2(rc_g:kdl2.Node):
-    win = sublime.active_window()
-    for node in rc_g.nodes: # r#":set invrelativenumber"#
-        _parse_rc_cfg_kdl2(win,rc_cfg=node)
-def _parse_rc_cfg_kdl2(win,rc_cfg:kdl2.Node) -> None:
-    if not (cfgT := type(rc_cfg)) is kdl2.Node:
-        _log.error("Type of ‘rc’ config group should be kdl2.Node, not ‘%s’",cfgT)
-        return None
-    node = rc_cfg               # r#":set invrelativenumber"#
-    if not len(node.entries) == 0:
-        _log.warn("‘rc’ config nodes must have no arguments/properties ‘%s’",node)
-        return None
-    opt_name = node.name     # r#":set invrelativenumber"#
-    if opt_name:
-        # print(f"‘rc’ config: node with no args/props, running as an Ex command ‘{node}’")
-        _source(win, [opt_name], nodump=True)
-        return None
-
-def _parse_general_g_kdl1(general_g:kdl.Node,CFG:dict,DEF:dict):
-    win = sublime.active_window()
-    st_pref = sublime.load_settings('Preferences.sublime-settings')
-    if (src_pre := general_g.get((None,"source"))):
-        if (args := src_pre.args):
-            tag_val = args[0] #(t)"/dvorak.neovintageous" if (t) exists (though shouldn't)
-            # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
-            if hasattr(tag_val,'value'):
-                val = tag_val.value # ignore tag
-                _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
-                    ,      src_pre.name,                               tag_val)
-            else:
-                val = tag_val
-            # print(f"loading source first ‘{val}’")
-            _pre_load(win,val)
-    for node in general_g.nodes: # set relativenumber=true
-        _parse_general_cfg_kdl1(general_cfg=node,CFG=CFG,DEF=DEF,st_pref=st_pref)
-def _parse_general_g_kdl2(general_g:kdl2.Node,CFG:dict,DEF:dict):
-    win = sublime.active_window()
-    st_pref = sublime.load_settings('Preferences.sublime-settings')
-    if (src_pre := general_g.get((None,"source"))):
-        for arg in src_pre.getArgs((...,...)): # only get the first one
-            tag_val = arg #(t)"/dvorak.neovintageous" if (t) exists (though shouldn't)
-            # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
-            if hasattr(tag_val,'value'):
-                val = tag_val.value # ignore tag
-                _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
-                    ,      src_pre.name,                               tag_val)
-            else:
-                val = tag_val
-            # print(f"loading source first ‘{val}’")
-            _pre_load(win,val)
-            break
-    for node in general_g.nodes: # set relativenumber=true
-        _parse_general_cfg_kdl2(general_cfg=node,CFG=CFG,DEF=DEF,st_pref=st_pref)
+from NeoVintageous.nv.cfg_parse1 import _parse_general_cfg_kdl1, _parse_keybinds_kdl1, _parse_rc_g_kdl1, _parse_general_g_kdl1
+from NeoVintageous.nv.cfg_parse2 import _parse_general_cfg_kdl2, _parse_keybinds_kdl2, _parse_rc_g_kdl2, _parse_general_g_kdl2
 
 from NeoVintageous.nv.cfg import DEF
 import copy

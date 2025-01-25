@@ -18,6 +18,43 @@ from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL, TFMT, DFMT
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
 
+def _parse_rc_g_kdl1(rc_g:kdl.Node):
+  win = sublime.active_window()
+  for node in rc_g.nodes: # r#":set invrelativenumber"#
+    _parse_rc_cfg_kdl1(win,rc_cfg=node)
+def _parse_rc_cfg_kdl1(win,rc_cfg:kdl.Node) -> None:
+  if not (cfgT := type(rc_cfg)) is kdl.Node:
+    _log.error("Type of ‘rc’ config group should be kdl.Node, not ‘%s’",cfgT)
+    return None
+  node = rc_cfg               # r#":set invrelativenumber"#
+  if node.args or\
+    node.props:
+    _log.warn("‘rc’ config nodes must have no arguments/properties ‘%s’",node)
+    return None
+  opt_name = node.name     # r#":set invrelativenumber"#
+  if opt_name:
+    # print(f"‘rc’ config: node with no args/props, running as an Ex command ‘{node}’")
+    _source(win, [opt_name], nodump=True)
+    return None
+
+def _parse_general_g_kdl1(general_g:kdl.Node,CFG:dict,DEF:dict):
+  win = sublime.active_window()
+  st_pref = sublime.load_settings('Preferences.sublime-settings')
+  if (src_pre := general_g.get((None,"source"))):
+    if (args := src_pre.args):
+      tag_val = args[0] #(t)"/dvorak.neovintageous" if (t) exists (though shouldn't)
+      # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
+      if hasattr(tag_val,'value'):
+        val = tag_val.value # ignore tag
+        _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
+          ,      src_pre.name,                               tag_val)
+      else:
+        val = tag_val
+      # print(f"loading source first ‘{val}’")
+      _pre_load(win,val)
+  for node in general_g.nodes: # set relativenumber=true
+    _parse_general_cfg_kdl1(general_cfg=node,CFG=CFG,DEF=DEF,st_pref=st_pref)
+
 def _parse_set_kdl1(node:kdl.Node,cfg='') -> None:
   from NeoVintageous.nv.ex_cmds import ex_set # inline import to avoid circular dependency errors
   win  = sublime.active_window()

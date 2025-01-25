@@ -46,6 +46,20 @@ def prop_key_tag_val_clean(node:ckdl.Node) -> Generator[Tuple[str,t_ckdl_or_val,
     val = clean_cmd (tag_val.value           if hasattr(tag_val,'value'          ) else tag_val)
     yield (pkey,tag_val,tag,val)
 
+def get_tag_val_warn(tag_val:ckdl.Value,logger:logging.Logger=None,node_name:str=''):
+  """split KDL value into tag and value, and warn if tag exists"""
+  if isinstance(tag_val, ckdl.Value):
+    tag = tag_val.tag
+    val = tag_val.value
+    if tag is not None:
+      if logger:
+        logger.warn("node ‘%s’ has unrecognized tag in value ‘%s’"
+          ,        node_name,                           tag_val)
+  else:
+    tag = None
+    val = tag_val
+  return (tag,val)
+
 def _parse_rc_g_kdl(rc_g:ckdl.Node):
   win = sublime.active_window()
   for node in rc_g.nodes: # r#":set invrelativenumber"#

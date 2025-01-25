@@ -72,34 +72,6 @@ def clean_cmd (name:str): # convert command name to lowercase (don't remove _ si
 def clean_path(name:str): # clean path segment by removing separators ␠⭾-_ but NOT . and converting to lowercase
   return re.sub(path_separator,'',name.casefold()) if  name                                              else name
 
-import logging
-def get_tag_val_warn(tag_val:kdl.Value,logger:logging.Logger=None,node_name:str=''):
-  """split KDL value into tag and value, and warn if tag exists"""
-  # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
-  if hasattr(tag_val,'value'):
-    tag = tag_val.tag
-    val = tag_val.value
-    if logger:
-      logger.warn("node ‘%s’ has unrecognized tag in value ‘%s’"
-        ,        node_name,                           tag_val)
-  else:
-    tag = None
-    val = tag_val
-  return (tag,val)
-def get_tag_val_warn2(tag_val:kdl2.Value,logger:logging.Logger=None,node_name:str=''):
-  """split KDL2 value into tag and value, and warn if tag exists"""
-  if isinstance(tag_val, kdl2.Value):
-    tag = tag_val.tag
-    val = tag_val.value
-    if tag is not None:
-      if logger:
-        logger.warn("node ‘%s’ has unrecognized tag in value ‘%s’"
-          ,        node_name,                           tag_val)
-  else:
-    tag = None
-    val = tag_val
-  return (tag,val)
-
 def parse_ckdl1_config( cfg:str, cfg_p:Path, kdl_docs:list    , enclose_in:str=''    ,var_d:dict={}):
   parse_ckdl_config(v=1,cfg=cfg, cfg_p=cfg_p,kdl_docs=kdl_docs, enclose_in=enclose_in,var_d=var_d)
 def parse_ckdl2_config( cfg:str, cfg_p:Path, kdl_docs:list    , enclose_in:str=''    ,var_d:dict={}):

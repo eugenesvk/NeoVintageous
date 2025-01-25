@@ -38,6 +38,20 @@ def prop_key_tag_val_clean(node:kdl.Node);
     val = clean_cmd (tag_val.value if hasattr(tag_val,'value') else tag_val)
     yield (pkey,tag_val,tag,val)
 
+def get_tag_val_warn(tag_val:kdl.Value,logger:logging.Logger=None,node_name:str=''):
+  """split KDL value into tag and value, and warn if tag exists"""
+  # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
+  if hasattr(tag_val,'value'):
+    tag = tag_val.tag
+    val = tag_val.value
+    if logger:
+      logger.warn("node ‘%s’ has unrecognized tag in value ‘%s’"
+        ,        node_name,                           tag_val)
+  else:
+    tag = None
+    val = tag_val
+  return (tag,val)
+
 def _parse_rc_g_kdl(rc_g:kdl.Node):
   win = sublime.active_window()
   for node in rc_g.nodes: # r#":set invrelativenumber"#

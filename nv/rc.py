@@ -98,8 +98,8 @@ from NeoVintageous.nv.modes import Mode, Mode as M, text_to_modes, mode_names, M
 from NeoVintageous.nv.cfg import _keybind_prop, re_count, re_subl_tag, re_filetype
 from NeoVintageous.nv.cfg_parse import clean_name, clean_cmd
 
-from NeoVintageous.nv.cfg_parse1 import _parse_general_cfg_kdl1, _parse_keybinds_kdl1, _parse_rc_g_kdl1, _parse_general_g_kdl1
-from NeoVintageous.nv.cfg_parse2 import _parse_general_cfg_kdl2, _parse_keybinds_kdl2, _parse_rc_g_kdl2, _parse_general_g_kdl2
+from NeoVintageous.nv.cfg_parse1 import _parse_keybinds_kdl1, _parse_rc_g_kdl1, _parse_general_g_kdl1
+from NeoVintageous.nv.cfg_parse2 import _parse_keybinds_kdl2, _parse_rc_g_kdl2, _parse_general_g_kdl2
 
 from NeoVintageous.nv import cfg as nvcfg
 # cfgU_settings = (f'{PACKAGE_NAME}.sublime-settings')

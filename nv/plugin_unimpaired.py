@@ -9,7 +9,7 @@ from NeoVintageous.nv.vi       import seqs
 from NeoVintageous.nv.vi.cmd_base import ViOperatorDef, translate_action
 from NeoVintageous.nv.modes    import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.window   import window_buffer_control, window_tab_control
-from NeoVintageous.nv.cfg_parse import clean_name, get_tag_val_warn
+from NeoVintageous.nv.cfg_parse import clean_name
 from NeoVintageous.nv           import cfg as nvcfg
 
 from NeoVintageous.nv.rc import cfgU
@@ -63,7 +63,7 @@ def reload_with_user_data_kdl() -> None:
                 args = [a for a in node_parent.getArgs((...,...))] if kdlv == 2 else node_parent.args
                 if args: # 0. clear
                     tag_val = args[0] #(t)‘’ if (t) exists (though shouldn't)
-                    (tag,val) = get_tag_val_warn(tag_val=tag_val,logger=_log,node_name=cfg_key)
+                    (tag,val) = cfgU.cfg_parse.get_tag_val_warn(tag_val=tag_val,logger=_log,node_name=cfg_key)
                     if val == 'clear':
                         CFG[cfg_key].clear() # clear all existing aliases
                         _log.debug('CFG arg cleared @%s ‘%s’={}',cfg.name,cfg_key)

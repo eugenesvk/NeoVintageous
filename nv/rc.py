@@ -101,10 +101,7 @@ from NeoVintageous.nv.cfg_parse import clean_name, clean_cmd
 from NeoVintageous.nv.cfg_parse1 import _parse_general_cfg_kdl1, _parse_keybinds_kdl1, _parse_rc_g_kdl1, _parse_general_g_kdl1
 from NeoVintageous.nv.cfg_parse2 import _parse_general_cfg_kdl2, _parse_keybinds_kdl2, _parse_rc_g_kdl2, _parse_general_g_kdl2
 
-from NeoVintageous.nv.cfg import DEF
-import copy
-CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload
-
+from NeoVintageous.nv import cfg as nvcfg
 # cfgU_settings = (f'{PACKAGE_NAME}.sublime-settings')
 class cfgU(metaclass=Singleton):
     cfg_p = _file_path_config_kdl()
@@ -214,19 +211,18 @@ class cfgU(metaclass=Singleton):
         _parse_rc_g_kdl      = _parse_rc_g_kdl2      if is2 else _parse_rc_g_kdl1
         _parse_keybinds_kdl  = _parse_keybinds_kdl2  if is2 else _parse_keybinds_kdl1
         if (general_g := cfgU.kdl['general']):
-            _parse_general_g_kdl(general_g=general_g,CFG=CFG,DEF=DEF)
+            _parse_general_g_kdl(general_g=general_g,CFG=nvcfg.CFG,DEF=nvcfg.DEF)
 
         if (rc_g := cfgU.kdl['rc']):
             _parse_rc_g_kdl(rc_g=rc_g)
 
         for (keybind,var_d) in cfgU.kdl['keybind']:
-            _parse_keybinds_kdl(keybinds=keybind,CFG=CFG,cfgU=cfgU,var_d=var_d)
+            _parse_keybinds_kdl(keybinds=keybind,CFG=nvcfg.CFG,cfgU=cfgU,var_d=var_d)
 
         _import_plugins_with_user_data_kdl()
 
     @staticmethod
     def unload_kdl():
-        global CFG
         if hasattr(cfgU,'kdl'): # reset config
             cfgU.kdl = dict()
             _log.debug('@cfgU.unload_kdl: erased current cfgU.kdl')
@@ -239,7 +235,7 @@ class cfgU(metaclass=Singleton):
                 text_commands[_m] = dict()
             cfgU.text_commands = text_commands
             _log.debug('@cfgU.unload_kdl: erased current cfgU.text_commands')
-        CFG = copy.deepcopy(DEF) # reset to defaults on reload
+        nvcfg.CFG = copy.deepcopy(nvcfg.DEF) # reset to defaults on reload
         _import_plugins_with_user_data_kdl() # reset plugin defaults
 
 def _import_plugins_with_user_data_kdl():

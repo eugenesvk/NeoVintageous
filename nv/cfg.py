@@ -80,3 +80,6 @@ DEF['gen_def'] = { # todo: replace float with int when kdl-py issue is fixed
   'autoswitchinputmethodgetcmd'   	: dict(t=str ,v=''         	,key='auto_switch_input_method_get_cmd'   ),
   'autoswitchinputmethodsetcmd'   	: dict(t=str ,v=''         	,key='auto_switch_input_method_set_cmd'   ),
 }
+
+import copy
+CFG = copy.deepcopy(DEF) # copy defaults to be able to reset values on config reload

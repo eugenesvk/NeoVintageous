@@ -35,11 +35,11 @@ def _parse_rc_cfg_kdl_c(win,rc_cfg:ckdl.Node) -> None:
     _source(win, [opt_name], nodump=True)
     return None
 
-def _parse_general_g_kdl_c(general_g:kdl2.Node,CFG:dict,DEF:dict): # TODO: update
+def _parse_general_g_kdl_c(general_g:ckdl.Node,CFG:dict,DEF:dict):
   win = sublime.active_window()
   st_pref = sublime.load_settings('Preferences.sublime-settings')
   if (src_pre := general_g.get((None,"source"))):
-    for arg in src_pre.getArgs((...,...)): # only get the first one
+    for arg in src_pre.args: # only get the first one
       tag_val = arg #(t)"/dvorak.neovintageous" if (t) exists (though shouldn't)
       # val = tag_val.value if hasattr(tag_val,'value') else tag_val # ignore tag
       if hasattr(tag_val,'value'):
@@ -52,26 +52,24 @@ def _parse_general_g_kdl_c(general_g:kdl2.Node,CFG:dict,DEF:dict): # TODO: updat
       _pre_load(win,val)
       break
   for node in general_g.nodes: # set relativenumber=true
-    _parse_general_cfg_kdl2(general_cfg=node,CFG=CFG,DEF=DEF,st_pref=st_pref)
+    _parse_general_cfg_kdl_c(general_cfg=node,CFG=CFG,DEF=DEF,st_pref=st_pref)
 
-def _parse_set_kdl2(node:kdl2.Node,cfg='') -> None:
-  from NeoVintageous.nv.ex_cmds import ex_set # inline import to avoid circular dependency errors
-  win  = sublime.active_window()
-  view = win.active_view()
+def _parse_set_kdl_c(node:ckdl.Node,cfg='') -> None:
+  from NeoVintageous.nv.ex_cmds import ex_set # inline import avoids circular dep error
   args = dict()
-  if win:
+  if (win := sublime.active_window()):
     args['window'] = win
-  if view:
-    args['view']   = view
+    if (view := win.active_view()):
+      args['view'] = view
 
-  for arg in node.getArgs((...,...)): # Parse arguments
-    tag = clean_name(arg.tag   if hasattr(arg,'tag'  ) else '' )
-    val = clean_cmd (arg.value if hasattr(arg,'value') else arg)
+  for arg            in node.args      : # Parse arguments
+    tag = clean_name(arg.type_annotation if hasattr(arg,'type_annotation') else '' )
+    val = clean_cmd (arg.value           if hasattr(arg,'value'          ) else arg)
     _log.debug(f"set option from kdl arg: ¦{val}¦")
     ex_set(option=val,value=None, **args)
-  for (pkey,tag_val) in node.getProps((...,...)): # Parse properties
-    tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
-    val = tag_val.value if hasattr(tag_val,'value') else tag_val
+  for (pkey,tag_val) in node.properties: # Parse properties
+    tag = tag_val.type_annotation if hasattr(tag_val,'type_annotation') else ''
+    val = tag_val.value           if hasattr(tag_val,'value'          ) else tag_val
     _log.debug(f"set option from kdl prop: ¦{pkey}¦=¦{val}¦")
     if   val == True:
       opt_key =       pkey
@@ -82,7 +80,7 @@ def _parse_set_kdl2(node:kdl2.Node,cfg='') -> None:
     elif val in ['inv','invert','!']:
       opt_key = 'inv'+pkey
       opt_val = None
-    elif val in ['show','?']:
+    elif val in ['show'   ,'?']:
       opt_key =       pkey+'?'
       opt_val = None
     else:
@@ -91,19 +89,19 @@ def _parse_set_kdl2(node:kdl2.Node,cfg='') -> None:
     ex_set(option=opt_key,value=opt_val, **args)
 
 from NeoVintageous.nv import variables
-def _parse_let_kdl2(node:kdl2.Node,cfg='') -> None:
-  if not _node_has_prop(node):
+def _parse_let_kdl_c(node:kdlc.Node,cfg='') -> None:
+  if not node.properties:
     _log.warn("%sconfig has a ‘let’ command without var=value properties (%s)",
       f'‘{cfg}’ ' if cfg else '',                                     node)
-  for (pkey,tag_val) in node.getProps((...,...)):
-    tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
-    val = tag_val.value if hasattr(tag_val,'value') else tag_val
+  for (pkey,tag_val) in node.properties:
+    tag = tag_val.type_annotation if hasattr(tag_val,'type_annotation') else ''
+    val = tag_val.value           if hasattr(tag_val,'value'          ) else tag_val
     _log.debug(f"set var from kdl: ¦{pkey}¦=¦{val}¦")
     variables.set(pkey,val)
 
-def _parse_general_cfg_kdl2(general_cfg:kdl2.Node,CFG:dict,DEF:dict,st_pref=None) -> None:
-  if not (cfgT := type(general_cfg)) is kdl2.Node:
-    _log.error("Type of ‘general’ config group should be kdl2.Node, not ‘%s’",cfgT)
+def _parse_general_cfg_kdl_c(general_cfg:kdlc.Node,CFG:dict,DEF:dict,st_pref=None) -> None:
+  if not (cfgT := type(general_cfg)) is kdlc.Node:
+    _log.error("Type of ‘general’ config group should be kdlc.Node, not ‘%s’",cfgT)
     return None
   node = general_cfg          # set relativenumber=true
   opt_name    = node.name     # ‘set’
@@ -112,58 +110,53 @@ def _parse_general_cfg_kdl2(general_cfg:kdl2.Node,CFG:dict,DEF:dict,st_pref=None
   elif opt_name == 'source': # source was loaded before
     return
   elif opt_name == 'let':
-    _parse_let_kdl2(node)
+    _parse_let_kdl_c(node)
     return None
   elif opt_name == 'set':
-    _parse_set_kdl2(node)
+    _parse_set_kdl_c(node)
     return None
   elif opt_name == 'vardef': #vardef pre="‹" pos="›"
-    # print('CFG pre',CFG)
-    tag_val = node.name
-    tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
-    val = tag_val.value if hasattr(tag_val,'value') else tag_val
-    if tag: # vardef should have no tags
+    if hasattr(node,'type_annotation'): # vardef should have no tags
       _log.warn("node ‘%s’ has unrecognized tag",node.name)
       return None
-    for (pkey,tag_val) in node.getProps((...,...)): # parse definition properties
-      tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
-      val = tag_val.value if hasattr(tag_val,'value') else tag_val
+    for (pkey,tag_val) in node.properties: # Parse definition properties
+      tag = tag_val.type_annotation if hasattr(tag_val,'type_annotation') else ''
+      val = tag_val.value           if hasattr(tag_val,'value'          ) else tag_val
       if pkey == 'pre':
         CFG['var_def'][0] = val #‹
       if pkey == 'pos':
         CFG['var_def'][1] = val #›
-    # print('CFG pos',CFG)
     return None
   elif opt_name in DEF['gen_def']:
-    opt_d    =   DEF['gen_def'][opt_name]
+    opt_d    =     DEF['gen_def'][opt_name]
     name_def = opt_d['key'] # vintageous_auto_switch_input_method
     type_def = opt_d['t']   # bool
     val_def  = opt_d['v']   # False
     if type_def == dict: # todo: iterate over values to strip tags?
-      if not _node_has_prop(node):
+      if not node.properties:
         _log.error("Unrecognized option type for %s in the ‘general’ config group, expecting %s, but there are no key=val properties!"
             ,                             opt_name,                                   type_def)
       else:
         props = dict()
-        for (pkey,tag_val) in node.getProps((...,...)):
+        for (pkey,tag_val) in node.properties:
           props[pkey] = tag_val
         CFG['general'][name_def] = props
         _over = ''
         if  st_pref.has(f"vintageous_{name_def}"): # override Preferences with KDL's
-          st_pref.set(f"vintageous_{name_def}", props)
+          st_pref.set  (f"vintageous_{name_def}", props)
           _over = ' (overridden Preferences)'
         if  st_pref.has(           f"{name_def}"): # override Preferences with KDL's
-          st_pref.set(           f"{name_def}", props)
+          st_pref.set  (           f"{name_def}", props)
           _over = ' (overridden Preferences)'
         _log.cfg("set user dict ‘%s’=‘%s’%s",name_def,props,_over)
       return None
     else:
-      for arg in node.getArgs((...,...)):
-        tag = arg.tag   if hasattr(arg,'tag'  ) else ''
-        val = arg.value if hasattr(arg,'value') else arg
+      for arg in node.args:
+        tag = arg.type_annotation if hasattr(arg,'type_annotation') else ''
+        val = arg.value           if hasattr(arg,'value'          ) else arg
         _log.debug("%s %s %s", arg, f"tag={tag}", f"val={val}")
         isSameType = False
-        if     isinstance(    type_def,type):
+        if   isinstance(    type_def,type):
           if isinstance(val,type_def):
             isSameType = True
         elif isinstance(type_def,list):
@@ -177,10 +170,10 @@ def _parse_general_cfg_kdl2(general_cfg:kdl2.Node,CFG:dict,DEF:dict,st_pref=None
         CFG['general'][name_def] = val
         _over = ''
         if  st_pref.has(f"vintageous_{name_def}"): # override Preferences with KDL's
-          st_pref.set(f"vintageous_{name_def}", val)
+          st_pref.set  (f"vintageous_{name_def}", val)
           _over = ' (overridden Preferences)'
         if  st_pref.has(           f"{name_def}"):
-          st_pref.set(           f"{name_def}", val)
+          st_pref.set  (           f"{name_def}", val)
           _over = ' (overridden Preferences)'
         _log.cfg("set user ‘%s=%s’ (%s)%s"
           ,         name_def,val, type(val), _over)
@@ -190,14 +183,14 @@ def _parse_general_cfg_kdl2(general_cfg:kdl2.Node,CFG:dict,DEF:dict,st_pref=None
     return None
 
 import copy
-def _parse_keybind_arg2(node:kdl2.Node, CFG:dict, prop_subl={}):
+def _parse_keybind_arg_c(node:ckdl.Node, CFG:dict, prop_subl={}):
   cmd_l   = []
   cmd_o   = [] # original unmodified command for later display purposes
   isChain = False
-  for arg in node.getArgs((...,...)): # Parse arguments
-    tag = clean_name(arg.tag   if hasattr(arg,'tag'  ) else '' )
-    val = clean_cmd (arg.value if hasattr(arg,'value') else arg)
-    val_dirt =       arg.value if hasattr(arg,'value') else arg
+  for arg in node.args: # Parse arguments
+    tag = clean_name(arg.type_annotation if hasattr(arg,'type_annotation') else '' )
+    val_dirt =       arg.value           if hasattr(arg,'value'          ) else arg
+    val = clean_cmd (val_dirt)
     count = 1
     if val == 'chain':
       isChain = True
@@ -223,7 +216,7 @@ def _parse_keybind_arg2(node:kdl2.Node, CFG:dict, prop_subl={}):
       cmd_l.append(cmd )
       cmd_o.append(cmdo)
   return (cmd_l, cmd_o, isChain)
-def _parse_vars_ckdl(node_vars:kdl2.Node,CFG:dict,var_d:dict={}): # TODO update
+def _parse_vars_ckdl(node_vars:ckdl.Node,CFG:dict,var_d:dict={}): # TODO update
   # print(f"var_d pre {var_d}")
   # use var_d from #import key=val props to seed initial values
   pre = CFG['var_def'][0] #‘
@@ -234,35 +227,31 @@ def _parse_vars_ckdl(node_vars:kdl2.Node,CFG:dict,var_d:dict={}): # TODO update
       pre = var_def[0]
       pos = var_def[1]
   var_set = var_d['set'] if 'set' in var_d else dict()
-  for node in node_vars.getAll('vardef'):
-    tag_val = node.name
-    tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
-    val = tag_val.value if hasattr(tag_val,'value') else tag_val
-    if tag: # vardef should have no tags
-      _log.warn("node ‘%s’ has unrecognized tag",node.name)
-      continue
-    for (pkey,tag_val) in child.getProps((...,...)): # parse definition properties
-      tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
-      val = tag_val.value if hasattr(tag_val,'value') else tag_val
-      if pkey == 'pre':
-        pre = val
-      if pkey == 'pos':
-        pos = val
+  for node in node_vars.children:
+    if (cn := clean_name(node.name)) == 'vardef': # get all child nodes = 'vardef'
+      if hasattr(node,'type_annotation'): # vardef should have no tags
+        _log.warn("node ‘%s’ has unrecognized tag (should have none)",node.name)
+        continue
+      for (pkey,tag_val) in node.properties: # parse definition properties
+        tag = tag_val.type_annotation if hasattr(tag_val,'type_annotation') else ''
+        val = tag_val.value           if hasattr(tag_val,'value'          ) else tag_val
+        if pkey == 'pre':
+          pre = val
+        if pkey == 'pos':
+          pos = val
+    elif cn                          == 'varset':
+      if hasattr(node,'type_annotation'): # varset should have no tags
+        _log.warn("node ‘%s’ has unrecognized tag (should have none)",node.name)
+        continue
+      for (key,tag_val) in node.properties: # 2. testvar=⎇ key=value pairs
+        if hasattr(tag_val,'value'): #=(t)⎇ if (t) exists (though shouldn't)
+          val = tag_val.value # ignore tag
+          _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
+            ,      node.name,                               tag_val)
+        else:
+          val = tag_val
+        var_set[key.lower()] = val
   var_def = [pre,pos]
-  for node in node_vars.getAll('varset'):
-    tag_val = node.name
-    tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
-    val = tag_val.value if hasattr(tag_val,'value') else tag_val
-    if tag: # vardef/set should have no tags
-      continue
-    for (key,tag_val) in node.getProps((...,...)): # 2. testvar=⎇ key=value pairs
-      if hasattr(tag_val,'value'): #=(t)⎇ if (t) exists (though shouldn't)
-        val = tag_val.value # ignore tag
-        _log.warn("node ‘%s’ has unrecognized tag in argument ‘%s’"
-          ,      node.name,                               tag_val)
-      else:
-        val = tag_val
-      var_set[key.lower()] = val
   _log.debug("found in vardef¦%s¦ and varset¦%s¦"
     ,                  var_def,         var_set)
   re_flags = 0
@@ -275,14 +264,14 @@ def _parse_vars_ckdl(node_vars:kdl2.Node,CFG:dict,var_d:dict={}): # TODO update
   # print(f"var_d pos {var_d}")
   return var_d
 
-def _parse_keybinds_kdl_c(keybinds:kdl2.Node,CFG:dict,cfgU,var_d:dict={}): # TODO: update
+def _parse_keybinds_kdl_c(keybinds:ckdl.Node,CFG:dict,cfgU,var_d:dict={}): # TODO: update
   var_d_combo = _parse_vars_ckdl(keybinds,CFG,var_d)
   for kb_node in keybinds.nodes: # (Ⓝ)"q" "OpenNameSpace"
     _parse_keybind_kdl_c(keybind=kb_node, CFG=CFG, cfgU=cfgU, var_d=var_d_combo)
-def _parse_keybind_kdl_c(keybind:kdl2.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0), var_d:dict={}): # TODO: update
+def _parse_keybind_kdl_c(keybind:ckdl.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0), var_d:dict={}): # TODO: update
   from NeoVintageous.nv.mappings import mappings_add, mappings_add_text
-  if not (cfgT := type(keybind)) is kdl2.Node:
-    _log.error("Type of ‘keybind’ should be kdl2.Node, not ‘%s’",cfgT)
+  if not (cfgT := type(keybind)) is ckdl.Node:
+    _log.error("Type of ‘keybind’ should be ckdl.Node, not ‘%s’",cfgT)
     return None
   node = keybind                 # (Ⓝ)"q" "OpenNameSpace"
   mode_s = node.tag              # ‘Ⓝ’
@@ -290,15 +279,15 @@ def _parse_keybind_kdl_c(keybind:kdl2.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0),
   children = node.nodes          # either full keybinds or just commands with Chain argument
   cmd_o   = []                   # ‘[OpenNameSpace]’ # original user supplied name
   cmd_txt = []                   # ‘[opennamespace]’
-  if key in ['vardef','varset'] and node.tag is None: # skip variables (parsed earlier)
+  if key in ['vardef','varset'] and node.type_annotation is None: # skip variables (parsed earlier)
     return
   if key == '≠': # skip comment nodes (todo: when lib supports roundtrip, save as actual comments)
     return
   if key == 'let':
-    _parse_let_kdl2(node)
+    _parse_let_kdl_c(node)
     return
   if key == 'set':
-    _parse_set_kdl2(node)
+    _parse_set_kdl_c(node)
     return
   if var_d and var_d['set']:
     # key_old = key # ‘var_name’ → var_value (match ‘var_name’, but need to find value for var_name, so use index to find the ‘(var_name)’ regex match)
@@ -318,9 +307,9 @@ def _parse_keybind_kdl_c(keybind:kdl2.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0),
 
   prop = dict()                  # Parse properties
   prop_rest = dict()             # Properties left from known defaults (e.g., part of Sublime commands)
-  for (pkey,tag_val) in node.getProps((...,...)): # ‘i="✗" d="Close a tab"’
-    tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
-    val = tag_val.value if hasattr(tag_val,'value') else tag_val
+  for (pkey,tag_val) in node.properties: # ‘i="✗" d="Close a tab"’
+    tag = tag_val.type_annotation if hasattr(tag_val,'type_annotation') else ''
+    val = tag_val.value           if hasattr(tag_val,'value'          ) else tag_val
     for dkey,key_abbrev in _keybind_prop.items():
       if dkey == 'file':
         if pkey in key_abbrev: # ['ft','filetype']
@@ -334,19 +323,19 @@ def _parse_keybind_kdl_c(keybind:kdl2.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0),
           prop_rest[pkey] = int(val)
         else:
           prop_rest[pkey] = val
-  (cmd,cmdo,isChain)      = _parse_keybind_arg2(node=node, CFG=CFG, prop_subl=prop_rest) # Parse arguments
+  (cmd,cmdo,isChain)      = _parse_keybind_arg_c(node=node, CFG=CFG, prop_subl=prop_rest) # Parse arguments
   cmd_txt.extend(cmd )
   cmd_o  .extend(cmdo)
   if children and isChain:           # with Chain argument...
     for child in children:         # ...parse children as commands
       prop_rest = dict()
-      for (pkey,tag_val) in child.getProps((...,...)): #
-        tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
-        val = tag_val.value if hasattr(tag_val,'value') else tag_val
+      for (pkey,tag_val) in child.properties: # Parse properties
+        tag = tag_val.type_annotation if hasattr(tag_val,'type_annotation') else ''
+        val = tag_val.value           if hasattr(tag_val,'value'          ) else tag_val
         for dkey,key_abbrev in _keybind_prop.items():
           if pkey not in key_abbrev: # non-specified key=val pairs
             prop_rest[pkey] = val
-      (cmd,cmdo,_) = _parse_keybind_arg2(node=child, CFG=CFG, prop_subl=prop_rest)
+      (cmd,cmdo,_) = _parse_keybind_arg_c(node=child, CFG=CFG, prop_subl=prop_rest)
       cmd_txt.extend(cmd )
       cmd_o  .extend(cmdo)
 
@@ -404,14 +393,14 @@ def _flatten_kdl_gen_c(kdl_dic, key_parent, sep, lvl, ignore):
       yield from flatten_kdl(node_child, key_new, sep=sep,lvl=lvl,ignore=ignore).items()
     if isinstance(doc_node, kdl.Node):
       key_this = key_parent + sep + key if key_parent else key
-      nprops = doc_node.getProps((...,...))
+      nprops = doc_node.properties
       for key,val in nprops:
         key_new = key_this + sep + key if key_this else key
         yield key_new, val
-      nargs = doc_node.getArgs((...,...))
+      nargs = doc_node.args
       for i, arg in enumerate(nargs):
-        # tag = arg.tag   if hasattr(arg,'tag'  ) else ''
-        val = arg.value if hasattr(arg,'value') else arg
+        # tag = arg.type_annotation if hasattr(arg,'type_annotation') else ''
+        val = arg.value           if hasattr(arg,'value'          ) else arg
         if i == 0: # store only the 1st arg without any prefixes
           key_new = key_this
         else:

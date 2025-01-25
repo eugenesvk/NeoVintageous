@@ -428,9 +428,8 @@ def _parse_keybind_kdl(keybind:kdl2.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0), v
     for mode in M_ANY: # TODO: m_inv iteration fails in py3.8
       if mode & m_inv: # todo: store original re matches in text_to_mode to allow roundtrip of modes matching user input
         mode_sym += mode_names[mode][0]
-    s = 's' if len(mode_sym) > 1 else ''
-    _log.warn("Invalid mode%s ‘%s’ in ‘%s’ in node ‘%s’"
-      ,                  s,mode_sym,mode_s,     node)
+    _log.warn(          "Invalid mode%s ‘%s’ in ‘%s’ in node ‘%s’"
+      ,'s' if len(mode_sym) > 1 else '',mode_sym,mode_s,     node)
   if cmd_txt:
     for mode in M_CMDTXT: # iterate over all of the allowed modes
       if mode & modes:  # if it's part of the keybind's modes, register the key

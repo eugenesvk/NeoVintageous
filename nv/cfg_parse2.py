@@ -537,7 +537,6 @@ def _parse_keybind_kdl(keybind:kdl.Node, CFG:dict, cfgU, map_add:Callable, gmode
       _parse_keybind_kdl(keybind=child, CFG=CFG, cfgU=cfgU, map_add=map_add, gmodes=modes, var_d=var_d)
 
 def _flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore):
-  kdl = kdl2
   lvl += 1
   if isinstance(kdl_dic, dict):
     d = kdl_dic

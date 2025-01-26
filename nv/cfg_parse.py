@@ -106,6 +106,6 @@ def _parse_line(line: str):
 
         return cmdline
   except Exception as e:
-    message('error detected while processing {} at line "{}":\n{}'.format(_file_name(), line.rstrip(), str(e)))
+    message('error detected while processing {} at line "{}":\n{}'.format('.neovintageousrc', line.rstrip(), str(e)))
 
   return None

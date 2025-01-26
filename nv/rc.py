@@ -19,16 +19,10 @@ _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
 
 
-def _file_name() -> str:
-    return '.neovintageousrc'
-def _file_name_config_kdl() -> str:
-    return f"{PACKAGE_NAME}.kdl"
-
-
 def _file_path() -> str:
-    return os.path.join(sublime.packages_path(), 'User', _file_name())
+    return os.path.join(sublime.packages_path(), 'User', '.neovintageousrc')
 def _file_path_config_kdl() -> str:
-    return os.path.join(sublime.packages_path(), 'User', _file_name_config_kdl())
+    return os.path.join(sublime.packages_path(), 'User', f"{PACKAGE_NAME}.kdl")
 
 
 def open_rc(window) -> None:

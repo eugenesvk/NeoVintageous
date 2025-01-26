@@ -206,7 +206,7 @@ def _parse_general_g_kdl(general_g:kdl.Node,CFG:dict,DEF:dict):
       # print(f"loading source first ‘{val}’")
       _pre_load(win,val)
   for node in general_g.nodes: # set relativenumber=true
-    _parse_general_cfg_kdl1(general_cfg=node,CFG=CFG,DEF=DEF,st_pref=st_pref)
+    _parse_general_cfg_kdl(general_cfg=node,CFG=CFG,DEF=DEF,st_pref=st_pref)
 
 def _parse_set_kdl(node:kdl.Node,cfg='') -> None:
   from NeoVintageous.nv.ex_cmds import ex_set # inline import to avoid circular dependency errors
@@ -253,7 +253,7 @@ def _parse_let_kdl(node:kdl.Node,cfg='') -> None:
     _log.debug(f"set var from kdl: ¦{pkey}¦=¦{val}¦")
     variables.set(pkey,val)
 
-def _parse_general_cfg_kdl1(general_cfg:kdl.Node,CFG:dict,DEF:dict,st_pref=None) -> None:
+def _parse_general_cfg_kdl(general_cfg:kdl.Node,CFG:dict,DEF:dict,st_pref=None) -> None:
   if not (cfgT := type(general_cfg)) is kdl.Node:
     _log.error("Type of ‘general’ config group should be kdl.Node, not ‘%s’",cfgT)
     return None

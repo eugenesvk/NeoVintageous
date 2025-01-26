@@ -156,8 +156,10 @@ class cfgU(metaclass=Singleton):
             parse_kdl_cfg_1st = parse_kdl_config2 if v_1st == 2 else parse_kdl_config1
             parse_kdl_cfg_2nd = parse_kdl_config1 if v_2nd == 1 else parse_kdl_config2
         else:
-            parse_kdl_cfg_1st = parse_kdl2_config  if v_1st == 2 else parse_kdl_config
-            parse_kdl_cfg_2nd = parse_kdl_config   if v_2nd == 1 else parse_kdl2_config
+            from NeoVintageous.nv.cfg_parse1 import parse_kdl_config as parse_kdl1_config
+            from NeoVintageous.nv.cfg_parse2 import parse_kdl_config as parse_kdl2_config
+            parse_kdl_cfg_1st = parse_kdl2_config if v_1st == 2 else parse_kdl1_config
+            parse_kdl_cfg_2nd = parse_kdl1_config if v_2nd == 1 else parse_kdl2_config
         try:
             parse_kdl_cfg_1st(cfg, cfg_f, kdl_docs)
             return kdl_docs
@@ -281,7 +283,7 @@ def _import_plugins_with_user_data_kdl():
     from NeoVintageous.nv import ui
     ui.reload_with_user_data_kdl()
 
-from NeoVintageous.nv.cfg_parse import parse_kdl_config, parse_kdl2_config, _libckdl
+from NeoVintageous.nv.cfg_parse import _libckdl
 # def load_cfgU() -> None:
 #     """load alternative user config file to a global class and add a watcher event to track changes"""
 #     global cfgU

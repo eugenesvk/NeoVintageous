@@ -105,7 +105,10 @@ def parse_ckdl_config(v,cfg:str, cfg_p:Path, kdl_docs:list    , enclose_in:str='
   doc = ckdl.parse(cfg,version=v) # version=None or "detect" to support both
   for node in doc.nodes:
     clean_node_name_c(node)
-  for node in doc.nodes: # Check imports
+  nodes_iter = doc.nodes
+  if enclose_in and len(nodes_iter) > 0:
+    nodes_iter = nodes_iter[0].children
+  for node in list(nodes_iter): # Check imports (in children if enclosed)
     if node.name in ["import"] and node.type_annotation is None: # match untagged import node ()
       import_var = {}
       for key, val in node.properties.items():
@@ -152,6 +155,7 @@ def parse_ckdl_config(v,cfg:str, cfg_p:Path, kdl_docs:list    , enclose_in:str='
           #todo# sublime.error_message(f"{PACKAGE_NAME}:\nCouldn't find config\n{cfg_import_f}\nimported in\n{cfg_p}")
           break
         parse_ckdl_config(v,cfg_import, cfg_import_f, kdl_docs, enclose_in=tag, var_d=var_d_new)
+      nodes_iter.remove(node)
   kdl_docs += [(doc,var_d)]
   return (doc,var_d)
 

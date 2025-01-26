@@ -7,7 +7,7 @@ from pathlib import Path
 import sublime
 import sublime_plugin
 
-import NeoVintageous.dep.kdl2 as kdl2
+import NeoVintageous.dep.kdl2 as kdl
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.modes import Mode, Mode as M, text_to_modes, mode_names, MODE_NAMES_OLD, M_EVENT, M_ANY, M_CMDTXT
 from NeoVintageous.nv.cfg import _keybind_prop, re_count, re_subl_tag, re_filetype
@@ -20,43 +20,43 @@ _log.setLevel(DEFAULT_LOG_LEVEL)
 from typing import Union
 import typing as tp
 
-def node_tag_val(node:kdl2.Node):
+def node_tag_val(node:kdl.Node):
   tag = node.tag   if hasattr(node,'tag'  ) else ''
   val = node.value if hasattr(node,'value') else node.name
   return (tag,val)
-def node_tag(node:kdl2.Node) -> Union[str, None]:
+def node_tag(node:kdl.Node) -> Union[str, None]:
   return node.tag
-def children(node:kdl2.Node) -> kdl2.Node:
+def children(node:kdl.Node) -> kdl.Node:
   for child in node.nodes:
     yield child
-t_parent = Union[kdl2.Document, kdl2.Node]
+t_parent = Union[kdl.Document, kdl.Node]
 def node_get(doc_or_node:t_parent, name:str, df=None):
   return doc_or_node.get(name, df)
 
-def arg_tag_val           (node:kdl2.Node):
+def arg_tag_val           (node:kdl.Node):
   for arg            in node.getArgs ((...,...)): # Parse arguments
     tag =            arg.tag       if hasattr(arg    ,'tag'  ) else ''
     val =            arg.value     if hasattr(arg    ,'value') else arg
     yield (arg,tag,val)
-def arg_tag_val_clean     (node:kdl2.Node):
+def arg_tag_val_clean     (node:kdl.Node):
   for arg            in node.getArgs ((...,...)): # Parse arguments
     tag = clean_name(arg.tag       if hasattr(arg    ,'tag'  ) else '' )
     val = clean_cmd (arg.value     if hasattr(arg    ,'value') else arg)
     yield (arg,tag,val)
-def prop_key_tag_val      (node:kdl2.Node):
+def prop_key_tag_val      (node:kdl.Node):
   for (pkey,tag_val) in node.getProps((...,...)): # Parse properties
     tag =            tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
     val =            tag_val.value if hasattr(tag_val,'value') else tag_val
     yield (pkey,tag_val,tag,val)
-def prop_key_tag_val_clean(node:kdl2.Node):
+def prop_key_tag_val_clean(node:kdl.Node):
   for (pkey,tag_val) in node.getProps((...,...)): # Parse properties
     tag = clean_name(tag_val.tag   if hasattr(tag_val,'tag'  ) else ''     )
     val = clean_cmd (tag_val.value if hasattr(tag_val,'value') else tag_val)
     yield (pkey,tag_val,tag,val)
 
-def get_tag_val_warn(tag_val:kdl2.Value,logger:logging.Logger=None,node_name:str=''):
+def get_tag_val_warn(tag_val:kdl.Value,logger:logging.Logger=None,node_name:str=''):
   """split KDL2 value into tag and value, and warn if tag exists"""
-  if isinstance(tag_val, kdl2.Value):
+  if isinstance(tag_val, kdl.Value):
     tag = tag_val.tag
     val = tag_val.value
     if tag is not None:
@@ -67,20 +67,20 @@ def get_tag_val_warn(tag_val:kdl2.Value,logger:logging.Logger=None,node_name:str
     val = tag_val
   return (tag,val)
 
-def _node_has_arg(node:kdl2.Node) -> bool:
+def _node_has_arg(node:kdl.Node) -> bool:
   has_arg = False
   for arg in node.getArgs((...,...)):
    has_arg = True
    break
   return has_arg
-def _node_has_prop(node:kdl2.Node) -> bool:
+def _node_has_prop(node:kdl.Node) -> bool:
   has_prop = False
   for (key, val) in node.getProps((...,...)):
    has_prop = True
    break
   return has_prop
 
-def clean_node_name(node:kdl2.Node,rec:bool=True,parent:Union[str,None]=None): # recursively clean KDL2 node names (remove separators ␠⭾-_. etc)
+def clean_node_name(node:kdl.Node,rec:bool=True,parent:Union[str,None]=None): # recursively clean KDL2 node names (remove separators ␠⭾-_. etc)
   node.name = re.sub(node_separator,'',node.name.casefold())
   if rec:
     if   node.name in ['keybind','rc']: # don't normalize keybind/init Ex commands
@@ -148,14 +148,14 @@ def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d
       parse_kdl_config(cfg_import, cfg_import_f, kdl_docs, enclose_in=tag, var_d=var_d_new)
     return None # consume imports, successfull will be stored as separate docs, so drop kdl_py_obj
 
-  parseConfig = kdl2.ParseConfig(
-    nativeUntaggedValues  =True         #|True| produce native Py objects (str int float bool None) for ()untagged values, or kdl-Py objects (kdl2.String kdl2.Decimal...)
+  parseConfig = kdl.ParseConfig(
+    nativeUntaggedValues  =True         #|True| produce native Py objects (str int float bool None) for ()untagged values, or kdl-Py objects (kdl.String kdl.Decimal...)
     ,nativeTaggedValues   =True         #|True| produce native Py objects for (tagged)values for predefined tags like i8..u64 f32 uuid url regex
     #,valueConverters     = {"i":fn_i}  # A dictionary of tag->converter functions
     ,nodeConverters       = {(None,"import"):fn_import,(None,"Import"):fn_import # match untagged import node ()
       } # A dictionary of NodeKey->converter functions
   )
-  printConfig = kdl2.PrintConfig(
+  printConfig = kdl.PrintConfig(
     indent              ="  "   #|"\t"|
     ,semicolons         =False  #|False|
     ,printNulls         =True   #|True| if False, skip over any "null"/None arg/props. Corrupts docs that use "null" keyword intentionally, but can be useful if you'd prefer to use a None value as a signal that the argument has been removed
@@ -163,7 +163,7 @@ def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d
     ,respectRadix       =True   #|True| ≈respectStringType, output numbers as the radix they were in the input, like 0x1b for hex numbers. False: print decimal numbers (kdl-Py)
     ,exponent           ="e"    #|e| character to use for the exponent part of decimal numbers, when printed with scientific notation, "e" or "E" (kdl-Py)
   )
-  doc = kdl2.Parser(parseConfig, printConfig).parse(cfg)
+  doc = kdl.Parser(parseConfig, printConfig).parse(cfg)
   for node in doc.nodes:
     clean_node_name2(node)
   # print(type(doc),'\n',doc)
@@ -171,13 +171,13 @@ def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d
 
   return (doc,var_d)
 
-def _parse_rc_g_kdl(rc_g:kdl2.Node):
+def _parse_rc_g_kdl(rc_g:kdl.Node):
   win = sublime.active_window()
   for node in rc_g.nodes: # r#":set invrelativenumber"#
     _parse_rc_cfg_kdl(win,rc_cfg=node)
-def _parse_rc_cfg_kdl(win,rc_cfg:kdl2.Node) -> None:
-  if not (cfgT := type(rc_cfg)) is kdl2.Node:
-    _log.error("Type of ‘rc’ config group should be kdl2.Node, not ‘%s’",cfgT)
+def _parse_rc_cfg_kdl(win,rc_cfg:kdl.Node) -> None:
+  if not (cfgT := type(rc_cfg)) is kdl.Node:
+    _log.error("Type of ‘rc’ config group should be kdl.Node, not ‘%s’",cfgT)
     return None
   node = rc_cfg               # r#":set invrelativenumber"#
   if not len(node.entries) == 0:
@@ -189,7 +189,7 @@ def _parse_rc_cfg_kdl(win,rc_cfg:kdl2.Node) -> None:
     _source(win, [opt_name], nodump=True)
     return None
 
-def _parse_general_g_kdl(general_g:kdl2.Node,CFG:dict,DEF:dict):
+def _parse_general_g_kdl(general_g:kdl.Node,CFG:dict,DEF:dict):
   win = sublime.active_window()
   st_pref = sublime.load_settings('Preferences.sublime-settings')
   if (src_pre := general_g.get((None,"source"))):
@@ -208,7 +208,7 @@ def _parse_general_g_kdl(general_g:kdl2.Node,CFG:dict,DEF:dict):
   for node in general_g.nodes: # set relativenumber=true
     _parse_general_cfg_kdl2(general_cfg=node,CFG=CFG,DEF=DEF,st_pref=st_pref)
 
-def _parse_set_kdl(node:kdl2.Node,cfg='') -> None:
+def _parse_set_kdl(node:kdl.Node,cfg='') -> None:
   from NeoVintageous.nv.ex_cmds import ex_set # inline import to avoid circular dependency errors
   args = dict()
   if (win := sublime.active_window()):
@@ -243,7 +243,7 @@ def _parse_set_kdl(node:kdl2.Node,cfg='') -> None:
     ex_set(option=opt_key,value=opt_val, **args)
 
 from NeoVintageous.nv import variables
-def _parse_let_kdl(node:kdl2.Node,cfg='') -> None:
+def _parse_let_kdl(node:kdl.Node,cfg='') -> None:
   if not _node_has_prop(node):
     _log.warn("%sconfig has a ‘let’ command without var=value properties (%s)",
       f'‘{cfg}’ ' if cfg else '',                                     node)
@@ -253,9 +253,9 @@ def _parse_let_kdl(node:kdl2.Node,cfg='') -> None:
     _log.debug(f"set var from kdl: ¦{pkey}¦=¦{val}¦")
     variables.set(pkey,val)
 
-def _parse_general_cfg_kdl2(general_cfg:kdl2.Node,CFG:dict,DEF:dict,st_pref=None) -> None:
-  if not (cfgT := type(general_cfg)) is kdl2.Node:
-    _log.error("Type of ‘general’ config group should be kdl2.Node, not ‘%s’",cfgT)
+def _parse_general_cfg_kdl2(general_cfg:kdl.Node,CFG:dict,DEF:dict,st_pref=None) -> None:
+  if not (cfgT := type(general_cfg)) is kdl.Node:
+    _log.error("Type of ‘general’ config group should be kdl.Node, not ‘%s’",cfgT)
     return None
   node = general_cfg          # set relativenumber=true
   opt_name    = node.name     # ‘set’
@@ -346,7 +346,7 @@ def _parse_general_cfg_kdl2(general_cfg:kdl2.Node,CFG:dict,DEF:dict,st_pref=None
     return None
 
 import copy
-def _parse_keybind_arg(node:kdl2.Node, CFG:dict, prop_subl={}):
+def _parse_keybind_arg(node:kdl.Node, CFG:dict, prop_subl={}):
   cmd_l   = []
   cmd_o   = [] # original unmodified command for later display purposes
   isChain = False
@@ -379,7 +379,7 @@ def _parse_keybind_arg(node:kdl2.Node, CFG:dict, prop_subl={}):
       cmd_l.append(cmd )
       cmd_o.append(cmdo)
   return (cmd_l, cmd_o, isChain)
-def _parse_vars_kdl(node_vars:kdl2.Node,CFG:dict,var_d:dict={}):
+def _parse_vars_kdl(node_vars:kdl.Node,CFG:dict,var_d:dict={}):
   # print(f"var_d pre {var_d}")
   # use var_d from #import key=val props to seed initial values
   pre = CFG['var_def'][0] #‘
@@ -431,14 +431,14 @@ def _parse_vars_kdl(node_vars:kdl2.Node,CFG:dict,var_d:dict={}):
   # print(f"var_d pos {var_d}")
   return var_d
 
-def _parse_keybinds_kdl(keybinds:kdl2.Node,CFG:dict,cfgU,var_d:dict={}):
+def _parse_keybinds_kdl(keybinds:kdl.Node,CFG:dict,cfgU,var_d:dict={}):
   var_d_combo = _parse_vars_kdl(keybinds,CFG,var_d)
   from NeoVintageous.nv.mappings import mappings_add_text
   for kb_node in keybinds.nodes: # (Ⓝ)"q" "OpenNameSpace"
     _parse_keybind_kdl(keybind=kb_node, CFG=CFG, cfgU=cfgU, map_add=mappings_add_text, var_d=var_d_combo)
-def _parse_keybind_kdl(keybind:kdl2.Node, CFG:dict, cfgU, map_add:Callable, gmodes:Mode=Mode(0),var_d:dict={}):
-  if not (cfgT := type(keybind)) is kdl2.Node:
-    _log.error("Type of ‘keybind’ should be kdl2.Node, not ‘%s’",cfgT)
+def _parse_keybind_kdl(keybind:kdl.Node, CFG:dict, cfgU, map_add:Callable, gmodes:Mode=Mode(0),var_d:dict={}):
+  if not (cfgT := type(keybind)) is kdl.Node:
+    _log.error("Type of ‘keybind’ should be kdl.Node, not ‘%s’",cfgT)
     return None
   node = keybind                 # (Ⓝ)"q" "OpenNameSpace"
   mode_s = node.tag              # ‘Ⓝ’
@@ -571,16 +571,16 @@ def _flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore):
         else:
           key_new = key_this + str(i+1) # add a numeric prefix
         yield key_new, val
-def flatten_kdl(kdl_dic:Union[kdl2.Document,kdl2.Node,dict], key_parent:str = '', sep:str = '.', lvl:int=0, ignore:dict={1:[],2:[]}):
+def flatten_kdl(kdl_dic:Union[kdl.Document,kdl.Node,dict], key_parent:str = '', sep:str = '.', lvl:int=0, ignore:dict={1:[],2:[]}):
   """convert KDL document or a dictionary of KDL nodes into a flat dictionary, ignoring 2nd+ argument, but retaining key=val properties"""
   return dict(_flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore))
 
 def parse_kdl_doc(s,v_untag:bool=False,v_tag:bool=False):
-  parseConfig = kdl2.ParseConfig(
+  parseConfig = kdl.ParseConfig(
     nativeUntaggedValues    = v_untag  #|True| produce native Py objects (str int float bool None) untagged values (no (foo)prefix), or kdl-Py objects (kdl.String kdl.Decimal...)
     ,nativeTaggedValues     = v_tag    #|True| produce native Py objects for (tagged)values for predefined tags like i8..u64 f32 uuid url regex
   )
-  printConfig = kdl2.PrintConfig(
+  printConfig = kdl.PrintConfig(
     indent             ="  "   #|"\t"|
     ,semicolons        =False  #|False|
     ,printNulls        =True   #|True| if False, skip over any "null"/None arg/props. Corrupts docs that use "null" keyword intentionally, but can be useful if you'd prefer to use a None value as a signal that the argument has been removed
@@ -588,4 +588,4 @@ def parse_kdl_doc(s,v_untag:bool=False,v_tag:bool=False):
     ,respectRadix      =True   #|True| ≈respectStringType, output numbers as the radix they were in the input, like 0x1b for hex numbers. False: print decimal numbers (kdl-Py)
     ,exponent          ="e"    #|e| character to use for the exponent part of decimal numbers, when printed with scientific notation, "e" or "E" (kdl-Py)
   )
-  return kdl2.Parser(parseConfig, printConfig).parse(s)
+  return kdl.Parser(parseConfig, printConfig).parse(s)

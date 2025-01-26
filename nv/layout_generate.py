@@ -199,7 +199,7 @@ def expand(string):
 # Command to generate the KDL version of the default keymap
 import NeoVintageous.dep.kdl as kdl
 import NeoVintageous.dep.kdl2 as kdl2
-from NeoVintageous.nv.cfg_parse import parse_kdl_doc
+from NeoVintageous.nv.cfg_parse2 import parse_kdl_doc
 
 from NeoVintageous.nv.modes import Mode as M, M_ANY, INSERT,INTERNAL_NORMAL,NORMAL,OPERATOR_PENDING,REPLACE,SELECT,UNKNOWN,VISUAL,VISUAL_BLOCK,VISUAL_LINE
 from NeoVintageous.nv.modes import mode_names, mode_names_rev, mode_full_to_abbrev, mode_group_sort, MODE_NAMES_OLD, MODE_HELP

@@ -6,6 +6,9 @@ import json
 import pickle
 from pathlib import Path
 from typing import List, Union
+# from time import monotonic_ns as ttime
+# from math import pow
+# ns = pow(10,9) # nanosecond, which 'monotonic_ns' are measured in
 
 import sublime
 
@@ -83,8 +86,14 @@ def _load() -> None:
     except FileNotFoundError:
         _log.info('%s file not found', _file_path())
     # load_cfgU()
+    # t0  = ttime()
     if not cfgU.load_cache():
+        # t1=ttime() ;print("⏲✗load_kdl_cache ∑{:.2f}s".format((t1-t0)/ns)); t0=ttime()
         cfgU.load_kdl()
+        # t1=ttime() ;print("⏲✓load_kdl ∑{:.2f}s".format((t1-t0)/ns))
+    else:
+        pass
+        # t1=ttime() ;print("⏲✓load_kdl_cache ∑{:.2f}s".format((t1-t0)/ns))
 
 
 from NeoVintageous.plugin import PACKAGE_NAME

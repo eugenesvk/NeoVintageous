@@ -3,13 +3,14 @@ import logging
 import os
 import re
 import json
+import pickle
 from pathlib import Path
 from typing import List, Union
 
 import sublime
 
 from NeoVintageous.nv.polyfill import nv_message as message
-from NeoVintageous.nv.helper import Singleton, file_hash
+from NeoVintageous.nv.helper import Singleton, file_hash, fname
 import NeoVintageous.nv.cfg_parse
 from NeoVintageous.nv.cfg_parse import _pre_load, _source, CFG_CACHE
 
@@ -82,7 +83,8 @@ def _load() -> None:
     except FileNotFoundError:
         _log.info('%s file not found', _file_path())
     # load_cfgU()
-    cfgU.load_kdl()
+    if not cfgU.load_cache():
+        cfgU.load_kdl()
 
 
 from NeoVintageous.plugin import PACKAGE_NAME
@@ -97,6 +99,8 @@ from NeoVintageous.nv import cfg as nvcfg
 class cfgU(metaclass=Singleton):
     cfg_p = _file_path_config_kdl()
     cfg_f = Path(cfg_p).expanduser()
+    cfg_cache_p = os.path.join(sublime.cache_path(), PACKAGE_NAME)
+    cfg_cache_f = Path(cfg_cache_p).expanduser() / "cfg_cache.pickle"
 
     text_commands = dict()
     for _m in M_CMDTXT:
@@ -283,6 +287,7 @@ class cfgU(metaclass=Singleton):
             cfg_parse._parse_keybinds_kdl(keybinds=keybind,CFG=nvcfg.CFG,cfgU=cfgU,var_d=var_d)
 
         _import_plugins_with_user_data_kdl()
+        cfgU.save_cache()
 
     @staticmethod
     def unload_kdl():

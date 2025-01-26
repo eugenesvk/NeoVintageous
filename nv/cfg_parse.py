@@ -108,11 +108,11 @@ def parse_ckdl_config(v,cfg:str, cfg_p:Path, kdl_docs:list    , enclose_in:str='
   kdl_docs += [(doc,var_d)]
   for node in doc.nodes: # Check imports
     if node.name.lower() in ["import"] and node.type_annotation is None: # match untagged import node ()
-      # import_var = {}
-      # for key, val in node.properties.items():
-      #   if hasattr(val,'type_annotation') and val.type_annotation is not None:
-      #     import_var[key] = val ;print(f"added to import_var {key}={val}")
-      # _log.info("%s",import_var)
+      import_var = {}
+      for key, val in node.properties.items():
+        if hasattr(val,'type_annotation') and val.type_annotation is not None:
+          import_var[key] = val
+      _log.info("%s",import_var)
 
       var_set   = dict()
       var_d_new = dict()

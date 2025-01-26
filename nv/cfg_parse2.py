@@ -167,7 +167,7 @@ def parse_kdl_config(cfg:str, cfg_p:Path, kdl_docs:list, enclose_in:str='',var_d
   )
   doc = kdl.Parser(parseConfig, printConfig).parse(cfg)
   for node in doc.nodes:
-    clean_node_name2(node)
+    clean_node_name(node)
   # print(type(doc),'\n',doc)
   kdl_docs += [(doc,var_d)] # append parsed doc to the list
 

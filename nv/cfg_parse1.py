@@ -61,8 +61,7 @@ def get_tag_val_warn(tag_val:kdl.Value,logger:logging.Logger=None,node_name:str=
     tag = tag_val.tag
     val = tag_val.value
     if logger:
-      logger.warn("node ‘%s’ has unrecognized tag in value ‘%s’"
-        ,        node_name,                           tag_val)
+      logger.warn("node ‘%s’ has unrecognized tag in value ‘%s’",node_name,tag_val)
   else:
     tag = None
     val = tag_val

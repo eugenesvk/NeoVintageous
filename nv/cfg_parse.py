@@ -109,3 +109,5 @@ def _parse_line(line: str):
     message('error detected while processing {} at line "{}":\n{}'.format('.neovintageousrc', line.rstrip(), str(e)))
 
   return None
+
+CFG_CACHE = {"file":dict(), "data":dict()}

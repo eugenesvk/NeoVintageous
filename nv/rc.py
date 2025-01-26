@@ -9,9 +9,9 @@ from typing import List, Union
 import sublime
 
 from NeoVintageous.nv.polyfill import nv_message as message
-from NeoVintageous.nv.helper import Singleton
+from NeoVintageous.nv.helper import Singleton, file_hash
 import NeoVintageous.nv.cfg_parse
-from NeoVintageous.nv.cfg_parse import _pre_load, _source
+from NeoVintageous.nv.cfg_parse import _pre_load, _source, CFG_CACHE
 
 
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
@@ -114,6 +114,7 @@ class cfgU(metaclass=Singleton):
             except FileNotFoundError as e:
                 sublime.error_message(f"{PACKAGE_NAME}:\nTried and failed to load\n{cfg_f}")
                 return kdl_docs
+            CFG_CACHE['file'][cfg_f] = file_hash(cfg_f)
         else:
             _log.info("Couldn't find ‘%s’",cfg_p) # config file is optional
             return kdl_docs

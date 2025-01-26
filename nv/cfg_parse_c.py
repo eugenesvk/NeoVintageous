@@ -514,7 +514,7 @@ def _parse_keybind_kdl(keybind:kdl.Node, CFG:dict, cfgU, map_add:Callable, gmode
   if cmd_txt:
     for mode in M_CMDTXT: # iterate over all of the allowed modes
       if mode & modes:  # if it's part of the keybind's modes, register the key
-        cfgU.text_commands[mode][key] = cmd_txt
+        cfgU.text_commands[mode][key] = {"cmd":cmd_txt,"cmd_o":cmd_o,"prop":prop}
         map_add(mode=MODE_NAMES_OLD[mode], key=key, cmd=cmd_txt, cmd_o=cmd_o, prop=prop)
         # print(f"kb map+ ({mode}){key}={cmd_txt} with {prop}")
   if children and not isChain:       # without Chain argument...

@@ -20,6 +20,10 @@ _log.setLevel(DEFAULT_LOG_LEVEL)
 from typing import Callable, Generator, Union, Tuple
 import typing as tp
 
+def node_tag_val(node:ckdl.Node) -> Tuple[str,t_ckdl_val]:
+  tag = node.type_annotation if hasattr(node,'type_annotation') else ''
+  val = node.value           if hasattr(node,'value'          ) else node.name
+  return (tag,val)
 def node_tag(node:ckdl.Node) -> Union[str, None]:
   return node.type_annotation
 def children(node:ckdl.Node) -> ckdl.Node:

@@ -20,6 +20,10 @@ _log.setLevel(DEFAULT_LOG_LEVEL)
 from typing import Union
 import typing as tp
 
+def node_tag_val(node:kdl2.Node):
+  tag = node.tag   if hasattr(node,'tag'  ) else ''
+  val = node.value if hasattr(node,'value') else node.name
+  return (tag,val)
 def node_tag(node:kdl2.Node) -> Union[str, None]:
   return node.tag
 def children(node:kdl2.Node) -> kdl2.Node:

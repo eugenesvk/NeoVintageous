@@ -33,9 +33,7 @@ def reload_with_user_data_kdl() -> None:
     if hasattr(cfgU,'kdl') and (cfg := cfgU.kdl.get('mark',None)): # skip on initial import when Plugin API isn't ready, so no settings are loaded
         _log.debug("@marks: Parsing config")
         for node in cfgU.cfg_parse.children(cfg): # back "'" "`"
-            tag_val = node.name
-            tag = tag_val.tag   if hasattr(tag_val,'tag'  ) else ''
-            val = tag_val.value if hasattr(tag_val,'value') else tag_val
+            (tag, val) = cfgU.cfg_parse.node_tag_val(node)
             cfg_key = val
             if tag:
                 _log.warn("node ‘%s’ has unrecognized tag, skipping",node.name)

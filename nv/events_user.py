@@ -113,7 +113,7 @@ def reload_with_user_data_kdl() -> None:
       # 2. Parse node children : {(os)exe arg;}
       for node_cmd in cfgU.cfg_parse.children(node):
         cmf_full = None
-        tag_os = node_cmd.tag  if hasattr(node_cmd,'tag' ) else ''
+        (tag_os, val) = cfgU.cfg_parse.node_tag_val(node_cmd)
         exe    = node_cmd.name
         if tag_os:
           if (os := OSrev.get(tag_os,None)):

@@ -103,6 +103,14 @@ class cfgU(metaclass=Singleton):
         text_commands[_m] = dict()
 
     @staticmethod
+    def save_cache():
+        os.makedirs(cfgU.cfg_cache_p, exist_ok=True)
+        CFG_CACHE['kdl'          ] = cfgU.kdl
+        CFG_CACHE['flat'         ] = cfgU.flat
+        CFG_CACHE['text_commands'] = cfgU.text_commands
+        with open(cfgU.cfg_cache_f,'wb') as fh:
+            pickle.dump(CFG_CACHE, fh, protocol=pickle.HIGHEST_PROTOCOL)
+            _log.debug("pickled CFG_CACHE to %s @%s",cfgU.cfg_cache_f,fname())
     def read_kdl_file() -> List: #List[(kdl1|kdl2|ckdl.Document, dict)]
         cfg_p = cfgU.cfg_p
         cfg_f = cfgU.cfg_f

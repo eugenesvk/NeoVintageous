@@ -557,3 +557,15 @@ def _flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore):
 def flatten_kdl(kdl_dic:Union[ckdl.Document,ckdl.Node,dict], key_parent:str = '', sep:str = '.', lvl:int=0, ignore:dict={1:[],2:[]}):
   """convert KDL document or a dictionary of KDL nodes into a flat dictionary, ignoring 2nd+ argument, but retaining key=val properties"""
   return dict(_flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore))
+
+def parse_kdl_doc(s,v_untag:bool=False,v_tag:bool=False):
+  return ckdl.parse(s,version=2) # version=None or "detect" to support both
+def print_kdl_doc(doc:ckdl.Document):
+  printConfig = ckdl.EmitterOptions(
+    indent            =2                                            #≝4
+    ,escape_mode      =ckdl.EscapeMode.default                      #minimal control newline tab ascii_mode defaul                    Which characters should be escaped in regular strings
+    ,identifier_mode  =ckdl.IdentifierMode.prefer_bare_identifiers  #prefer_bare_identifiers quote_all_identifiers ascii_identifiers  How should identifiers (i.e., node names, type annotations and property keys) be rendered
+    ,float_mode       =ckdl.FloatMode(always_write_decimal_point=None, always_write_decimal_point_or_exponent=None, capital_e=None, exponent_plus=None, plus=None, min_exponent=None) #How exactly should doubles be formatted
+    ,version          =2  #KDL version to emit
+  )
+  return doc.dump(printConfig)

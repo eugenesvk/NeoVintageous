@@ -468,3 +468,19 @@ def _flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore):
 def flatten_kdl(kdl_dic:Union[kdl1.Document,kdl1.Node,dict], key_parent:str = '', sep:str = '.', lvl:int=0, ignore:dict={1:[],2:[]}):
   """convert KDL document or a dictionary of KDL nodes into a flat dictionary, ignoring 2nd+ argument, but retaining key=val properties"""
   return dict(_flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore))
+
+def parse_kdl_doc(s,v_untag:bool=False,v_tag:bool=False):
+  parseConfig = kdl.ParseConfig(
+    nativeUntaggedValues    = v_untag  #|True| produce native Py objects (str int float bool None) untagged values (no (foo)prefix), or kdl-Py objects (kdl.String kdl.Decimal...)
+    ,nativeTaggedValues     = v_tag    #|True| produce native Py objects for (tagged)values for predefined tags like i8..u64 f32 uuid url regex
+  )
+  printConfig = kdl.PrintConfig(
+    indent              ="  "   #|"\t"|
+    ,semicolons         =False  #|False|
+    ,printNullArgs      =True   #|True| if False, skip over any "null"/None arguments. Corrupts docs that use "null" keyword intentionally, but can be useful if you'd prefer to use a None value as a signal that the argument has been removed
+    ,printNullProps     =True   #|True| =printNullArgs, but applies to properties
+    ,respectStringType  =True   #|True| output strings as the same type they were in the input, either raw (r#"foo"#) or normal ("foo") (only kdl-Py, not native ones (e.g, set nativeUntaggedValues=False))
+    ,respectRadix       =True   #|True| ≈respectStringType, output numbers as the radix they were in the input, like 0x1b for hex numbers. False: print decimal numbers (kdl-Py)
+    ,exponent           ="e"    #|e| character to use for the exponent part of decimal numbers, when printed with scientific notation, "e" or "E" (kdl-Py)
+  )
+  return kdl.Parser(parseConfig, printConfig).parse(s)

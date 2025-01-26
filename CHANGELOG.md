@@ -15,6 +15,9 @@
   <!-- - __Security__ -->
   <!--   + 🔒️ vulnerabilities -->
 
+  - __Added__
+    + ✨ config cache to speed up loading (more relevant for older slow pykdl parsers)
+
 [0.97.1352]: https://github.com/eugenesvk/NeoVintageous/compare/0.97.1352...HEAD
 ## [0.97.1352]
   - __Added__

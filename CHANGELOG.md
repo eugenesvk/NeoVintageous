@@ -1,6 +1,6 @@
 # Changelog
 
-[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.97.1352...HEAD
+[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.971.1352...HEAD
 ## [Unreleased]
   <!-- - __Added__ -->
   <!--   + ✨ new features -->
@@ -15,6 +15,8 @@
   <!-- - __Security__ -->
   <!--   + 🔒️ vulnerabilities -->
 
+[0.971.1352]: https://github.com/eugenesvk/NeoVintageous/compare/0.971.1352...HEAD
+## [0.971.1352]
   - __Added__
     + ✨ config cache to speed up loading (more relevant for older slow pykdl parsers)
 

@@ -1,7 +1,7 @@
 import re
 import json
 import logging
-from typing  import Union
+from typing  import Union, Callable
 from pathlib import Path
 
 import sublime
@@ -331,10 +331,10 @@ def _parse_vars_kdl(node_vars:ckdl.Node,CFG:dict,var_d:dict={}): # TODO update
 
 def _parse_keybinds_kdl(keybinds:ckdl.Node,CFG:dict,cfgU,var_d:dict={}): # TODO: update
   var_d_combo = _parse_vars_kdl(keybinds,CFG,var_d)
+  from NeoVintageous.nv.mappings import mappings_add_text
   for kb_node in keybinds.children: # (Ⓝ)"q" "OpenNameSpace"
-    _parse_keybind_kdl(keybind=kb_node, CFG=CFG, cfgU=cfgU, var_d=var_d_combo)
-def _parse_keybind_kdl(keybind:ckdl.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0), var_d:dict={}): # TODO: update
-  from NeoVintageous.nv.mappings import mappings_add, mappings_add_text
+    _parse_keybind_kdl(keybind=kb_node, CFG=CFG, cfgU=cfgU, map_add=mappings_add_text, var_d=var_d_combo)
+def _parse_keybind_kdl(keybind:ckdl.Node, CFG:dict, cfgU, map_add:Callable, gmodes:Mode=Mode(0),var_d:dict={}):
   if not (cfgT := type(keybind)) is ckdl.Node:
     _log.error("Type of ‘keybind’ should be ckdl.Node, not ‘%s’",cfgT)
     return None
@@ -426,11 +426,11 @@ def _parse_keybind_kdl(keybind:ckdl.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0), v
     for mode in M_CMDTXT: # iterate over all of the allowed modes
       if mode & modes:  # if it's part of the keybind's modes, register the key
         cfgU.text_commands[mode][key] = cmd_txt
-        mappings_add_text(mode=MODE_NAMES_OLD[mode], key=key, cmd=cmd_txt, cmd_o=cmd_o, prop=prop)
+        map_add(mode=MODE_NAMES_OLD[mode], key=key, cmd=cmd_txt, cmd_o=cmd_o, prop=prop)
         # print(f"kb map+ ({mode}){key}={cmd_txt} with {prop}")
   if children and not isChain:       # without Chain argument...
     for child in children:         # ...parse children as keybinds
-      _parse_keybind_kdl(keybind=child, CFG=CFG, cfgU=cfgU, gmodes=modes, var_d=var_d)
+      _parse_keybind_kdl(keybind=child, CFG=CFG, cfgU=cfgU, map_add=map_add, gmodes=modes, var_d=var_d)
 
 def _flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore):
   kdl = ckdl

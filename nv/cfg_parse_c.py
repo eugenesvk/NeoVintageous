@@ -432,7 +432,7 @@ def _parse_keybind_kdl(keybind:ckdl.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0), v
     for child in children:         # ...parse children as keybinds
       _parse_keybind_kdl(keybind=child, CFG=CFG, cfgU=cfgU, gmodes=modes, var_d=var_d)
 
-def _flatten_kdl_gen_c(kdl_dic, key_parent, sep, lvl, ignore):
+def _flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore):
   kdl = ckdl
   lvl += 1
   if isinstance(kdl_dic, dict):
@@ -469,4 +469,4 @@ def _flatten_kdl_gen_c(kdl_dic, key_parent, sep, lvl, ignore):
         yield key_new, val
 def flatten_kdl(kdl_dic:Union[ckdl.Document,ckdl.Node,dict], key_parent:str = '', sep:str = '.', lvl:int=0, ignore:dict={1:[],2:[]}):
   """convert KDL document or a dictionary of KDL nodes into a flat dictionary, ignoring 2nd+ argument, but retaining key=val properties"""
-  return dict(_flatten_kdl_gen_c(kdl_dic, key_parent, sep, lvl, ignore))
+  return dict(_flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore))

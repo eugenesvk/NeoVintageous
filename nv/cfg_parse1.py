@@ -105,7 +105,7 @@ def _parse_general_g_kdl(general_g:kdl.Node,CFG:dict,DEF:dict):
   for node in general_g.nodes: # set relativenumber=true
     _parse_general_cfg_kdl1(general_cfg=node,CFG=CFG,DEF=DEF,st_pref=st_pref)
 
-def _parse_set_kdl1(node:kdl.Node,cfg='') -> None:
+def _parse_set_kdl(node:kdl.Node,cfg='') -> None:
   from NeoVintageous.nv.ex_cmds import ex_set # inline import to avoid circular dependency errors
   args = dict()
   if (win := sublime.active_window()):
@@ -140,7 +140,7 @@ def _parse_set_kdl1(node:kdl.Node,cfg='') -> None:
     ex_set(option=opt_key,value=opt_val, **args)
 
 from NeoVintageous.nv import variables
-def _parse_let_kdl1(node:kdl.Node,cfg='') -> None:
+def _parse_let_kdl(node:kdl.Node,cfg='') -> None:
   if not node.props:
     _log.warn("%sconfig has a ‘let’ command without var=value properties (%s)",
       f'‘{cfg}’ ' if cfg else '',                                     node)
@@ -161,10 +161,10 @@ def _parse_general_cfg_kdl1(general_cfg:kdl.Node,CFG:dict,DEF:dict,st_pref=None)
   elif opt_name == 'source': # source was loaded before
     return
   elif opt_name == 'let':
-    _parse_let_kdl1(node)
+    _parse_let_kdl(node)
     return None
   elif opt_name == 'set':
-    _parse_set_kdl1(node)
+    _parse_set_kdl(node)
     return None
   elif opt_name == 'vardef': #vardef pre="‹" pos="›"
     # print('CFG pre',CFG)
@@ -345,10 +345,10 @@ def _parse_keybind_kdl(keybind:kdl.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0),var
   if key == '≠': # skip comment nodes (todo: when lib supports roundtrip, save as actual comments)
     return
   if key == 'let':
-    _parse_let_kdl1(node)
+    _parse_let_kdl(node)
     return
   if key == 'set':
-    _parse_set_kdl1(node)
+    _parse_set_kdl(node)
     return
   if var_d and var_d['set']:
     # key_old = key # ‘var_name’ → var_value (match ‘var_name’, but need to find value for var_name, so use index to find the ‘(var_name)’ regex match)

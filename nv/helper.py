@@ -99,3 +99,12 @@ def print_time(pre:str, t:OrderedDict):
       v_1 = v
   res_s = '\n'.join(res)
   print(f"{pre}\n{res_s}") # ⏲
+
+import hashlib
+def file_hash(file_path, algo='sha256'):
+  """Compute the hash of a file using the specified algorithm"""
+  hash_func = hashlib.new(algo)
+  with open(file_path,'rb') as file:
+    while chunk := file.read(4096): # read the file in chunks of 4096 bytes
+      hash_func.update(chunk)
+  return hash_func.hexdigest()

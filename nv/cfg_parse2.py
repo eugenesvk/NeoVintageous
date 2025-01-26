@@ -482,5 +482,5 @@ def _flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore):
           key_new = key_this + str(i+1) # add a numeric prefix
         yield key_new, val
 def flatten_kdl(kdl_dic:Union[kdl2.Document,kdl2.Node,dict], key_parent:str = '', sep:str = '.', lvl:int=0, ignore:dict={1:[],2:[]}):
-    """convert KDL document or a dictionary of KDL nodes into a flat dictionary, ignoring 2nd+ argument, but retaining key=val properties"""
-    return dict(_flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore))
+  """convert KDL document or a dictionary of KDL nodes into a flat dictionary, ignoring 2nd+ argument, but retaining key=val properties"""
+  return dict(_flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore))

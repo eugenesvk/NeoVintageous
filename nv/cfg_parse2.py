@@ -252,7 +252,7 @@ def _parse_general_cfg_kdl2(general_cfg:kdl2.Node,CFG:dict,DEF:dict,st_pref=None
     return None
 
 import copy
-def _parse_keybind_arg2(node:kdl2.Node, CFG:dict, prop_subl={}):
+def _parse_keybind_arg(node:kdl2.Node, CFG:dict, prop_subl={}):
   cmd_l   = []
   cmd_o   = [] # original unmodified command for later display purposes
   isChain = False
@@ -396,7 +396,7 @@ def _parse_keybind_kdl(keybind:kdl2.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0), v
           prop_rest[pkey] = int(val)
         else:
           prop_rest[pkey] = val
-  (cmd,cmdo,isChain)      = _parse_keybind_arg2(node=node, CFG=CFG, prop_subl=prop_rest) # Parse arguments
+  (cmd,cmdo,isChain)      = _parse_keybind_arg(node=node, CFG=CFG, prop_subl=prop_rest) # Parse arguments
   cmd_txt.extend(cmd )
   cmd_o  .extend(cmdo)
   if children and isChain:           # with Chain argument...
@@ -408,7 +408,7 @@ def _parse_keybind_kdl(keybind:kdl2.Node, CFG:dict, cfgU, gmodes:Mode=Mode(0), v
         for dkey,key_abbrev in _keybind_prop.items():
           if pkey not in key_abbrev: # non-specified key=val pairs
             prop_rest[pkey] = val
-      (cmd,cmdo,_) = _parse_keybind_arg2(node=child, CFG=CFG, prop_subl=prop_rest)
+      (cmd,cmdo,_) = _parse_keybind_arg(node=child, CFG=CFG, prop_subl=prop_rest)
       cmd_txt.extend(cmd )
       cmd_o  .extend(cmdo)
 

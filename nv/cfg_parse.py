@@ -242,7 +242,11 @@ def parse_user_sublime_cmdline(line:str) -> Union[str,None]:
 _dump_to_kdl = False
 _NVRC_KDL = None
 if _dump_to_kdl:
-  _NVRC_KDL = parse_kdl2_doc('')
+  if _libckdl:
+    from NeoVintageous.nv import cfg_parse_c as cfg_parse
+  else:
+    from NeoVintageous.nv import cfg_parse2  as cfg_parse
+  _NVRC_KDL = cfg_parse.parse_kdl_doc('')
 
 def _pre_load(window,source) -> None:
   if source and isinstance(source, str):
@@ -260,7 +264,10 @@ def _source(window, source, nodump=False) -> None:
       if ex_cmdline:
         do_ex_cmdline(window, ex_cmdline)
       elif _dump_to_kdl and not nodump:
-        node_key = kdl2.Node(tag=None, name='≠', args=[kdl2.RawString(line.rstrip())])
+        if _libckdl:
+          node_key = ckdl.Node(    None,      '≠',      [               line.rstrip() ])
+        else:
+          node_key = kdl2.Node(tag=None, name='≠', args=[kdl2.RawString(line.rstrip())])
         _NVRC_KDL.nodes.append(node_key)
   finally:
     window.settings().erase('_nv_sourcing')

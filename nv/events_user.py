@@ -91,12 +91,10 @@ def reload_with_user_data_kdl() -> None:
           if (tag_os := tag):
             exe = val
             if not (os := OSrev.get(tag_os,None)):
-              _log.error("node ‘%s’ has unrecognized OS tag ‘%s’ in ‘%s’, skipping"
-                ,               cfg.name,                    os,     arg)
+              _log.error("node ‘%s’ has unrecognized OS tag ‘%s’ in ‘%s’, skipping",cfg.name,os,arg)
               break # stop parsing arguments
           else:
-            _log.error("node ‘%s’ has no OS tag in ‘%s’, skipping"
-              ,               cfg.name,             arg)
+            _log.error("node ‘%s’ has no OS tag in ‘%s’, skipping",cfg.name,arg)
             break # stop parsing arguments
           cmf_full  = [val] # start a new command
         else:
@@ -121,12 +119,10 @@ def reload_with_user_data_kdl() -> None:
           if (os := OSrev.get(tag_os,None)):
             cmf_full = [exe] # start a new command
           else:
-            _log.error("node ‘%s’ has unrecognized OS tag ‘%s’ in ‘%s’, skipping"
-              ,               cfg.name,                    os,      exe)
+            _log.error("node ‘%s’ has unrecognized OS tag ‘%s’ in ‘%s’, skipping",cfg.name,os,exe)
             continue # skip to another node
         else:
-          _log.error("node ‘%s’ has no OS tag in ‘%s’, skipping"
-            ,               cfg.name,             exe)
+          _log.error("node ‘%s’ has no OS tag in ‘%s’, skipping",cfg.name,exe)
           continue # skip to another node
         for i,(arg,tag,val) in enumerate(cfgU.cfg_parse.arg_tag_val(node_cmd)):
           if tag:

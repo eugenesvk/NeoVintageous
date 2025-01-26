@@ -11,7 +11,7 @@ import NeoVintageous.dep.kdl2 as kdl
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.modes import Mode, Mode as M, text_to_modes, mode_names, MODE_NAMES_OLD, M_EVENT, M_ANY, M_CMDTXT
 from NeoVintageous.nv.cfg import _keybind_prop, re_count, re_subl_tag, re_filetype
-from NeoVintageous.nv.cfg_parse import clean_name, clean_cmd, _pre_load, _source, CFG_CACHE
+from NeoVintageous.nv.cfg_parse import clean_name, clean_cmd, _pre_load, _source, node_separator, CFG_CACHE
 from NeoVintageous.nv.helper import Singleton, file_hash
 
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL, TFMT, DFMT

@@ -111,6 +111,46 @@ class cfgU(metaclass=Singleton):
         with open(cfgU.cfg_cache_f,'wb') as fh:
             pickle.dump(CFG_CACHE, fh, protocol=pickle.HIGHEST_PROTOCOL)
             _log.debug("pickled CFG_CACHE to %s @%s",cfgU.cfg_cache_f,fname())
+
+    @staticmethod
+    def load_cache() -> bool:
+        is_cache_valid = False # CFG_CACHE = {"file":dict(), "data":dict()}
+        cfg_cache_load = dict()
+        if cfgU.cfg_cache_f.exists():
+            try:
+                with open(cfgU.cfg_cache_f,'rb') as fh:
+                    cfg_cache_load = pickle.load(fh)
+                    is_cache_valid = True # CFG_CACHE = {"file":dict(), "data":dict()}
+            except FileNotFoundError as e:
+                sublime.error_message(f"{PACKAGE_NAME}:\nTried and failed to load\n{cfgU.cfg_cache_f}")
+                return         False
+            if is_cache_valid and (f_p_hash := cfg_cache_load.get('file')) and isinstance(f_p_hash,dict):
+                for fpath, fhash in f_p_hash.items():
+                    if not fhash == file_hash(fpath):
+                        _log.debug("Config file changed: %s", fpath)
+                        return False
+            else:
+                return         False
+        if is_cache_valid:
+            cached_keys = ['kdl','flat','text_commands']
+            for key in cached_keys:
+                if not key in cfg_cache_load:
+                    _log.warn("Cache exists, but missing data ‘%s’! Deleting %s @%s",key,cfgU.cfg_cache_f,fname())
+                    cfgU.cfg_cache_f.unlink(missing_ok=False)
+                    return     False
+            cfgU.kdl           = cfg_cache_load.get('kdl'          )
+            cfgU.flat          = cfg_cache_load.get('flat'         )
+            cfgU.text_commands = cfg_cache_load.get('text_commands')
+            from NeoVintageous.nv.mappings import mappings_add_text as map_add
+            from NeoVintageous.nv.modes    import MODE_NAMES_OLD
+            for mode, mode_d in cfgU.text_commands.items():
+                for key, cmd_d in mode_d.items(): # cfgU.text_commands[mode][key] = {"cmd":cmd_txt,"cmd_o":cmd_o,"prop":prop} @cfg_parse
+                    map_add(mode=MODE_NAMES_OLD[mode], key=key, cmd=cmd_d['cmd'], cmd_o=cmd_d['cmd_o'], prop=cmd_d['prop'])
+            _log.debug('Restored config from cache (cfgU kdl/flat/text_commands) @%s',fname())
+            return             True
+        return                 False
+
+    @staticmethod
     def read_kdl_file() -> List: #List[(kdl1|kdl2|ckdl.Document, dict)]
         cfg_p = cfgU.cfg_p
         cfg_f = cfgU.cfg_f

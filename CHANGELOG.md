@@ -15,6 +15,13 @@
   <!-- - __Security__ -->
   <!--   + 🔒️ vulnerabilities -->
 
+  - __Added__
+    + ✨ much faster KDL config parser
+  - __Changed__
+    + config parsers to be lib-independent (can use pykdl1/2 or ckdl)
+  - __Fixed__
+    + wrong node var name in config parsing
+
 [0.961.1352]: https://github.com/eugenesvk/NeoVintageous/compare/0.961.1352...HEAD
 ## [0.961.1352]
   - __Fixed__

@@ -11,7 +11,7 @@ import ckdl
 from NeoVintageous.nv.modes import INSERT, INTERNAL_NORMAL, NORMAL, OPERATOR_PENDING, REPLACE, SELECT, UNKNOWN, VISUAL, VISUAL_BLOCK, VISUAL_LINE
 from NeoVintageous.nv.modes import Mode, Mode as M, text_to_modes, mode_names, MODE_NAMES_OLD, M_EVENT, M_ANY, M_CMDTXT
 from NeoVintageous.nv.cfg import _keybind_prop, re_count, re_subl_tag, re_filetype
-from NeoVintageous.nv.cfg_parse import clean_name, clean_cmd, _pre_load, _source
+from NeoVintageous.nv.cfg_parse import clean_name, clean_cmd, _pre_load, _source, node_separator
 
 from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL, TFMT, DFMT
 _log = logging.getLogger(__name__)
@@ -82,6 +82,23 @@ def get_tag_val_warn(tag_val:ckdl.Value,logger:logging.Logger=None,node_name:str
     val = tag_val
   return (tag,val)
 
+def clean_node_name(node:ckdl.Node,rec:bool=True,parent:Union[str,None]=None): # recursively clean KDL2 node names (remove separators ␠⭾-_. etc)
+  node.name = re.sub(node_separator,'',node.name.casefold())
+  if rec:
+    if   node.name in ['keybind','rc']: # don't normalize keybind/init Ex commands
+      return
+    elif node.name == 'alias'\
+      and parent   == 'abolish': # don't normalize children of ‘alias’ as they can be - _
+      return
+    elif node.name == 'event': # don't normalize event cli commands (but normalize the initial (mode)Event node)
+      rec = False
+    if node.name == 'abolish':
+      for node in node.children:
+        clean_node_name(node, rec=rec, parent='abolish')
+    else:
+      for node in node.children:
+        clean_node_name(node, rec=rec)
+
 def parse_kdl_config1( cfg:str, cfg_p:Path, kdl_docs:list    , enclose_in:str=''    ,var_d:dict={}):
   parse_kdl_config(v=1,cfg=cfg, cfg_p=cfg_p,kdl_docs=kdl_docs, enclose_in=enclose_in,var_d=var_d)
 def parse_kdl_config2( cfg:str, cfg_p:Path, kdl_docs:list    , enclose_in:str=''    ,var_d:dict={}):
@@ -97,7 +114,7 @@ def parse_kdl_config(v,cfg:str, cfg_p:Path, kdl_docs:list    , enclose_in:str=''
   )
   doc = ckdl.parse(cfg,version=v) # version=None or "detect" to support both
   for node in doc.nodes:
-    clean_node_name_c(node)
+    clean_node_name(node)
   nodes_iter = doc.nodes
   if enclose_in and len(nodes_iter) > 0:
     nodes_iter = nodes_iter[0].children

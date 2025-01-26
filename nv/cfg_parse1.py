@@ -21,13 +21,13 @@ _log.setLevel(DEFAULT_LOG_LEVEL)
 from typing import Union
 import typing as tp
 
-def node_tag_val(node:kdl1.Node):
+def node_tag_val(node:kdl.Node):
   tag = node.tag   if hasattr(node,'tag'  ) else ''
   val = node.value if hasattr(node,'value') else node.name
   return (tag,val)
-def node_tag(node:kdl1.Node) -> Union[str, None]:
+def node_tag(node:kdl.Node) -> Union[str, None]:
   return node.tag
-def children(node:kdl1.Node) -> kdl1.Node:
+def children(node:kdl.Node) -> kdl.Node:
   for child in node.nodes:
     yield child
 t_parent = Union[kdl.Document, kdl.Node]
@@ -568,7 +568,7 @@ def _flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore):
           key_new = key_this + str(i+1) # add a numeric prefix
         yield key_new, val
 
-def flatten_kdl(kdl_dic:Union[kdl1.Document,kdl1.Node,dict], key_parent:str = '', sep:str = '.', lvl:int=0, ignore:dict={1:[],2:[]}):
+def flatten_kdl(kdl_dic:Union[kdl.Document,kdl.Node,dict], key_parent:str = '', sep:str = '.', lvl:int=0, ignore:dict={1:[],2:[]}):
   """convert KDL document or a dictionary of KDL nodes into a flat dictionary, ignoring 2nd+ argument, but retaining key=val properties"""
   return dict(_flatten_kdl_gen(kdl_dic, key_parent, sep, lvl, ignore))
 

@@ -1,6 +1,6 @@
 # Changelog
 
-[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.961.1352...HEAD
+[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.97.1352...HEAD
 ## [Unreleased]
   <!-- - __Added__ -->
   <!--   + ✨ new features -->
@@ -15,6 +15,8 @@
   <!-- - __Security__ -->
   <!--   + 🔒️ vulnerabilities -->
 
+[0.97.1352]: https://github.com/eugenesvk/NeoVintageous/compare/0.97.1352...HEAD
+## [0.97.1352]
   - __Added__
     + ✨ much faster KDL config parser
   - __Changed__

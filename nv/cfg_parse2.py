@@ -80,6 +80,23 @@ def _node_has_prop(node:kdl2.Node) -> bool:
    break
   return has_prop
 
+def clean_node_name(node:kdl2.Node,rec:bool=True,parent:Union[str,None]=None): # recursively clean KDL2 node names (remove separators ␠⭾-_. etc)
+  node.name = re.sub(node_separator,'',node.name.casefold())
+  if rec:
+    if   node.name in ['keybind','rc']: # don't normalize keybind/init Ex commands
+      return
+    elif node.name == 'alias'\
+      and parent   == 'abolish': # don't normalize children of ‘alias’ as they can be - _
+      return
+    elif node.name == 'event': # don't normalize event cli commands (but normalize the initial (mode)Event node)
+      rec = False
+    if node.name == 'abolish':
+      for node in node.nodes:
+        clean_node_name(node, rec=rec, parent='abolish')
+    else:
+      for node in node.nodes:
+        clean_node_name(node, rec=rec)
+
 def _parse_rc_g_kdl(rc_g:kdl2.Node):
   win = sublime.active_window()
   for node in rc_g.nodes: # r#":set invrelativenumber"#

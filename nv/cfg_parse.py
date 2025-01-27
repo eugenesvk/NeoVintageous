@@ -109,4 +109,4 @@ def _parse_line(line: str):
 
   return None
 
-CFG_CACHE = {"file":dict(), "data":dict()}
+CFG_CACHE = {"file":dict()} #rc also fills: kdl, flat, text_commands

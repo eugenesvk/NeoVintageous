@@ -6,7 +6,6 @@ from pathlib import Path
 import sublime
 import sublime_plugin
 
-import NeoVintageous.dep.kdl as kdl
 import NeoVintageous.dep.kdl2 as kdl2
 _libckdl = False
 try:

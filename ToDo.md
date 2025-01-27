@@ -14,7 +14,6 @@
 # Misc
   - g0 g$ g^ motion commands not implemented for wrapped lines https://github.com/NeoVintageous/NeoVintageous/issues/757
   - inoremap not working https://github.com/NeoVintageous/NeoVintageous/issues/837
-  - mark neovint as incompatible plugin in my fork
 # BLOCKED by Sublime
   - keybinds: fix multilingual: single-key rebinds are still keycap based, so remapping ⇧4 from qwerty to russian means losing ; since that's what's mapped there, need to exclude this remap from user config or wait until ST implements proper physical key mapping https://github.com/sublimehq/sublime_text/issues/5976
   - F1 add my keybinds as HTML phantom/toolip? Or "menus" for mini-modes after a delay without action has passed
@@ -44,6 +43,7 @@
 ‹.m› в	 b
 
 # +Resolved
+  - (?no need since you can't install both) mark neovint as incompatible plugin in my fork
   + cache hashes of all imported kdl files during the last config load and dump the consolidated cfgU file to disk so that next time all you'd need to do is caclulate hashes of 10 files instead of parsing them as KDL?
   + (yes, without this mappings to й would not be recognized) is `SEQ['q'] += ['й']` really needed? seems to work without it, but how?
   + (no?) is there a way to allow direct remapping of й in neovintageous map without having to add sublime keymap?

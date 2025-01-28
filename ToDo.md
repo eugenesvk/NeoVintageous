@@ -1,6 +1,10 @@
 # ToDo
   - Add a select-first (select-without-extend) mode (~kak/hx)
   - fix 11 error invalid mode
+  - add tree-sitter support
+  - make insert snippet ' command' work only in insert mode
+  - convert all `<key>` to ⎇ etc symbols
+    - or use enums?
 # Keymap
   - add a Shifted function instead of Upper to also work with 9→( and [→{
   - change default keymap to ergonomic one (add a config to revert)

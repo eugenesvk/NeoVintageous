@@ -129,9 +129,8 @@ def reload_with_user_data_kdl() -> None:
 
 def ex_buffers(window, **kwargs) -> None:
     def _format_buffer_line(view) -> str:
-        file_name = view.file_name()
-        if file_name:
-            parent, leaf = os.path.split(path)
+        if (file_name := view.file_name()):
+            parent, leaf = os.path.split(file_name)
             path = os.path.join(os.path.basename(parent), leaf)
         else:
             path = view.name() or CFG['no_name']

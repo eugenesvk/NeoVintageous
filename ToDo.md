@@ -5,6 +5,10 @@
   - make insert snippet ' command' work only in insert mode
   - convert all `<key>` to ⎇ etc symbols
     - or use enums?
+# Help popup
+  - add global help popup similar to continuation one for e.g. `F1`
+  - make Esc close the help keymap popup
+  - use Group name (parent key node name) as a group name in the help tooltip (not sure it's saved in the keymap)
 # Keymap
   - add a Shifted function instead of Upper to also work with 9→( and [→{
   - change default keymap to ergonomic one (add a config to revert)

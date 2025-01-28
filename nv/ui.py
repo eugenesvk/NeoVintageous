@@ -7,6 +7,7 @@ from NeoVintageous.nv.settings import get_setting, get_setting_hly, get_mode
 from NeoVintageous.nv.vim      import status_message
 from NeoVintageous.nv.helper   import remove_prefix
 
+import html
 
 def _ui_bell(*msg: str) -> None:
     window = active_window()
@@ -160,13 +161,15 @@ def reload_with_user_data_kdl() -> None:
 def get_popup_key_table_html(prefix,cmd_part:dict) -> str:
     rows = []
     for key,val in cmd_part.items(): # 'nnn': {
+        if val['cmd'] in (None,[None]):
+            continue
         key_no_pre = remove_prefix(key,prefix)
-        key_b = f"{prefix}<b>{key_no_pre}</b>"
+        key_b = f"{html.escape(prefix)}<b>{html.escape(key_no_pre)}</b>"
         cmdo = ' '.join(val['cmdo']) or '' #'cmdo':['MoveToBracketMatch']
         icon = val['icon'] or '   ' #'desc':'Go (comment) ([{ or preprocessor directive match @ line'
         type = val['type'] or '  ' #'icon':'🢔(n)🢖'
         info = val['desc'] or '   ' #'type':'‸'
-        row = CFG['row'].format_map(dict(key=key_b,icon=icon,type=type,cmd=cmdo,info=info))
+        row = CFG['row'].format_map(dict(key=key_b,icon=html.escape(icon),type=html.escape(type),cmd=html.escape(cmdo),info=html.escape(info)))
         rows.append(row)
     return CFG['table'].format_map(dict(rows=''.join(rows)))
 from NeoVintageous.nv.mappings import _get_partial_matches_help

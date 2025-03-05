@@ -1,5 +1,5 @@
 # ToDo
-  - Add a select-first (select-without-extend) mode (~kak/hx)
+  - Add a select-first (select-without-extend VisNoExt) mode (~kak/hx)
   - fix 11 error invalid mode
   - add tree-sitter support
   - make insert snippet ' command' work only in insert mode

@@ -103,6 +103,7 @@ from NeoVintageous.nv.modes import Mode, Mode as M, text_to_modes, mode_names, M
 from NeoVintageous.nv.cfg import _keybind_prop, re_count, re_subl_tag, re_filetype
 from NeoVintageous.nv.cfg_parse import clean_name, clean_cmd
 
+import copy
 from NeoVintageous.nv import cfg as nvcfg
 # cfgU_settings = (f'{PACKAGE_NAME}.sublime-settings')
 class cfgU(metaclass=Singleton):

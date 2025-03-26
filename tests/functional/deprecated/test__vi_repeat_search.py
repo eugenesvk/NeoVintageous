@@ -26,7 +26,7 @@ class Test__nv_vi_repeat_star_InNormalMode(unittest.ViewTestCase):
 
     def test_repeat_forward(self):
         self.normal('foo\n|abc\nbar\nabc\nmoo\nabc\nend')
-        self.view.run_command('nv_vi_star', {'mode': unittest.NORMAL})
+        self.view.run_command('nv_vi_find_word', {'mode': unittest.NORMAL})
         self.view.run_command('nv_vi_repeat_buffer_search', {'mode': unittest.NORMAL, 'reverse': False})
         self.assertNormal('foo\nabc\nbar\nabc\nmoo\n|abc\nend')
         self.assertSearch('foo\n|abc|\nbar\n|abc|\nmoo\n|abc|\nend')
@@ -34,7 +34,7 @@ class Test__nv_vi_repeat_star_InNormalMode(unittest.ViewTestCase):
 
     def test_repeat_forward_twice(self):
         self.normal('foo\n|abc\nbar\nabc\nmoo\nabc\nend')
-        self.view.run_command('nv_vi_star', {'mode': unittest.NORMAL})
+        self.view.run_command('nv_vi_find_word', {'mode': unittest.NORMAL})
         self.view.run_command('nv_vi_repeat_buffer_search', {'mode': unittest.NORMAL, 'reverse': False})
         self.view.run_command('nv_vi_repeat_buffer_search', {'mode': unittest.NORMAL, 'reverse': False})
         self.assertNormal('foo\n|abc\nbar\nabc\nmoo\nabc\nend')
@@ -43,7 +43,7 @@ class Test__nv_vi_repeat_star_InNormalMode(unittest.ViewTestCase):
 
     def test_repeat_reverse(self):
         self.normal('foo\n|abc\nbar\nabc\nmoo\nabc\nend')
-        self.view.run_command('nv_vi_star', {'mode': unittest.NORMAL})
+        self.view.run_command('nv_vi_find_word', {'mode': unittest.NORMAL})
         self.view.run_command('nv_vi_repeat_buffer_search', {'mode': unittest.NORMAL, 'reverse': True})
         self.assertNormal('foo\n|abc\nbar\nabc\nmoo\nabc\nend')
         self.assertSearch('foo\n|abc|\nbar\n|abc|\nmoo\n|abc|\nend')
@@ -51,7 +51,7 @@ class Test__nv_vi_repeat_star_InNormalMode(unittest.ViewTestCase):
 
     def test_repeat_reverse_twice(self):
         self.normal('foo\n|abc\nbar\nabc\nmoo\nabc\nend')
-        self.view.run_command('nv_vi_star', {'mode': unittest.NORMAL})
+        self.view.run_command('nv_vi_find_word', {'mode': unittest.NORMAL})
         self.view.run_command('nv_vi_repeat_buffer_search', {'mode': unittest.NORMAL, 'reverse': True})
         self.view.run_command('nv_vi_repeat_buffer_search', {'mode': unittest.NORMAL, 'reverse': True})
         self.assertNormal('foo\nabc\nbar\nabc\nmoo\n|abc\nend')
@@ -60,7 +60,7 @@ class Test__nv_vi_repeat_star_InNormalMode(unittest.ViewTestCase):
 
     def test_repeat_forward_reverse_twice_forward_thrice(self):
         self.normal('foo\n|abc\nbar\nabc\nmoo\nabc\nend')
-        self.view.run_command('nv_vi_star', {'mode': unittest.NORMAL})
+        self.view.run_command('nv_vi_find_word', {'mode': unittest.NORMAL})
         self.view.run_command('nv_vi_repeat_buffer_search', {'mode': unittest.NORMAL, 'reverse': False})
         self.view.run_command('nv_vi_repeat_buffer_search', {'mode': unittest.NORMAL, 'reverse': True})
         self.view.run_command('nv_vi_repeat_buffer_search', {'mode': unittest.NORMAL, 'reverse': True})
@@ -73,7 +73,7 @@ class Test__nv_vi_repeat_star_InNormalMode(unittest.ViewTestCase):
 
     def test_repeat_no_partial(self):
         self.normal('foo\n|abc\nbar\nabc\nmoo\nabcxend')
-        self.view.run_command('nv_vi_star', {'mode': unittest.NORMAL})
+        self.view.run_command('nv_vi_find_word', {'mode': unittest.NORMAL})
         self.view.run_command('nv_vi_repeat_buffer_search', {'mode': unittest.NORMAL, 'reverse': False})
         self.assertNormal('foo\n|abc\nbar\nabc\nmoo\nabcxend')
         self.assertSearch('foo\n|abc|\nbar\n|abc|\nmoo\nabcxend')
@@ -88,7 +88,7 @@ class Test__nv_vi_repeat_octothorp_InNormalMode(unittest.ViewTestCase):
 
     def test_repeat_forward(self):
         self.normal('foo\n|abc\nbar\nabc\nmoo\nabc\nend')
-        self.view.run_command('nv_vi_octothorp', {'mode': unittest.NORMAL})
+        self.view.run_command('nv_vi_find_word_rev', {'mode': unittest.NORMAL})
         self.view.run_command('nv_vi_repeat_buffer_search', {'mode': unittest.NORMAL, 'reverse': False})
         self.assertNormal('foo\nabc\nbar\n|abc\nmoo\nabc\nend')
         self.assertSearch('foo\n|abc|\nbar\n|abc|\nmoo\n|abc|\nend')
@@ -96,7 +96,7 @@ class Test__nv_vi_repeat_octothorp_InNormalMode(unittest.ViewTestCase):
 
     def test_repeat_reverse(self):
         self.normal('foo\n|abc\nbar\nabc\nmoo\nabc\nend')
-        self.view.run_command('nv_vi_octothorp', {'mode': unittest.NORMAL})
+        self.view.run_command('nv_vi_find_word_rev', {'mode': unittest.NORMAL})
         self.view.run_command('nv_vi_repeat_buffer_search', {'mode': unittest.NORMAL, 'reverse': True})
         self.assertNormal('foo\n|abc\nbar\nabc\nmoo\nabc\nend')
         self.assertSearch('foo\n|abc|\nbar\n|abc|\nmoo\n|abc|\nend')
@@ -104,7 +104,7 @@ class Test__nv_vi_repeat_octothorp_InNormalMode(unittest.ViewTestCase):
 
     def test_repeat_no_partial(self):
         self.normal('foo\n|abc\nbar\nabc\nmoo\nabcxend')
-        self.view.run_command('nv_vi_octothorp', {'mode': unittest.NORMAL})
+        self.view.run_command('nv_vi_find_word_rev', {'mode': unittest.NORMAL})
         self.view.run_command('nv_vi_repeat_buffer_search', {'mode': unittest.NORMAL, 'reverse': True})
         self.assertNormal('foo\n|abc\nbar\nabc\nmoo\nabcxend')
         self.assertSearch('foo\n|abc|\nbar\n|abc|\nmoo\nabcxend')

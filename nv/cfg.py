@@ -20,11 +20,11 @@ re_count = re.compile(r"[№⌗×⋅cn](\d+)")
 re_subl_tag = re.compile(r"subl|sublime|st")
 re_filetype = re.compile(r"[\s,]+")
 _keybind_prop = {
-  'desc':['d','des','desc','description','inf','info'],
-  'icon':['i','icn','icon','img','image'],
-  'type':['t','type'],
-  'file':['ft','filetype'],
-  'defk':['defk','default_key','≝k'],
+  'desc':['d','des','desc','description','inf','info','🛈','ℹ'],
+  'icon':['i','icn','icon','img','image','🖻','🖼'],
+  'type':['t','type','🆃','🅃'],
+  'file':['ft','filetype','🗋'],
+  'defk':['defk','default_key','≝k','≝⃣'],
   'defc':['defc','default_cmd','≝c'],
   }
 

@@ -406,8 +406,8 @@ def mappings_add_text(mode:str, key:str, cmd:Union[str,list], cmd_o:Union[str,li
     if prop: # store User data (icons, descriptions, type) to our classes for later use in Status and Help
         cmd_txt = ''
         cmd_ot  = ''
-        if isinstance(cmd,list) and len(cmd) == 1 and isinstance(cmd0 := cmd[0],str): # cmd can be None if null in kdl
-            cmd_txt = cmd0.lower()
+        if isinstance(cmd,list) and len(cmd) == 1 and isinstance(cmd[0],str): # cmd can be None if null in kdl
+            cmd_txt = cmd[0].lower()
             cmd_ot  = cmd_o[0]
         if isinstance(cmd,str):
             cmd_txt = cmd .lower()

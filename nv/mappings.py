@@ -218,7 +218,7 @@ def _find_full_match_text(view, mode: str, lhs: str):
         rhs =          _mappings_text[mode].get(lhs)
     if rhs:
         if isinstance(rhs, (str, list)):
-            return     rhs
+            return    rhs
         try:
             return     _mappings_text[mode][lhs][get_file_type(view)]
         except     KeyError:

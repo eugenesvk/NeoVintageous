@@ -384,6 +384,7 @@ def mappings_add_text(mode:str, key:str, cmd:Union[str,list], cmd_o:Union[str,li
     old_hlp_ftype = _mappings_help[mode].get(key_norm)
     _log.mapp(" map+txt ¦%s¦ ‹¦%s ≈ %s¦⟶¦%s¦› @file¦%s¦ oldcmd¦%s¦"
       ,                mode, key,key_norm,cmd,prop.get('file',''),old_cmd_ftype)
+    cmd_help = {"cmd":cmd,"cmdo":cmd_o,'desc':prop.get('desc',None),"icon":prop.get('icon',None),"type":prop.get('type',None)}
     if (file_types := prop.get('file')):
         if not old_cmd_ftype:
             _mappings_text[mode][key_norm]            = {}
@@ -394,14 +395,14 @@ def mappings_add_text(mode:str, key:str, cmd:Union[str,list], cmd_o:Union[str,li
             _mappings_help[mode][key_norm]            = {'':old_hlp_ftype}
         for file_type in file_types:
             _mappings_text    [mode][key_norm][file_type] = cmd
-            _mappings_help    [mode][key_norm][file_type] ={"cmd":cmd,"cmdo":cmd_o,'desc':prop.get('desc',None),"icon":prop.get('icon',None),"type":prop.get('type',None)}
+            _mappings_help    [mode][key_norm][file_type] = cmd_help
         return
     if       (isinstance(old_cmd_ftype,dict)): # don't overwrite existing filetype commands
         _mappings_text        [mode][key_norm][''       ] = cmd
-        _mappings_help        [mode][key_norm][''       ] ={"cmd":cmd,"cmdo":cmd_o,'desc':prop.get('desc',None),"icon":prop.get('icon',None),"type":prop.get('type',None)}
+        _mappings_help        [mode][key_norm][''       ] = cmd_help
     else:                                          # ok to overwrite old commands
         _mappings_text        [mode][key_norm]            = cmd
-        _mappings_help        [mode][key_norm]            ={"cmd":cmd,"cmdo":cmd_o,'desc':prop.get('desc',None),"icon":prop.get('icon',None),"type":prop.get('type',None)}
+        _mappings_help        [mode][key_norm]            = cmd_help
 
     if prop: # store User data (icons, descriptions, type) to our classes for later use in Status and Help TODO: this is likely not needed since help text is constructed by _get_partial_matches_help from the dictionary of commands, not class properties
         cmd_txt = ''

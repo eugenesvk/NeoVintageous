@@ -422,8 +422,8 @@ def mappings_add_text(mode:str, key:str, cmd:Union[str,list], cmd_o:Union[str,li
                 cmd_cls.icon = _p
             if _p := prop.get('type',None):
                 cmd_cls.type = _p
-            if _p := prop.get('type',None):
-                cmd_cls.cmdo = cmd_ot
+            if cmd_ot:
+                cmd_cls.cmdo = cmd_ot # MoveByBigWords
 
 def mappings_remove(mode: str, lhs: str) -> None:
     del _mappings[mode][_normalise_lhs(lhs)]

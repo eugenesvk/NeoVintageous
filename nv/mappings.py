@@ -403,7 +403,7 @@ def mappings_add_text(mode:str, key:str, cmd:Union[str,list], cmd_o:Union[str,li
         _mappings_text        [mode][key_norm]            = cmd
         _mappings_help        [mode][key_norm]            ={"cmd":cmd,"cmdo":cmd_o,'desc':prop.get('desc',None),"icon":prop.get('icon',None),"type":prop.get('type',None)}
 
-    if prop: # store User data (icons, descriptions, type) to our classes for later use in Status and Help
+    if prop: # store User data (icons, descriptions, type) to our classes for later use in Status and Help TODO: this is likely not needed since help text is constructed by _get_partial_matches_help from the dictionary of commands, not class properties
         cmd_txt = ''
         cmd_ot  = ''
         if isinstance(cmd,list) and len(cmd) == 1 and isinstance(cmd[0],str): # cmd can be None if null in kdl
@@ -416,7 +416,9 @@ def mappings_add_text(mode:str, key:str, cmd:Union[str,list], cmd_o:Union[str,li
             return
         cmd_cls = _text_to_command(view=None,text=cmd_txt)
         if not isinstance(cmd_cls,CommandNotFound):
-            if _p := prop.get('desc',None):
+            # icon:W⭲,           desc:'Move next end of WORD', defk:W, defc:MoveByBigWords
+            # icon:ᵡ▋ⓘ, type:®🄼, desc:'ᵡ 🄼 sel &Ins'         , defk:c}
+            if _p := prop.get('desc',None): # ↑prop
                 cmd_cls.desc = _p
             if _p := prop.get('icon',None):
                 cmd_cls.icon = _p

@@ -350,11 +350,16 @@ def _parse_keybind_arg(node:kdl.Node, CFG:dict, prop_subl={}):
       isChain = True
       continue
     if re_subl_tag.search(tag): # Sublime command per tag, serialize into a json dump
+      context = ""
       prop_subl_clean = copy.deepcopy(prop_subl)
       for key in prop_subl: # remove reserved flags so Sublime doesn't choke on them
         if clean_name(key) in CFG['res_tag']:
+          del prop_subl_clean[key] # i des ≝k
+        if clean_name(key) in ['context']:
+          context = prop_subl_clean[key]
           del prop_subl_clean[key]
       subl_arg = f',"args":{json.dumps(prop_subl_clean)}' if prop_subl_clean else ''
+      subl_arg += f',"context":{context}'                 if context         else ''
       cmd      = f'"command":"{val_dirt}"{subl_arg}<CR>'
       cmdo     = val_dirt
       # (Ⓝ)q (subl)"move" by="words" forward=true extend=true

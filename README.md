@@ -26,7 +26,7 @@ NeoVi18nt extends NeoVintageous plugin for Sublime Text by adding:
   - User events on mode change
     + set your "exit Insert mode" command to hold 🠿<kbd>i</kbd> to avoid typo-prone or inconvenient key sequences by setting an `isNVⓘ` variable to `1` via Karabiner Elements (macOS), and sending <kbd>⎋</kbd> when it's `1` on 🠿<kbd>i</kbd>
     + alternatively (on Windows) set up a windows message listener in AutoHotkey and get message notifications on mode changes with the numeric code of the new mode
-      - requires manual installation of the Pywin32 dependency after adding [this repo](https://github.com/eugenesvk/Pywin32) to the Package Control (couldn't get the new [Package Control Libraries](https://github.com/packagecontrol/channel) channel with dependencies work for Pywin32)
+      - might require manual installation of the Pywin32 dependency after adding [this repo](https://github.com/eugenesvk/Pywin32) to the Package Control (if the defauld dependency resolution via the new [Package Control Libraries](https://github.com/packagecontrol/channel) channel is bugged)
       - to get the numeric code of all modes, run in Sublime Text's console:
       ```py
       from NeoVintageous.nv.modes import M_EVENT, M_ANY, Mode as M, text_to_modes, mode_names_rev,mode_clean_names_rev

@@ -15,6 +15,12 @@
   <!-- - __Security__ -->
   <!--   + 🔒️ vulnerabilities -->
 
+  - __Added__
+    + add icons/emojis as an alternative to command field names (e.g., `🅃` instead of `type`/`t`)
+  - __Fixed__
+    + empty or invalid html values breaking help popup
+    + wrong var name, missing import
+
 [0.971.1352]: https://github.com/eugenesvk/NeoVintageous/compare/0.971.1352...HEAD
 ## [0.971.1352]
   - __Added__

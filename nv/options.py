@@ -164,34 +164,34 @@ def _get_default_shell_flags() -> str:
 
 
 _options = {
-    'autoindent'    	: BooleanViewOption     	('auto_indent'             	                     	),
-    'belloff'       	: StringOption          	('belloff'                 	,''                  	,select=('','all')),
-    'equalalways'   	: BooleanOption         	('equalalways'             	,True                	),
-    'expandtab'     	: BooleanViewOption     	('translate_tabs_to_spaces'	,on=True            	,off=False),
-    'hlsearch'      	: BooleanOption         	('hlsearch'                	,True                	),
-    'ignorecase'    	: BooleanOption         	('ignorecase'              	,False               	),
-    'incsearch'     	: BooleanOption         	('incsearch'               	,True                	),
-    'list'          	: BooleanViewOption     	('draw_white_space'        	,on=('all',)         	,off=('selection','none')),
-    'magic'         	: BooleanOption         	('magic'                   	,True                	),
-    'menu'          	: BooleanIsVisibleOption	('menu'                    	,True                	),  # {not in Vim}
-    'minimap'       	: BooleanIsVisibleOption	('minimap'                 	,True                	),  # {not in Vim}
-    'modeline'      	: BooleanOption         	('modeline'                	,True                	),
-    'modelines'     	: NumberOption          	('modelines'               	,5                   	),
-    'number'        	: BooleanViewOption     	('line_numbers'            	                     	),
-    'relativenumber'	: BooleanViewOption     	('relative_line_numbers'   	                     	),
-    'scrolloff'     	: NumberViewOption      	('scroll_context_lines'    	,0                   	),
-    'shell'         	: StringOption          	('shell'                   	,_get_default_shell()	),
+    'autoindent'    	: BooleanViewOption     	('auto_indent'             	            	),
+    'belloff'       	: StringOption          	('belloff'                 	,''         	,select=('','all')),
+    'equalalways'   	: BooleanOption         	('equalalways'             	,True       	),
+    'expandtab'     	: BooleanViewOption     	('translate_tabs_to_spaces'	,on=True    	,off=False),
+    'hlsearch'      	: BooleanOption         	('hlsearch'                	,True       	),
+    'ignorecase'    	: BooleanOption         	('ignorecase'              	,False      	),
+    'incsearch'     	: BooleanOption         	('incsearch'               	,True       	),
+    'list'          	: BooleanViewOption     	('draw_white_space'        	,on=('all',)	,off=('selection','none')),
+    'magic'         	: BooleanOption         	('magic'                   	,True       	),
+    'menu'          	: BooleanIsVisibleOption	('menu'                    	,True       	),  # {not in Vim}
+    'minimap'       	: BooleanIsVisibleOption	('minimap'                 	,True       	),  # {not in Vim}
+    'modeline'      	: BooleanOption         	('modeline'                	,True       	),
+    'modelines'     	: NumberOption          	('modelines'               	,5          	),
+    'number'        	: BooleanViewOption     	('line_numbers'            	            	),
+    'relativenumber'	: BooleanViewOption     	('relative_line_numbers'   	            	),
+    'scrolloff'     	: NumberViewOption      	('scroll_context_lines'    	,0          	),
+    'shell'         	: StringOption          	('shell'                   	,_get_default_shell()),
     'shellcmdflag'  	: StringOption          	('shellcmdflag'            	,_get_default_shell_flags()),
-    'sidebar'       	: BooleanIsVisibleOption	('sidebar'                 	,True                	),  # {not in Vim}
-    'sidescrolloff' 	: NumberOption          	('sidescrolloff'           	,5                   	),
-    'smartcase'     	: BooleanOption         	('smartcase'               	,False               	),
-    'spell'         	: BooleanViewOption     	('spell_check'             	                     	),
-    'statusbar'     	: BooleanIsVisibleOption	('status_bar'              	,True                	),  # {not in Vim}
-    'tabstop'       	: NumberViewOption      	('tab_size'                	                     	),
-    'textwidth'     	: NumberViewOption      	('wrap_width'              	                     	),
-    'winaltkeys'    	: StringOption          	('winaltkeys'              	,'menu'              	,select=('no','yes','menu')),
-    'wrap'          	: BooleanViewOption     	('word_wrap'               	                     	),
-    'wrapscan'      	: BooleanOption         	('wrapscan'                	,True                	),
+    'sidebar'       	: BooleanIsVisibleOption	('sidebar'                 	,True  	),  # {not in Vim}
+    'sidescrolloff' 	: NumberOption          	('sidescrolloff'           	,5     	),
+    'smartcase'     	: BooleanOption         	('smartcase'               	,False 	),
+    'spell'         	: BooleanViewOption     	('spell_check'             	       	),
+    'statusbar'     	: BooleanIsVisibleOption	('status_bar'              	,True  	),  # {not in Vim}
+    'tabstop'       	: NumberViewOption      	('tab_size'                	       	),
+    'textwidth'     	: NumberViewOption      	('wrap_width'              	       	),
+    'winaltkeys'    	: StringOption          	('winaltkeys'              	,'menu'	,select=('no','yes','menu')),
+    'wrap'          	: BooleanViewOption     	('word_wrap'               	       	),
+    'wrapscan'      	: BooleanOption         	('wrapscan'                	,True  	),
 }
 
 _OPTION_ALIASES = {

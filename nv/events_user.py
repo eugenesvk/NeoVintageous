@@ -204,8 +204,9 @@ def run_command    (full_cmd, current_mode, new_mode) -> None:
 
 
 if sys.platform.startswith('win') and PLATFORM == 'windows':
+  _pywin = False
   try:
-    import Pywin32.setup
+    import pywin
     from win32com.client.gencache import EnsureDispatch
     import win32con
     import win32gui
@@ -215,7 +216,18 @@ if sys.platform.startswith('win') and PLATFORM == 'windows':
   except ModuleNotFoundError:
     _pywin = False
   if not _pywin:
-    _log.error("‘PyWin32’ module couldn't be loaded, so can't send any messages!")
+    try:
+      import Pywin32.setup
+      from win32com.client.gencache import EnsureDispatch
+      import win32con
+      import win32gui
+      _pywin = True
+    except ImportError:
+      _pywin = False
+    except ModuleNotFoundError:
+      _pywin = False
+  if not _pywin:
+    _log.error("Neither ‘pywin’ nor ‘PyWin32’ module could be loaded, so can't send any messages!")
 
   import ctypes
   dll     = ctypes.windll

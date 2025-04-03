@@ -1,6 +1,6 @@
 # Changelog
 
-[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.971.1352...HEAD
+[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.972.1353...HEAD
 ## [Unreleased]
   <!-- - __Added__ -->
   <!--   + ✨ new features -->
@@ -15,6 +15,8 @@
   <!-- - __Security__ -->
   <!--   + 🔒️ vulnerabilities -->
 
+[0.972.1353]: https://github.com/eugenesvk/NeoVintageous/compare/0.972.1353...HEAD
+## [0.972.1353]
   - __Added__
     + add icons/emojis as an alternative to command field names (e.g., `🅃` instead of `type`/`t`)
   - __Fixed__

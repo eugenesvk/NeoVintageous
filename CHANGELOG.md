@@ -15,6 +15,9 @@
   <!-- - __Security__ -->
   <!--   + 🔒️ vulnerabilities -->
 
+  - __Fixed__
+    + (hopefully) `pywin32` library dependency resolution
+
 [0.972.1353]: https://github.com/eugenesvk/NeoVintageous/compare/0.972.1353...HEAD
 ## [0.972.1353]
   - __Added__

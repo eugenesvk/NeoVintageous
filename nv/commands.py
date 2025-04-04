@@ -184,48 +184,29 @@ class nv_cmdline_feed_key(TextCommand):
         if self.view.size() == 1 and key not in keys_allow_empty:
             return
 
-        if key in ('<tab>', '<S-tab>'):
+        if   key in ('<tab>', '<S-tab>'):
             insert_best_cmdline_completion(self.view, edit, forward=(True if key == '<tab>' else False))
-
-        elif key in ('<up>', '<C-p>'):
-            # Recall older command-line from history, whose beginning matches
-            # the current command-line.
+        elif key in ('<up>', '<C-p>'  ): # Recall older command-line from history, whose beginning matches the current command-line.
             self._next_history(edit, backwards=True)
-
-        elif key in ('<down>', '<C-n>'):
-            # Recall more recent command-line from history, whose beginning
-            # matches the current command-line.
+        elif key in ('<down>', '<C-n>'): # Recall more recent command-line from history, whose beginning matches the current command-line
             self._next_history(edit, backwards=False)
-
-        elif key in ('<C-b>', '<home>'):
-            # Cursor to beginning of command-line.
+        elif key in ('<C-b>', '<home>'): # Cursor to beginning of command-line
             set_selection(self.view, 1)
-
-        elif key in ('<C-c>', '<C-[>'):
-            # Quit command-line without executing.
+        elif key in ('<C-c>', '<C-[>' ): # Quit command-line without executing
             hide_panel(self.view.window())
-
-        elif key in ('<C-e>', '<end>'):
-            # Cursor to end of command-line.
+        elif key in ('<C-e>', '<end>' ): # Cursor to end of command-line
             set_selection(self.view, self.view.size())
-
-        elif key == '<C-h>':
-            # Delete the character in front of the cursor.
+        elif key == '<C-h>': # Delete the character in front of the cursor.
             pt_end = self.view.sel()[0].b
             pt_begin = pt_end - 1
             self.view.erase(edit, Region(pt_begin, pt_end))
-
-        elif key == '<C-u>':
-            # Remove all characters between the cursor position and the
-            # beginning of the line.
+        elif key == '<C-u>': # Remove all characters between the cursor position and the beginning of the line.
             self.view.erase(edit, Region(1, self.view.sel()[0].end()))
-
-        elif key == '<C-w>':
-            # Delete the |word| before the cursor.
-            word_region = self.view.word(self.view.sel()[0].begin())
-            word_region = self.view.expand_by_class(self.view.sel()[0].begin(), CLASS_WORD_START)
-            word_start_pt = word_region.begin()
-            caret_end_pt = self.view.sel()[0].end()
+        elif key == '<C-w>': # Delete the |word| before the cursor.
+            word_region      = self.view.word(self.view.sel()[0].begin())
+            word_region      = self.view.expand_by_class(self.view.sel()[0].begin(), CLASS_WORD_START)
+            word_start_pt    = word_region.begin()
+            caret_end_pt     = self.view.sel()[0].end()
             word_part_region = Region(max(word_start_pt, 1), caret_end_pt)
             self.view.erase(edit, word_part_region)
         else:

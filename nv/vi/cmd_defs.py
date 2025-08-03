@@ -1886,6 +1886,14 @@ class ViGotoEof(ViMotionDef):
     def translate(self, view):
         return translate_motion(view, 'nv_vi_goto_line_or_eof',{'count':get_count(view,default=0)})
 
+@assign_text(['GotoEofBlank'], MOTION_MODES, icon="⭰ω")
+class ViGotoEofBlank(ViMotionDef):
+    def init(self):
+        self.scroll_into_view = True
+        self.updates_xpos     = True
+    def translate(self, view):
+        return translate_motion(view, 'nv_vi_goto_line_or_eof',{'count':get_count(view,default=0),'non_blank':False})
+
 
 @assign(seqs.SEQ['r'], ACTION_MODES)
 @assign_text(['ReplaceCharacters'], ACTION_MODES)

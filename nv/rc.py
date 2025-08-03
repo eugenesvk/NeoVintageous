@@ -140,7 +140,7 @@ class cfgU(metaclass=Singleton):
                 return         False
             if is_cache_valid and (f_p_hash := cfg_cache_load.get('file')) and isinstance(f_p_hash,dict):
                 for fpath, fhash in f_p_hash.items():
-                    if not fhash == file_hash(fpath):
+                    if fpath.exists() and not fhash == file_hash(fpath):
                         _log.debug("Config file changed: %s", fpath)
                         return False
             else:

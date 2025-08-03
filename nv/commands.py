@@ -2741,13 +2741,16 @@ class nv_vi_goto_line_or_bof(TextCommand):
 
 
 class nv_vi_goto_line_or_eof(TextCommand):
-    def run(self, edit, mode=None, count=None):
+    def run(self, edit, mode=None, count=None, non_blank=True):
         if count:
             GotoView(self.view, mode, count).line()
             return
 
         def t(view) -> int:
-            return get_linewise_non_blank_target(view, target)
+            if non_blank: # move to the 1st non-blank char
+                return get_linewise_non_blank_target(view, target)
+            else: # move to EOF
+                return view.line(target).b
 
         def f(view, s):
             if   mode == NORMAL:

@@ -78,24 +78,24 @@ class LayoutConverter:
     self.isUser   = False
     self.isAlias  = False
     layout_str        = {
-      lyt.qwerty      :{'low' : R'''`1234567890-=\ qwertyuiop[] asdfghjkl;' zxcvbnm,./'''
-       ,                'upp' : R'''~!@#$%^&*()_+| QWERTYUIOP{} ASDFGHJKL:" ZXCVBNM<>?'''},
-      lyt.dvorak      :{'low' : R'''`1234567890[]\ ',.pyfgcrl/= aoeuidhtns- ;qjkxbmwvz'''
-       ,                'upp' : R'''~!@#$%^&*(){}| "<>PYFGCRL?+ AOEUIDHTNS_ :QJKXBMWVZ'''},
-      lyt.colemak     :{'low' : R'''`1234567890-=\ qwfpgjluy;[] arstdhneio' zxcvbkm,./'''
-       ,                'upp' : R'''~!@#$%^&*()_+| QWFPGJLUY:{} ARSTDHNEIO" ZXCVBKM<>?'''},
-      lyt.workman     :{'low' : R'''`1234567890-=\ qdrwbjfup;[] ashtgyneoi' zxmcvkl,./'''
-       ,                'upp' : R'''~!@#$%^&*()_+| QDRWBJFUPP{} ASHTGYNEOI" ZXMCVKL<>?'''},
-      lyt.asset       :{'low' : R'''`1234567890-=\ qwjfgypul;[] asetdhnior' zxcvbkm,./'''
-       ,                'upp' : R'''~!@#$%^&*()_+| QWJFGYPUL;{} ASETDHNIO:" ZXCVBKM<>?'''},
-      lyt.colemak_dh  :{'low' : R'''`1234567890-=\ qwfpbjluy;[] arstgkneio' zxcdvmh,./'''
-       ,                'upp' : R'''~!@#$%^&*()_+| QWFPBJLUY:{} ARSTGKNEIO" ZXCDVMH<>?'''},
-      lyt.neo2        :{'low' : R'''^1234567890-`\ xvlcwkhgfqß´ uiaeosnrtdy üöäpzbm,.j'''
-       ,                'upp' : R'''ˇ°§ℓ»«$€„“”—¸| XVLCWKHGFQẞ˜ UIAEOSNRTDY ÜÖÄPZBM–•J'''},
-      lyt.ru_pc       :{'low' : R'''ё1234567890-=\ йцукенгшщзхъ фывапролджэ ячсмитьбю.'''
-       ,                'upp' : R'''Ё!"№;%:?*()_+/ ЙЦУКЕНГШЩЗХЪ ФЫВАПРОЛДЖЭ ЯЧСМИТЬБЮ,'''},
-      lyt.ru_mac      :{'low' : R''']1234567890-=ё йцукенгшщзхъ фывапролджэ ячсмитьбю/'''
-       ,                'upp' : R'''[!"№;%,.;()_+Ё ЙЦУКЕНГШЩЗХЪ ФЫВАПРОЛДЖЭ ЯЧСМИТЬБЮ?'''},
+      lyt.qwerty    :{'low':R'''` 1234567890 -=\ qwertyuiop [] asdfghjkl; ' zxcvbnm,./'''
+       ,              'upp':R'''~ !@#$%^&*() _+| QWERTYUIOP {} ASDFGHJKL: " ZXCVBNM<>?'''},
+      lyt.dvorak    :{'low':R'''` 1234567890 []\ ',.pyfgcrl /= aoeuidhtns - ;qjkxbmwvz'''
+       ,              'upp':R'''~ !@#$%^&*() {}| "<>PYFGCRL ?+ AOEUIDHTNS _ :QJKXBMWVZ'''},
+      lyt.colemak   :{'low':R'''` 1234567890 -=\ qwfpgjluy; [] arstdhneio ' zxcvbkm,./'''
+       ,              'upp':R'''~ !@#$%^&*() _+| QWFPGJLUY: {} ARSTDHNEIO " ZXCVBKM<>?'''},
+      lyt.workman   :{'low':R'''` 1234567890 -=\ qdrwbjfup; [] ashtgyneoi ' zxmcvkl,./'''
+       ,              'upp':R'''~ !@#$%^&*() _+| QDRWBJFUPP {} ASHTGYNEOI " ZXMCVKL<>?'''},
+      lyt.asset     :{'low':R'''` 1234567890 -=\ qwjfgypul; [] asetdhnior ' zxcvbkm,./'''
+       ,              'upp':R'''~ !@#$%^&*() _+| QWJFGYPUL; {} ASETDHNIO: " ZXCVBKM<>?'''},
+      lyt.colemak_dh:{'low':R'''` 1234567890 -=\ qwfpbjluy; [] arstgkneio ' zxcdvmh,./'''
+       ,              'upp':R'''~ !@#$%^&*() _+| QWFPBJLUY: {} ARSTGKNEIO " ZXCDVMH<>?'''},
+      lyt.neo2      :{'low':R'''^ 1234567890 -`\ xvlcwkhgfq ß´ uiaeosnrtd y üöäpzbm,.j'''
+       ,              'upp':R'''ˇ °§ℓ»«$€„“” —¸| XVLCWKHGFQ ẞ˜ UIAEOSNRTD Y ÜÖÄPZBM–•J'''},
+      lyt.ru_pc     :{'low':R'''ё 1234567890 -=\ йцукенгшщз хъ фывапролдж э ячсмитьбю.'''
+       ,              'upp':R'''Ё !"№;%:?*() _+/ ЙЦУКЕНГШЩЗ ХЪ ФЫВАПРОЛДЖ Э ЯЧСМИТЬБЮ,'''},
+      lyt.ru_mac    :{'low':R'''] 1234567890 -=ё йцукенгшщз хъ фывапролдж э ячсмитьбю/'''
+       ,              'upp':R'''[ !"№;%,.;() _+Ё ЙЦУКЕНГШЩЗ ХЪ ФЫВАПРОЛДЖ Э ЯЧСМИТЬБЮ?'''},
     }
     for k,v in layout_str.items():
       v['low'] = v['low'].replace(' ','')

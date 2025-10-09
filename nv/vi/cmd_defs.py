@@ -1357,7 +1357,7 @@ class ViMoveHalfScreenDown(ViMotionDef):
         self.scroll_into_view = False
 
     def translate(self, view):
-        return translate_motion(view, 'nv_vi_ctrl_d', {
+        return translate_motion(view, 'nv_vi_move_screen_half_down', {
             'count': get_count(view, default=0)
         })
 

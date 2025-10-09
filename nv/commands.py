@@ -80,7 +80,6 @@ __all__ = [
     'nv_change_char',
     'nv_vi_change_line',
     'nv_vi_ctrl_b',
-    'nv_vi_ctrl_d',
     'nv_vi_ctrl_e',
     'nv_vi_ctrl_f',
     'nv_vi_file_status',
@@ -120,7 +119,7 @@ __all__ = [
     'nv_vi_move_bigwordend_prev' ,'nv_vi_move_bigwordend_next' ,
     'nv_vi_move_line_up'         ,'nv_vi_move_line_down'       ,
     'nv_vi_move_screen_line_up'  ,'nv_vi_move_screen_line_down','nv_vi_move_line_back',
-    'nv_vi_move_screen_half_up'  ,
+    'nv_vi_move_screen_half_up'  ,'nv_vi_move_screen_half_down',
     'nv_vi_move_sentence_prev'   ,'nv_vi_move_sentence_next'   ,
     'nv_vi_move_paragraph_prev'  ,'nv_vi_move_paragraph_next'  ,
     'nv_move_change_prev'        ,'nv_move_change_next'        ,
@@ -3457,7 +3456,7 @@ class nv_vi_move_screen_half_up(TextCommand):
             scroll_viewport_position(self.view, number_of_scroll_lines, forward=False)
 
 
-class nv_vi_ctrl_d(TextCommand):
+class nv_vi_move_screen_half_down(TextCommand):
     def run(self, edit, mode=None, count=0):
         def f(view, s):
             if   mode == NORMAL:

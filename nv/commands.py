@@ -87,7 +87,6 @@ __all__ = [
     'nv_vi_goto_file_alt',
     'nv_vi_ctrl_r',
     'nv_vi_ctrl_right_square_bracket',
-    'nv_vi_ctrl_u',
     'nv_vi_window_control',
     'nv_vi_delete_word',
     'nv_vi_complete_line',
@@ -121,6 +120,7 @@ __all__ = [
     'nv_vi_move_bigwordend_prev' ,'nv_vi_move_bigwordend_next' ,
     'nv_vi_move_line_up'         ,'nv_vi_move_line_down'       ,
     'nv_vi_move_screen_line_up'  ,'nv_vi_move_screen_line_down','nv_vi_move_line_back',
+    'nv_vi_move_screen_half_up'  ,
     'nv_vi_move_sentence_prev'   ,'nv_vi_move_sentence_next'   ,
     'nv_vi_move_paragraph_prev'  ,'nv_vi_move_paragraph_next'  ,
     'nv_move_change_prev'        ,'nv_move_change_next'        ,
@@ -1417,6 +1417,14 @@ class nv_vi_replace_char(TextCommand):
         enter_normal_mode  (self.view, mode)
 
 
+class nv_vi_dedent       (TextCommand): # extracted from nv_vi_ctrl_u's Insert mode
+    def run(self, edit, mode=None, count=0):
+        def t(view, s):
+            s.a = view.line(get_insertion_point_at_b(s)).a
+            return s
+        regions_transformer(self.view, t)
+        self.view.run_command('left_delete')
+        return
 class nv_vi_unindent     (TextCommand):
     def run(self, edit, mode=None, count=1, register=None, motion=None):
         if motion:
@@ -3423,24 +3431,15 @@ class nv_vi_move_to_soft_eol(TextCommand):
         regions_transformer(self.view, f)
 
 
-class nv_vi_ctrl_u(TextCommand):
+class nv_vi_move_screen_half_up(TextCommand):
     def run(self, edit, mode=None, count=0):
-        if mode == INSERT:
-            def t(view, s):
-                s.a = view.line(get_insertion_point_at_b(s)).a
-                return s
-
-            regions_transformer(self.view, t)
-            self.view.run_command('left_delete')
-            return
-
         def f(view, s):
             if   mode == NORMAL:
-                resolve_normal_target(s, target)
+                resolve_normal_target     (      s, target)
             elif mode == INSERT:
-                resolve_normal_target(s, target)
+                resolve_normal_target     (      s, target)
             elif mode == VISUAL:
-                resolve_visual_target(s, target)
+                resolve_visual_target     (      s, target)
             elif mode == VISUAL_LINE:
                 resolve_visual_line_target(view, s, target)
             elif mode == INTERNAL_NORMAL:

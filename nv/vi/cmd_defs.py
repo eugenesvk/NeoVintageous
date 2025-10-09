@@ -104,6 +104,18 @@ class ViYankSelectByChars(ViOperatorDef):
         self.command = 'nv_vi_copy_char'
 
 
+
+@assign(seqs.SEQ['⎈u'], (INSERT,))
+@assign_text(['Dedent'], (INSERT,), icon='⇚')
+class ViDedent(ViMotionDef):
+    def init(self):
+        self.updates_xpos     = True
+        self.scroll_into_view = True
+
+    def translate(self, view):
+        return translate_motion(view, 'nv_vi_dedent', {
+            'count': get_count (view, default=0)
+        })
 @assign(seqs.LESS_THAN, ACTION_MODES)
 @assign_text(['Unindent'], ACTION_MODES, icon='⇚')
 class ViUnindent(ViOperatorDef):
@@ -1350,15 +1362,15 @@ class ViMoveHalfScreenDown(ViMotionDef):
         })
 
 
-@assign(seqs.SEQ['⎈u'], MOTION_MODES + (INSERT,))
-@assign_text(['MoveHalfScreenUp'], MOTION_MODES + (INSERT,), icon='⤉')
+@assign(seqs.SEQ['⎈u'], MOTION_MODES)
+@assign_text(['MoveHalfScreenUp'], MOTION_MODES, icon='⤉')
 class ViMoveHalfScreenUp(ViMotionDef):
     def init(self):
         self.updates_xpos = True
         self.scroll_into_view = True
 
     def translate(self, view):
-        return translate_motion(view, 'nv_vi_ctrl_u', {
+        return translate_motion(view, 'nv_vi_move_screen_half_up', {
             'count': get_count(view, default=0)
         })
 

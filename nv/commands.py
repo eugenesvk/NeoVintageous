@@ -2459,20 +2459,13 @@ class nv_vi_search_forward_impl(TextCommand):
 class nv_vi_move_char_right(TextCommand):
     def run(self, edit, mode=None, count=1):
         def f(view, s):
-            if mode == NORMAL:
-                if view.line(s.b).empty():
-                    return s
-
-                nl = 0 if (get_config('edit.ignore_nl_on_char_move') == False) else 1
-                x_limit = min(view.line(s.b).b - nl, s.b + count, view.size())
-                return Region(x_limit, x_limit)
-
             if mode == INTERNAL_NORMAL:
                 x_limit = min(view.line(s.b).b, s.b + count)
                 x_limit = max(0, x_limit)
                 return Region(s.a, x_limit)
 
-            if mode in (VISUAL, VISUAL_BLOCK):
+
+            elif mode in (VISUAL, VISUAL_BLOCK):
                 if s.a < s.b:
                     x_limit = min(view.full_line(s.b - 1).b, s.b + count)
                     return Region(s.a, x_limit)
@@ -2488,6 +2481,14 @@ class nv_vi_move_char_right(TextCommand):
 
                     return Region(s.a, x_limit)
 
+            elif mode == NORMAL:
+                if view.line(s.b).empty():
+                    return s
+
+                nl = 0 if (get_config('edit.ignore_nl_on_char_move') == False) else 1
+                x_limit = min(view.line(s.b).b - nl, s.b + count, view.size())
+                return Region(x_limit, x_limit)
+
             return s
 
         regions_transformer(self.view, f)
@@ -2498,11 +2499,11 @@ class nv_vi_move_char_left(TextCommand):
         def f(view, s):
             if mode == INTERNAL_NORMAL:
                 x_limit = max(view.line(s.b).a, s.b - count)
+
                 return Region(s.a, x_limit)
 
             # TODO: Split handling of the two modes for clarity.
             elif mode in (VISUAL, VISUAL_BLOCK):
-
                 if s.a < s.b:
                     if mode == VISUAL_BLOCK and self.view.rowcol(s.b - 1)[1] == baseline:
                         return s
@@ -2517,12 +2518,12 @@ class nv_vi_move_char_left(TextCommand):
                     x_limit = max(view.line(s.b).a, s.b - count)
                     return Region(s.a, x_limit)
 
+
             elif mode == NORMAL:
                 x_limit = max(view.line(s.b).a, s.b - count)
                 return Region(x_limit, x_limit)
 
-            # XXX: We should never reach this.
-            return s
+            return s # XXX: We should never reach this.
 
         # For jagged selections (on the rhs), only those sticking out need to move leftwards.
         # Example ([] denotes the selection):

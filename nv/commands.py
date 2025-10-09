@@ -2459,7 +2459,7 @@ class nv_vi_search_forward_impl(TextCommand):
 class nv_vi_move_char_right(TextCommand):
     def run(self, edit, mode=None, count=1):
         def f(view, s):
-            if mode == NORMAL:
+            if mode in (NORMAL, INSERT):
                 if view.line(s.b).empty():
                     return s
 
@@ -2517,7 +2517,7 @@ class nv_vi_move_char_left(TextCommand):
                     x_limit = max(view.line(s.b).a, s.b - count)
                     return Region(s.a, x_limit)
 
-            elif mode == NORMAL:
+            elif mode in (NORMAL, INSERT):
                 x_limit = max(view.line(s.b).a, s.b - count)
                 return Region(x_limit, x_limit)
 

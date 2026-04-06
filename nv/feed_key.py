@@ -159,7 +159,7 @@ class FeedKeyHandler():
         self._part_seq = get_partial_sequence(self.view) +  self.key
         set_partial_text                (self.view, self._part_txt)
         set_partial_sequence            (self.view, self._part_seq)
-        _log.key('_part_txt¦%s¦ _part_seq¦%s¦ key¦%s¦',_part_txt,_part_seq,self.key)
+        _log.key('_part_txt¦%s¦ _part_seq¦%s¦ key¦%s¦',self._part_txt,self._part_seq,self.key)
 
         cmdT = mappings_resolve_text(self.view, check_user_mappings=self.check_user_mappings)
         cmdS = mappings_resolve     (self.view, check_user_mappings=self.check_user_mappings)

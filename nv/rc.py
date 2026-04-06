@@ -6,6 +6,8 @@ import json
 import pickle
 from pathlib import Path
 from typing import List, Union
+import time
+from datetime import datetime
 # from time import monotonic_ns as ttime
 # from math import pow
 # ns = pow(10,9) # nanosecond, which 'monotonic_ns' are measured in
@@ -18,7 +20,7 @@ import NeoVintageous.nv.cfg_parse
 from NeoVintageous.nv.cfg_parse import _pre_load, _source, CFG_CACHE
 
 
-from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL
+from NeoVintageous.nv.log import DEFAULT_LOG_LEVEL, TFMT, DFMT
 _log = logging.getLogger(__name__)
 _log.setLevel(DEFAULT_LOG_LEVEL)
 
@@ -49,7 +51,10 @@ def open_config_file_kdl(window) -> None:
     window.open_file(file)
 
 
+t = datetime.now()
 def load_rc() -> None:
+    global t
+    _log.t("load_rc      ⏰%s %s", DFMT.format(t=(datetime.now() - t)), TFMT.format(t=(t:=datetime.now())))
     _log.debug('sourcing %s', _file_path())
     _load()
 
@@ -73,6 +78,7 @@ def _unload() -> None:
 
 
 def _load() -> None:
+    global t
     window = sublime.active_window()
 
     settings = sublime.load_settings('Preferences.sublime-settings')
@@ -86,6 +92,7 @@ def _load() -> None:
     except FileNotFoundError:
         _log.info('%s file not found', _file_path())
     # load_cfgU()
+    _log.t("load_kdl pre ⏰%s %s", DFMT.format(t=(datetime.now() - t)), TFMT.format(t=(t:=datetime.now())))
     # t0  = ttime()
     if not cfgU.load_cache():
         # t1=ttime() ;print("⏲✗load_kdl_cache ∑{:.2f}s".format((t1-t0)/ns)); t0=ttime()
@@ -233,9 +240,11 @@ class cfgU(metaclass=Singleton):
 
     @staticmethod
     def load_kdl():
+        global t
         if hasattr(cfgU,'kdl') and cfgU.kdl: # avoid loading the same config multiple times
             return
         cfg_l = cfgU.read_kdl_file() #cfg_l:List[(kdl1|kdl2|ckdl.Document,dict)]
+        _log.t("load_kdl file ⏰%s %s", DFMT.format(t=(datetime.now() - t)), TFMT.format(t=(t:=datetime.now())))
         cfgU.kdl = dict()
         if     nvcfg.CFG['pref']['kdlp'] == 'ckdl' and _libckdl:
             from     NeoVintageous.nv import cfg_parse_c as cfg_parse
@@ -281,22 +290,28 @@ class cfgU(metaclass=Singleton):
                             else:
                                 cfgU.kdl[nest][g] = node
 
+        _log.t("load_kdl pars ⏰%s %s", DFMT.format(t=(datetime.now() - t)), TFMT.format(t=(t:=datetime.now())))
         ignore = {1:cfg_group, 2:[]} # ignore the lowest level dictionary groups as they repeat node names
         for g,subg in cfg_nest.items():
             ignore[2] += subg
         cfgU.flat = cfg_parse.flatten_kdl(cfgU.kdl, ignore=ignore) # store a flat dictionary for easy access
+        _log.t("load_kdl flat ⏰%s %s", DFMT.format(t=(datetime.now() - t)), TFMT.format(t=(t:=datetime.now())))
         # print('cfgU.flat', cfgU.flat)
 
         if (general_g := cfgU.kdl['general']):
             cfg_parse._parse_general_g_kdl(general_g=general_g,CFG=nvcfg.CFG,DEF=nvcfg.DEF)
+        _log.t("load_kdl gen  ⏰%s %s", DFMT.format(t=(datetime.now() - t)), TFMT.format(t=(t:=datetime.now())))
 
         if (rc_g := cfgU.kdl['rc']):
             cfg_parse._parse_rc_g_kdl(rc_g=rc_g)
+        _log.t("load_kdl rc   ⏰%s %s", DFMT.format(t=(datetime.now() - t)), TFMT.format(t=(t:=datetime.now())))
 
         for (keybind,var_d) in cfgU.kdl['keybind']:
             cfg_parse._parse_keybinds_kdl(keybinds=keybind,CFG=nvcfg.CFG,cfgU=cfgU,var_d=var_d)
+        _log.t("load_kdl key  ⏰%s %s", DFMT.format(t=(datetime.now() - t)), TFMT.format(t=(t:=datetime.now())))
 
         _import_plugins_with_user_data_kdl()
+        _log.t("load_kdl imp  ⏰%s %s", DFMT.format(t=(datetime.now() - t)), TFMT.format(t=(t:=datetime.now())))
         cfgU.save_cache()
 
     @staticmethod

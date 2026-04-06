@@ -55,6 +55,26 @@ _mappings_help = { # stores icons/descriptions/original name for text_commands
     VISUAL              : {}
 }  # type: dict
 
+_mappings_reverse = { # map[internal class Name] = key from  ↑ to make finding a key easier
+    INSERT              : {},
+    NORMAL              : {},
+    OPERATOR_PENDING    : {},
+    SELECT              : {},
+    VISUAL_BLOCK        : {},
+    VISUAL_LINE         : {},
+    VISUAL              : {}
+}  # type: dict
+_mappings_text_reverse = { # map[text_command Name] = key from  ↑ to make finding a key easier
+    INSERT              : {},
+    NORMAL              : {},
+    OPERATOR_PENDING    : {},
+    SELECT              : {},
+    VISUAL_BLOCK        : {},
+    VISUAL_LINE         : {},
+    VISUAL              : {}
+}  # type: dict
+
+
 
 class Mapping:
 

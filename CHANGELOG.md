@@ -1,6 +1,6 @@
 # Changelog
 
-[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.972.1353...HEAD
+[unreleased]: https://github.com/eugenesvk/NeoVintageous/compare/0.973.1353...HEAD
 ## [Unreleased]
 <!-- - ✨ __Added__ -->
   <!-- + new features -->
@@ -15,6 +15,8 @@
 <!-- - 🔒 __Security__ -->
   <!-- + vulnerabilities -->
 
+[0.973.1353]: https://github.com/eugenesvk/NeoVintageous/compare/0.973.1353...HEAD
+## [0.973.1353]
   - ✨ __Added__
     + `GotoEofBlank` default command
 

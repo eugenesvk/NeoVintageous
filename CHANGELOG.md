@@ -15,7 +15,16 @@
 <!-- - 🔒 __Security__ -->
   <!-- + vulnerabilities -->
 
-  - __Fixed__
+  - ✨ __Added__
+    + `GotoEofBlank` default command
+
+  - Δ __Changed__
+    + goto eof: add an argument to go to true eof even if blank
+    + support `nv_vi_move_char_left`/`right` in insert mode
+    + rename `nv_vi_ctrl_u`/`d` to `move_screen_half_up`/`down`
+
+  - 🐞 __Fixed__
+    + breaking on missing kdl config file
     + (hopefully) `pywin32` library dependency resolution
 
 [0.972.1353]: https://github.com/eugenesvk/NeoVintageous/compare/0.972.1353...HEAD

@@ -1,11 +1,10 @@
 from collections import Counter
 from contextlib  import contextmanager
 from functools   import wraps
-from pathlib import Path
 import os
 import re
 
-from sublime import FORCE_GROUP, Region, View, Window, CLASS_WORD_END, CLASS_WORD_START, version, SymbolSource, SymbolType, KindId
+from sublime import FORCE_GROUP, Region, View, Window, CLASS_WORD_END, CLASS_WORD_START, version, SymbolSource, SymbolType, KindId, version
 
 from NeoVintageous.nv.options  import get_option
 from NeoVintageous.nv.polyfill import make_all_groups_same_size, set_selection, spell_add, spell_undo
@@ -246,17 +245,28 @@ def get_line_count(view: View) -> int:
     return last_row(view) + 1
 
 
-def get_file_type(view: View) -> str:
-    file_name = view.file_name()
-    if not file_name:
-        return ''
+if int(version()) >= 4000:
+    from pathlib import Path
 
-    name = Path(file_name).name
-    suffix = Path(name).suffix
-    if suffix:
-        return suffix[1:]
-
-    return name.lstrip('.')
+    def get_file_type(view: View) -> str:
+        file_name = view.file_name()
+        if not file_name:
+            return ''
+        name = Path(file_name).name
+        suffix = Path(name).suffix
+        if suffix:
+            return suffix[1:]
+        return name.lstrip('.')
+else:
+    def get_file_type(view: View) -> str:
+        file_name = view.file_name()
+        if not file_name:
+            return ''
+        base = os.path.basename(file_name)
+        root, ext = os.path.splitext(base)
+        if ext:
+            return ext[1:]
+        return base.lstrip('.')
 
 
 # Used for example by commands like f{char}, t{char}, r{char}

@@ -263,6 +263,12 @@
     + :beetle: 1-symbol keys like `⇟` in named key aliases not recognized
 
 
+## 1.35.4 - Unreleased
+
+### Fixed
+
+- Support dotless files like Containerfile and Dockerfile in neovintageousrc [#1053](https://github.com/NeoVintageous/NeoVintageous/issues/1053)
+
 ## 1.35.3 - 2025-04-03
 
 ### Fixed

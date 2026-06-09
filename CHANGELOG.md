@@ -263,7 +263,7 @@
     + :beetle: 1-symbol keys like `⇟` in named key aliases not recognized
 
 
-## 1.35.4 - Unreleased
+## 1.35.4 - 2026-06-09
 
 ### Fixed
 

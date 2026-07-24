@@ -15,6 +15,9 @@
 <!-- - 🔒 __Security__ -->
   <!-- + vulnerabilities -->
 
+- Δ __Changed__
+  + Updated to upstream release 1.35.4
+
 [0.973.1353]: https://github.com/eugenesvk/NeoVintageous/compare/0.973.1353...HEAD
 ## [0.973.1353]
   - ✨ __Added__
